@@ -1,0 +1,66 @@
+@theme {
+  /*  Primary - Yellow */
+  --color-Yellow-105: #fffdf5;
+  --color-Yellow-100: #fff9e6;
+  --color-Yellow-80: #ffebb0;
+  --color-Yellow-70: #ffe18a;
+  --color-Yellow-60: #ffd354;
+  --color-Yellow-50: #ffcf40; /* Main - normal */
+  --color-Yellow-45: #ffc300; /* Main - normal */
+  --color-Yellow-40: #fdb600; /* hovered */
+  --color-Yellow-30: #f19d00; /* pressed */
+  --color-Yellow-20: #d87700; /* selected */
+  --color-Yellow-10: #a84f01;
+  --color-Yellow-5: #6b3200;
+
+  /* Secondary - Pink */
+  --color-Pink-100: #fff7f9;
+  --color-Pink-80: #ffe3f6;
+  --color-Pink-60: #ffe7ed;
+  --color-Pink-50: #ffb1c4; /* Point - normal */
+  --color-Pink-40: #ff7395; /* hovered */
+  --color-Pink-30: #e32a57; /* pressed */
+  --color-Pink-20: #df0036; /* selected */
+  --color-Pink-10: #ae002a;
+  --color-Pink-5: #600017;
+
+  /* Point - Green */
+  --color-Green-100: #e9f7f5;
+  --color-Green-80: #bae6e1;
+  --color-Green-60: #98d9d3;
+  --color-Green-50: #69c8bf; /* Point - normal */
+  --color-Green-40: #4cbdb2; /* hovered */
+  --color-Green-30: #1fad9f; /* pressed */
+  --color-Green-20: #167b71; /* selected */
+  --color-Green-10: #115f57;
+  --color-Green-5: #0d4943;
+
+  /* Mono */
+  --color-White: #ffffff;
+  --color-Black: #000000;
+
+  /* Gray */
+  --color-Gray-1: #f3f3f3;
+  --color-Gray-2: #e6e6e6;
+  --color-Gray-3: #cbcbcb;
+  --color-Gray-4: #c3c3c3; /* normal */
+  --color-Gray-5: #9e9e9e; /* hover */
+  --color-Gray-6: #777777; /* active */
+  --color-Gray-7: #585858;
+  --color-Gray-8: #424242;
+  --color-Gray-9: #353535;
+  --color-Gray-10: #1f1f1f; /* Typo */
+
+  /* Gradation */
+  --gradient-1: linear-gradient(90deg, #fff9e6 0%, #ffcf40 100%);
+  --gradient-2: linear-gradient(90deg, #ffebb0 0%, #ff7395 100%);
+}
+
+/* Utility classes for gradients */
+.gradient-1 {
+  background: var(--gradient-1);
+}
+
+.gradient-2 {
+  background: var(--gradient-2);
+}

@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import '@fontsource/pretendard';
 @import './styles/typography.css';
+@import './styles/color.css';
 
 @font-face {
   font-family: 'DNFBitBitv2';
