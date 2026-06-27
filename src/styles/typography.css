@@ -1,0 +1,225 @@
+@utility dnf-Title1 {
+  font-family: var(--font-dnf);
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Title2 {
+  font-family: var(--font-dnf);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Title3 {
+  font-family: var(--font-dnf);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Title4 {
+  font-family: var(--font-dnf);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Subtitle1 {
+  font-family: var(--font-dnf);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Subtitle2 {
+  font-family: var(--font-dnf);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Subtitle3 {
+  font-family: var(--font-dnf);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Caption1 {
+  font-family: var(--font-dnf);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility dnf-Caption2 {
+  font-family: var(--font-dnf);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+/*Pretendard*/
+
+@utility pretendard-Title1 {
+  font-family: var(--font-pretendard);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+@utility pretendard-Title2 {
+  font-family: var(--font-pretendard);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+@utility pretendard-Title3 {
+  font-family: var(--font-pretendard);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+@utility pretendard-Subtitle1 {
+  font-family: var(--font-pretendard);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+@utility pretendard-Subtitle2 {
+  font-family: var(--font-pretendard);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+@utility pretendard-Subtitle3 {
+  font-family: var(--font-pretendard);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+@utility pretendard-Subtitle4 {
+  font-family: var(--font-pretendard);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+@utility pretendard-Subtitle5 {
+  font-family: var(--font-pretendard);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 100%;
+}
+
+@utility pretendard-Subtitle6 {
+  font-family: var(--font-pretendard);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+@utility pretendard-Subtitle7 {
+  font-family: var(--font-pretendard);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+@utility pretendard-Body1-Semibold {
+  font-family: var(--font-pretendard);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 150%;
+}
+
+@utility pretendard-Body1-Medium {
+  font-family: var(--font-pretendard);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 150%;
+}
+
+@utility pretendard-Body1-Regular {
+  font-family: var(--font-pretendard);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+@utility pretendard-Body2-Semibold {
+  font-family: var(--font-pretendard);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 150%;
+}
+
+@utility pretendard-Body2-Medium {
+  font-family: var(--font-pretendard);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 150%;
+}
+
+@utility pretendard-Body2-Regular {
+  font-family: var(--font-pretendard);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+@utility pretendard-Button1 {
+  font-family: var(--font-pretendard);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+@utility pretendard-Button2 {
+  font-family: var(--font-pretendard);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 100%;
+}
+
+@utility pretendard-Button3 {
+  font-family: var(--font-pretendard);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility pretendard-Caption1 {
+  font-family: var(--font-pretendard);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+@utility pretendard-Caption2 {
+  font-family: var(--font-pretendard);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+@utility pretendard-Caption3 {
+  font-family: var(--font-pretendard);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 100%;
+}
+
+@utility pretendard-Caption4 {
+  font-family: var(--font-pretendard);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 100%;
+}

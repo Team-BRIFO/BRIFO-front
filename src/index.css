@@ -1,1 +1,17 @@
 @import 'tailwindcss';
+@import '@fontsource/pretendard';
+@import './styles/typography.css';
+@import './styles/color.css';
+
+@font-face {
+  font-family: 'DNFBitBitv2';
+  src: url('/fonts/DNFBitBitv2.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-pretendard: 'Pretendard', sans-serif;
+  --font-dnf: 'DNFBitBitv2', sans-serif;
+}
