@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
-language: "ko-KR"
+language: 'ko-KR'
 
 tone_instructions: >
   항상 한국어로 리뷰를 작성해줘. 존댓말을 사용하되 장황하지 않고 간결하게,
@@ -9,9 +9,9 @@ tone_instructions: >
 early_access: false
 
 reviews:
-  profile: "chill"
+  profile: 'chill'
   high_level_summary: true
-  high_level_summary_placeholder: "@coderabbitai summary"
+  high_level_summary_placeholder: '@coderabbitai summary'
   poem: false
   review_status: true
   collapse_walkthrough: false
@@ -22,7 +22,7 @@ reviews:
     drafts: false
 
   path_instructions:
-    - path: "**/*"
+    - path: '**/*'
       instructions: >
         이 프로젝트의 스택 버전: React 19, TypeScript 5.x+, Vite(latest),
         TailwindCSS v4(@tailwindcss/vite — v3의 tailwind.config.js 기반 설정이 아닌
@@ -32,14 +32,14 @@ reviews:
         Tailwind v3 전용 설정 방식, React 18 이하 관례 등)을 최신 표준이라고 착각해
         지적하지 않도록 주의해줘.
 
-    - path: "src/api/**/*.ts"
+    - path: 'src/api/**/*.ts'
       instructions: >
         이 프로젝트는 서버 상태를 TanStack Query로만 관리한다. 컴포넌트에서 axios를
         직접 호출하지 않고 반드시 src/api/{도메인}.ts 레이어를 거치는지 확인해줘.
         apiClient(src/api/axios.ts)의 인터셉터(JWT 주입, 401 처리) 패턴을 우회하는
         별도의 axios 인스턴스 생성이 있는지 점검해줘.
 
-    - path: "src/components/**/*.tsx"
+    - path: 'src/components/**/*.tsx'
       instructions: >
         components 폴더는 반드시 도메인 하위 폴더(agent/, briefing/, feed/, common/,
         layouts/ 등)로 구성되어야 한다. 최상위에 바로 컴포넌트 파일이 추가되지
@@ -47,26 +47,26 @@ reviews:
         동일해야 한다. Tailwind 임의 hex 값(예: bg-[#ffffff]) 대신 프로젝트 디자인
         토큰(BERIFO 디자인 시스템 색상/폰트 토큰) 사용을 권장해줘.
 
-    - path: "src/pages/**/*.tsx"
+    - path: 'src/pages/**/*.tsx'
       instructions: >
         페이지 컴포넌트는 pages/{도메인}/XxxPage.tsx 구조를 따라야 한다. 라우트 경로는
         src/constants/routes.ts의 ROUTES 상수를 사용해야 하며, 문자열 경로 하드코딩이
         있으면 지적해줘.
 
-    - path: "src/stores/**/*.ts"
+    - path: 'src/stores/**/*.ts'
       instructions: >
         클라이언트 전역 상태는 Zustand로 관리한다. 인증 등 영속성이 필요한 상태는
         persist 미들웨어를 사용하는지 확인해줘. 서버에서 오는 데이터(API 응답)를
         Zustand에 그대로 캐싱하려는 패턴이 보이면, TanStack Query로 옮기는 것을
         제안해줘.
 
-    - path: "src/constants/queryKeys.ts"
+    - path: 'src/constants/queryKeys.ts'
       instructions: >
         React Query의 쿼리 키는 이 파일에서 중앙 관리되어야 한다. 컴포넌트나 훅에서
         인라인 배열(예: ['agents', 'mine'])을 직접 쓰는 코드가 있으면 이 파일의 키를
         사용하도록 지적해줘.
 
-    - path: "src/**/*.{ts,tsx}"
+    - path: 'src/**/*.{ts,tsx}'
       instructions: >
         - Import 경로는 상대경로(../../) 대신 `@/` alias를 사용해야 한다.
         - 타입/인터페이스는 `import type`으로 분리해서 가져와야 한다.
@@ -75,12 +75,12 @@ reviews:
         - Vite 환경 변수는 `VITE_` 접두사가 있어야 하며, `.env` 파일이 커밋 diff에
           포함되어 있다면 반드시 지적해줘.
 
-  auto_title_placeholder: "@coderabbitai"
-  auto_title_instructions: ""
+  auto_title_placeholder: '@coderabbitai'
+  auto_title_instructions: ''
 
 chat:
   auto_reply: true
 
 knowledge_base:
   learnings:
-    scope: "auto"
+    scope: 'auto'
