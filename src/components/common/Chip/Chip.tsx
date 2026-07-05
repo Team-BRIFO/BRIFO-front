@@ -130,6 +130,9 @@ export function Chip({
   // trend variant는 12px radius, 나머지는 pill(20px)
   const radiusClass = isTrend ? 'rounded-[12px]' : 'rounded-[20px]'
 
+  const hasRemoveAction = Boolean(isRemovable && onRemove)
+  const isComplex = isInteractive && hasRemoveAction
+
   const baseClass = [
     'inline-flex items-center justify-center',
     radiusClass,
@@ -138,48 +141,62 @@ export function Chip({
     colorClass,
     isSelected ? 'ring-1 ring-Yellow-45' : '',
     disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : '',
-    isInteractive && !disabled
-      ? 'cursor-pointer hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45'
+    isInteractive && !disabled ? 'hover:opacity-80' : '',
+    isInteractive && !disabled && !isComplex
+      ? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45'
       : '',
     className,
   ]
     .filter(Boolean)
     .join(' ')
 
+  const removeBtn = hasRemoveAction ? (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation()
+        onRemove!(e)
+      }}
+      disabled={disabled}
+      aria-label={`${children} 삭제`}
+      className="relative z-10 flex shrink-0 items-center p-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-current"
+    >
+      <Icon name="close" size={16} isDecorative />
+    </button>
+  ) : null
+
+  // 1. onClick과 onRemove가 둘 다 있는 경우 (버튼 중첩 방지)
+  if (isComplex) {
+    return (
+      <div className={`${baseClass} relative`}>
+        <button
+          type="button"
+          onClick={onClick}
+          disabled={disabled}
+          aria-pressed={isSelected}
+          className="absolute inset-0 z-0 h-full w-full cursor-pointer rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45"
+          aria-label={typeof children === 'string' ? children : '칩'}
+        />
+        {leftIcon && <span className="pointer-events-none relative z-10 flex shrink-0 items-center">{leftIcon}</span>}
+        {variant === 'outline' && <span className="pointer-events-none relative z-10" aria-hidden="true">#</span>}
+        {isTrend && direction && <span className="pointer-events-none relative z-10" aria-hidden="true">{TREND_INDICATOR[direction]}</span>}
+        <span className="pointer-events-none relative z-10">{children}</span>
+        {removeBtn}
+      </div>
+    )
+  }
+
+  // 2. 단일 액션 또는 단순 표시용 컴포넌트 내용
   const content = (
     <>
       {leftIcon && <span className="flex shrink-0 items-center">{leftIcon}</span>}
-
-      {/* outline variant는 # 프리픽스를 내부에서 렌더링 */}
       {variant === 'outline' && <span aria-hidden="true">#</span>}
-
-      {/* trend variant는 방향 지시자(▲/▼)를 내부에서 렌더링 */}
-      {isTrend && direction && (
-        <span aria-hidden="true">{TREND_INDICATOR[direction]}</span>
-      )}
-
+      {isTrend && direction && <span aria-hidden="true">{TREND_INDICATOR[direction]}</span>}
       <span>{children}</span>
-
-      {isRemovable && onRemove ? (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation()
-            onRemove(e)
-          }}
-          disabled={disabled}
-          aria-label={`${children} 삭제`}
-          className="flex shrink-0 items-center p-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-current"
-        >
-          <Icon name="close" size={16} isDecorative />
-        </button>
-      ) : (
-        rightIcon && <span className="flex shrink-0 items-center">{rightIcon}</span>
-      )}
+      {removeBtn || (rightIcon && <span className="flex shrink-0 items-center">{rightIcon}</span>)}
     </>
   )
 
-  // 클릭 가능하면 button, 표시용이면 span으로 렌더링
   if (isInteractive) {
     return (
       <button

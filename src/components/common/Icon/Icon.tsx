@@ -12,7 +12,7 @@ import CloseIcon from '@/assets/icons/close.svg?react'
 export type IconVariant = 'line' | 'filled' | 'brand'
 export type IconSize = 16 | 20 | 24 | 28 | 32
 
-export interface IconProps {
+export interface BaseIconProps {
   /** 렌더링할 아이콘 이름 */
   name: string
 
@@ -29,15 +29,23 @@ export interface IconProps {
    */
   color?: string
 
-  /** 의미 있는 아이콘일 때 screen reader에 전달할 라벨 */
-  ariaLabel?: string
-
-  /** 장식용 아이콘 여부 (기본: true) */
-  isDecorative?: boolean
-
   /** 추가 스타일 className */
   className?: string
 }
+
+export type IconProps = BaseIconProps & (
+  | {
+      /** 장식용 아이콘 여부 (기본: true) */
+      isDecorative?: true
+      ariaLabel?: never
+    }
+  | {
+      /** 의미 있는 아이콘일 경우 false로 설정해야 합니다 */
+      isDecorative: false
+      /** 의미 있는 아이콘일 때 screen reader에 전달할 라벨 (필수) */
+      ariaLabel: string
+    }
+)
 
 // ─── Icon Registry ───────────────────────────────────────────────────────────
 

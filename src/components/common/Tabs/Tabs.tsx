@@ -89,7 +89,11 @@ function getContainerClass(
   segmentedType: 1 | 2,
   className: string
 ): string {
-  const base = ['flex items-center', isFullWidth ? 'w-full' : 'w-max', className]
+  const base = ['flex items-center', className]
+
+  if (variant !== 'segmented') {
+    base.push(isFullWidth ? 'w-full' : 'w-max')
+  }
 
   if (variant === 'segmented') {
     // 피그마 스펙 대응
