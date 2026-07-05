@@ -69,10 +69,7 @@ interface ModalFooterProps {
 }
 
 function Header({ children, className = '' }: ModalHeaderProps) {
-  return (
-    /* 간격은 피그마 Dev Mode 확인 후 조정 예정 */
-    <header className={`mb-4 text-center ${className}`}>{children}</header>
-  )
+  return <header className={`mb-4 text-center ${className}`}>{children}</header>
 }
 
 function Body({ children, className = '' }: ModalBodyProps) {
@@ -80,8 +77,7 @@ function Body({ children, className = '' }: ModalBodyProps) {
 }
 
 function Footer({ children, className = '' }: ModalFooterProps) {
-  /* 간격은 피그마 Dev Mode 확인 후 조정 예정 */
-  return <footer className={`mt-6 flex w-full flex-col gap-2 ${className}`}>{children}</footer>
+  return <footer className={`mt-8 flex w-full flex-col gap-2 ${className}`}>{children}</footer>
 }
 
 Modal.Header = Header
