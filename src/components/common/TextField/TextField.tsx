@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react'
 import { useId } from 'react'
 
-import CloseIcon from '@/assets/icons/close.svg?react'
-import SearchIcon from '@/assets/icons/search.svg?react'
+import { Icon } from '@/components/common/Icon/Icon'
 
 type TextFieldVariant = 'field' | 'search'
 
@@ -137,7 +136,7 @@ export const TextField = ({
         {/* 왼쪽 아이콘: 전달된 leftIcon 우선, variant="search"이면 검색 아이콘 기본 표시 */}
         {(leftIcon || isSearch) && (
           <span className="flex shrink-0 items-center text-Gray-5">
-            {leftIcon ?? <SearchIcon width={20} height={20} aria-hidden="true" />}
+            {leftIcon ?? <Icon name="search" size={20} isDecorative />}
           </span>
         )}
 
@@ -173,7 +172,7 @@ export const TextField = ({
             aria-label="입력 내용 지우기"
             className="flex shrink-0 items-center text-Gray-5 hover:text-Gray-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45"
           >
-            <CloseIcon width={20} height={20} aria-hidden="true" />
+            <Icon name="close" size={20} isDecorative />
           </button>
         ) : (
           rightIcon && (

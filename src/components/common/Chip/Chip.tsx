@@ -1,6 +1,6 @@
 import type { MouseEventHandler, ReactNode } from 'react'
 
-import CloseIcon from '@/assets/icons/close.svg?react'
+import { Icon } from '@/components/common/Icon/Icon'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -171,7 +171,7 @@ export function Chip({
           aria-label={`${children} 삭제`}
           className="flex shrink-0 items-center p-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-current"
         >
-          <CloseIcon width={12} height={12} aria-hidden="true" />
+          <Icon name="close" size={16} isDecorative />
         </button>
       ) : (
         rightIcon && <span className="flex shrink-0 items-center">{rightIcon}</span>
