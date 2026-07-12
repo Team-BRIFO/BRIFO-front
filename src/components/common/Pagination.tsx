@@ -51,7 +51,7 @@ export function Pagination({
               }
             }}
             aria-current={isActive ? 'page' : undefined}
-            aria-label={`${index + 1}번째 페이지`}
+            aria-label={`${item.value}번째 페이지`}
             className={[
               'h-2 w-2 shrink-0 rounded-full transition-colors duration-200',
               dotColorClass,

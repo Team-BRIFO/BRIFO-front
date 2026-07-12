@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { type KeyboardEvent, type ReactNode, useRef } from 'react'
 
 export type TabsVariant = 'underline' | 'segmented' | 'pill' | 'plain'
 
@@ -47,6 +47,42 @@ export function Tabs({
   disabled = false,
   className = '',
 }: TabsProps) {
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([])
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return
+
+    e.preventDefault()
+
+    const enabledIndexes = items
+      .map((item, index) => (disabled || item.disabled ? -1 : index))
+      .filter((index) => index !== -1)
+
+    if (enabledIndexes.length === 0) return
+
+    let nextIndex = currentIndex
+    const currentEnabledPos = enabledIndexes.indexOf(currentIndex)
+
+    if (e.key === 'ArrowRight') {
+      nextIndex = enabledIndexes[(currentEnabledPos + 1) % enabledIndexes.length]
+    } else if (e.key === 'ArrowLeft') {
+      nextIndex = enabledIndexes[(currentEnabledPos - 1 + enabledIndexes.length) % enabledIndexes.length]
+    } else if (e.key === 'Home') {
+      nextIndex = enabledIndexes[0]
+    } else if (e.key === 'End') {
+      nextIndex = enabledIndexes[enabledIndexes.length - 1]
+    }
+
+    if (nextIndex !== currentIndex && nextIndex !== undefined) {
+      tabsRef.current[nextIndex]?.focus()
+      onChange(items[nextIndex].value)
+    }
+  }
+
+  const activeIndex = items.findIndex(item => item.value === value && !item.disabled && !disabled)
+  const firstEnabledIndex = items.findIndex(item => !item.disabled && !disabled)
+  const focusableIndex = activeIndex !== -1 ? activeIndex : firstEnabledIndex
+
   // ─── Render Logic ───
   return (
     <div
@@ -54,15 +90,20 @@ export function Tabs({
       aria-label={ariaLabel}
       className={getContainerClass(variant, isFullWidth, segmentedType, className)}
     >
-      {items.map((item) => {
+      {items.map((item, index) => {
         const isActive = item.value === value
         const isDisabled = disabled || item.disabled
+        const tabIndex = (!isDisabled && index === focusableIndex) ? 0 : -1
 
         return (
           <button
             key={item.value}
+            ref={(el) => {
+              tabsRef.current[index] = el
+            }}
             role="tab"
             type="button"
+            tabIndex={tabIndex}
             aria-selected={isActive}
             aria-disabled={isDisabled}
             disabled={isDisabled}
@@ -71,6 +112,7 @@ export function Tabs({
                 onChange(item.value)
               }
             }}
+            onKeyDown={(e) => handleKeyDown(e, index)}
             className={getItemClass(variant, isActive, isDisabled, segmentedType)}
           >
             {item.label}
@@ -98,9 +140,9 @@ function getContainerClass(
   if (variant === 'segmented') {
     // 피그마 스펙 대응
     if (segmentedType === 2) { // Type 2 (사원/시스템 등, 316px)
-      base.push('w-[316px] h-[24px] justify-between rounded-[40px] bg-Gray-1')
+      base.push(isFullWidth ? 'w-full' : 'w-[316px]', 'h-[24px] justify-between rounded-[40px] bg-Gray-1')
     } else { // Type 1 (리스트/통계 등, 213px)
-      base.push('w-[213px] h-[24px] gap-[4px] rounded-[30px] bg-Gray-2')
+      base.push(isFullWidth ? 'w-full' : 'w-[213px]', 'h-[24px] gap-[4px] rounded-[30px] bg-Gray-2')
     }
   } else if (variant === 'underline') {
     base.push('border-b border-Gray-2 gap-4')

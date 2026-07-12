@@ -1,4 +1,5 @@
 import type { MouseEventHandler } from 'react'
+
 import { Icon } from '@/components/common/Icon'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -50,20 +51,15 @@ const VARIANT_CLASS: Record<Exclude<IconButtonVariant, 'brand'>, string> = {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function getBrandClass(iconName: string): string {
+function getBrandClass(): string {
   // 아이콘 이름에 따라 고유 브랜드 색상을 반환합니다.
-  if (iconName.toLowerCase().includes('kakao')) {
-    return 'bg-[#FEE500] text-[#391B1B] hover:opacity-80'
-  }
-  if (iconName.toLowerCase().includes('instar') || iconName.toLowerCase().includes('instagram')) {
-    return 'bg-White border border-Gray-2 hover:bg-Gray-1' // 내부는 Icon 컴포넌트가 그라데이션으로 처리
-  }
+  // 커스텀 브랜드 색상이 필요하다면 이곳에 추가하세요.
   return 'bg-White hover:bg-Gray-1'
 }
 
-function getColorClass(variant: IconButtonVariant, iconName: string): string {
+function getColorClass(variant: IconButtonVariant): string {
   if (variant === 'brand') {
-    return getBrandClass(iconName)
+    return getBrandClass()
   }
   return VARIANT_CLASS[variant]
 }
@@ -81,7 +77,7 @@ export function IconButton({
   className = '',
 }: IconButtonProps) {
   const { button: buttonSizeClass, icon: iconSize } = SIZE_MAP[size]
-  const colorClass = getColorClass(variant, iconName)
+  const colorClass = getColorClass(variant)
 
   const baseClass = [
     'inline-flex items-center justify-center rounded-full shrink-0',

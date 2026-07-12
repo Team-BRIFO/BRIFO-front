@@ -1,11 +1,6 @@
 import type { ElementType } from 'react'
 
-// Lucide 아이콘 (예시)
-import { ChevronRight, Bell, AlertCircle } from 'lucide-react'
 
-// Custom SVGR 아이콘 (vite-plugin-svgr)
-import SearchIcon from '@/assets/icons/search.svg?react'
-import CloseIcon from '@/assets/icons/close.svg?react'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -55,20 +50,10 @@ export type IconProps = BaseIconProps & (
  */
 const ICON_REGISTRY: Record<IconVariant, Record<string, ElementType>> = {
   line: {
-    // 커스텀 SVG (vite-plugin-svgr)
-    'search': SearchIcon,
-    'close': CloseIcon,
-    
-    // Lucide React
-    'chevron-right': ChevronRight,
-    'bell': Bell,
-    'alert': AlertCircle,
   },
   filled: {
-    // 예: 'star': StarFilledIcon
   },
   brand: {
-    // 예: 'kakao': KakaoLogoIcon
   },
 }
 
