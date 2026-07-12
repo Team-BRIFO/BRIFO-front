@@ -1,6 +1,6 @@
 import type { MouseEventHandler, ReactNode } from 'react'
 
-import { Icon } from '@/components/common/Icon/Icon'
+import { Icon } from '@/components/common/Icon'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

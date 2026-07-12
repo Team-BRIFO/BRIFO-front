@@ -1,4 +1,4 @@
-import { Container } from '@/components/common/Container/Container'
+import { Container } from '@/components/common/Container'
 
 function App() {
   return (

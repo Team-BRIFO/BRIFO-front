@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useId } from 'react'
 
-import { Icon } from '@/components/common/Icon/Icon'
+import { Icon } from '@/components/common/Icon'
 
 type TextFieldVariant = 'field' | 'search'
 
