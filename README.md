@@ -69,40 +69,67 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ```
 src/
-├── main.tsx              # React root 렌더링 진입점
-├── App.tsx               # 전역 Provider와 Router 연결
-├── assets/               # 아이콘, 캐릭터 등 정적 에셋
-│   ├── characters/
-│   └── icons/
-├── routes/               # React Router route tree와 path 상수
+├── main.tsx              # React root 렌더링 진입점 (RouterProvider 연결)
+├── App.tsx               # (레거시, 현재 미사용)
+├── assets/               # 아이콘, 캐릭터, 이미지 등 정적 에셋
+│   ├── characters/       # 캐릭터 SVG (rookie, pro, tanker × normal/select/complete, celebration)
+│   ├── icons/            # 커스텀 아이콘 SVG (svgr ?react 방식으로 임포트)
+│   └── images/           # 배경/일러스트 이미지 (image-1~3.svg)
+├── routes/               # 라우팅 전체 관리
+│   ├── paths.ts          # PATH 경로 상수 (동적 경로는 함수로 정의)
+│   └── Router.tsx        # createBrowserRouter 라우트 트리
+├── layouts/              # 레이아웃 컴포넌트
+│   ├── AuthLayout.tsx    # 비로그인 레이아웃 (스플래시, 온보딩, 튜토리얼)
+│   └── AppLayout.tsx     # 로그인 레이아웃 (하단 GNB 탭 포함)
 ├── providers/            # QueryClientProvider 등 전역 Provider
 ├── components/
-│   ├── common/           # 순수 공용 UI 컴포넌트
-│   ├── domain/           # 도메인 데이터를 표현하는 재사용 컴포넌트
-│   └── feature/          # 화면 일부 기능을 조합하는 컴포넌트
-├── pages/                # 라우트 단위 화면
+│   ├── common/           # 순수 공용 UI 컴포넌트 (API/store 의존 없음)
+│   │   ├── Icon.tsx      # SVG 레지스트리 기반 아이콘 컴포넌트
+│   │   ├── Chip.tsx
+│   │   ├── Toggle.tsx
+│   │   ├── ProgressBar.tsx
+│   │   ├── Loading.tsx
+│   │   ├── Tabs.tsx
+│   │   ├── Pagination.tsx
+│   │   ├── TextField.tsx
+│   │   ├── IconButton.tsx
+│   │   └── Container.tsx
+│   ├── domain/           # 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
+│   └── feature/          # common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
+├── pages/                # 라우트 단위 화면 (routing·query·store 연결 담당)
+│   ├── SplashPage/
+│   │   └── SplashPage.tsx         # SCR-01
+│   ├── OnboardingPage/
+│   │   └── OnboardingPage.tsx     # SCR-02
+│   ├── TutorialPage/
+│   │   └── TutorialPage.tsx       # SCR-03
 │   ├── HomePage/
-│   │   ├── HomePage.tsx
-│   │   ├── useHomePageData.ts
-│   │   └── index.ts
+│   │   └── HomePage.tsx           # 홈 탭 메인
 │   ├── CardNewsDetailPage/
-│   │   ├── CardNewsDetailPage.tsx
-│   │   ├── useCardNewsDetailPageData.ts
-│   │   └── index.ts
-│   ├── DecisionPage/
-│   │   ├── DecisionPage.tsx
-│   │   ├── useDecisionPageData.ts
-│   │   └── index.ts
-│   └── DiaryPage/
-│       ├── DiaryPage.tsx
-│       ├── useDiaryPageData.ts
-│       └── index.ts
+│   │   └── CardNewsDetailPage.tsx # SCR-05 (/card-news/:id)
+│   ├── OfficePage/
+│   │   └── OfficePage.tsx         # SCR-04
+│   ├── BriefingPage/
+│   │   └── BriefingPage.tsx       # SCR-06, 07
+│   ├── TeamPage/
+│   │   └── TeamPage.tsx           # SCR-12
+│   ├── Diary/
+│   │   ├── DiaryCalendarPage/
+│   │   │   └── DiaryCalendarPage.tsx  # SCR-08 (/diary)
+│   │   ├── DiaryListPage/
+│   │   │   └── DiaryListPage.tsx      # SCR-09 (/diary/list)
+│   │   └── DiaryDetailPage/
+│   │       └── DiaryDetailPage.tsx    # SCR-10 (/diary/:id)
+│   ├── MyPage/
+│   │   └── MyPage.tsx             # SCR-11, 13
+│   └── error/
+│       └── NotFoundPage.tsx       # 404
 ├── hooks/
 │   ├── queries/          # 전역 재사용 query hook
 │   ├── mutations/        # 전역 재사용 mutation hook
 │   └── ui/               # 서버와 무관한 UI hook
 ├── services/
-│   └── api/              # axios client와 API 함수 레이어
+│   └── api/              # axios client와 도메인별 API 함수 레이어
 ├── stores/               # Zustand 전역 client state
 ├── types/
 │   ├── domain/           # 프론트 도메인 타입
@@ -114,7 +141,8 @@ src/
 - **Import 경로**: 항상 `@/` alias 사용 (상대경로 `../../` 지양)
 
 ```typescript
-import { Button } from '@/components/common/Button'
+import { Icon } from '@/components/common/Icon'
+import { PATH } from '@/routes/paths'
 import type { Agent } from '@/types/domain/agent'
 ```
 
@@ -122,9 +150,11 @@ import type { Agent } from '@/types/domain/agent'
 - `components/domain`: 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
 - `components/feature`: common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
 - `pages`: routing, query/mutation 연결, store 연결, loading/error 처리, feature 조립 담당
-- `pages/*/use<Page>Data.ts`: 특정 page에만 쓰이는 데이터 조합 hook
+- `pages/*/use<Page>Data.ts`: 특정 page에만 쓰이는 데이터 조합 hook (추가 예정)
 - `hooks/queries`, `hooks/mutations`, `hooks/ui`: 전역 재사용 가능한 hook
 - `services/api`: axios client와 도메인별 API 함수 레이어
+- `routes/paths.ts`: `PATH` 경로 상수 — 하드코딩 금지, 동적 경로는 함수로 정의
+
 
 ---
 
