@@ -33,7 +33,7 @@ export function Pagination({
       aria-label={ariaLabel}
       className={`inline-flex items-center gap-[6px] rounded-full bg-Yellow-100 px-[14px] py-[10px] ${className}`}
     >
-      {items.map((item, index) => {
+      {items.map((item) => {
         const isActive = item.value === currentPage
         const isDisabled = item.disabled
 

@@ -141,7 +141,7 @@ export function Chip({
     colorClass,
     isSelected ? 'ring-1 ring-Yellow-45' : '',
     disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : '',
-    isInteractive && !disabled ? 'hover:opacity-80' : '',
+    isInteractive && !disabled ? 'hover:opacity-80 active:scale-95' : '',
     isInteractive && !disabled && !isComplex
       ? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45'
       : '',
