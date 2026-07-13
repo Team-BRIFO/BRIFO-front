@@ -22,6 +22,7 @@ export default function NavigationItem({
       type="button"
       disabled={disabled}
       onClick={onClick}
+      aria-current={isActive ? 'page' : undefined}
       className={`flex flex-1 flex-col items-center justify-center gap-1 disabled:cursor-not-allowed disabled:opacity-50 ${isActive ? 'text-Yellow-40' : 'text-Gray-5'} ${className} `}
     >
       <Icon className="h-6 w-6" />
