@@ -12,7 +12,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isFullWidth?: boolean
   leftIcon?: ReactNode
   rightIcon?: ReactNode
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const sizeStyles = {
