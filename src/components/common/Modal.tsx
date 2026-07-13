@@ -40,6 +40,26 @@ function Modal({
   useEffect(() => {
     if (!isOpen) return
 
+    const appRoot = document.getElementById('root')
+    const previousAriaHidden = appRoot?.getAttribute('aria-hidden')
+
+    appRoot?.setAttribute('aria-hidden', 'true')
+
+    return () => {
+      if (previousAriaHidden === null) {
+        appRoot?.removeAttribute('aria-hidden')
+        return
+      }
+
+      if (previousAriaHidden !== undefined) {
+        appRoot?.setAttribute('aria-hidden', previousAriaHidden)
+      }
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+
     const previousActiveElement = document.activeElement
     const dialog = dialogRef.current
     const firstFocusableElement = dialog?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
