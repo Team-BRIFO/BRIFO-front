@@ -13,7 +13,7 @@ export function AppLayout() {
         <Outlet />
       </main>
       {/* TODO: BottomTabBar */}
-      <nav className="fixed bottom-0 left-0 right-0 h-16 border-t border-Gray-2 bg-White" />
+      <nav className="border-Gray-2 bg-White fixed right-0 bottom-0 left-0 h-16 border-t" />
     </div>
   )
 }

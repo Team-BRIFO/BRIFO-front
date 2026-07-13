@@ -155,7 +155,6 @@ import type { Agent } from '@/types/domain/agent'
 - `services/api`: axios client와 도메인별 API 함수 레이어
 - `routes/paths.ts`: `PATH` 경로 상수 — 하드코딩 금지, 동적 경로는 함수로 정의
 
-
 ---
 
 ## 🌿 브랜치 컨벤션
