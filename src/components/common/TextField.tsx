@@ -113,7 +113,7 @@ export const TextField = ({
         >
           {label}
           {required && (
-            <span aria-hidden="true" className="ml-0.5 text-Pink-30">
+            <span aria-hidden="true" className="text-Pink-30 ml-0.5">
               *
             </span>
           )}
@@ -124,7 +124,7 @@ export const TextField = ({
       <div
         className={[
           'flex h-[47px] w-full items-center gap-3',
-          'rounded-[20px] border bg-White',
+          'bg-White rounded-[20px] border',
           'px-6 py-3 transition-colors duration-150',
           borderClass,
           wrapperFocusClass,
@@ -135,7 +135,7 @@ export const TextField = ({
       >
         {/* 왼쪽 아이콘: 전달된 leftIcon 우선, variant="search"이면 검색 아이콘 기본 표시 */}
         {(leftIcon || isSearch) && (
-          <span className="flex shrink-0 items-center text-Gray-5">
+          <span className="text-Gray-5 flex shrink-0 items-center">
             {leftIcon ?? <Icon name="search" size={20} isDecorative />}
           </span>
         )}
@@ -171,20 +171,16 @@ export const TextField = ({
             type="button"
             onClick={onClear}
             aria-label="입력 내용 지우기"
-            className="flex shrink-0 items-center text-Gray-5 hover:text-Gray-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45"
+            className="text-Gray-5 hover:text-Gray-8 focus-visible:ring-Yellow-45 flex shrink-0 items-center focus-visible:ring-2 focus-visible:outline-none"
           >
             <Icon name="close" size={20} isDecorative />
           </button>
         ) : isError ? (
-          <span className="flex shrink-0 items-center text-Pink-30">
+          <span className="text-Pink-30 flex shrink-0 items-center">
             <Icon name="alert-circle" size={20} isDecorative />
           </span>
         ) : (
-          rightIcon && (
-            <span className="flex shrink-0 items-center text-Gray-5">
-              {rightIcon}
-            </span>
-          )
+          rightIcon && <span className="text-Gray-5 flex shrink-0 items-center">{rightIcon}</span>
         )}
       </div>
 

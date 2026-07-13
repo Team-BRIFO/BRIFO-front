@@ -1,7 +1,5 @@
 import type { ElementType } from 'react'
 
-
-
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export type IconVariant = 'line' | 'filled' | 'brand'
@@ -17,7 +15,7 @@ export interface BaseIconProps {
   /** 아이콘 크기 */
   size?: IconSize
 
-  /** 
+  /**
    * 아이콘 색상 (Tailwind text-color 클래스 권장)
    * 예: 'text-Gray-9', 'text-Pink-30'
    * 생략 시 부모의 텍스트 색상(currentColor)을 상속받습니다.
@@ -28,19 +26,20 @@ export interface BaseIconProps {
   className?: string
 }
 
-export type IconProps = BaseIconProps & (
-  | {
-      /** 장식용 아이콘 여부 (기본: true) */
-      isDecorative?: true
-      ariaLabel?: never
-    }
-  | {
-      /** 의미 있는 아이콘일 경우 false로 설정해야 합니다 */
-      isDecorative: false
-      /** 의미 있는 아이콘일 때 screen reader에 전달할 라벨 (필수) */
-      ariaLabel: string
-    }
-)
+export type IconProps = BaseIconProps &
+  (
+    | {
+        /** 장식용 아이콘 여부 (기본: true) */
+        isDecorative?: true
+        ariaLabel?: never
+      }
+    | {
+        /** 의미 있는 아이콘일 경우 false로 설정해야 합니다 */
+        isDecorative: false
+        /** 의미 있는 아이콘일 때 screen reader에 전달할 라벨 (필수) */
+        ariaLabel: string
+      }
+  )
 
 // ─── Icon Registry ───────────────────────────────────────────────────────────
 
@@ -49,12 +48,9 @@ export type IconProps = BaseIconProps & (
  * 프로젝트에서 사용하는 아이콘이 추가될 때마다 이곳에 등록해주세요.
  */
 const ICON_REGISTRY: Record<IconVariant, Record<string, ElementType>> = {
-  line: {
-  },
-  filled: {
-  },
-  brand: {
-  },
+  line: {},
+  filled: {},
+  brand: {},
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -76,10 +72,7 @@ export function Icon({
   }
 
   // color prop이 주어지면 적용하고, 없으면 상속(currentColor)
-  const finalClassName = [
-    color,
-    className
-  ].filter(Boolean).join(' ')
+  const finalClassName = [color, className].filter(Boolean).join(' ')
 
   return (
     <IconComponent

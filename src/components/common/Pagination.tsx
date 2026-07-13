@@ -31,7 +31,7 @@ export function Pagination({
     <div
       role="group"
       aria-label={ariaLabel}
-      className={`inline-flex items-center gap-[6px] rounded-full bg-Yellow-100 px-[14px] py-[10px] ${className}`}
+      className={`bg-Yellow-100 inline-flex items-center gap-[6px] rounded-full px-[14px] py-[10px] ${className}`}
     >
       {items.map((item) => {
         const isActive = item.value === currentPage
@@ -56,7 +56,7 @@ export function Pagination({
               'h-2 w-2 shrink-0 rounded-full transition-colors duration-200',
               dotColorClass,
               !isDisabled
-                ? 'cursor-pointer hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45'
+                ? 'focus-visible:ring-Yellow-45 cursor-pointer hover:opacity-80 focus-visible:ring-2 focus-visible:outline-none'
                 : 'cursor-default',
             ]
               .filter(Boolean)
