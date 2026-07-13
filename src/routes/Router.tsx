@@ -2,11 +2,11 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { AuthLayout } from '@/layouts/AuthLayout'
+import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
 import { CardNewsDetailPage } from '@/pages/CardNewsDetailPage/CardNewsDetailPage'
 import { DiaryCalendarPage } from '@/pages/Diary/DiaryCalendarPage/DiaryCalendarPage'
 import { DiaryDetailPage } from '@/pages/Diary/DiaryDetailPage/DiaryDetailPage'
 import { DiaryListPage } from '@/pages/Diary/DiaryListPage/DiaryListPage'
-import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
 import { NotFoundPage } from '@/pages/error/NotFoundPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyPage } from '@/pages/MyPage/MyPage'
@@ -15,7 +15,6 @@ import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
-
 import { PATH } from '@/routes/paths'
 
 export const router = createBrowserRouter([
