@@ -100,8 +100,8 @@ export const TextField = ({
   // 오류: Pink-30 | 기본: Gray-2
   const borderClass = isError ? 'border-Pink-30' : 'border-Gray-2'
 
-  // ─── focus-within active 테두리: 오류 상태가 아닐 때만 적용 ───
-  const wrapperFocusClass = !isError ? 'focus-within:border-Yellow-50' : ''
+  // ─── focus-within & hover 테두리: 오류 상태가 아닐 때만 적용 ───
+  const wrapperFocusClass = !isError && !disabled ? 'focus-within:border-Yellow-50 hover:border-Yellow-50' : ''
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
@@ -113,7 +113,7 @@ export const TextField = ({
         >
           {label}
           {required && (
-            <span aria-hidden="true" className="ml-0.5 text-Pink-30">
+            <span aria-hidden="true" className="text-Pink-30 ml-0.5">
               *
             </span>
           )}
@@ -124,7 +124,7 @@ export const TextField = ({
       <div
         className={[
           'flex h-[47px] w-full items-center gap-3',
-          'rounded-[20px] border bg-White',
+          'bg-White rounded-[20px] border',
           'px-6 py-3 transition-colors duration-150',
           borderClass,
           wrapperFocusClass,
@@ -135,7 +135,7 @@ export const TextField = ({
       >
         {/* 왼쪽 아이콘: 전달된 leftIcon 우선, variant="search"이면 검색 아이콘 기본 표시 */}
         {(leftIcon || isSearch) && (
-          <span className="flex shrink-0 items-center text-Gray-5">
+          <span className="text-Gray-5 flex shrink-0 items-center">
             {leftIcon ?? <Icon name="search" size={20} isDecorative />}
           </span>
         )}
@@ -156,7 +156,8 @@ export const TextField = ({
           aria-label={!label ? placeholder : undefined}
           className={[
             'pretendard-Body2-Medium min-w-0 flex-1 bg-transparent',
-            'text-Gray-9 placeholder:text-Gray-5',
+            isError ? 'text-Pink-30' : 'text-Gray-9',
+            'placeholder:text-Gray-5',
             'outline-none focus-visible:outline-none',
             disabled ? 'cursor-not-allowed' : '',
           ]
@@ -164,22 +165,22 @@ export const TextField = ({
             .join(' ')}
         />
 
-        {/* 오른쪽: Search Clear 버튼 우선, 없으면 rightIcon */}
+        {/* 오른쪽: Search Clear 버튼 우선, 그 다음 에러 아이콘, 마지막으로 rightIcon */}
         {showClearButton ? (
           <button
             type="button"
             onClick={onClear}
             aria-label="입력 내용 지우기"
-            className="flex shrink-0 items-center text-Gray-5 hover:text-Gray-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-Yellow-45"
+            className="text-Gray-5 hover:text-Gray-8 focus-visible:ring-Yellow-45 flex shrink-0 items-center focus-visible:ring-2 focus-visible:outline-none"
           >
             <Icon name="close" size={20} isDecorative />
           </button>
+        ) : isError ? (
+          <span className="text-Pink-30 flex shrink-0 items-center">
+            <Icon name="alert-circle" size={20} isDecorative />
+          </span>
         ) : (
-          rightIcon && (
-            <span className="flex shrink-0 items-center text-Gray-5">
-              {rightIcon}
-            </span>
-          )
+          rightIcon && <span className="text-Gray-5 flex shrink-0 items-center">{rightIcon}</span>
         )}
       </div>
 

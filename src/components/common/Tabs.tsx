@@ -24,7 +24,7 @@ export interface TabsProps {
   ariaLabel?: string
   /** 탭이 부모 너비를 꽉 채울지 여부 */
   isFullWidth?: boolean
-  /** 
+  /**
    * segmented variant일 때의 피그마 대응 타입
    * 1: Type 1 (213px, gap 4px, 반경 30px)
    * 2: Type 2 (316px, space-between, 반경 40px)
@@ -66,7 +66,8 @@ export function Tabs({
     if (e.key === 'ArrowRight') {
       nextIndex = enabledIndexes[(currentEnabledPos + 1) % enabledIndexes.length]
     } else if (e.key === 'ArrowLeft') {
-      nextIndex = enabledIndexes[(currentEnabledPos - 1 + enabledIndexes.length) % enabledIndexes.length]
+      nextIndex =
+        enabledIndexes[(currentEnabledPos - 1 + enabledIndexes.length) % enabledIndexes.length]
     } else if (e.key === 'Home') {
       nextIndex = enabledIndexes[0]
     } else if (e.key === 'End') {
@@ -79,8 +80,8 @@ export function Tabs({
     }
   }
 
-  const activeIndex = items.findIndex(item => item.value === value && !item.disabled && !disabled)
-  const firstEnabledIndex = items.findIndex(item => !item.disabled && !disabled)
+  const activeIndex = items.findIndex((item) => item.value === value && !item.disabled && !disabled)
+  const firstEnabledIndex = items.findIndex((item) => !item.disabled && !disabled)
   const focusableIndex = activeIndex !== -1 ? activeIndex : firstEnabledIndex
 
   // ─── Render Logic ───
@@ -92,8 +93,8 @@ export function Tabs({
     >
       {items.map((item, index) => {
         const isActive = item.value === value
-        const isDisabled = disabled || item.disabled
-        const tabIndex = (!isDisabled && index === focusableIndex) ? 0 : -1
+        const isDisabled = Boolean(disabled || item.disabled)
+        const tabIndex = !isDisabled && index === focusableIndex ? 0 : -1
 
         return (
           <button
@@ -129,7 +130,7 @@ function getContainerClass(
   variant: TabsVariant,
   isFullWidth: boolean,
   segmentedType: 1 | 2,
-  className: string
+  className: string,
 ): string {
   const base = ['flex items-center', className]
 
@@ -139,9 +140,14 @@ function getContainerClass(
 
   if (variant === 'segmented') {
     // 피그마 스펙 대응
-    if (segmentedType === 2) { // Type 2 (사원/시스템 등, 316px)
-      base.push(isFullWidth ? 'w-full' : 'w-[316px]', 'h-[24px] justify-between rounded-[40px] bg-Gray-1')
-    } else { // Type 1 (리스트/통계 등, 213px)
+    if (segmentedType === 2) {
+      // Type 2 (사원/시스템 등, 316px)
+      base.push(
+        isFullWidth ? 'w-full' : 'w-[316px]',
+        'h-[24px] justify-between rounded-[40px] bg-Gray-1',
+      )
+    } else {
+      // Type 1 (리스트/통계 등, 213px)
       base.push(isFullWidth ? 'w-full' : 'w-[213px]', 'h-[24px] gap-[4px] rounded-[30px] bg-Gray-2')
     }
   } else if (variant === 'underline') {
@@ -159,7 +165,7 @@ function getItemClass(
   variant: TabsVariant,
   isActive: boolean,
   isDisabled: boolean,
-  segmentedType: 1 | 2
+  segmentedType: 1 | 2,
 ): string {
   const base = [
     'relative flex items-center justify-center transition-all duration-200',
@@ -170,7 +176,7 @@ function getItemClass(
   if (variant === 'segmented') {
     // 폰트 스타일
     base.push(isActive ? 'pretendard-Button2 text-White' : 'pretendard-Button2 text-Gray-6')
-    
+
     // 구조 및 배경 스타일
     if (segmentedType === 2) {
       base.push('h-full flex-1 rounded-[40px]')
@@ -181,7 +187,11 @@ function getItemClass(
     }
   } else if (variant === 'underline') {
     base.push('h-[40px] pretendard-Button2')
-    base.push(isActive ? 'border-b-2 border-Gray-9 text-Gray-9' : 'border-b-2 border-transparent text-Gray-5')
+    base.push(
+      isActive
+        ? 'border-b-2 border-Gray-9 text-Gray-9'
+        : 'border-b-2 border-transparent text-Gray-5',
+    )
   } else if (variant === 'pill') {
     base.push('h-[32px] px-4 rounded-full pretendard-Button2')
     base.push(isActive ? 'bg-Gray-9 text-White' : 'bg-Gray-1 text-Gray-6')

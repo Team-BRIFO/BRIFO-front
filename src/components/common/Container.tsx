@@ -57,7 +57,9 @@ export function Container({
   // 1. 최대 너비와 중앙 정렬 처리
   const isFluid = variant === 'fluid'
   const widthClass = isFluid ? 'w-full' : 'w-full'
-  const maxWidthStyle = isFluid ? undefined : { maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth }
+  const maxWidthStyle = isFluid
+    ? undefined
+    : { maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth }
   const centerClass = isCentered && !isFluid ? 'mx-auto' : ''
 
   // 2. 패딩 처리
@@ -66,17 +68,9 @@ export function Container({
   // 3. Variant별 고유 스타일 (피그마 스펙 반영)
   // page: 화면 꽉 차는 높이, 세로 배치, 흰색 배경, 피그마에서 요청한 0.5px 검은 테두리
   const variantClass =
-    variant === 'page'
-      ? 'min-h-screen flex flex-col bg-White border-[0.5px] border-Black'
-      : ''
+    variant === 'page' ? 'min-h-screen flex flex-col bg-White border-[0.5px] border-Black' : ''
 
-  const baseClass = [
-    widthClass,
-    centerClass,
-    paddingClass,
-    variantClass,
-    className,
-  ]
+  const baseClass = [widthClass, centerClass, paddingClass, variantClass, className]
     .filter(Boolean)
     .join(' ')
 
