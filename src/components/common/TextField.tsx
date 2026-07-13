@@ -156,7 +156,8 @@ export const TextField = ({
           aria-label={!label ? placeholder : undefined}
           className={[
             'pretendard-Body2-Medium min-w-0 flex-1 bg-transparent',
-            'text-Gray-9 placeholder:text-Gray-5',
+            isError ? 'text-Pink-30' : 'text-Gray-9',
+            'placeholder:text-Gray-5',
             'outline-none focus-visible:outline-none',
             disabled ? 'cursor-not-allowed' : '',
           ]
@@ -164,7 +165,7 @@ export const TextField = ({
             .join(' ')}
         />
 
-        {/* 오른쪽: Search Clear 버튼 우선, 없으면 rightIcon */}
+        {/* 오른쪽: Search Clear 버튼 우선, 그 다음 에러 아이콘, 마지막으로 rightIcon */}
         {showClearButton ? (
           <button
             type="button"
@@ -174,6 +175,10 @@ export const TextField = ({
           >
             <Icon name="close" size={20} isDecorative />
           </button>
+        ) : isError ? (
+          <span className="flex shrink-0 items-center text-Pink-30">
+            <Icon name="alert-circle" size={20} isDecorative />
+          </span>
         ) : (
           rightIcon && (
             <span className="flex shrink-0 items-center text-Gray-5">
