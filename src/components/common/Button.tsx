@@ -52,12 +52,14 @@ export default function Button({
   leftIcon,
   rightIcon,
   className = '',
+  type = 'button',
   ...props
 }: ButtonProps) {
   const variantStyle = variant === 'solid' ? solidStyles[color] : outlineStyles[color]
 
   return (
     <button
+      type={type}
       className={`inline-flex items-center justify-center gap-2 transition-colors duration-200 disabled:cursor-not-allowed ${sizeStyles[size]} ${variantStyle} ${isFullWidth ? 'w-full' : ''} ${className} `}
       {...props}
     >
