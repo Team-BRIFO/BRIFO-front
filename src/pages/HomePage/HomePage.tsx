@@ -1,7 +1,4 @@
+/** 홈 탭: 메인 랜딩 (출석체크/알림 컴포넌트 포함 예정) */
 export function HomePage() {
-  return (
-    <div>
-      <h1>홈 (카드뉴스 목록)</h1>
-    </div>
-  )
+  return <div>HomePage</div>
 }

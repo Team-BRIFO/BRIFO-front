@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 
-import { PATH } from '@/constants/paths'
+import { PATH } from '@/routes/paths'
 
+/** 404 페이지 */
 export function NotFoundPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4">
