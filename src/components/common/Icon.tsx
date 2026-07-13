@@ -53,8 +53,8 @@ export type IconProps = BaseIconProps &
  */
 const ICON_REGISTRY: Record<IconVariant, Record<string, ElementType>> = {
   line: {
-    'search': SearchIcon,
-    'close': CloseIcon,
+    search: SearchIcon,
+    close: CloseIcon,
     'alert-circle': AlertCircleIcon,
   },
   filled: {},
