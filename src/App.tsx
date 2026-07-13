@@ -1,10 +1,10 @@
-import { Layout } from '@/components/layouts/Layout'
+import { Container } from '@/components/common/Container'
 
 function App() {
   return (
-    <Layout>
+    <Container variant="page" as="main">
       <div>Content</div>
-    </Layout>
+    </Container>
   )
 }
 
