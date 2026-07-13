@@ -5,7 +5,7 @@ import type { ElementType } from 'react'
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export type IconVariant = 'line' | 'filled' | 'brand'
-export type IconSize = 16 | 20 | 24 | 28 | 32
+export type IconSize = 14 | 16 | 20 | 24 | 28 | 32
 
 export interface BaseIconProps {
   /** 렌더링할 아이콘 이름 */
