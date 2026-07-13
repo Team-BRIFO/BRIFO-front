@@ -1,5 +1,9 @@
 import type { ElementType } from 'react'
 
+import AlertCircleIcon from '@/assets/icons/alert-circle.svg?react'
+import CloseIcon from '@/assets/icons/close.svg?react'
+import SearchIcon from '@/assets/icons/search.svg?react'
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export type IconVariant = 'line' | 'filled' | 'brand'
@@ -48,7 +52,11 @@ export type IconProps = BaseIconProps &
  * 프로젝트에서 사용하는 아이콘이 추가될 때마다 이곳에 등록해주세요.
  */
 const ICON_REGISTRY: Record<IconVariant, Record<string, ElementType>> = {
-  line: {},
+  line: {
+    'search': SearchIcon,
+    'close': CloseIcon,
+    'alert-circle': AlertCircleIcon,
+  },
   filled: {},
   brand: {},
 }

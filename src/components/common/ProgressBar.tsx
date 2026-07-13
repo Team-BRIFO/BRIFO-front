@@ -22,8 +22,10 @@ export function ProgressBar({
   heightClassName = 'h-2',
   className = '',
 }: ProgressBarProps) {
+  // NaN 방어 로직: 값이 없거나 NaN이면 0으로 처리
+  const safeProgress = Number.isNaN(progress) ? 0 : progress
   // 0~100 사이 값으로 클램핑
-  const clampedProgress = Math.min(Math.max(progress, 0), 100)
+  const clampedProgress = Math.min(Math.max(safeProgress, 0), 100)
 
   return (
     <div

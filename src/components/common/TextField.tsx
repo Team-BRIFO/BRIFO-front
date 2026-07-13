@@ -101,7 +101,7 @@ export const TextField = ({
   const borderClass = isError ? 'border-Pink-30' : 'border-Gray-2'
 
   // ─── focus-within & hover 테두리: 오류 상태가 아닐 때만 적용 ───
-  const wrapperFocusClass = !isError ? 'focus-within:border-Yellow-50 hover:border-Yellow-50' : ''
+  const wrapperFocusClass = !isError && !disabled ? 'focus-within:border-Yellow-50 hover:border-Yellow-50' : ''
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
