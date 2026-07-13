@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
+
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 interface ModalProps {
   isOpen: boolean
@@ -21,6 +24,8 @@ function Modal({
   ariaLabel = 'modal',
   className = '',
 }: ModalProps) {
+  const dialogRef = useRef<HTMLElement>(null)
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -30,6 +35,62 @@ function Modal({
     return () => {
       document.body.style.overflow = previousOverflow
     }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const previousActiveElement = document.activeElement
+    const dialog = dialogRef.current
+    const firstFocusableElement = dialog?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+
+    if (firstFocusableElement) {
+      firstFocusableElement.focus()
+    } else {
+      dialog?.focus()
+    }
+
+    return () => {
+      if (previousActiveElement instanceof HTMLElement) {
+        previousActiveElement.focus()
+      }
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return
+
+      const dialog = dialogRef.current
+      const focusableElements = Array.from(
+        dialog?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? [],
+      )
+
+      if (focusableElements.length === 0) {
+        event.preventDefault()
+        dialog?.focus()
+        return
+      }
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement.focus()
+        return
+      }
+
+      if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen])
 
   useEffect(() => {
@@ -51,9 +112,11 @@ function Modal({
       onClick={shouldCloseOnOverlayClick ? onClose : undefined}
     >
       <section
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}
+        tabIndex={-1}
         className={`bg-White w-82.5 rounded-3xl px-6 py-7 shadow-lg ${className} `}
         onClick={(event) => event.stopPropagation()}
       >
