@@ -69,55 +69,62 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ```
 src/
-├── api/                  # API 레이어 (도메인별 호출 함수 + axios 인스턴스)
-│   ├── axios.ts          # apiClient (JWT 인터셉터 / 401 처리)
-│   ├── auth.ts
-│   ├── agents.ts
-│   ├── briefing.ts
-│   ├── news.ts
-│   ├── decision.ts
-│   ├── feed.ts
-│   └── mock.ts           # BE 연동 전 목업 응답
-├── components/           # 재사용 컴포넌트 (도메인별 하위 폴더로 구성)
-│   ├── ui/common/        # Modal, Toast, PageHeader, BottomNavBar, GlobalHeader …
-│   ├── layouts/          # AppLayout(인증 가드) / AuthLayout
-│   ├── agent/            # AgentCard, AgentCharacter, AgentChip, AgentStatBar …
-│   ├── briefing/         # NewsCard, BriefingReportCard, SpeechBubble
-│   ├── feed/
-│   └── review/
-├── pages/                # 라우트 단위 페이지 (pages/{도메인}/XxxPage.tsx)
-│   ├── auth/             # Splash, Onboarding, Login, CompanySetup, FirstAgent
-│   ├── home/             # Home, Quest, Notification
-│   ├── briefing/         # BriefingList, BriefingSetup, BriefingReport
-│   ├── team/             # Team, AgentDetail
-│   ├── market/           # Market
-│   ├── feed/             # Feed, Ranking, DecisionDetail
-│   └── mypage/           # My, ProfileEdit, Review, APHistory, Achievement …
-├── stores/               # Zustand 스토어
-│   ├── authStore.ts      # 토큰/로그인 상태 (persist)
-│   ├── userStore.ts      # 유저 정보, AP 잔액
-│   ├── agentStore.ts
-│   └── toastStore.ts
-├── constants/
-│   ├── routes.ts         # ROUTES 경로 상수
-│   ├── queryKeys.ts      # React Query 키 중앙 관리
-│   └── agentConfig.ts    # 사원(루키/프로/탱커) 설정
-├── types/                # 도메인 타입 정의 (user, agent, briefing, news, decision, feed …)
-├── hooks/                # 커스텀 훅
-├── lib/
-│   ├── utils.ts          # cn() 등 유틸 (clsx + tailwind-merge)
-│   ├── format.ts         # 날짜/숫자 포맷 (date-fns)
-│   └── mockData.ts
-├── router.tsx            # createBrowserRouter 라우트 트리
-└── main.tsx              # 진입점 (QueryClientProvider + RouterProvider)
+├── main.tsx              # React root 렌더링 진입점
+├── App.tsx               # 전역 Provider와 Router 연결
+├── assets/               # 아이콘, 캐릭터 등 정적 에셋
+│   ├── characters/
+│   └── icons/
+├── routes/               # React Router route tree와 path 상수
+├── providers/            # QueryClientProvider 등 전역 Provider
+├── components/
+│   ├── common/           # 순수 공용 UI 컴포넌트
+│   ├── domain/           # 도메인 데이터를 표현하는 재사용 컴포넌트
+│   └── feature/          # 화면 일부 기능을 조합하는 컴포넌트
+├── pages/                # 라우트 단위 화면
+│   ├── HomePage/
+│   │   ├── HomePage.tsx
+│   │   ├── useHomePageData.ts
+│   │   └── index.ts
+│   ├── CardNewsDetailPage/
+│   │   ├── CardNewsDetailPage.tsx
+│   │   ├── useCardNewsDetailPageData.ts
+│   │   └── index.ts
+│   ├── DecisionPage/
+│   │   ├── DecisionPage.tsx
+│   │   ├── useDecisionPageData.ts
+│   │   └── index.ts
+│   └── DiaryPage/
+│       ├── DiaryPage.tsx
+│       ├── useDiaryPageData.ts
+│       └── index.ts
+├── hooks/
+│   ├── queries/          # 전역 재사용 query hook
+│   ├── mutations/        # 전역 재사용 mutation hook
+│   └── ui/               # 서버와 무관한 UI hook
+├── services/
+│   └── api/              # axios client와 API 함수 레이어
+├── stores/               # Zustand 전역 client state
+├── types/
+│   ├── domain/           # 프론트 도메인 타입
+│   └── api/              # API 요청/응답 타입
+├── utils/                # 순수 유틸 함수
+└── styles/               # 디자인 토큰과 전역 스타일
 ```
 
 - **Import 경로**: 항상 `@/` alias 사용 (상대경로 `../../` 지양)
 
 ```typescript
-import { agentsApi } from '@/api/agents'
-import type { Agent } from '@/types/agent'
+import { Button } from '@/components/common/Button'
+import type { Agent } from '@/types/domain/agent'
 ```
+
+- `components/common`: API 호출, store 접근, routing 의존성이 없는 순수 공용 UI
+- `components/domain`: 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
+- `components/feature`: common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
+- `pages`: routing, query/mutation 연결, store 연결, loading/error 처리, feature 조립 담당
+- `pages/*/use<Page>Data.ts`: 특정 page에만 쓰이는 데이터 조합 hook
+- `hooks/queries`, `hooks/mutations`, `hooks/ui`: 전역 재사용 가능한 hook
+- `services/api`: axios client와 도메인별 API 함수 레이어
 
 ---
 
