@@ -5,8 +5,7 @@ import DiaryIcon from '@/assets/icons/calendar.svg?react'
 import TeamIcon from '@/assets/icons/globe-2.svg?react'
 import HomeIcon from '@/assets/icons/home-5.svg?react'
 import MyIcon from '@/assets/icons/user-2.svg?react'
-
-import NavigationItem from './NavigationItem'
+import NavigationItem from '@/components/common/NavigationItem'
 
 export type NavigationValue = 'briefing' | 'team' | 'home' | 'diary' | 'my'
 
@@ -47,7 +46,7 @@ const NAV_ITEMS = [
 ] as const
 
 export default function NavigationBar({
-  value = 'home',
+  value,
   defaultValue = 'home',
   onChange,
   className = '',
@@ -55,15 +54,15 @@ export default function NavigationBar({
 }: NavigationBarProps) {
   const [internalValue, setInternalValue] = useState<NavigationValue>(defaultValue)
 
-  const selectedValue = onChange ? value : internalValue
+  const isControlled = value !== undefined
+  const selectedValue = isControlled ? value : internalValue
 
   const handleClick = (nextValue: NavigationValue) => {
-    if (onChange) {
-      onChange(nextValue)
-      return
+    if (!isControlled) {
+      setInternalValue(nextValue)
     }
 
-    setInternalValue(nextValue)
+    onChange?.(nextValue)
   }
 
   return (
