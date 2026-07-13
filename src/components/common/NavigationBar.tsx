@@ -12,6 +12,7 @@ export type NavigationValue = 'briefing' | 'team' | 'home' | 'diary' | 'my'
 
 interface NavigationBarProps {
   value?: NavigationValue
+  defaultValue?: NavigationValue
   onChange?: (value: NavigationValue) => void
   className?: string
   isFullWidth?: boolean
@@ -47,11 +48,12 @@ const NAV_ITEMS = [
 
 export default function NavigationBar({
   value = 'home',
+  defaultValue = 'home',
   onChange,
   className = '',
   isFullWidth = false,
 }: NavigationBarProps) {
-  const [internalValue, setInternalValue] = useState<NavigationValue>(value)
+  const [internalValue, setInternalValue] = useState<NavigationValue>(defaultValue)
 
   const selectedValue = onChange ? value : internalValue
 
