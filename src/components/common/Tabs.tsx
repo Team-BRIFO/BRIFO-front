@@ -93,7 +93,7 @@ export function Tabs({
     >
       {items.map((item, index) => {
         const isActive = item.value === value
-        const isDisabled = disabled || item.disabled
+        const isDisabled = Boolean(disabled || item.disabled)
         const tabIndex = !isDisabled && index === focusableIndex ? 0 : -1
 
         return (
