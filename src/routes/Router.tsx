@@ -16,7 +16,7 @@ import { SplashPage } from '@/pages/SplashPage/SplashPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 
-import { PATH } from './paths'
+import { PATH } from '@/routes/paths'
 
 export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
