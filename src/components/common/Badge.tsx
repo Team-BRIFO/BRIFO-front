@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 export type BadgeType =
@@ -35,6 +35,9 @@ export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'child
   children: string | number
   type?: BadgeType
   size?: BadgeSize
+  left?: ReactNode
+  right?: ReactNode
+  contentClassName?: string
 }
 
 const BADGE_STYLES: Record<BadgeType, BadgeStyle> = {
@@ -142,15 +145,48 @@ const INDICATOR_SIZE_STYLES: Record<BadgeSize, string> = {
   xl: 'h-2.5 w-2.5',
 }
 
-export function Badge({ children, type = 'normal', size, className = '', ...props }: BadgeProps) {
+const ICON_SIZE_STYLES: Record<BadgeSize, string> = {
+  xs: 'h-2.5 w-2.5 [&_svg]:h-2.5 [&_svg]:w-2.5',
+  sm: 'h-3 w-3 [&_svg]:h-3 [&_svg]:w-3',
+  md: 'h-3.5 w-3.5 [&_svg]:h-3.5 [&_svg]:w-3.5',
+  lg: 'h-4 w-4 [&_svg]:h-4 [&_svg]:w-4',
+  xl: 'h-4 w-4 [&_svg]:h-4 [&_svg]:w-4',
+}
+
+export function Badge({
+  children,
+  type = 'normal',
+  size,
+  left,
+  right,
+  contentClassName = '',
+  className = '',
+  ...props
+}: BadgeProps) {
   const badgeStyle = BADGE_STYLES[type]
   const badgeSize = size ?? badgeStyle.size
   const sizeStyle = SIZE_STYLES[badgeSize]
 
+  const renderContent = (content: ReactNode) => {
+    if (content == null || content === false) return null
+
+    return (
+      <span
+        className={twMerge(
+          'inline-flex shrink-0 items-center justify-center',
+          ICON_SIZE_STYLES[badgeSize],
+          contentClassName,
+        )}
+      >
+        {content}
+      </span>
+    )
+  }
+
   return (
     <span
       className={twMerge(
-        'inline-flex w-fit shrink-0 items-center justify-center rounded-full whitespace-nowrap',
+        'inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-full whitespace-nowrap',
         sizeStyle,
         badgeStyle.className,
         className,
@@ -167,7 +203,9 @@ export function Badge({ children, type = 'normal', size, className = '', ...prop
           aria-hidden="true"
         />
       )}
+      {renderContent(left)}
       {children}
+      {renderContent(right)}
     </span>
   )
 }
