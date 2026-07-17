@@ -1,10 +1,3 @@
-import axios from 'axios'
-
-// TODO: 프로젝트 공통 axios 인스턴스(인터셉터 포함)가 준비되면 교체 필요
-const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '',
-})
-
 export interface TermDetailResponse {
   termId: string
   term: string
@@ -25,6 +18,15 @@ export interface ApiResponse<T> {
  * @param termId 조회할 용어 공개 ID (UUID)
  */
 export const getTermDetail = async (termId: string): Promise<TermDetailResponse> => {
-  const { data } = await axiosInstance.get<ApiResponse<TermDetailResponse>>(`/api/terms/${termId}`)
-  return data.result
+  // TODO: 공통 apiClient(src/api/axios.ts)가 origin/dev 등에 머지되면 아래 주석을 해제하고 연동하세요.
+  // const { data } = await apiClient.get<ApiResponse<TermDetailResponse>>(`/api/terms/${termId}`)
+  // return data.result
+
+  return {
+    termId,
+    term: '임시 용어',
+    definition: '공통 axios 인스턴스 연동 전 표시되는 임시 데이터입니다.',
+    category: '임시 카테고리',
+    isLearned: false,
+  }
 }
