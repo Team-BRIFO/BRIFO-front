@@ -13,11 +13,7 @@ export interface NewsCardPointListProps {
   className?: string
 }
 
-export function NewsCardPointList({
-  title,
-  points,
-  className = '',
-}: NewsCardPointListProps) {
+export function NewsCardPointList({ title, points, className = '' }: NewsCardPointListProps) {
   if (!points || points.length === 0) return null
 
   return (
