@@ -13,8 +13,10 @@ export function NewsCardPointList({ points, glossaryTerms = [], className = '' }
     <ul className={`flex flex-col gap-2 ${className}`}>
       {points.map((point, index) => (
         <li key={index} className="flex items-start gap-2">
-          <span className="text-Yellow-30 mt-1 shrink-0">•</span>
+          <span className="text-Gray-10 mt-1 shrink-0">•</span>
           <p className="text-Gray-8 pretendard-Body1 leading-relaxed">
+            {point}
+            {/* 추후 glossary 도메인 컴포넌트 추가 시 아래 코드로 교체 */}
             {/* <GlossaryHighlightText
               text={point}
               highlightWord={glossaryTerms}
