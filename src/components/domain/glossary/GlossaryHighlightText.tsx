@@ -19,7 +19,7 @@ export function GlossaryHighlightText({
   return (
     <span
       onClick={() => onClick?.(termId)}
-      className={`cursor-pointer bg-Yellow-80 text-Gray-10 underline decoration-Gray-10 decoration-1 underline-offset-4 font-semibold transition-colors ${className}`}
+      className={`bg-Yellow-80 text-Gray-10 decoration-Gray-10 cursor-pointer font-semibold underline decoration-1 underline-offset-4 transition-colors ${className}`}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
