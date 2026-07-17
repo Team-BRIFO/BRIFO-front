@@ -35,7 +35,7 @@ export function NewsCardInfo({
           {importanceLevel && (
             <>
               {/* 공용 Badge 확정 전 임시 UI */}
-              <span className="bg-Pink-100 text-Pink-30 pretendard-Caption2 inline-flex items-center justify-center rounded-sm px-1.5 py-0.5 font-bold">
+              <span className="bg-Pink-40 text-White pretendard-Caption2 inline-flex items-center justify-center rounded-sm px-1.5 py-0.5 font-bold">
                 {importanceLevel}
               </span>
               {/* 공용 Badge 컴포넌트 적용 부분 (추후 공용 뱃지가 확정되면 주석 해제) */}

@@ -1,12 +1,12 @@
 import { Pagination, type PaginationItem } from '@/components/common/Pagination'
 
-export interface CardNewsIndicatorProps {
+export interface NewsCardIndicatorProps {
   total: number
   currentIndex: number
   className?: string
 }
 
-export function CardNewsIndicator({ total, currentIndex, className = '' }: CardNewsIndicatorProps) {
+export function NewsCardIndicator({ total, currentIndex, className = '' }: NewsCardIndicatorProps) {
   // Validate total and currentIndex
   if (!Number.isInteger(total) || total <= 1) return null
   if (!Number.isInteger(currentIndex) || currentIndex < 0 || currentIndex >= total) return null
