@@ -11,7 +11,7 @@ export interface BannerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
   children?: ReactNode
 }
 
-const variantStyles: Record<BannerVariant, string> = {
+const VARIANT_STYLES: Record<BannerVariant, string> = {
   info: 'border-Yellow-60 bg-Yellow-100 text-Yellow-10',
   success: 'border-Green-60 bg-Green-100 text-Green-10',
   warning: 'border-Yellow-40 bg-Yellow-80 text-Yellow-5',
@@ -35,7 +35,7 @@ export function Banner({
       role="status"
       className={[
         'flex w-full items-start gap-3 rounded-2xl border px-4 py-3',
-        variantStyles[variant],
+        VARIANT_STYLES[variant],
         className,
       ]
         .filter(Boolean)
