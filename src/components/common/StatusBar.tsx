@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 import BellIcon from '@/assets/icons/bell.svg?react'
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg?react'
@@ -25,14 +26,12 @@ export function StatusBarBackButton({ className = '', ...props }: StatusBarActio
     <button
       type="button"
       aria-label="뒤로 가기"
-      className={[
+      className={twMerge(
         'flex h-6 w-6 shrink-0 items-center justify-center',
         'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
         '[&_path]:fill-Gray-6',
         className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      )}
       {...props}
     >
       <ChevronLeftIcon width={24} height={24} aria-hidden="true" />
@@ -48,14 +47,12 @@ export function StatusBarNotificationButton({
     <button
       type="button"
       aria-label="알림"
-      className={[
+      className={twMerge(
         'flex h-6 w-6 shrink-0 items-center justify-center',
         'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
         '[&_path]:fill-Black',
         className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      )}
       {...props}
     >
       <BellIcon width={24} height={24} aria-hidden="true" />
@@ -71,13 +68,11 @@ export function StatusBarSkipButton({
   return (
     <button
       type="button"
-      className={[
-        "shrink-0 font-['Inter',var(--font-pretendard)] text-[12px] leading-[15px] font-bold text-[#8A8499]",
+      className={twMerge(
+        'pretendard-Caption1 text-Gray-6 shrink-0',
         'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
         className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      )}
       {...props}
     >
       {children}
@@ -100,10 +95,7 @@ export function StatusBar({
   ...props
 }: StatusBarProps) {
   return (
-    <header
-      className={['bg-White flex w-full flex-col', className].filter(Boolean).join(' ')}
-      {...props}
-    >
+    <header className={twMerge('bg-White flex w-full flex-col', className)} {...props}>
       {hasStatusArea && (
         <div className="flex h-[30px] w-full shrink-0 items-center justify-center">
           {statusArea}
@@ -118,9 +110,7 @@ export function StatusBar({
         {title && (
           <div className="pointer-events-none absolute inset-x-0 flex justify-center px-16">
             <h1
-              className={['pretendard-Body1-Semibold text-Gray-8 truncate', titleClassName]
-                .filter(Boolean)
-                .join(' ')}
+              className={twMerge('pretendard-Body1-Semibold text-Gray-8 truncate', titleClassName)}
             >
               {title}
             </h1>
