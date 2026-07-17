@@ -7,6 +7,10 @@ export interface CardNewsIndicatorProps {
 }
 
 export function CardNewsIndicator({ total, currentIndex, className = '' }: CardNewsIndicatorProps) {
+  // Validate total and currentIndex
+  if (!Number.isInteger(total) || total <= 1) return null
+  if (!Number.isInteger(currentIndex) || currentIndex < 0 || currentIndex >= total) return null
+
   // Create an array of PaginationItems from total length
   // 클릭 불가능한 읽기 전용 상태로 만들기 위해 disabled: true 전달
   const items: PaginationItem[] = Array.from({ length: total }, (_, i) => ({
@@ -16,8 +20,6 @@ export function CardNewsIndicator({ total, currentIndex, className = '' }: CardN
 
   // Handle case where currentIndex is 0-indexed but Pagination expects 1-indexed
   const activePage = currentIndex + 1
-
-  if (total <= 1) return null
 
   return (
     <Pagination
