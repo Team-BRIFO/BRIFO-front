@@ -1,4 +1,5 @@
-import { Badge, type BadgeType } from '@/components/common/Badge'
+import type { BadgeType } from '@/components/common/Badge'
+import { Badge } from '@/components/common/Badge'
 
 export interface NewsCardInfoProps {
   cardId?: string
@@ -19,7 +20,7 @@ const getBadgeType = (badge: string): BadgeType => {
     case 'LOW':
       return 'gray'
     default:
-      return 'normal'
+      return 'hot'
   }
 }
 
@@ -37,7 +38,7 @@ export function NewsCardInfo({
       <div className="flex flex-1 flex-col gap-2">
         <div className="text-Gray-5 pretendard-Caption2 flex items-center gap-2">
           {importanceBadge && (
-            <Badge type={getBadgeType(importanceBadge)} size="sm">
+            <Badge type={getBadgeType(importanceBadge)} size="md">
               {importanceBadge}
             </Badge>
           )}
