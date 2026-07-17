@@ -30,8 +30,8 @@ export function NewsCardInfo({
 }: NewsCardInfoProps) {
   return (
     <div className={`flex items-start gap-4 ${className}`}>
-      <div className="flex-1 flex flex-col gap-2">
-        <div className="flex items-center gap-2 text-Gray-6 pretendard-Caption1">
+      <div className="flex flex-1 flex-col gap-2">
+        <div className="text-Gray-6 pretendard-Caption1 flex items-center gap-2">
           {importanceLevel && (
             <>
               {/* 공용 Badge 컴포넌트 적용 부분 (추후 공용 뱃지가 확정되면 주석 해제) */}
@@ -42,13 +42,11 @@ export function NewsCardInfo({
           )}
           <span>{publishedAt}</span>
         </div>
-        <h2 className="text-Gray-9 pretendard-Subtitle1 font-bold line-clamp-2">
-          {title}
-        </h2>
+        <h2 className="text-Gray-9 pretendard-Subtitle1 line-clamp-2 font-bold">{title}</h2>
       </div>
       {imageUrl && (
-        <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-Gray-2">
-          <img src={imageUrl} alt="뉴스 썸네일" className="w-full h-full object-cover" />
+        <div className="bg-Gray-2 h-20 w-20 shrink-0 overflow-hidden rounded-lg">
+          <img src={imageUrl} alt="뉴스 썸네일" className="h-full w-full object-cover" />
         </div>
       )}
     </div>

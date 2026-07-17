@@ -7,7 +7,12 @@ export interface CardNewsIndicatorProps {
   className?: string
 }
 
-export function CardNewsIndicator({ total, currentIndex, onChange, className = '' }: CardNewsIndicatorProps) {
+export function CardNewsIndicator({
+  total,
+  currentIndex,
+  onChange,
+  className = '',
+}: CardNewsIndicatorProps) {
   // Create an array of PaginationItems from total length
   const items: PaginationItem[] = Array.from({ length: total }, (_, i) => ({
     value: i + 1, // 1-indexed for the component
