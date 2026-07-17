@@ -167,19 +167,21 @@ export function Badge({
   const badgeSize = size ?? badgeStyle.size
   const sizeStyle = SIZE_STYLES[badgeSize]
 
-  const renderContent = (content: ReactNode) =>
-    content ? (
+  const renderContent = (content: ReactNode) => {
+    if (content == null || content === false) return null
+
+    return (
       <span
         className={twMerge(
           'inline-flex shrink-0 items-center justify-center',
           ICON_SIZE_STYLES[badgeSize],
           contentClassName,
         )}
-        aria-hidden="true"
       >
         {content}
       </span>
-    ) : null
+    )
+  }
 
   return (
     <span
