@@ -6,7 +6,7 @@ export interface NewsCardPointListProps {
   className?: string
 }
 
-export function NewsCardPointList({ points, glossaryTerms = [], className = '' }: NewsCardPointListProps) {
+export function NewsCardPointList({ points, className = '' }: NewsCardPointListProps) {
   if (!points || points.length === 0) return null
 
   return (
