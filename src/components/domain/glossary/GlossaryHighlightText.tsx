@@ -16,14 +16,19 @@ export function GlossaryHighlightText({
   onClick,
   className = '',
 }: GlossaryHighlightTextProps) {
-  return (
-    <span
-      onClick={() => onClick?.(termId)}
-      className={`bg-Yellow-80 text-Gray-10 decoration-Gray-10 cursor-pointer font-semibold underline decoration-1 underline-offset-4 transition-colors ${className}`}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-    >
-      {children}
-    </span>
-  )
+  const baseClassName = `bg-Yellow-80 text-Gray-10 decoration-Gray-10 font-semibold underline decoration-1 underline-offset-4 transition-colors ${className}`
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={() => onClick(termId)}
+        className={`cursor-pointer ${baseClassName}`}
+      >
+        {children}
+      </button>
+    )
+  }
+
+  return <span className={baseClassName}>{children}</span>
 }
