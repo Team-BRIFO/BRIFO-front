@@ -1,13 +1,23 @@
 //import { GlossaryHighlightText } from '@/components/domain/glossary/GlossaryHighlightText'
 
+export interface TermItem {
+  termId: string
+  surface: string
+  displayOrder: number
+}
+
 export interface NewsCardPointListProps {
   title?: string
   points: string[]
-  glossaryTerms?: string[]
+  terms?: TermItem[]
   className?: string
 }
 
-export function NewsCardPointList({ title, points, className = '' }: NewsCardPointListProps) {
+export function NewsCardPointList({
+  title,
+  points,
+  className = '',
+}: NewsCardPointListProps) {
   if (!points || points.length === 0) return null
 
   return (
@@ -22,7 +32,7 @@ export function NewsCardPointList({ title, points, className = '' }: NewsCardPoi
               {/* 추후 glossary 도메인 컴포넌트 추가 시 아래 코드로 교체 */}
               {/* <GlossaryHighlightText
                 text={point}
-                highlightWord={glossaryTerms}
+                terms={terms}
                 highlightClassName="text-Yellow-30 font-semibold bg-Yellow-100 px-1 rounded"
               /> */}
             </p>
