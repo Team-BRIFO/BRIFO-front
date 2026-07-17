@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Children, isValidElement, useEffect, useRef } from 'react'
+import { Children, isValidElement, useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 const FOCUSABLE_SELECTOR =
@@ -37,6 +37,7 @@ function BottomSheet({
   className = '',
 }: BottomSheetProps) {
   const dialogRef = useRef<HTMLElement>(null)
+  const titleId = useId()
 
   useEffect(() => {
     if (!isOpen) return
@@ -46,6 +47,26 @@ function BottomSheet({
 
     return () => {
       document.body.style.overflow = previousOverflow
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const appRoot = document.getElementById('root')
+    const previousAriaHidden = appRoot?.getAttribute('aria-hidden')
+
+    appRoot?.setAttribute('aria-hidden', 'true')
+
+    return () => {
+      if (previousAriaHidden === null) {
+        appRoot?.removeAttribute('aria-hidden')
+        return
+      }
+
+      if (previousAriaHidden !== undefined) {
+        appRoot?.setAttribute('aria-hidden', previousAriaHidden)
+      }
     }
   }, [isOpen])
 
@@ -133,20 +154,9 @@ function BottomSheet({
     }
   }
 
-  const resolvedHeader = [
-    title ? <h3 className="pretendard-Title4 text-Gray-9 mb-4">{title}</h3> : null,
-    header,
-    ...headerChildren,
-  ]
-
   const resolvedBody = bodyChildren.length > 0 ? bodyChildren : fallbackBodyChildren
-
-  const resolvedFooter: ReactNode[] =
-    footerChildren.length > 0
-      ? footerChildren
-      : footer
-        ? [<div className="mt-6">{footer}</div>]
-        : []
+  const hasHeader = Boolean(title) || Boolean(header) || headerChildren.length > 0
+  const hasFooter = Boolean(footer) || footerChildren.length > 0
 
   if (!isOpen) return null
 
@@ -159,7 +169,8 @@ function BottomSheet({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label={ariaLabel}
+        aria-labelledby={title ? titleId : undefined}
+        aria-label={title ? undefined : ariaLabel}
         tabIndex={-1}
         className={[
           'bg-White flex max-h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl px-6 pt-3 pb-8 shadow-lg',
@@ -174,11 +185,22 @@ function BottomSheet({
           <div aria-hidden="true" className="bg-Gray-3 mx-auto mb-5 h-1 w-10 rounded-full" />
         )}
 
-        {resolvedHeader.length > 0 ? resolvedHeader : null}
+        {hasHeader && (
+          <>
+            {title && (
+              <h3 id={titleId} className="pretendard-Title4 text-Gray-9 mb-4">
+                {title}
+              </h3>
+            )}
+            {header}
+            {headerChildren}
+          </>
+        )}
 
         <div className="flex-1 overflow-y-auto">{resolvedBody}</div>
 
-        {resolvedFooter.length > 0 ? resolvedFooter : null}
+        {hasFooter &&
+          (footerChildren.length > 0 ? footerChildren : <div className="mt-6">{footer}</div>)}
       </section>
     </div>,
     document.body,
