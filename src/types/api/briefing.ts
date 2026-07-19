@@ -26,9 +26,43 @@ export interface BriefingDetailData {
   oneLiner: string
 }
 
+// 1. GET /api/briefings/{briefingId} (기존 단건 조회)
 export interface BriefingDetailResponse {
   stock: BriefingDetailStock
   agent: BriefingDetailAgent
   newsCard: BriefingDetailNewsCard
   briefing: BriefingDetailData
+}
+
+// 2. GET /api/news/{cardId}/briefing (카드뉴스 기준 다건 조회)
+export interface BriefingListItem {
+  briefingId: string
+  oneLiner: string
+  direction: 'UP' | 'DOWN' | 'NEUTRAL'
+  agentId: string
+  nickname: string
+  agentType: string
+}
+
+export interface BriefingListByCardResponse {
+  stock: BriefingDetailStock
+  items: BriefingListItem[]
+}
+
+// 3. GET /api/briefings/office (오피스 전체 브리핑 조회)
+export interface OfficeAgentStatus {
+  briefingId: string
+  agentId: string
+  nickname: string
+  agentType: string
+  status: 'PENDING' | 'ANALYZING' | 'COMPLETED' | 'FAILED'
+}
+
+export interface OfficeBriefingItem {
+  stockName: string
+  agents: OfficeAgentStatus[]
+}
+
+export interface OfficeBriefingListResponse {
+  items: OfficeBriefingItem[]
 }
