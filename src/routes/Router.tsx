@@ -68,7 +68,7 @@ export const router = createBrowserRouter([
         element: <TeamPage />,
       },
       {
-        path: '/team/:agentType',
+        path: PATH.TEAM_DETAIL_ROUTE,
         element: <TeamDetailPage />,
       },
 

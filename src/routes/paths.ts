@@ -32,8 +32,9 @@ export const PATH = {
   /** 팀 탭 - SCR-12: 사원 관리 인사팀 화면 */
   TEAM: '/team',
 
-  /** 팀 탭 - SCR-12: 사원 상세 (루키/프로/탱커, 동적 라우트) */
-  TEAM_DETAIL: (agentType: string) => `/team/${agentType}`,
+  /** 팀 탭 - SCR-12: 사원 상세 (동적 라우트) */
+  TEAM_DETAIL: (agentId: string) => `/team/${agentId}`,
+  TEAM_DETAIL_ROUTE: '/team/:agentId',
 
   // ─── AppLayout - 피드 탭 (결정 일기) ───────────────────────────
   /** 피드 탭 - SCR-08: 결정 일기 캘린더 뷰 */

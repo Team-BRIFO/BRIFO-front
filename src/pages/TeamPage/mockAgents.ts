@@ -44,9 +44,9 @@ export const MOCK_AGENT_LIST_RESPONSE: ApiResponse<AgentListResult> = {
   },
 }
 
-/** 사원 상세 조회 응답 mock (route param: rookie/pro/tanker 로 조회) */
+/** 사원 상세 조회 응답 mock (route param: agentId 로 조회) */
 export const MOCK_AGENT_DETAIL_RESPONSES: Record<string, ApiResponse<AgentDetailResponse>> = {
-  rookie: {
+  '0f2b7e7c-7d8a-4f4f-9b8e-0d1f3a2b9c11': {
     success: true,
     code: 'COMMON_200',
     message: '요청에 성공했습니다.',
@@ -65,7 +65,7 @@ export const MOCK_AGENT_DETAIL_RESPONSES: Record<string, ApiResponse<AgentDetail
       dailySalary: 10,
     },
   },
-  pro: {
+  '2d9c6a71-3c5c-46e7-b8a2-54f5c1f7d912': {
     success: true,
     code: 'COMMON_200',
     message: '요청에 성공했습니다.',
@@ -84,7 +84,7 @@ export const MOCK_AGENT_DETAIL_RESPONSES: Record<string, ApiResponse<AgentDetail
       dailySalary: 50,
     },
   },
-  tanker: {
+  '7a1e6d33-890e-4f73-a18c-9d11c8e7f444': {
     success: true,
     code: 'COMMON_200',
     message: '요청에 성공했습니다.',

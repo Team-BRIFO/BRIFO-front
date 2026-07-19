@@ -14,10 +14,10 @@ import { MOCK_AGENT_DETAIL_RESPONSES } from './mockAgents'
 /** 팀 탭 - SCR-12: 사원 상세 (루키/프로/탱커 공용) */
 export function TeamDetailPage() {
   const navigate = useNavigate()
-  const { agentType = '' } = useParams()
+  const { agentId = '' } = useParams()
 
-  // TODO: useQuery(agentType) 로 교체 (지금은 mock 응답 → 도메인 매핑)
-  const response = MOCK_AGENT_DETAIL_RESPONSES[agentType]
+  // TODO: useQuery(agentId) 로 교체 (지금은 mock 응답 → 도메인 매핑)
+  const response = MOCK_AGENT_DETAIL_RESPONSES[agentId]
 
   // 존재하지 않는 사원이면 목록으로
   if (!response) {
