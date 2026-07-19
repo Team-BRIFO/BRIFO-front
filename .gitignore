@@ -27,3 +27,6 @@ dist-ssr
 .agents/*
 
 .pnpm-store/
+
+# MCP
+.mcp.json
