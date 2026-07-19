@@ -13,6 +13,7 @@ import { MyPage } from '@/pages/MyPage/MyPage'
 import { OfficePage } from '@/pages/OfficePage/OfficePage'
 import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
+import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: PATH.TEAM,
         element: <TeamPage />,
+      },
+      {
+        path: '/team/:agentType',
+        element: <TeamDetailPage />,
       },
 
       // 피드 탭 - 결정 일기
