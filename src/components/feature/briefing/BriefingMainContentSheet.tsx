@@ -25,13 +25,16 @@ export function BriefingMainContentSheet({ children, className }: BriefingMainCo
         {children || (
           <>
             <AgentCard
-              type="rookie"
-              name="루키"
-              modelName="Claude Haiku 4.5"
-              hitRate={64}
-              dailyAP={10}
-              level={8}
-              levelProgress={30}
+              agent={{
+                id: 'rookie-1',
+                type: 'rookie',
+                name: '루키',
+                modelName: 'Claude Haiku 4.5',
+                hitRate: 64,
+                dailyAP: 10,
+                level: 8,
+                levelProgress: 30,
+              }}
             />
             <BriefingTopCard
               badgeType="rise"
