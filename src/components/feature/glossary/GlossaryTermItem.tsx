@@ -1,4 +1,4 @@
-import { GlossaryStatusBadge } from './GlossaryStatusBadge'
+import { GlossaryStatusBadge } from '@/components/feature/glossary/GlossaryStatusBadge'
 
 export interface GlossaryTermItemProps {
   /** 용어 제목 */
