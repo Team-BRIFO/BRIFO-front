@@ -1,6 +1,7 @@
-import { useRef } from 'react'
 import type { HTMLAttributes } from 'react'
+import { useRef } from 'react'
 import { twMerge } from 'tailwind-merge'
+
 import { ProgressBar } from '@/components/common/ProgressBar'
 
 export interface ConfidenceSliderSectionProps extends Omit<
