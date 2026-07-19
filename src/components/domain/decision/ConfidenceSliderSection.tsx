@@ -1,5 +1,7 @@
-import type { ChangeEvent, HTMLAttributes } from 'react'
+import { useRef } from 'react'
+import type { HTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
+import { ProgressBar } from '@/components/common/ProgressBar'
 
 export interface ConfidenceSliderSectionProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
@@ -28,8 +30,30 @@ export function ConfidenceSliderSection({
   className,
   ...props
 }: ConfidenceSliderSectionProps) {
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onChange(Number(e.target.value))
+  const trackRef = useRef<HTMLDivElement>(null)
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!trackRef.current) return
+    const updateValue = (clientX: number) => {
+      const rect = trackRef.current!.getBoundingClientRect()
+      const x = Math.max(0, Math.min(clientX - rect.left, rect.width))
+      const percent = x / rect.width
+      const newValue = Math.round(min + percent * (max - min))
+      if (newValue !== value) {
+        onChange(newValue)
+      }
+    }
+
+    updateValue(e.clientX)
+
+    const handlePointerMove = (ev: PointerEvent) => updateValue(ev.clientX)
+    const handlePointerUp = () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
   }
 
   // 트랙 배경의 채워진 영역 비율 계산 (linear-gradient 용도)
@@ -51,19 +75,33 @@ export function ConfidenceSliderSection({
           <span className="pretendard-Caption1 text-Yellow-40">많이</span>
         </div>
 
-        {/* ConfidenceSlider */}
-        <div className="flex w-full items-center">
-          <input
-            type="range"
-            aria-label="확신도 조절"
-            min={min}
-            max={max}
-            value={value}
-            onChange={handleChange}
-            className="bg-Gray-2 accent-Yellow-30 focus-visible:ring-Yellow-30 h-2 w-full cursor-pointer appearance-none rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
-            style={{
-              background: `linear-gradient(to right, var(--color-Yellow-30) ${percentage}%, var(--color-Gray-2) ${percentage}%)`,
-            }}
+        {/* ConfidenceSlider (Custom Interaction) */}
+        <div
+          ref={trackRef}
+          role="slider"
+          aria-label="확신도 조절"
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={value}
+          tabIndex={0}
+          className="focus-visible:ring-Yellow-30 relative flex w-full cursor-pointer items-center py-2 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+          onPointerDown={handlePointerDown}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+              e.preventDefault()
+              if (value < max) onChange(value + 1)
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+              e.preventDefault()
+              if (value > min) onChange(value - 1)
+            }
+          }}
+        >
+          {/* 시각적 표현을 담당하는 ProgressBar */}
+          <ProgressBar
+            progress={percentage}
+            hasThumb={true}
+            barColor="bg-Yellow-30"
+            className="pointer-events-none"
           />
         </div>
       </div>
