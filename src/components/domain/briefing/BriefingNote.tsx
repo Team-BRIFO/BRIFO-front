@@ -23,7 +23,8 @@ export function BriefingNote({
   return (
     <div
       className={twMerge(
-        'bg-White box-border flex w-full flex-col items-start gap-2 rounded-lg px-5 py-4',
+        'box-border flex w-full flex-col items-start gap-2 rounded-lg px-5 py-4',
+        isErrorVariant ? 'border-Pink-30 bg-Pink-10 border' : 'bg-White',
         className,
       )}
       {...props}
@@ -39,7 +40,7 @@ export function BriefingNote({
       )}
 
       {/* Error_Text_Area (조건부 렌더링) */}
-      {(errorText || isErrorVariant) && errorText && (
+      {errorText && (
         <span className="pretendard-Body2-Regular text-Pink-30 w-full break-words">
           {errorText}
         </span>

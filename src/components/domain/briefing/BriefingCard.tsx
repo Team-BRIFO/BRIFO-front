@@ -28,8 +28,8 @@ const STATUS_TEXT = {
 export function BriefingCard({ stock, status, progress, className = '' }: BriefingCardProps) {
   const badgeText = STATUS_TEXT[status]
 
-  // COMPLETED 상태는 무조건 100%로 수렴 노출
-  const displayProgress = status === 'COMPLETED' ? 100 : progress
+  // COMPLETED 상태는 무조건 100%로 수렴 노출, 그 외 상태는 0~100 범위로 정규화
+  const displayProgress = status === 'COMPLETED' ? 100 : Math.min(Math.max(progress, 0), 100)
 
   return (
     <div

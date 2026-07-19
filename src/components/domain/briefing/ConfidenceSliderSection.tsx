@@ -55,11 +55,12 @@ export function ConfidenceSliderSection({
         <div className="flex w-full items-center">
           <input
             type="range"
+            aria-label="확신도 조절"
             min={min}
             max={max}
             value={value}
             onChange={handleChange}
-            className="bg-Gray-2 accent-Yellow-30 h-2 w-full cursor-pointer appearance-none rounded-full focus:outline-none"
+            className="bg-Gray-2 accent-Yellow-30 focus-visible:ring-Yellow-30 h-2 w-full cursor-pointer appearance-none rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
             style={{
               background: `linear-gradient(to right, var(--color-Yellow-30) ${percentage}%, var(--color-Gray-2) ${percentage}%)`,
             }}

@@ -61,6 +61,7 @@ function PredictionOption({
   return (
     <button
       type="button"
+      aria-pressed={isSelected}
       onClick={onClick}
       disabled={disabled}
       className={twMerge(
@@ -87,7 +88,7 @@ export function DirectionSelectorGroup({
   return (
     <div className={twMerge('flex w-full flex-col items-start gap-3', className)} {...props}>
       <span className="pretendard-Body1-Bold text-Gray-10">방향을 선택하세요</span>
-      <div className="flex w-full justify-between gap-2">
+      <div className="flex w-full justify-between gap-2" role="group" aria-label="방향 선택">
         <PredictionOption
           type="UP"
           isSelected={selectedDirection === 'UP'}
