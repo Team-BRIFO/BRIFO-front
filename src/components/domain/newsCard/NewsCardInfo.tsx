@@ -1,5 +1,6 @@
 import type { BadgeType } from '@/components/common/Badge'
 import { Badge } from '@/components/common/Badge'
+
 import { NewsPublishedTime } from './NewsPublishedTime'
 import { NewsSourceLink } from './NewsSourceLink'
 
