@@ -27,7 +27,7 @@ export function BriefingTopCard({
 }: BriefingTopCardProps) {
   return (
     <div
-      className={`border-Gray-2 bg-White box-border flex w-[328px] items-start gap-3 rounded-[8px] border p-4 shadow-[0px_4px_40px_0px_rgba(224,224,224,0.15)] ${className}`}
+      className={`border-Gray-2 bg-White shadow-card box-border flex w-full flex-col items-start gap-3 rounded-lg border p-4 ${className}`}
     >
       {/* Badge_percentage_Wrapper */}
       <div className="flex shrink-0 items-center gap-1.5">

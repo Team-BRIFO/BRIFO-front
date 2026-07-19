@@ -23,7 +23,7 @@ export function BriefingNote({
   return (
     <div
       className={twMerge(
-        'bg-White box-border flex w-[328px] flex-col items-start gap-2 rounded-[8px] p-[16px_20px]',
+        'bg-White box-border flex w-full flex-col items-start gap-2 rounded-lg px-5 py-4',
         className,
       )}
       {...props}
@@ -40,7 +40,9 @@ export function BriefingNote({
 
       {/* Error_Text_Area (조건부 렌더링) */}
       {(errorText || isErrorVariant) && errorText && (
-        <span className="pretendard-Caption1 text-Pink-30 w-full break-words">{errorText}</span>
+        <span className="pretendard-Body2-Regular text-Pink-30 w-full break-words">
+          {errorText}
+        </span>
       )}
     </div>
   )

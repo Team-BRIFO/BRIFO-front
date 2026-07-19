@@ -17,18 +17,18 @@ export function BriefingComment({
   return (
     <div
       className={twMerge(
-        'from-Pink-50 via-Pink-60 to-Pink-50 box-border flex w-[328px] flex-col items-start gap-2 rounded-[8px] bg-gradient-to-r p-[16px_20px]',
+        'from-Pink-50 via-Pink-60 to-Pink-50 box-border flex w-full flex-col items-start gap-2 rounded-lg bg-gradient-to-r px-5 py-4',
         className,
       )}
       {...props}
     >
       {/* Tag_Wrapper */}
-      <div className="bg-Pink-20 flex items-center justify-center rounded-[4px] px-2 py-1">
+      <div className="bg-Pink-20 flex items-center justify-center rounded px-2 py-1">
         <span className="pretendard-Caption1 text-White">{tagText}</span>
       </div>
 
       {/* Comment_Text */}
-      <span className="pretendard-Body2-Semibold text-Pink-30 w-full break-words">{comment}</span>
+      <span className="pretendard-Body2-Semibold text-Pink-5 w-full break-words">{comment}</span>
     </div>
   )
 }

@@ -57,12 +57,10 @@ export function BriefingCardV2({
 
   return (
     <div
-      className={`relative box-border flex h-[92px] w-[328px] cursor-pointer flex-col overflow-hidden rounded-[8px] border p-[20px_8px_22px_8px] shadow-[0px_4px_40px_0px_rgba(224,224,224,0.15)] transition-colors ${containerBgClass} ${borderClass} ${className}`}
+      className={`shadow-card relative box-border flex h-[5.75rem] w-full cursor-pointer flex-col overflow-hidden rounded-lg border px-2 pt-5 pb-[1.375rem] transition-colors ${containerBgClass} ${borderClass} ${className}`}
     >
       {/* 하단 배경색 분리 레이어 (Bottom Half Background) */}
-      <div
-        className={`absolute bottom-0 left-0 h-[44px] w-full transition-colors ${bottomBgClass}`}
-      />
+      <div className={`absolute bottom-0 left-0 h-11 w-full transition-colors ${bottomBgClass}`} />
 
       {/* 내부 콘텐츠 레이어 */}
       <div className="relative z-10 flex h-full flex-col justify-between px-2">
@@ -71,7 +69,7 @@ export function BriefingCardV2({
           <div className="flex items-center gap-2">
             {rank !== undefined && (
               <span
-                className={`pretendard-Body2-Semibold w-[18px] text-center transition-colors ${rankClass}`}
+                className={`pretendard-Body2-Semibold w-[1.125rem] text-center transition-colors ${rankClass}`}
               >
                 {rank}
               </span>

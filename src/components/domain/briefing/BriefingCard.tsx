@@ -33,7 +33,7 @@ export function BriefingCard({ stock, status, progress, className = '' }: Briefi
 
   return (
     <div
-      className={`border-Gray-2 bg-White box-border flex w-[328px] flex-col overflow-hidden rounded-[8px] border shadow-[0px_4px_40px_0px_rgba(224,224,224,0.15)] ${className}`}
+      className={`border-Gray-2 bg-White shadow-card box-border flex w-full flex-col overflow-hidden rounded-lg border ${className}`}
     >
       {/* 상단: 주식 정보 영역 */}
       <div className="flex w-full items-start justify-between p-4 pb-4">
