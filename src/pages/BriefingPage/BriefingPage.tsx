@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import {
   StatusBar,
@@ -7,55 +8,71 @@ import {
 } from '@/components/common/StatusBar'
 import { Tabs } from '@/components/common/Tabs'
 import { BriefingMainContentSheet } from '@/components/feature/briefing/BriefingMainContentSheet'
+import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
 import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
-const AGENT_DATA: Record<AgentType, AgentSummary> = {
-  rookie: {
-    id: 'rookie-1',
-    type: 'rookie',
-    name: '루키',
-    modelName: 'Claude Haiku 4.5',
-    level: 8,
-    levelProgress: 30,
-    hitRate: 64,
-    dailyAP: 10,
-  },
-  pro: {
-    id: 'pro-1',
-    type: 'pro',
-    name: '프로',
-    modelName: 'GPT-4o',
-    level: 15,
-    levelProgress: 60,
-    hitRate: 75,
-    dailyAP: 30,
-  },
-  tanker: {
-    id: 'tanker-1',
-    type: 'tanker',
-    name: '탱커',
-    modelName: 'HyperCLOVA X',
-    level: 20,
-    levelProgress: 90,
-    hitRate: 80,
-    dailyAP: 50,
-  },
-}
-
 export function BriefingPage() {
+  const [searchParams] = useSearchParams()
+  // URL에서 id 파라미터 추출 (없으면 기본 mock UUID 사용)
+  const briefingId = searchParams.get('id') ?? '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31'
+
+  const { data: response, isLoading, isError } = useGetBriefingDetail(briefingId)
+
+  // 탭 상태 (API 응답이 오면 해당 사원으로 탭 자동 동기화)
   const [activeTab, setActiveTab] = useState<AgentType>('rookie')
 
-  const currentAgent = AGENT_DATA[activeTab]
+  useEffect(() => {
+    if (response?.agent) {
+      const type = response.agent.agentType.toLowerCase() as AgentType
+      setActiveTab(type)
+    }
+  }, [response?.agent])
 
-  const dummyBriefing = {
-    badgeType: 'rise' as const,
-    badgeText: '상승 예측',
-    percentage: 72,
-    headline: 'HBM 수주 확대로 단기 모멘텀 강세',
+  if (isLoading) {
+    return (
+      <div className="bg-Gray-1 flex h-screen w-full flex-col items-center justify-center">
+        <p className="pretendard-Body1 text-Gray-6">브리핑을 불러오는 중...</p>
+      </div>
+    )
+  }
+
+  if (isError || !response) {
+    return (
+      <div className="bg-Gray-1 flex h-screen w-full flex-col items-center justify-center">
+        <p className="pretendard-Body1 text-Pink-30">브리핑 데이터를 불러오지 못했습니다.</p>
+      </div>
+    )
+  }
+
+  const { stock, agent, newsCard, briefing } = response
+
+  // API 도메인 모델을 UI 컴포넌트 모델로 변환
+  const mappedAgent: AgentSummary = {
+    id: agent.agentId,
+    type: agent.agentType.toLowerCase() as AgentType,
+    name: agent.nickname,
+    modelName: agent.modelName,
+    // API에 없는 추가 스펙은 mock 데이터로 채움
+    level: activeTab === 'rookie' ? 8 : activeTab === 'pro' ? 15 : 20,
+    levelProgress: activeTab === 'rookie' ? 30 : activeTab === 'pro' ? 60 : 90,
+    hitRate: activeTab === 'rookie' ? 64 : activeTab === 'pro' ? 75 : 80,
+    dailyAP: activeTab === 'rookie' ? 10 : activeTab === 'pro' ? 30 : 50,
+  }
+
+  const directionMap = {
+    UP: { badgeType: 'rise' as const, badgeText: '상승 예측' },
+    DOWN: { badgeType: 'fall' as const, badgeText: '하락 예측' },
+    NEUTRAL: { badgeType: 'watch' as const, badgeText: '관망' },
+  }
+
+  const mappedBriefing = {
+    badgeType: directionMap[briefing.direction].badgeType,
+    badgeText: directionMap[briefing.direction].badgeText,
+    percentage: briefing.confidenceRate,
+    headline: newsCard.headline ?? `${stock.name} 관련 뉴스`,
     commentTag: '사장님 맞춤',
-    comment: '사장님, 지난번 SK하이닉스 관망이 적중하셨죠! 이번 삼성전자도 결이 비슷해요.',
-    noteMessage:
-      '사장님, 이건 진짜 기회예요! HBM3E 12단 양산이 시작됐고, 엔비디아·AMD 공급 계약까지 임박했어요. 게다가 외국인이 5거래일 연속 순매수 중이라 수급도 든든합니다! 과거 HBM3 양산 발표 때도 한 달간 강세였던 전례가 있어요. 다만 단기 급등 구간이라 분할 접근만 주의하면 좋겠습니다.',
+    comment: briefing.oneLiner,
+    noteMessage: briefing.contentText,
   }
 
   return (
@@ -79,7 +96,10 @@ export function BriefingPage() {
             variant="segmented"
             segmentedType={1}
             value={activeTab}
-            onChange={(val) => setActiveTab(val as AgentType)}
+            onChange={(val) => {
+              setActiveTab(val as AgentType)
+              // 향후 다른 사원 탭을 누를 때, briefingId를 교체하거나 처리하는 로직 추가 가능
+            }}
             items={[
               { label: '루키', value: 'rookie' },
               { label: '프로', value: 'pro' },
@@ -90,8 +110,8 @@ export function BriefingPage() {
           {/* 메인 브리핑 시트 (가운데 정렬) */}
           <div className="mt-2 flex justify-center">
             <BriefingMainContentSheet
-              agent={currentAgent}
-              briefing={dummyBriefing}
+              agent={mappedAgent}
+              briefing={mappedBriefing}
               onConfirm={() => alert('결정!')}
             />
           </div>
