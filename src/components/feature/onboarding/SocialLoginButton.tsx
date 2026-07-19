@@ -5,7 +5,7 @@ import KakaoIcon from '@/assets/logo/kakao_logo.svg?react'
 import NaverIcon from '@/assets/logo/naver_logo.svg?react'
 import Button from '@/components/common/Button'
 
-export type SocialProvider = 'kakao' | 'naver' | 'apple'
+export type SocialProvider = 'kakao' | 'naver'
 
 interface SocialLoginButtonProps extends Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -32,11 +32,6 @@ const SOCIAL_LOGIN_OPTIONS: Record<SocialProvider, SocialLoginOption> = {
     icon: NaverIcon,
     className:
       'bg-[#03A94D] text-white !pretendard-Button1 hover:!bg-[#03A94D] active:!bg-[#03A94D]',
-  },
-  apple: {
-    label: '애플로 로그인 시작하기',
-    icon: AppleIcon,
-    className: 'bg-black text-white !pretendard-Button1 hover:!bg-black active:!bg-black',
   },
 }
 
