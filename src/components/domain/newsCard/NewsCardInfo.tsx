@@ -1,9 +1,7 @@
 import type { BadgeType } from '@/components/common/Badge'
 import { Badge } from '@/components/common/Badge'
-
-import { NewsPublishedTime } from './NewsPublishedTime'
-import { NewsSourceLink } from './NewsSourceLink'
-
+import { NewsPublishedTime } from '@/components/domain/newsCard/NewsPublishedTime'
+import { NewsSourceLink } from '@/components/domain/newsCard/NewsSourceLink'
 export interface NewsCardInfoProps {
   cardId?: string
   publishedDate: string
