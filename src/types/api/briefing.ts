@@ -66,3 +66,21 @@ export interface OfficeBriefingItem {
 export interface OfficeBriefingListResponse {
   items: OfficeBriefingItem[]
 }
+
+// 4. POST /api/news/{cardId}/briefings (브리핑 요청 생성)
+export interface PostBriefingRequest {
+  agentIds: string[]
+}
+
+export interface RequestedAgentData {
+  briefingId: string
+  agentId: string
+  agentType: string
+  salaryCost: number
+}
+
+export interface PostBriefingResponse {
+  requestedCount: number
+  totalSalaryCost: number
+  requestedAgents: RequestedAgentData[]
+}

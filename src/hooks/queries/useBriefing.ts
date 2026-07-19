@@ -1,10 +1,17 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
-import { getBriefingDetail, getCardNewsBriefings, getOfficeBriefings } from '@/api/briefing'
+import {
+  getBriefingDetail,
+  getCardNewsBriefings,
+  getOfficeBriefings,
+  postBriefingRequest,
+} from '@/api/briefing'
 import type {
   BriefingDetailResponse,
   BriefingListByCardResponse,
   OfficeBriefingListResponse,
+  PostBriefingRequest,
+  PostBriefingResponse,
 } from '@/types/api/briefing'
 
 export const BRIEFING_QUERY_KEYS = {
@@ -43,5 +50,14 @@ export function useGetOfficeBriefings() {
   return useQuery<OfficeBriefingListResponse, Error>({
     queryKey: BRIEFING_QUERY_KEYS.officeList(),
     queryFn: getOfficeBriefings,
+  })
+}
+
+/**
+ * [생성] 브리핑 다건 생성 요청 (최대 3명)
+ */
+export function usePostBriefingRequest() {
+  return useMutation<PostBriefingResponse, Error, { cardId: string; req: PostBriefingRequest }>({
+    mutationFn: ({ cardId, req }) => postBriefingRequest(cardId, req),
   })
 }

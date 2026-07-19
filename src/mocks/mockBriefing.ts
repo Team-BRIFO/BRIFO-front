@@ -2,6 +2,7 @@ import type {
   BriefingDetailResponse,
   BriefingListByCardResponse,
   OfficeBriefingListResponse,
+  PostBriefingResponse,
 } from '@/types/api/briefing'
 
 export const MOCK_BRIEFING_DETAIL: BriefingDetailResponse = {
@@ -80,6 +81,25 @@ export const MOCK_OFFICE_BRIEFING_LIST: OfficeBriefingListResponse = {
           status: 'COMPLETED',
         },
       ],
+    },
+  ],
+}
+
+export const MOCK_POST_BRIEFING_RESPONSE: PostBriefingResponse = {
+  requestedCount: 2,
+  totalSalaryCost: 60,
+  requestedAgents: [
+    {
+      briefingId: '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31',
+      agentId: '0f2b7e7c-7d8a-4f4f-9b8e-0d1f3a2b9c11',
+      agentType: 'ROOKIE',
+      salaryCost: 10,
+    },
+    {
+      briefingId: '8c3a9f61-9db5-4c0b-90ec-91d3b2a54f81',
+      agentId: '2d9c6a71-3c5c-46e7-b8a2-54f5c1f7d912',
+      agentType: 'PRO',
+      salaryCost: 50,
     },
   ],
 }

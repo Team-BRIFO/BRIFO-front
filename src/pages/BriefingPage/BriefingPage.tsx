@@ -9,6 +9,7 @@ import {
 import { Tabs } from '@/components/common/Tabs'
 import { BriefingMainContentSheet } from '@/components/feature/briefing/BriefingMainContentSheet'
 import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
+import { MOCK_AGENT_DETAIL_RESPONSES } from '@/pages/TeamPage/mockAgents'
 import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
 export function BriefingPage() {
@@ -46,17 +47,19 @@ export function BriefingPage() {
 
   const { stock, agent, newsCard, briefing } = response
 
+  // 실제 API 연동 전이므로, Agent 상세 모의 데이터를 가져와서 UI 스펙에 맞게 주입
+  const agentDetail = MOCK_AGENT_DETAIL_RESPONSES[agent.agentId]?.result
+
   // API 도메인 모델을 UI 컴포넌트 모델로 변환
   const mappedAgent: AgentSummary = {
     id: agent.agentId,
     type: agent.agentType.toLowerCase() as AgentType,
     name: agent.nickname,
     modelName: agent.modelName,
-    // API에 없는 추가 스펙은 mock 데이터로 채움
-    level: activeTab === 'rookie' ? 8 : activeTab === 'pro' ? 15 : 20,
-    levelProgress: activeTab === 'rookie' ? 30 : activeTab === 'pro' ? 60 : 90,
-    hitRate: activeTab === 'rookie' ? 64 : activeTab === 'pro' ? 75 : 80,
-    dailyAP: activeTab === 'rookie' ? 10 : activeTab === 'pro' ? 30 : 50,
+    level: agentDetail?.level ?? 1,
+    levelProgress: agentDetail?.exp ? agentDetail.exp % 100 : 0,
+    hitRate: agentDetail?.accuracyRate ?? 0,
+    dailyAP: agentDetail?.dailySalary ?? 0,
   }
 
   const directionMap = {
