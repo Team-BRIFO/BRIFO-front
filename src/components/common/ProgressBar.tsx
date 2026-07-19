@@ -1,3 +1,6 @@
+import type { ReactNode } from 'react'
+import { twMerge } from 'tailwind-merge'
+
 export interface ProgressBarProps {
   /** 진행률 (0 ~ 100) */
   progress: number
@@ -8,19 +11,27 @@ export interface ProgressBarProps {
   /** 프로그레스 바 색상 (기본: bg-Yellow-45) */
   barColor?: string
 
+  /** 트랙(배경) 색상 (기본: bg-Gray-2) */
+  trackColor?: string
+
   /** 바의 높이 (기본값: h-2) */
   heightClassName?: string
 
   /** 래퍼 추가 스타일 className */
   className?: string
+
+  /** 바 위에 겹쳐 렌더할 오버레이 콘텐츠 (라벨 등) */
+  children?: ReactNode
 }
 
 export function ProgressBar({
   progress,
   hasThumb = false,
   barColor = 'bg-Yellow-45',
+  trackColor = 'bg-Gray-2',
   heightClassName = 'h-2',
   className = '',
+  children,
 }: ProgressBarProps) {
   // NaN 방어 로직: 값이 없거나 NaN이면 0으로 처리
   const safeProgress = Number.isNaN(progress) ? 0 : progress
@@ -29,9 +40,7 @@ export function ProgressBar({
 
   return (
     <div
-      className={['bg-Gray-2 relative w-full rounded-full', heightClassName, className]
-        .filter(Boolean)
-        .join(' ')}
+      className={twMerge(trackColor, 'relative w-full rounded-full', heightClassName, className)}
       role="progressbar"
       aria-valuenow={clampedProgress}
       aria-valuemin={0}
@@ -39,7 +48,7 @@ export function ProgressBar({
     >
       <div
         className={[
-          'absolute top-0 left-0 h-full rounded-full transition-all duration-300 ease-in-out',
+          'absolute top-0 left-0 h-full rounded-[inherit] transition-all duration-300 ease-in-out',
           barColor,
         ].join(' ')}
         style={{ width: `${clampedProgress}%` }}
@@ -53,6 +62,8 @@ export function ProgressBar({
           />
         )}
       </div>
+
+      {children && <div className="pointer-events-none absolute inset-0">{children}</div>}
     </div>
   )
 }
