@@ -37,31 +37,34 @@ export function ConfidenceSliderSection({
 
   return (
     <div
-      className={twMerge('flex w-full flex-col items-stretch gap-3 px-6 py-4', className)}
+      className={twMerge('flex w-full flex-col items-stretch gap-6 px-6 py-4', className)}
       {...props}
     >
-      {/* Label_Row */}
-      <div className="flex items-center justify-between">
-        <span className="pretendard-Body1-Bold text-Gray-10">확신도</span>
-        <div className="flex items-center gap-2">
-          <span className="pretendard-Caption1 text-Gray-5">조금</span>
-          <span className="pretendard-Caption1 text-Gray-5">많이</span>
-        </div>
-      </div>
+      {/* Title */}
+      <span className="pretendard-Body1-Bold text-Gray-10">확신도</span>
 
-      {/* ConfidenceSlider */}
-      <div className="flex w-full items-center py-2">
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={value}
-          onChange={handleChange}
-          className="bg-Gray-2 accent-Yellow-30 h-2 w-full cursor-pointer appearance-none rounded-full focus:outline-none"
-          style={{
-            background: `linear-gradient(to right, var(--color-Yellow-30) ${percentage}%, var(--color-Gray-2) ${percentage}%)`,
-          }}
-        />
+      {/* Slider Area */}
+      <div className="flex w-full flex-col gap-2">
+        {/* Labels: 조금 / 많이 */}
+        <div className="flex items-center justify-between px-1">
+          <span className="pretendard-Caption1 text-Yellow-40">조금</span>
+          <span className="pretendard-Caption1 text-Yellow-40">많이</span>
+        </div>
+
+        {/* ConfidenceSlider */}
+        <div className="flex w-full items-center">
+          <input
+            type="range"
+            min={min}
+            max={max}
+            value={value}
+            onChange={handleChange}
+            className="bg-Gray-2 accent-Yellow-30 h-2 w-full cursor-pointer appearance-none rounded-full focus:outline-none"
+            style={{
+              background: `linear-gradient(to right, var(--color-Yellow-30) ${percentage}%, var(--color-Gray-2) ${percentage}%)`,
+            }}
+          />
+        </div>
       </div>
 
       {/* Info_Guide_Text */}
