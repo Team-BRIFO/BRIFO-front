@@ -1,15 +1,10 @@
+import type { GlossaryTerm } from '@/types/domain/glossary'
 //import { GlossaryHighlightText } from '@/components/domain/glossary/GlossaryHighlightText'
-
-export interface TermItem {
-  termId: string
-  surface: string
-  displayOrder: number
-}
 
 export interface NewsCardPointListProps {
   title?: string
   points: string[]
-  terms?: TermItem[]
+  terms?: GlossaryTerm[]
   className?: string
 }
 
