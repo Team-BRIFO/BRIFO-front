@@ -17,15 +17,11 @@ export function NewsCardPointList({ title, points, className = '' }: NewsCardPoi
       <ul className="flex flex-col gap-2">
         {points.map((point, index) => (
           <li key={index} className="flex items-start gap-2">
-            <span className="text-Gray-10 mt-0.5 shrink-0 text-[12px] leading-tight">•</span>
+            <div className="bg-Gray-10 mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" />
             <p className="text-Gray-10 pretendard-Caption1 leading-relaxed">
               {point}
               {/* 추후 glossary 도메인 컴포넌트 추가 시 아래 코드로 교체 */}
-              {/* <GlossaryHighlightText
-                text={point}
-                terms={terms}
-                highlightClassName="text-Yellow-30 font-semibold bg-Yellow-100 px-1 rounded"
-              /> */}
+              {/* <GlossaryHighlightText/> */}
             </p>
           </li>
         ))}
