@@ -1,6 +1,5 @@
 import type { ButtonHTMLAttributes, ComponentType, SVGProps } from 'react'
 
-import AppleIcon from '@/assets/logo/apple_logo.svg?react'
 import KakaoIcon from '@/assets/logo/kakao_logo.svg?react'
 import NaverIcon from '@/assets/logo/naver_logo.svg?react'
 import Button from '@/components/common/Button'
