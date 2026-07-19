@@ -1,5 +1,7 @@
 import type { BadgeType } from '@/components/common/Badge'
 import { Badge } from '@/components/common/Badge'
+import { NewsPublishedTime } from './NewsPublishedTime'
+import { NewsSourceLink } from './NewsSourceLink'
 
 export interface NewsCardInfoProps {
   cardId?: string
@@ -42,10 +44,15 @@ export function NewsCardInfo({
               {importanceBadge}
             </Badge>
           )}
-          <span>
-            {source && `${source} · `}
-            {publishedDate}
-          </span>
+          <div className="flex items-center gap-1">
+            {source && (
+              <>
+                <NewsSourceLink source={source} />
+                <span className="text-Gray-5 pretendard-Caption2">·</span>
+              </>
+            )}
+            <NewsPublishedTime time={publishedDate} />
+          </div>
         </div>
         <h2 className="text-Gray-9 pretendard-Body1-Semibold">{headline}</h2>
       </div>
