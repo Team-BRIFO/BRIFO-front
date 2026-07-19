@@ -16,7 +16,7 @@ export function GlossaryHighlightText({
   onClick,
   className = '',
 }: GlossaryHighlightTextProps) {
-  const baseClassName = `bg-Yellow-80 text-Gray-10 decoration-Gray-10 font-semibold underline decoration-1 underline-offset-4 transition-colors ${className}`
+  const baseClassName = `bg-Yellow-80 text-Gray-10 decoration-Gray-10 pretendard-Caption1 underline decoration-1 underline-offset-4 transition-colors ${className}`
 
   if (onClick) {
     return (
