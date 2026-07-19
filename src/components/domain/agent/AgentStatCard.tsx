@@ -22,7 +22,7 @@ export function AgentStatCard({
     <div
       className={twMerge(
         'border-Gray-2 bg-White flex flex-col items-center gap-1 rounded-lg border px-4 py-3.5',
-        'shadow-[0px_0px_10px_0px_rgba(230,230,230,0.25)]',
+        'shadow-[0px_0px_10px_0px_color-mix(in_srgb,var(--color-Gray-2)_25%,transparent)]',
         className,
       )}
       {...props}

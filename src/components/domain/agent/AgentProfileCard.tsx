@@ -19,7 +19,7 @@ export function AgentProfileCard({ agent, className = '' }: AgentProfileCardProp
     <div
       className={[
         'border-Gray-2 bg-White flex flex-col overflow-hidden rounded-xl border',
-        'shadow-[0px_4px_40px_0px_rgba(224,224,224,0.15)]',
+        'shadow-[0px_4px_40px_0px_color-mix(in_srgb,var(--color-Gray-2)_15%,transparent)]',
         className,
       ]
         .filter(Boolean)
