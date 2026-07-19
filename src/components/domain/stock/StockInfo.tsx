@@ -1,6 +1,6 @@
 export interface StockInfoProps {
   /** 기업 로고 이미지 URL (Nullable 대응) */
-  logoUrl?: string
+  logoUrl?: string | null
   /** 종목명 (예: "SK 하이닉스") */
   name: string
   /** 종목 코드 (예: "000660") */
