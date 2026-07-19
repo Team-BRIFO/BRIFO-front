@@ -2,9 +2,8 @@ import type { HTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import { Badge } from '@/components/common/Badge'
+import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { AgentType } from '@/types/domain/agent'
-
-import { AgentAvatar } from './AgentAvatar'
 
 export type AgentPrediction = 'rise' | 'watch' | 'fall'
 
