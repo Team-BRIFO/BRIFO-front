@@ -1,6 +1,7 @@
-import type { AgentStats } from '@/types/domain/agent'
+import { twMerge } from 'tailwind-merge'
 
-import { AgentStatCard } from './AgentStatCard'
+import { AgentStatCard } from '@/components/domain/agent/AgentStatCard'
+import type { AgentStats } from '@/types/domain/agent'
 
 export interface AgentStatGridProps {
   stats: AgentStats
@@ -12,7 +13,7 @@ export function AgentStatGrid({ stats, className = '' }: AgentStatGridProps) {
   const { hitRate, totalAnalysis, contributedAP, workStreak } = stats
 
   return (
-    <div className={['grid grid-cols-2 gap-2', className].filter(Boolean).join(' ')}>
+    <div className={twMerge('grid grid-cols-2 gap-2', className)}>
       <AgentStatCard value={hitRate} unit="%" label="적중률" />
       <AgentStatCard value={totalAnalysis} unit="건" label="누적분석" />
       <AgentStatCard value={contributedAP.toLocaleString()} label="기여 AP" />

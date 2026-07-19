@@ -1,3 +1,5 @@
+import { twMerge } from 'tailwind-merge'
+
 import { Badge } from '@/components/common/Badge'
 import type { AgentDetail } from '@/types/domain/agent'
 
@@ -17,13 +19,11 @@ export function AgentProfileCard({ agent, className = '' }: AgentProfileCardProp
 
   return (
     <div
-      className={[
+      className={twMerge(
         'border-Gray-2 bg-White flex flex-col overflow-hidden rounded-xl border',
         'shadow-[0px_4px_40px_0px_color-mix(in_srgb,var(--color-Gray-2)_15%,transparent)]',
         className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      )}
     >
       <div className="flex flex-col items-center gap-5 px-0 pt-4 pb-1">
         <AgentAvatar type={type} size={112} hasCircleBg />

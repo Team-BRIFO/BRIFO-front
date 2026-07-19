@@ -35,12 +35,11 @@ export function AgentCard({ agent, active = false, className = '', ...props }: A
   return (
     <button
       type="button"
-      aria-pressed={active}
       className={twMerge(
         'bg-White flex w-full flex-col overflow-hidden rounded-lg text-left',
         'shadow-[0px_4px_40px_0px_color-mix(in_srgb,var(--color-Gray-2)_15%,transparent)]',
         active ? `border-2 ${activeBorderClassName}` : 'border-Gray-2 border',
-        'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
+        'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-hidden',
         className,
       )}
       {...props}
