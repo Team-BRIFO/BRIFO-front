@@ -100,6 +100,7 @@ export function ConfidenceSliderSection({
           <ProgressBar
             progress={percentage}
             hasThumb={true}
+            isAnimated={false}
             barColor="bg-Yellow-30"
             className="pointer-events-none"
           />
