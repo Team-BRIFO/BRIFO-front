@@ -6,11 +6,14 @@ export interface BriefingCommentProps extends HTMLAttributes<HTMLDivElement> {
   tagText?: string
   /** 코멘트 본문 */
   comment: string
+  /** 에러 상황 여부 (true 시 글자색 Pink-30 변경) */
+  isErrorVariant?: boolean
 }
 
 export function BriefingComment({
   tagText = '사장님 맞춤',
   comment,
+  isErrorVariant = false,
   className,
   ...props
 }: BriefingCommentProps) {
@@ -28,7 +31,14 @@ export function BriefingComment({
       </div>
 
       {/* Comment_Text */}
-      <span className="pretendard-Body2-Semibold text-Pink-5 w-full break-words">{comment}</span>
+      <span
+        className={twMerge(
+          'pretendard-Body2-Semibold w-full break-words',
+          isErrorVariant ? 'text-Pink-30' : 'text-Pink-5',
+        )}
+      >
+        {comment}
+      </span>
     </div>
   )
 }
