@@ -36,7 +36,7 @@ export function BriefingMainContentSheet({
   return (
     <div
       className={twMerge(
-        'flex h-[528px] w-[328px] flex-col items-stretch overflow-hidden',
+        'flex h-[33rem] w-[20.5rem] flex-col items-stretch overflow-hidden',
         className,
       )}
     >

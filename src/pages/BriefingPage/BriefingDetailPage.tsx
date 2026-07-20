@@ -8,9 +8,11 @@ import {
 } from '@/components/common/StatusBar'
 import { Tabs } from '@/components/common/Tabs'
 import { BriefingMainContentSheet } from '@/components/feature/briefing/BriefingMainContentSheet'
-import { DecisionBottomSheet } from '@/components/feature/briefing/DecisionBottomSheet'
+import { BriefingResultModal } from '@/components/feature/decision/BriefingResultModal'
+import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
 import { PredictionCompleteModal } from '@/components/feature/briefing/PredictionCompleteModal'
 import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
+import { usePostDecision, useGetDecision } from '@/hooks/queries/useDecision'
 import { MOCK_AGENT_DETAIL_RESPONSES } from '@/pages/TeamPage/mockAgents'
 import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
@@ -19,11 +21,20 @@ export function BriefingDetailPage() {
   const navigate = useNavigate()
 
   const { data: response, isLoading, isError } = useGetBriefingDetail(briefingId ?? null)
+  const { mutate: submitDecision } = usePostDecision(briefingId ?? '')
 
   // 탭 상태 (API 응답이 오면 해당 사원으로 탭 자동 동기화)
   const [activeTab, setActiveTab] = useState<AgentType>('rookie')
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
+
+  // 테스트용 상태
+  const [isTestResultModalOpen, setIsTestResultModalOpen] = useState(false)
+  const [testType, setTestType] = useState<
+    'success-decision' | 'fail-decision' | 'pending-decision'
+  >('success-decision')
+  const { data: testResult } = useGetDecision(testType)
+
   const [predictionData, setPredictionData] = useState<{
     direction: 'UP' | 'DOWN' | 'NEUTRAL'
     confidence: number
@@ -114,7 +125,32 @@ export function BriefingDetailPage() {
       <div className="flex flex-1 flex-col overflow-y-auto">
         <div className="flex flex-col gap-3 px-4">
           {/* 타이틀 */}
-          <h1 className="dnf-Subtitle1 text-Gray-10">브리핑</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="dnf-Subtitle1 text-Gray-10">브리핑</h1>
+            {/* 임시 테스트 버튼 */}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="bg-Gray-2 text-Gray-7 rounded px-2 py-1 text-xs"
+                onClick={() => {
+                  setTestType('success-decision')
+                  setIsTestResultModalOpen(true)
+                }}
+              >
+                적중 모달
+              </button>
+              <button
+                type="button"
+                className="bg-Gray-2 text-Gray-7 rounded px-2 py-1 text-xs"
+                onClick={() => {
+                  setTestType('fail-decision')
+                  setIsTestResultModalOpen(true)
+                }}
+              >
+                실패 모달
+              </button>
+            </div>
+          </div>
 
           {/* 에이전트 선택 탭 (피그마 스펙 Type 1) */}
           <Tabs
@@ -154,9 +190,19 @@ export function BriefingDetailPage() {
           oneLiner: mappedBriefing.comment,
         }}
         onConfirm={(direction, confidence) => {
-          setPredictionData({ direction, confidence })
-          setIsDecisionSheetOpen(false)
-          setIsCompleteModalOpen(true)
+          submitDecision(
+            { direction, confidenceLevel: confidence },
+            {
+              onSuccess: () => {
+                setPredictionData({ direction, confidence })
+                setIsDecisionSheetOpen(false)
+                setIsCompleteModalOpen(true)
+              },
+              onError: () => {
+                alert('예측 등록에 실패했습니다.')
+              },
+            },
+          )
         }}
       />
       <PredictionCompleteModal
@@ -170,11 +216,31 @@ export function BriefingDetailPage() {
         onConfirm={() => {
           setIsCompleteModalOpen(false)
           if (predictionData) {
-            // TODO: 실제 예측 등록 API 호출
-            alert(`예측 등록: ${predictionData.direction}, 확신도: ${predictionData.confidence}`)
+            // 임시 테스트용: 선택한 방향에 따라 다른 결과 모달을 띄움
+            if (predictionData.direction === 'UP') {
+              setTestType('success-decision')
+            } else if (predictionData.direction === 'DOWN') {
+              setTestType('fail-decision')
+            } else {
+              setTestType('pending-decision') // 관망
+            }
+            setIsTestResultModalOpen(true)
           }
         }}
       />
+      {testResult && (
+        <BriefingResultModal
+          isOpen={isTestResultModalOpen}
+          isSuccess={testResult.isCorrect ?? false}
+          points={Math.abs(testResult.apDelta ?? 0)}
+          stockInfo={{
+            name: testResult.stock.name,
+            changeRate: testResult.stock.changeRate ?? 0,
+          }}
+          confidenceLevel={predictionData?.confidence ?? testResult.confidenceLevel}
+          onClose={() => setIsTestResultModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

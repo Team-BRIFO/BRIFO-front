@@ -31,7 +31,7 @@ export function Pagination({
     <div
       role="group"
       aria-label={ariaLabel}
-      className={`bg-Yellow-100 inline-flex items-center gap-[6px] rounded-full px-[14px] py-[10px] ${className}`}
+      className={`bg-Yellow-100 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2.5 ${className}`}
     >
       {items.map((item) => {
         const isActive = item.value === currentPage

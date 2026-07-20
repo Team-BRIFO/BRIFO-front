@@ -97,12 +97,12 @@ export function StatusBar({
   return (
     <header className={twMerge('bg-White flex w-full flex-col', className)} {...props}>
       {hasStatusArea && (
-        <div className="flex h-[30px] w-full shrink-0 items-center justify-center">
+        <div className="flex h-7.5 w-full shrink-0 items-center justify-center">
           {statusArea}
         </div>
       )}
 
-      <div className="relative flex h-[60px] w-full shrink-0 items-center px-4">
+      <div className="relative flex h-15 w-full shrink-0 items-center px-4">
         <div className="z-10 flex min-w-6 items-center justify-start">
           {left ?? renderPlaceholder()}
         </div>

@@ -15,6 +15,12 @@ export interface BriefingCardProps {
     code?: string
     marketType?: string
   }
+  /** 각 사원별 진행 상태 (옵션). 주어지지 않으면 카드의 type을 따름 */
+  agentStatuses?: {
+    rookie?: '완료' | '진행중'
+    pro?: '완료' | '진행중'
+    tanker?: '완료' | '진행중'
+  }
   className?: string
 }
 
@@ -23,6 +29,7 @@ export function BriefingCard({
   active = false,
   rank,
   stock,
+  agentStatuses,
   className = '',
 }: BriefingCardProps) {
   // 상태 및 활성화 여부에 따른 동적 스타일 매핑
@@ -55,46 +62,46 @@ export function BriefingCard({
     }
   }
 
+  const rookieStatus = agentStatuses?.rookie ?? type
+  const proStatus = agentStatuses?.pro ?? type
+  const tankerStatus = agentStatuses?.tanker ?? type
+
   return (
     <div
-      className={`shadow-card relative box-border flex h-[5.75rem] w-full cursor-pointer flex-col overflow-hidden rounded-lg border px-2 pt-5 pb-[1.375rem] transition-colors ${containerBgClass} ${borderClass} ${className}`}
+      className={`shadow-card box-border flex w-full cursor-pointer flex-col items-start overflow-hidden rounded-lg border transition-colors ${containerBgClass} ${borderClass} ${className}`}
     >
-      {/* 하단 배경색 분리 레이어 (Bottom Half Background) */}
-      <div className={`absolute bottom-0 left-0 h-11 w-full transition-colors ${bottomBgClass}`} />
-
-      {/* 내부 콘텐츠 레이어 */}
-      <div className="relative z-10 flex h-full flex-col justify-between px-2">
-        {/* 상단 라인: 순위, 로고, 종목명 및 우측 상태 배지 */}
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-2">
-            {rank != null && (
-              <span
-                className={`dnf-Subtitle3 w-[1.125rem] text-center transition-colors ${rankClass}`}
-              >
-                {rank}
-              </span>
-            )}
-            <StockInfo
-              name={stock.name}
-              logoUrl={stock.logoUrl}
-              code={stock.code}
-              marketType={stock.marketType}
-            />
-          </div>
-
-          <Badge type={type === '완료' ? 'complete' : 'progress'}>{type}</Badge>
+      {/* 상단 라인: 순위, 로고, 종목명 및 우측 상태 배지 */}
+      <div className="flex w-full items-center justify-between px-5 py-3">
+        <div className="flex items-center gap-2">
+          {rank != null && (
+            <span
+              className={`dnf-Subtitle3 w-4.5 text-center transition-colors ${rankClass}`}
+            >
+              {rank}
+            </span>
+          )}
+          <StockInfo
+            name={stock.name}
+            logoUrl={stock.logoUrl}
+            code={stock.code}
+            marketType={stock.marketType}
+          />
         </div>
 
-        {/* 하단 라인: 3개의 개별 에이전트 완료/진행중 배지 */}
-        <div className="flex w-full items-center gap-1.5">
-          <Badge type={type === '완료' ? 'rookie-complete' : 'rookie-progress'}>
-            {`루키 ${type}`}
-          </Badge>
-          <Badge type={type === '완료' ? 'pro-complete' : 'pro-progress'}>{`프로 ${type}`}</Badge>
-          <Badge type={type === '완료' ? 'tanker-complete' : 'tanker-progress'}>
-            {`탱커 ${type}`}
-          </Badge>
-        </div>
+        <Badge type={type === '완료' ? 'complete' : 'progress'}>{type}</Badge>
+      </div>
+
+      {/* 하단 라인: 3개의 개별 에이전트 완료/진행중 배지 */}
+      <div className={`flex w-full items-center gap-3 px-4 py-2 transition-colors ${bottomBgClass}`}>
+        <Badge type={rookieStatus === '완료' ? 'rookie-complete' : 'rookie-progress'}>
+          {`루키 ${rookieStatus}`}
+        </Badge>
+        <Badge type={proStatus === '완료' ? 'pro-complete' : 'pro-progress'}>
+          {`프로 ${proStatus}`}
+        </Badge>
+        <Badge type={tankerStatus === '완료' ? 'tanker-complete' : 'tanker-progress'}>
+          {`탱커 ${tankerStatus}`}
+        </Badge>
       </div>
     </div>
   )
