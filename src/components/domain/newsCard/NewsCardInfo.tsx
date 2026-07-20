@@ -35,7 +35,7 @@ export function NewsCardInfo({
   className = '',
 }: NewsCardInfoProps) {
   return (
-    <div className={`flex flex-col gap-4 ${className}`}>
+    <div className={`flex flex-col gap-6 ${className}`}>
       <div className="flex flex-1 flex-col gap-2">
         <div className="text-Gray-5 pretendard-Caption2 flex items-center gap-2">
           {importanceBadge && (
@@ -53,10 +53,10 @@ export function NewsCardInfo({
             <NewsPublishedTime time={publishedDate} />
           </div>
         </div>
-        <h2 className="text-Gray-9 pretendard-Body1-Semibold">{headline}</h2>
+        <p className="text-Gray-9 pretendard-Body1-Semibold">{headline}</p>
       </div>
       {imageUrl && (
-        <div className="bg-Gray-2 h-[150px] w-full shrink-0 overflow-hidden rounded-lg">
+        <div className="bg-Gray-2 aspect-[2/1] w-full shrink-0 overflow-hidden rounded-lg">
           <img src={imageUrl} alt="뉴스 썸네일" className="h-full w-full object-cover" />
         </div>
       )}

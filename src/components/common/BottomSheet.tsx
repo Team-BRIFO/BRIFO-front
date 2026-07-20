@@ -184,12 +184,12 @@ function BottomSheet({
         {showHandle && (
           <div
             aria-hidden="true"
-            className="bg-Gray-3 mx-auto mb-5 h-1 w-10 shrink-0 rounded-full"
+            className="bg-Gray-3 mx-auto h-1 w-30 shrink-0 rounded-full"
           />
         )}
 
         {hasHeader && (
-          <div className="shrink-0 px-6">
+          <div className="w-full shrink-0 px-6">
             {title && (
               <h3 id={titleId} className="pretendard-Title4 text-Gray-9 mb-4">
                 {title}
@@ -200,12 +200,12 @@ function BottomSheet({
           </div>
         )}
 
-        <div className={`flex-1 overflow-y-auto px-6 ${hasFooter ? '' : 'pb-7'}`}>
+        <div className={`flex-1 w-full overflow-y-auto px-6 ${hasFooter ? '' : 'pb-7'}`}>
           {resolvedBody}
         </div>
 
         {hasFooter && (
-          <div className="shrink-0 px-6 pb-8">
+          <div className="w-full shrink-0 px-6 pb-8">
             {footerChildren.length > 0 ? footerChildren : <div className="mt-6">{footer}</div>}
           </div>
         )}
@@ -221,7 +221,7 @@ interface BottomSheetSectionProps {
 }
 
 function Header({ children, className = '' }: BottomSheetSectionProps) {
-  return <header className={`mb-4 ${className}`}>{children}</header>
+  return <header className={`${className}`}>{children}</header>
 }
 
 function Body({ children, className = '' }: BottomSheetSectionProps) {
@@ -229,7 +229,7 @@ function Body({ children, className = '' }: BottomSheetSectionProps) {
 }
 
 function Footer({ children, className = '' }: BottomSheetSectionProps) {
-  return <footer className={`mt-6 flex w-full flex-col gap-2 ${className}`}>{children}</footer>
+  return <footer className={`flex w-full flex-col ${className}`}>{children}</footer>
 }
 
 BottomSheet.Header = Header

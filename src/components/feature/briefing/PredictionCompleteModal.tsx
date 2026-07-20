@@ -1,6 +1,6 @@
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
-import { StockSummaryCard } from '@/components/feature/stock/StockSummaryCard'
+import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
 
 export interface PredictionCompleteModalProps {
   isOpen: boolean
@@ -36,7 +36,15 @@ export function PredictionCompleteModal({
           </div>
 
           {/* 주식 정보 카드 */}
-          <StockSummaryCard stock={stock} className="w-full" />
+          <AnalyzeCard 
+            type="normal"
+            resultType="HASHTAG"
+            stock={{
+              ...stock,
+              tags: stock.hashtags,
+            }} 
+            className="w-full" 
+          />
 
           {/* 안내 텍스트 */}
           <p className="pretendard-Caption2 text-Gray-6 gap-0.5 text-center leading-[1.4]">

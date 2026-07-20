@@ -6,7 +6,7 @@ import { BriefingReviewSection } from '@/components/domain/briefing/BriefingRevi
 import { ConfidenceSliderSection } from '@/components/domain/decision/ConfidenceSliderSection'
 import type { PredictionType } from '@/components/domain/decision/DirectionSelectorGroup'
 import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSelectorGroup'
-import { StockSummaryCard } from '@/components/feature/stock/StockSummaryCard'
+import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
 import type { ConfidenceLevel } from '@/types/api/decision'
 
 export interface DecisionBottomSheetProps {
@@ -61,11 +61,18 @@ export function DecisionBottomSheet({
       <BottomSheet.Body className="flex flex-col gap-6">
         <div className="flex flex-col gap-3">
           {/* 바텀시트 헤더 (타이틀) */}
-          <div className="text-center">
+          <div className="text-center mt-4.5">
             <h2 className="dnf-Subtitle2 text-Gray-10 text-center">투자 결정</h2>
           </div>
           {/* 주식 요약 카드 */}
-          <StockSummaryCard stock={stock} />
+          <AnalyzeCard
+            type="normal"
+            resultType="HASHTAG"
+            stock={{
+              ...stock,
+              tags: stock.hashtags,
+            }}
+          />
         </div>
 
         {/* 방향 선택 */}
