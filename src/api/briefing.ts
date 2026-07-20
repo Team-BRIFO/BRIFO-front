@@ -1,5 +1,5 @@
 import {
-  MOCK_BRIEFING_DETAIL,
+  MOCK_BRIEFING_DETAILS,
   MOCK_BRIEFING_LIST_BY_CARD,
   MOCK_OFFICE_BRIEFING_LIST,
   MOCK_POST_BRIEFING_RESPONSE,
@@ -21,11 +21,14 @@ export const getBriefingDetail = async (briefingId: string): Promise<BriefingDet
   // const { data } = await apiClient.get<ApiResponse<BriefingDetailResponse>>(`/api/briefings/${briefingId}`)
   // return data.result
 
-  void briefingId // TS 미사용 변수 에러 방지
-
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(MOCK_BRIEFING_DETAIL)
+      const result = MOCK_BRIEFING_DETAILS[briefingId]
+      if (result) {
+        resolve(result)
+      } else {
+        reject(new Error('Briefing not found'))
+      }
     }, 500)
   })
 }

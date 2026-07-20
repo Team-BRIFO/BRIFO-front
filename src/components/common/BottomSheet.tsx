@@ -162,7 +162,7 @@ function BottomSheet({
 
   return createPortal(
     <div
-      className="bg-Black/50 fixed inset-0 z-50 flex items-end"
+      className="bg-Black/50 fixed inset-0 z-50 flex items-end justify-center"
       onClick={shouldCloseOnOverlayClick ? onClose : undefined}
     >
       <section
@@ -173,7 +173,7 @@ function BottomSheet({
         aria-label={title ? undefined : ariaLabel}
         tabIndex={-1}
         className={[
-          'bg-White flex max-h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl px-6 pt-3 pb-8 shadow-lg',
+          'bg-White flex max-h-[85vh] w-full max-w-[360px] flex-col overflow-hidden rounded-t-3xl pt-3 shadow-lg',
           'focus-visible:outline-none',
           className,
         ]
@@ -182,11 +182,14 @@ function BottomSheet({
         onClick={(event) => event.stopPropagation()}
       >
         {showHandle && (
-          <div aria-hidden="true" className="bg-Gray-3 mx-auto mb-5 h-1 w-10 rounded-full" />
+          <div
+            aria-hidden="true"
+            className="bg-Gray-3 mx-auto mb-5 h-1 w-10 shrink-0 rounded-full"
+          />
         )}
 
         {hasHeader && (
-          <>
+          <div className="shrink-0 px-6">
             {title && (
               <h3 id={titleId} className="pretendard-Title4 text-Gray-9 mb-4">
                 {title}
@@ -194,13 +197,18 @@ function BottomSheet({
             )}
             {header}
             {headerChildren}
-          </>
+          </div>
         )}
 
-        <div className="flex-1 overflow-y-auto">{resolvedBody}</div>
+        <div className={`flex-1 overflow-y-auto px-6 ${hasFooter ? '' : 'pb-8'}`}>
+          {resolvedBody}
+        </div>
 
-        {hasFooter &&
-          (footerChildren.length > 0 ? footerChildren : <div className="mt-6">{footer}</div>)}
+        {hasFooter && (
+          <div className="shrink-0 px-6 pb-8">
+            {footerChildren.length > 0 ? footerChildren : <div className="mt-6">{footer}</div>}
+          </div>
+        )}
       </section>
     </div>,
     document.body,

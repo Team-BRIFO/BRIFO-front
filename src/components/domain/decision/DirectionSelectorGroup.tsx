@@ -38,7 +38,7 @@ function PredictionOption({
   ...props
 }: PredictionOptionProps) {
   const baseClass =
-    'flex flex-1 flex-col items-center justify-center gap-2 rounded-xl border py-4 transition-colors duration-200'
+    'flex flex-1 flex-col items-center justify-center gap-1 self-stretch rounded-xl border py-3.5 px-0 transition-colors duration-200'
 
   let Icon = FolderMinusIcon
   let label = ''
@@ -73,7 +73,7 @@ function PredictionOption({
       {...props}
     >
       <Icon className="h-6 w-6" strokeWidth={2} />
-      <span className="pretendard-Body2-Semibold">{label}</span>
+      <span className="pretendard-Button3">{label}</span>
     </button>
   )
 }
@@ -87,7 +87,7 @@ export function DirectionSelectorGroup({
 }: DirectionSelectorGroupProps) {
   return (
     <div className={twMerge('flex w-full flex-col items-start gap-3', className)} {...props}>
-      <span className="pretendard-Body1-Bold text-Gray-10">방향을 선택하세요</span>
+      <span className="pretendard-Button1 text-Gray-10">방향을 선택하세요</span>
       <div className="flex w-full justify-between gap-2" role="group" aria-label="방향 선택">
         <PredictionOption
           type="UP"

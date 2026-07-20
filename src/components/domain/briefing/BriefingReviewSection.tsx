@@ -25,32 +25,29 @@ export function BriefingReviewSection({
   ...props
 }: BriefingReviewSectionProps) {
   return (
-    <div
-      className={twMerge('border-Gray-2 flex w-full flex-col border-t pt-4', className)}
-      {...props}
-    >
+    <div className={twMerge('flex w-full flex-col gap-3', className)} {...props}>
       {/* Header_Row */}
-      <div className="flex items-center justify-between pb-4">
-        <span className="pretendard-Body1-Bold text-Gray-10">브리핑 다시보기</span>
+      <div className="flex items-center justify-between">
+        <span className="pretendard-Button1 text-Gray-10">브리핑 다시보기</span>
       </div>
 
       {/* Review_List_Wrapper (Conditional Rendering) */}
       {isExpanded && (
-        <div className="flex flex-col gap-4 pb-4">
+        <div className="flex flex-col gap-4">
           {reviews.map((review, index) => {
             return (
               <div
                 key={index}
-                className="border-Gray-2 bg-White flex flex-col gap-2 rounded-xl rounded-bl-none border p-4"
+                className="border-Gray-2 bg-White flex w-full flex-col items-start gap-2 rounded-xl rounded-bl-none border px-3.5 py-3"
               >
                 {/* Agent_Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex w-full items-center justify-between">
                   <span className="dnf-Caption2 text-Gray-10">{review.agentName}</span>
                   <Badge type={review.badgeType}>{review.badgeText}</Badge>
                 </div>
 
                 {/* Comment_Text */}
-                <span className="pretendard-Body2-Regular text-Gray-7 w-full break-words">
+                <span className="pretendard-Caption1 text-Gray-6 w-full break-words">
                   {review.comment}
                 </span>
               </div>

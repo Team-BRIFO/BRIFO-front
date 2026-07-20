@@ -61,12 +61,9 @@ export function ConfidenceSliderSection({
   const percentage = ((value - min) / (max - min)) * 100
 
   return (
-    <div
-      className={twMerge('flex w-full flex-col items-stretch gap-6 px-6 py-4', className)}
-      {...props}
-    >
+    <div className={twMerge('flex w-full flex-col items-stretch gap-3', className)} {...props}>
       {/* Title */}
-      <span className="pretendard-Body1-Bold text-Gray-10">확신도</span>
+      <span className="pretendard-Button1 text-Gray-10">확신도</span>
 
       {/* Slider Area */}
       <div className="flex w-full flex-col gap-2">
@@ -85,7 +82,7 @@ export function ConfidenceSliderSection({
           aria-valuemax={max}
           aria-valuenow={value}
           tabIndex={0}
-          className="focus-visible:ring-Yellow-30 relative flex w-full cursor-pointer items-center py-2 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+          className="focus-visible:ring-Yellow-30 relative flex w-full cursor-pointer items-center gap-2 py-2 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
           onPointerDown={handlePointerDown}
           onKeyDown={(e) => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
@@ -102,16 +99,15 @@ export function ConfidenceSliderSection({
             progress={percentage}
             hasThumb={true}
             isAnimated={false}
-            barColor="bg-Yellow-30"
+            barColor="bg-Yellow-50"
             className="pointer-events-none"
           />
         </div>
+        {/* Info_Guide_Text */}
+        <span className="pretendard-Caption1 text-Gray-6 text-center">
+          확신도 {value} · AP {apCost} 소모 · 적중 시 +{expectedReward}AP
+        </span>
       </div>
-
-      {/* Info_Guide_Text */}
-      <span className="pretendard-Caption1 text-Gray-6 text-center">
-        확신도 {value} · AP {apCost} 소모 · 적중 시 +{expectedReward}AP
-      </span>
     </div>
   )
 }

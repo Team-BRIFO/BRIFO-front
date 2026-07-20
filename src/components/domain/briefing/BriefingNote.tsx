@@ -24,7 +24,7 @@ export function BriefingNote({
     <div
       className={twMerge(
         'box-border flex w-full flex-col items-start gap-2 rounded-lg px-5 py-4',
-        isErrorVariant ? 'border-Pink-30 bg-Pink-10 border' : 'bg-White',
+        isErrorVariant ? 'bg-White' : 'bg-White',
         className,
       )}
       {...props}
