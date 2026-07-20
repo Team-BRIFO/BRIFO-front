@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
 import {
@@ -12,12 +12,15 @@ import {
   type AnalyzeModalType,
   AnalyzeRequestModal,
 } from '@/components/feature/briefing/AnalyzeRequestModal'
-import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
+import { useGetCardNewsBriefings, usePostBriefingRequest } from '@/hooks/queries/useBriefing'
 import { MOCK_AGENT_LIST_RESPONSE } from '@/pages/TeamPage/mockAgents'
+import { PATH } from '@/routes/paths'
 import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
 export function BriefingAssignPage() {
   const { cardId } = useParams<{ cardId: string }>()
+  const navigate = useNavigate()
+  const { mutate: postBriefingRequest, isPending } = usePostBriefingRequest()
 
   // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
   const { data: cardNewsData } = useGetCardNewsBriefings(cardId ?? null)
@@ -43,8 +46,19 @@ export function BriefingAssignPage() {
   }
 
   const handleStartAnalysis = async () => {
-    // 첫 번째 모달 표시
-    setModalType('SUCCESS')
+    if (!cardId) return
+
+    postBriefingRequest(
+      { cardId, req: { agentIds: Array.from(selectedIds) } },
+      {
+        onSuccess: (result) => {
+          navigate(PATH.BRIEFING_COMPLETE(cardId), { state: { result }, replace: true })
+        },
+        onError: () => {
+          setModalType('LLM_FAIL') // Error handling fallback
+        },
+      },
+    )
   }
 
   const handleNextModal = () => {
@@ -127,8 +141,9 @@ export function BriefingAssignPage() {
           color="primary"
           onClick={handleStartAnalysis}
           className="!rounded-full"
+          disabled={isPending || selectedIds.size === 0}
         >
-          분석 시작하기
+          {isPending ? '분석 요청 중...' : '분석 시작하기'}
         </Button>
       </div>
 

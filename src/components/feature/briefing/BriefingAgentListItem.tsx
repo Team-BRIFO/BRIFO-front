@@ -16,10 +16,12 @@ export function BriefingAgentListItem({
   agentName,
   badgeType,
   comment,
+  className,
   ...props
 }: BriefingAgentListItemProps) {
   return (
     <AgentChat
+      className={className}
       type={agentType}
       name={agentName}
       prediction={badgeType}

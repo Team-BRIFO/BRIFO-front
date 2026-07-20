@@ -4,11 +4,10 @@ import BottomSheet from '@/components/common/BottomSheet'
 import Button from '@/components/common/Button'
 import { BriefingReviewSection } from '@/components/domain/briefing/BriefingReviewSection'
 import { ConfidenceSliderSection } from '@/components/domain/decision/ConfidenceSliderSection'
-import {
-  DirectionSelectorGroup,
-  type PredictionType,
-} from '@/components/domain/decision/DirectionSelectorGroup'
+import type { PredictionType } from '@/components/domain/decision/DirectionSelectorGroup'
+import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSelectorGroup'
 import { StockSummaryCard } from '@/components/feature/stock/StockSummaryCard'
+import type { ConfidenceLevel } from '@/types/api/decision'
 
 export interface DecisionBottomSheetProps {
   isOpen: boolean
@@ -30,7 +29,8 @@ export interface DecisionBottomSheetProps {
     badgeType: 'rise' | 'fall' | 'watch'
     oneLiner: string
   }
-  onConfirm: (direction: 'UP' | 'DOWN' | 'NEUTRAL', confidence: number) => void
+  onConfirm: (direction: 'UP' | 'DOWN' | 'NEUTRAL', confidence: ConfidenceLevel) => void
+  isSubmitting?: boolean
 }
 
 export function DecisionBottomSheet({
@@ -40,15 +40,17 @@ export function DecisionBottomSheet({
   agent,
   briefing,
   onConfirm,
+  isSubmitting = false,
 }: DecisionBottomSheetProps) {
   const [direction, setDirection] = useState<PredictionType>('UP')
-  const [confidence, setConfidence] = useState(3)
+  const [confidence, setConfidence] = useState<ConfidenceLevel>(3)
 
   // API 스펙이나 요구사항에 따라 계산 (임시 로직)
   const apCost = confidence * 20
   const expectedReward = confidence * 20
 
   const handleConfirm = () => {
+    if (isSubmitting) return
     const confirmDirection = direction === 'HOLD' ? 'NEUTRAL' : (direction as 'UP' | 'DOWN')
     onConfirm(confirmDirection, confidence)
   }
@@ -89,8 +91,14 @@ export function DecisionBottomSheet({
           ]}
         />
         <div className="flex flex-col gap-3">
-          <Button isFullWidth size="lg" color="primary" onClick={handleConfirm}>
-            예측 등록하기
+          <Button
+            isFullWidth
+            size="lg"
+            color="primary"
+            onClick={handleConfirm}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '등록 중...' : '예측 등록하기'}
           </Button>
           <button
             type="button"

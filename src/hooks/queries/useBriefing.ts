@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import {
   getBriefingDetail,
@@ -57,7 +57,17 @@ export function useGetOfficeBriefings() {
  * [생성] 브리핑 다건 생성 요청 (최대 3명)
  */
 export function usePostBriefingRequest() {
+  const queryClient = useQueryClient()
   return useMutation<PostBriefingResponse, Error, { cardId: string; req: PostBriefingRequest }>({
     mutationFn: ({ cardId, req }) => postBriefingRequest(cardId, req),
+    onSuccess: (_, variables) => {
+      // 해당 카드에 대한 브리핑 목록과 전체 오피스 브리핑 상태 갱신
+      queryClient.invalidateQueries({
+        queryKey: BRIEFING_QUERY_KEYS.listByCard(variables.cardId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: BRIEFING_QUERY_KEYS.officeList(),
+      })
+    },
   })
 }

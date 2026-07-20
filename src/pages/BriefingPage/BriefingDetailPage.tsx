@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import {
@@ -12,8 +12,10 @@ import { PredictionCompleteModal } from '@/components/feature/briefing/Predictio
 import { BriefingResultModal } from '@/components/feature/decision/BriefingResultModal'
 import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
 import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
-import { useGetDecision, usePostDecision } from '@/hooks/queries/useDecision'
+import { usePostDecision } from '@/hooks/queries/useDecision'
 import { MOCK_AGENT_DETAIL_RESPONSES } from '@/pages/TeamPage/mockAgents'
+import { PATH } from '@/routes/paths'
+import type { ConfidenceLevel } from '@/types/api/decision'
 import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
 export function BriefingDetailPage() {
@@ -23,34 +25,20 @@ export function BriefingDetailPage() {
   const { data: response, isLoading, isError } = useGetBriefingDetail(briefingId ?? null)
   const { mutate: submitDecision } = usePostDecision(briefingId ?? '')
 
-  // 탭 상태 (API 응답이 오면 해당 사원으로 탭 자동 동기화)
-  const [activeTab, setActiveTab] = useState<AgentType>('rookie')
+  // 탭 상태 (API 응답 기반으로 동기화)
+  const activeTab = (response?.agent?.agentType.toLowerCase() as AgentType) || 'rookie'
+
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
-
-  // 테스트용 상태
-  const [isTestResultModalOpen, setIsTestResultModalOpen] = useState(false)
-  const [testType, setTestType] = useState<
-    'success-decision' | 'fail-decision' | 'pending-decision'
-  >('success-decision')
-  const { data: testResult } = useGetDecision(testType)
+  const [errorModalMsg, setErrorModalMsg] = useState<string | null>(null)
 
   const [predictionData, setPredictionData] = useState<{
     direction: 'UP' | 'DOWN' | 'NEUTRAL'
-    confidence: number
+    confidence: ConfidenceLevel
   } | null>(null)
-
-  useEffect(() => {
-    if (response?.agent) {
-      const type = response.agent.agentType.toLowerCase() as AgentType
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setActiveTab(type)
-    }
-  }, [response?.agent])
 
   const handleTabChange = (val: string) => {
     const type = val as AgentType
-    setActiveTab(type)
 
     // 실제 환경에서는 cardId로 조회한 목록에서 해당 사원의 briefingId를 찾아야 하지만,
     // 현재는 모의 데이터 조회를 위해 하드코딩된 UUID를 매핑하여 URL을 변경합니다.
@@ -117,7 +105,7 @@ export function BriefingDetailPage() {
       {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
       <StatusBar
         className="bg-White"
-        left={<StatusBarBackButton onClick={() => navigate('/briefing')} />}
+        left={<StatusBarBackButton onClick={() => navigate(PATH.BRIEFING)} />}
         title="브리핑"
         right={<StatusBarNotificationButton />}
       />
@@ -128,29 +116,6 @@ export function BriefingDetailPage() {
           {/* 타이틀 */}
           <div className="flex items-center justify-between">
             <h1 className="dnf-Subtitle1 text-Gray-10">브리핑</h1>
-            {/* 임시 테스트 버튼 */}
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className="bg-Gray-2 text-Gray-7 rounded px-2 py-1 text-xs"
-                onClick={() => {
-                  setTestType('success-decision')
-                  setIsTestResultModalOpen(true)
-                }}
-              >
-                적중 모달
-              </button>
-              <button
-                type="button"
-                className="bg-Gray-2 text-Gray-7 rounded px-2 py-1 text-xs"
-                onClick={() => {
-                  setTestType('fail-decision')
-                  setIsTestResultModalOpen(true)
-                }}
-              >
-                실패 모달
-              </button>
-            </div>
           </div>
 
           {/* 에이전트 선택 탭 (피그마 스펙 Type 1) */}
@@ -200,7 +165,7 @@ export function BriefingDetailPage() {
                 setIsCompleteModalOpen(true)
               },
               onError: () => {
-                alert('예측 등록에 실패했습니다.')
+                setErrorModalMsg('예측 등록에 실패했습니다. 잠시 후 다시 시도해주세요.')
               },
             },
           )
@@ -216,30 +181,19 @@ export function BriefingDetailPage() {
         earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
         onConfirm={() => {
           setIsCompleteModalOpen(false)
-          if (predictionData) {
-            // 임시 테스트용: 선택한 방향에 따라 다른 결과 모달을 띄움
-            if (predictionData.direction === 'UP') {
-              setTestType('success-decision')
-            } else if (predictionData.direction === 'DOWN') {
-              setTestType('fail-decision')
-            } else {
-              setTestType('pending-decision') // 관망
-            }
-            setIsTestResultModalOpen(true)
-          }
+          navigate(PATH.DIARY_CALENDAR)
         }}
       />
-      {testResult && (
+      {errorModalMsg && (
         <BriefingResultModal
-          isOpen={isTestResultModalOpen}
-          isSuccess={testResult.isCorrect ?? false}
-          points={Math.abs(testResult.apDelta ?? 0)}
-          stockInfo={{
-            name: testResult.stock.name,
-            changeRate: testResult.stock.changeRate ?? 0,
-          }}
-          confidenceLevel={predictionData?.confidence ?? testResult.confidenceLevel}
-          onClose={() => setIsTestResultModalOpen(false)}
+          isOpen={!!errorModalMsg}
+          isSuccess={false}
+          points={0}
+          stockInfo={{ name: stock.name, changeRate: stock.changeRate }}
+          comment={errorModalMsg}
+          resultText="등록 실패"
+          onAction={() => setErrorModalMsg(null)}
+          onClose={() => setErrorModalMsg(null)}
         />
       )}
     </div>

@@ -12,7 +12,7 @@ export interface BriefingResultModalProps {
   comment?: string
   resultText?: string
   confidenceLevel?: number
-  onAction?: () => void
+  onAction: () => void
   onClose: () => void
 }
 

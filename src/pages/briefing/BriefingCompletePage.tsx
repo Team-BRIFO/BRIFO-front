@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import CelebrationImage from '@/assets/characters/celebration.svg?react'
 import Button from '@/components/common/Button'
@@ -11,13 +11,14 @@ import { PATH } from '@/routes/paths'
 export function BriefingCompletePage() {
   const { cardId } = useParams<{ cardId: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
+  const result = location.state?.result as { requestedAgents: { agentId: string }[] } | undefined
 
   // 임시: 카드뉴스 브리핑 데이터에서 주식명 가져오기
   const { data: cardNewsData } = useGetCardNewsBriefings(cardId ?? null)
   const stockName = cardNewsData?.stock?.name ?? '삼성전자'
 
-  // 임시: 요청한 사원 수
-  const agentCount = 3
+  const agentCount = result?.requestedAgents?.length ?? 3
 
   // 임시 테스트용 상태 (순차적 뱃지 변경)
   const [mockAgents, setMockAgents] = useState<string[]>([])

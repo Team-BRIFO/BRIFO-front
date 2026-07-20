@@ -1,21 +1,22 @@
 import type { HTMLAttributes } from 'react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import { ProgressBar } from '@/components/common/ProgressBar'
+import type { ConfidenceLevel } from '@/types/api/decision'
 
 export interface ConfidenceSliderSectionProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
   'children' | 'onChange'
 > {
   /** 현재 슬라이더의 확신도 선택 수치 (부모에서 제어) */
-  value: number
+  value: ConfidenceLevel
   /** 최소 선택 범위 구성 (Default: 1) */
   min?: number
   /** 최대 선택 범위 구성 (Default: 5) */
   max?: number
   /** 슬라이더 바 조작 시 상태를 변경하는 콜백 핸들러 */
-  onChange: (value: number) => void
+  onChange: (value: ConfidenceLevel) => void
   /** 선택 수치에 따라 동적으로 계산되어 가이드로 출력될 재화 정보 */
   apCost: number
   expectedReward: number
@@ -32,6 +33,11 @@ export function ConfidenceSliderSection({
   ...props
 }: ConfidenceSliderSectionProps) {
   const trackRef = useRef<HTMLDivElement>(null)
+  const valueRef = useRef(value)
+
+  useEffect(() => {
+    valueRef.current = value
+  }, [value])
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!trackRef.current) return
@@ -39,8 +45,8 @@ export function ConfidenceSliderSection({
       const rect = trackRef.current!.getBoundingClientRect()
       const x = Math.max(0, Math.min(clientX - rect.left, rect.width))
       const percent = x / rect.width
-      const newValue = Math.round(min + percent * (max - min))
-      if (newValue !== value) {
+      const newValue = Math.round(min + percent * (max - min)) as ConfidenceLevel
+      if (newValue !== valueRef.current) {
         onChange(newValue)
       }
     }
@@ -82,15 +88,15 @@ export function ConfidenceSliderSection({
           aria-valuemax={max}
           aria-valuenow={value}
           tabIndex={0}
-          className="focus-visible:ring-Yellow-30 relative flex w-full cursor-pointer items-center gap-2 py-2 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+          className="focus-visible:ring-Yellow-30 relative flex w-full cursor-pointer touch-none items-center gap-2 py-2 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
           onPointerDown={handlePointerDown}
           onKeyDown={(e) => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
               e.preventDefault()
-              if (value < max) onChange(value + 1)
+              if (value < max) onChange((value + 1) as ConfidenceLevel)
             } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
               e.preventDefault()
-              if (value > min) onChange(value - 1)
+              if (value > min) onChange((value - 1) as ConfidenceLevel)
             }
           }}
         >

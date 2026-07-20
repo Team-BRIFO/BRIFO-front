@@ -37,8 +37,7 @@ export const postDecision = async (
 export const getDecision = async (decisionId: string): Promise<GetDecisionResponse> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      const mockResult =
-        MOCK_GET_DECISION_RESPONSES[decisionId] || MOCK_GET_DECISION_RESPONSES['success-decision']
+      const mockResult = MOCK_GET_DECISION_RESPONSES[decisionId]
       if (mockResult) {
         resolve(mockResult)
       } else {

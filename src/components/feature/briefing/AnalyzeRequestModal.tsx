@@ -16,6 +16,15 @@ export interface AnalyzeRequestModalProps {
   onSecondaryClick?: () => void
 }
 
+function ApShortageBadge({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="text-Yellow-40 flex flex-col items-center gap-1">
+      <span className="pretendard-Caption1 text-Gray-6">{label}</span>
+      <span className="dnf-Title3">{value}</span>
+    </div>
+  )
+}
+
 export function AnalyzeRequestModal({
   isOpen,
   onClose,
@@ -57,10 +66,7 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">AP가 부족해요</h2>
-              <div className="text-Yellow-40 flex flex-col items-center gap-1">
-                <span className="pretendard-Caption1 text-Gray-6">부족한 AP</span>
-                <span className="dnf-Title3">{shortageAP}AP</span>
-              </div>
+              <ApShortageBadge label="부족한 AP" value={`${shortageAP}AP`} />
               <p className="pretendard-Button2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 사원들에게 일급을 주려면 AP가 더 필요해요.
                 <br />
@@ -91,10 +97,7 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">오늘은 여기까지</h2>
-              <div className="text-Yellow-40 flex flex-col items-center gap-1">
-                <span className="pretendard-Caption1 text-Gray-6">부족한 AP</span>
-                <span className="dnf-Title3">{shortageAP}AP</span>
-              </div>
+              <ApShortageBadge label="부족한 AP" value={`${shortageAP}AP`} />
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 출석 보너스도 신용대출도 이미 받았어요.
                 <br />
@@ -115,10 +118,7 @@ export function AnalyzeRequestModal({
               <h2 className="dnf-Title4 text-Gray-10 m-0">
                 <span className="text-Yellow-40">{employeeName}</span>의 분석이 실패했어요
               </h2>
-              <div className="text-Yellow-40 flex flex-col items-center gap-1">
-                <span className="pretendard-Caption1 text-Gray-6">재의뢰 비용</span>
-                <span className="dnf-Title3">{shortageAP} AP</span>
-              </div>
+              <ApShortageBadge label="재의뢰 비용" value={`${shortageAP} AP`} />
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em] whitespace-pre-wrap">
                 {`${employeeName}가 분석에 실패했어요.\n의뢰비는 환불됐어요. 다시 시도할까요?`}
               </p>
@@ -142,12 +142,7 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">잠시후 다시 시도해주세요</h2>
-              <div className="text-Yellow-40 flex flex-col items-center gap-1">
-                <span className="pretendard-Caption1 text-Gray-6">오늘 재시도</span>
-                <span className="dnf-Title3">
-                  {retryCount}/{maxRetryCount}
-                </span>
-              </div>
+              <ApShortageBadge label="오늘 재시도" value={`${retryCount}/${maxRetryCount}`} />
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 {employeeName} 분석이 계속 실패하고 있어요.
                 <br />

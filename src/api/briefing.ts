@@ -2,7 +2,6 @@ import {
   MOCK_BRIEFING_DETAILS,
   MOCK_BRIEFING_LIST_BY_CARD,
   MOCK_OFFICE_BRIEFING_LIST,
-  MOCK_POST_BRIEFING_RESPONSE,
 } from '@/pages/BriefingPage/mockBriefing'
 import type {
   BriefingDetailResponse,
@@ -75,16 +74,20 @@ export const postBriefingRequest = async (
   cardId: string,
   req: PostBriefingRequest,
 ): Promise<PostBriefingResponse> => {
-  // TODO: API 연결
-  // const { data } = await apiClient.post<ApiResponse<PostBriefingResponse>>(`/api/news/${cardId}/briefings`, req)
-  // return data.result
-
   void cardId
-  void req
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(MOCK_POST_BRIEFING_RESPONSE)
+      resolve({
+        requestedCount: req.agentIds.length,
+        totalSalaryCost: req.agentIds.length * 100, // mock salary cost
+        requestedAgents: req.agentIds.map((agentId) => ({
+          agentId,
+          briefingId: `mock-briefing-${agentId}`,
+          agentType: 'rookie', // mock type
+          salaryCost: 100,
+        })),
+      })
     }, 500)
   })
 }

@@ -1,3 +1,5 @@
+import type { AgentType } from './agent'
+
 export type BriefingDirectionType = 'rise' | 'fall' | 'watch'
 export type AgentStatusType = 'PENDING' | 'ANALYZING' | 'COMPLETED' | 'FAILED'
 
@@ -14,7 +16,7 @@ export interface BriefingSummaryData {
 export interface BriefingListItemData {
   id: string
   agentId: string
-  agentType: string
+  agentType: AgentType
   nickname: string
   direction: BriefingDirectionType
   oneLiner: string

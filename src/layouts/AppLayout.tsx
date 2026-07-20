@@ -16,7 +16,7 @@ export function AppLayout() {
       padding="none"
       className="relative mx-auto h-[100dvh] overflow-hidden shadow-xl"
     >
-      <main className="flex flex-1 flex-col overflow-hidden">
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         <Outlet />
       </main>
     </Container>
