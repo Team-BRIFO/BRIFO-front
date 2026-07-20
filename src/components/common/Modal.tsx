@@ -137,7 +137,7 @@ function Modal({
         aria-modal="true"
         aria-label={ariaLabel}
         tabIndex={-1}
-        className={`bg-White w-82.5 rounded-3xl px-6 py-7 shadow-lg ${className} `}
+        className={`bg-White w-82.5 rounded-3xl px-5 py-6 shadow-lg ${className} `}
         onClick={(event) => event.stopPropagation()}
       >
         {children}

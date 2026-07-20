@@ -15,6 +15,9 @@ export interface BriefingData {
   commentTag: string
   comment: string
   noteMessage: string
+  isError?: boolean
+  errorText?: string
+  recommendText?: string
 }
 
 export interface BriefingMainContentSheetProps {
@@ -45,8 +48,17 @@ export function BriefingMainContentSheet({
           percentage={briefing.percentage}
           newsTitleText={briefing.headline}
         />
-        <BriefingComment tagText={briefing.commentTag} comment={briefing.comment} />
-        <BriefingNote message={briefing.noteMessage} />
+        <BriefingComment
+          tagText={briefing.commentTag}
+          comment={briefing.comment}
+          isErrorVariant={briefing.isError}
+        />
+        <BriefingNote
+          message={briefing.noteMessage}
+          isErrorVariant={briefing.isError}
+          errorText={briefing.errorText}
+          recommendText={briefing.recommendText}
+        />
 
         <Button isFullWidth color="primary" size="lg" onClick={onConfirm}>
           이 브리핑으로 결정

@@ -3,7 +3,7 @@ import {
   MOCK_BRIEFING_LIST_BY_CARD,
   MOCK_OFFICE_BRIEFING_LIST,
   MOCK_POST_BRIEFING_RESPONSE,
-} from '@/mocks/mockBriefing'
+} from '@/pages/BriefingPage/mockBriefing'
 import type {
   BriefingDetailResponse,
   BriefingListByCardResponse,

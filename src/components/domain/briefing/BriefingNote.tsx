@@ -30,10 +30,12 @@ export function BriefingNote({
       {...props}
     >
       {/* Text_Area */}
-      <span className="pretendard-Body2-Regular text-Gray-6 w-full break-words">{message}</span>
+      {!isErrorVariant && message && (
+        <span className="pretendard-Body2-Regular text-Gray-6 w-full break-words">{message}</span>
+      )}
 
       {/* Ai_Recommend_Text (조건부 렌더링) */}
-      {recommendText && (
+      {!isErrorVariant && recommendText && (
         <span className="pretendard-Body2-Semibold text-Yellow-30 w-full break-words">
           {recommendText}
         </span>

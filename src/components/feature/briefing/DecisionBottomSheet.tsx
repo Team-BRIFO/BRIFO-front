@@ -8,8 +8,7 @@ import {
   DirectionSelectorGroup,
   type PredictionType,
 } from '@/components/domain/decision/DirectionSelectorGroup'
-import { StockInfo } from '@/components/domain/stock/StockInfo'
-import { StockPriceChange } from '@/components/domain/stock/StockPriceChange'
+import { StockSummaryCard } from '@/components/feature/stock/StockSummaryCard'
 
 export interface DecisionBottomSheetProps {
   isOpen: boolean
@@ -52,7 +51,6 @@ export function DecisionBottomSheet({
   const handleConfirm = () => {
     const confirmDirection = direction === 'HOLD' ? 'NEUTRAL' : (direction as 'UP' | 'DOWN')
     onConfirm(confirmDirection, confidence)
-    onClose()
   }
 
   return (
@@ -65,28 +63,7 @@ export function DecisionBottomSheet({
             <h2 className="dnf-Subtitle2 text-Gray-10 text-center">투자 결정</h2>
           </div>
           {/* 주식 요약 카드 */}
-          <div className="border-Gray-3 bg-White flex flex-col overflow-hidden rounded-2xl border">
-            <div className="flex items-center justify-between p-4">
-              <StockInfo
-                name={stock.name}
-                code={stock.code}
-                marketType={stock.marketType}
-                logoUrl={stock.logoUrl}
-              />
-              <StockPriceChange
-                price={stock.price}
-                changeRate={stock.changeRate}
-                textAlign="right"
-              />
-            </div>
-            {stock.hashtags && stock.hashtags.length > 0 && (
-              <div className="bg-Gray-1 text-Gray-6 pretendard-Caption1 flex flex-wrap gap-2 px-4 py-3">
-                {stock.hashtags.map((tag, idx) => (
-                  <span key={idx}>#{tag}</span>
-                ))}
-              </div>
-            )}
-          </div>
+          <StockSummaryCard stock={stock} />
         </div>
 
         {/* 방향 선택 */}
@@ -111,10 +88,6 @@ export function DecisionBottomSheet({
             },
           ]}
         />
-      </BottomSheet.Body>
-
-      {/* 하단 액션 버튼 */}
-      <BottomSheet.Footer>
         <div className="flex flex-col gap-3">
           <Button isFullWidth size="lg" color="primary" onClick={handleConfirm}>
             예측 등록하기
@@ -127,7 +100,7 @@ export function DecisionBottomSheet({
             다음에 할게요
           </button>
         </div>
-      </BottomSheet.Footer>
+      </BottomSheet.Body>
     </BottomSheet>
   )
 }

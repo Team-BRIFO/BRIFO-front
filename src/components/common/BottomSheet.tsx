@@ -200,7 +200,7 @@ function BottomSheet({
           </div>
         )}
 
-        <div className={`flex-1 overflow-y-auto px-6 ${hasFooter ? '' : 'pb-8'}`}>
+        <div className={`flex-1 overflow-y-auto px-6 ${hasFooter ? '' : 'pb-7'}`}>
           {resolvedBody}
         </div>
 

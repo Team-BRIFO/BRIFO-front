@@ -25,8 +25,12 @@ export const PATH = {
   /** 사무실 탭 - SCR-04: 메인 대시보드 */
   OFFICE: '/office',
 
-  /** 사무실 탭 - SCR-06, 07: AI 사원 보고서 열람 및 투자 결정/대기 */
+  /** 사무실 탭 - SCR-07: AI 사원 보고서 리스트 (메인) */
   BRIEFING: '/briefing',
+
+  /** 사무실 탭 - SCR-06: AI 사원 보고서 상세 */
+  BRIEFING_DETAIL: (briefingId: string) => `/briefing/detail/${briefingId}`,
+  BRIEFING_DETAIL_ROUTE: '/briefing/detail/:briefingId',
 
   // ─── AppLayout - 팀 탭 ─────────────────────────────────────────
   /** 팀 탭 - SCR-12: 사원 관리 인사팀 화면 */

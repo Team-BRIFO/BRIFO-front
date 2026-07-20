@@ -1,50 +1,22 @@
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import {
   StatusBar,
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
-import { Tabs } from '@/components/common/Tabs'
-import { BriefingMainContentSheet } from '@/components/feature/briefing/BriefingMainContentSheet'
-import { DecisionBottomSheet } from '@/components/feature/briefing/DecisionBottomSheet'
-import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
-import { MOCK_AGENT_DETAIL_RESPONSES } from '@/pages/TeamPage/mockAgents'
-import type { AgentSummary, AgentType } from '@/types/domain/agent'
+import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
+import { StockSummaryCard } from '@/components/feature/stock/StockSummaryCard'
+import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
+import type { AgentType } from '@/types/domain/agent'
 
 export function BriefingPage() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  // URL에서 id 파라미터 추출 (없으면 기본 mock UUID 사용)
-  const briefingId = searchParams.get('id') ?? '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31'
+  const [searchParams] = useSearchParams()
+  // URL에서 cardId 추출 (없으면 기본 mock UUID 사용)
+  const cardId = searchParams.get('cardId') ?? 'mock-card-id'
+  const navigate = useNavigate()
 
-  const { data: response, isLoading, isError } = useGetBriefingDetail(briefingId)
-
-  // 탭 상태 (API 응답이 오면 해당 사원으로 탭 자동 동기화)
-  const [activeTab, setActiveTab] = useState<AgentType>('rookie')
-  const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
-
-  useEffect(() => {
-    if (response?.agent) {
-      const type = response.agent.agentType.toLowerCase() as AgentType
-      setActiveTab(type)
-    }
-  }, [response?.agent])
-
-  const handleTabChange = (val: string) => {
-    const type = val as AgentType
-    setActiveTab(type)
-
-    // 실제 환경에서는 cardId로 조회한 목록에서 해당 사원의 briefingId를 찾아야 하지만,
-    // 현재는 모의 데이터 조회를 위해 하드코딩된 UUID를 매핑하여 URL을 변경합니다.
-    const MOCK_BRIEFING_IDS: Record<AgentType, string> = {
-      rookie: '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31',
-      pro: '8c3a9f61-9db5-4c0b-90ec-91d3b2a54f81',
-      tanker: '2e3f5d77-c6b3-4d13-8f88-637c8c623c44',
-    }
-    searchParams.set('id', MOCK_BRIEFING_IDS[type])
-    setSearchParams(searchParams)
-  }
+  const { data: response, isLoading, isError } = useGetCardNewsBriefings(cardId)
 
   if (isLoading) {
     return (
@@ -62,42 +34,17 @@ export function BriefingPage() {
     )
   }
 
-  const { stock, agent, newsCard, briefing } = response
-
-  // 실제 API 연동 전이므로, Agent 상세 모의 데이터를 가져와서 UI 스펙에 맞게 주입
-  const agentDetail = MOCK_AGENT_DETAIL_RESPONSES[agent.agentId]?.result
-
-  // API 도메인 모델을 UI 컴포넌트 모델로 변환
-  const mappedAgent: AgentSummary = {
-    id: agent.agentId,
-    type: agent.agentType.toLowerCase() as AgentType,
-    name: agent.nickname,
-    modelName: agent.modelName,
-    level: agentDetail?.level ?? 1,
-    levelProgress: agentDetail?.exp ? agentDetail.exp % 100 : 0,
-    hitRate: agentDetail?.accuracyRate ?? 0,
-    dailyAP: agentDetail?.dailySalary ?? 0,
-  }
+  const { stock, items } = response
 
   const directionMap = {
     UP: { badgeType: 'rise' as const, badgeText: '상승 예측' },
     DOWN: { badgeType: 'fall' as const, badgeText: '하락 예측' },
-    NEUTRAL: { badgeType: 'watch' as const, badgeText: '관망' },
-  }
-
-  const mappedBriefing = {
-    badgeType: directionMap[briefing.direction].badgeType,
-    badgeText: directionMap[briefing.direction].badgeText,
-    percentage: briefing.confidenceRate,
-    headline: newsCard.headline ?? `${stock.name} 관련 뉴스`,
-    commentTag: '사장님 맞춤',
-    comment: briefing.oneLiner,
-    noteMessage: briefing.contentText,
+    NEUTRAL: { badgeType: 'watch' as const, badgeText: '관망 예측' },
   }
 
   return (
-    <div className="bg-Gray-1 flex h-screen w-full flex-col gap-3">
-      {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
+    <div className="bg-Gray-1 flex h-screen w-full flex-col">
+      {/* 글로벌 상태바 헤더 */}
       <StatusBar
         className="bg-White"
         left={<StatusBarBackButton />}
@@ -105,54 +52,45 @@ export function BriefingPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {/* 2. 스크롤 가능한 본문 영역 */}
-      <div className="flex flex-1 flex-col overflow-y-auto">
-        <div className="flex flex-col gap-3 px-4">
-          {/* 타이틀 */}
-          <h1 className="dnf-Subtitle1 text-Gray-10">브리핑</h1>
-
-          {/* 에이전트 선택 탭 (피그마 스펙 Type 1) */}
-          <Tabs
-            variant="segmented"
-            segmentedType={1}
-            value={activeTab}
-            onChange={handleTabChange}
-            items={[
-              { label: '루키', value: 'rookie' },
-              { label: '프로', value: 'pro' },
-              { label: '탱커', value: 'tanker' },
-            ]}
+      {/* 스크롤 가능한 본문 영역 */}
+      <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
+        <div className="flex flex-col gap-8">
+          {/* 주식 요약 카드 */}
+          <StockSummaryCard
+            stock={{
+              ...stock,
+              hashtags: ['HBM', '반도체', '외국인 순매수'],
+            }}
           />
 
-          {/* 메인 브리핑 시트 (가운데 정렬) */}
-          <div className="mt-2 flex justify-center">
-            <BriefingMainContentSheet
-              agent={mappedAgent}
-              briefing={mappedBriefing}
-              onConfirm={() => setIsDecisionSheetOpen(true)}
-            />
+          {/* AI 사원 브리핑 리스트 */}
+          <div className="flex flex-col gap-4">
+            <div>
+              <h2 className="dnf-Subtitle2 text-Gray-10">AI 사원 브리핑</h2>
+              <p className="pretendard-Button2 text-Gray-6 mt-1">
+                세 사원이 같은 종목을 다르게 봅니다
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {items.map((item) => {
+                const mappedType = item.agentType.toLowerCase() as AgentType
+                return (
+                  <BriefingAgentListItem
+                    key={item.briefingId}
+                    agentType={mappedType}
+                    agentName={item.nickname}
+                    badgeType={directionMap[item.direction].badgeType}
+                    badgeText={directionMap[item.direction].badgeText}
+                    comment={item.oneLiner}
+                    onClick={() => navigate(`/briefing/detail/${item.briefingId}`)}
+                  />
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
-
-      <DecisionBottomSheet
-        isOpen={isDecisionSheetOpen}
-        onClose={() => setIsDecisionSheetOpen(false)}
-        stock={{
-          ...stock,
-          hashtags: ['HBM', '반도체', '외국인 순매수'],
-        }}
-        agent={{ name: agent.nickname }}
-        briefing={{
-          badgeText: mappedBriefing.badgeText,
-          badgeType: mappedBriefing.badgeType,
-          oneLiner: mappedBriefing.comment,
-        }}
-        onConfirm={(direction, confidence) => {
-          // TODO: 실제 예측 등록 API 호출
-          alert(`예측 등록: ${direction}, 확신도: ${confidence}`)
-        }}
-      />
     </div>
   )
 }
