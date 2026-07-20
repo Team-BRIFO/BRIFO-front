@@ -97,9 +97,7 @@ export function StatusBar({
   return (
     <header className={twMerge('bg-White flex w-full flex-col', className)} {...props}>
       {hasStatusArea && (
-        <div className="flex h-7.5 w-full shrink-0 items-center justify-center">
-          {statusArea}
-        </div>
+        <div className="flex h-7.5 w-full shrink-0 items-center justify-center">{statusArea}</div>
       )}
 
       <div className="relative flex h-15 w-full shrink-0 items-center px-4">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import {
   StatusBar,
@@ -8,11 +8,11 @@ import {
 } from '@/components/common/StatusBar'
 import { Tabs } from '@/components/common/Tabs'
 import { BriefingMainContentSheet } from '@/components/feature/briefing/BriefingMainContentSheet'
+import { PredictionCompleteModal } from '@/components/feature/briefing/PredictionCompleteModal'
 import { BriefingResultModal } from '@/components/feature/decision/BriefingResultModal'
 import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
-import { PredictionCompleteModal } from '@/components/feature/briefing/PredictionCompleteModal'
 import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
-import { usePostDecision, useGetDecision } from '@/hooks/queries/useDecision'
+import { useGetDecision, usePostDecision } from '@/hooks/queries/useDecision'
 import { MOCK_AGENT_DETAIL_RESPONSES } from '@/pages/TeamPage/mockAgents'
 import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
@@ -43,6 +43,7 @@ export function BriefingDetailPage() {
   useEffect(() => {
     if (response?.agent) {
       const type = response.agent.agentType.toLowerCase() as AgentType
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveTab(type)
     }
   }, [response?.agent])

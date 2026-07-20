@@ -1,23 +1,23 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
+import Button from '@/components/common/Button'
 import {
   StatusBar,
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
-import Button from '@/components/common/Button'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
-import { MOCK_AGENT_LIST_RESPONSE } from '@/pages/TeamPage/mockAgents'
-import type { AgentType, AgentSummary } from '@/types/domain/agent'
-import { PATH } from '@/routes/paths'
-import { postBriefingRequest } from '@/api/briefing'
+import {
+  type AnalyzeModalType,
+  AnalyzeRequestModal,
+} from '@/components/feature/briefing/AnalyzeRequestModal'
 import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
-import { AnalyzeRequestModal, type AnalyzeModalType } from '@/components/feature/briefing/AnalyzeRequestModal'
+import { MOCK_AGENT_LIST_RESPONSE } from '@/pages/TeamPage/mockAgents'
+import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
 export function BriefingAssignPage() {
   const { cardId } = useParams<{ cardId: string }>()
-  const navigate = useNavigate()
 
   // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
   const { data: cardNewsData } = useGetCardNewsBriefings(cardId ?? null)
@@ -49,7 +49,13 @@ export function BriefingAssignPage() {
 
   const handleNextModal = () => {
     if (!modalType) return
-    const MODAL_TYPES: AnalyzeModalType[] = ['SUCCESS', 'SHORTAGE', 'EXHAUSTED', 'LLM_FAIL', 'RETRY_COUNT']
+    const MODAL_TYPES: AnalyzeModalType[] = [
+      'SUCCESS',
+      'SHORTAGE',
+      'EXHAUSTED',
+      'LLM_FAIL',
+      'RETRY_COUNT',
+    ]
     const currentIndex = MODAL_TYPES.indexOf(modalType)
     if (currentIndex < MODAL_TYPES.length - 1) {
       setModalType(MODAL_TYPES[currentIndex + 1])

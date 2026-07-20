@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
-import Button from '@/components/common/Button'
-import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
-import { BriefingCard } from '@/components/domain/briefing/BriefingCard'
 import CelebrationImage from '@/assets/characters/celebration.svg?react'
+import Button from '@/components/common/Button'
+import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
+import { BriefingCard } from '@/components/domain/briefing/BriefingCard'
 import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
 import { PATH } from '@/routes/paths'
 
@@ -37,20 +36,18 @@ export function BriefingCompletePage() {
 
   // 모든 사원이 완료되었는지 확인
   const isAllComplete =
-    mockAgents.includes('rookie') &&
-    mockAgents.includes('pro') &&
-    mockAgents.includes('tanker')
+    mockAgents.includes('rookie') && mockAgents.includes('pro') && mockAgents.includes('tanker')
 
   return (
     <div className="bg-White box-border flex h-screen w-full flex-col px-4">
       <StatusBar
         left={<StatusBarBackButton />}
-      // title 없음
+        // title 없음
       />
 
-      <div className="flex flex-1 flex-col items-center gap-15.5 mt-20">
+      <div className="mt-20 flex flex-1 flex-col items-center gap-15.5">
         {/* 상단: 캐릭터 & 타이틀 영역 */}
-        <div className=" flex flex-col items-center gap-7">
+        <div className="flex flex-col items-center gap-7">
           {/* 아바타 그룹 연출 (픽셀 이미지 대체) */}
           <CelebrationImage width={208} height={120} />
 
@@ -78,12 +75,7 @@ export function BriefingCompletePage() {
 
         {/* 하단: 액션 버튼 영역 */}
         <div className="flex w-full flex-col items-center gap-4">
-          <Button
-            isFullWidth
-            size="lg"
-            color="primary"
-            onClick={() => navigate(PATH.BRIEFING)}
-          >
+          <Button isFullWidth size="lg" color="primary" onClick={() => navigate(PATH.BRIEFING)}>
             지금 확인하기
           </Button>
           <button

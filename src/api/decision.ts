@@ -1,12 +1,12 @@
+import {
+  MOCK_GET_DECISION_RESPONSES,
+  MOCK_POST_DECISION_RESPONSE,
+} from '@/pages/DecisionPage/mockDecision'
 import type {
+  GetDecisionResponse,
   PostDecisionRequest,
   PostDecisionResponse,
-  GetDecisionResponse,
 } from '@/types/api/decision'
-import {
-  MOCK_POST_DECISION_RESPONSE,
-  MOCK_GET_DECISION_RESPONSES,
-} from '@/pages/DecisionPage/mockDecision'
 
 /**
  * [생성] 특정 브리핑에 대한 예측(결정)을 등록합니다.

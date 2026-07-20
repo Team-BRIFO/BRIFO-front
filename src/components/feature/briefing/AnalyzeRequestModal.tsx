@@ -1,7 +1,5 @@
-import type { ReactNode } from 'react'
-
-import Modal from '@/components/common/Modal'
 import Button from '@/components/common/Button'
+import Modal from '@/components/common/Modal'
 
 export type AnalyzeModalType = 'SUCCESS' | 'SHORTAGE' | 'EXHAUSTED' | 'LLM_FAIL' | 'RETRY_COUNT'
 
@@ -37,15 +35,14 @@ export function AnalyzeRequestModal({
         return (
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
-              <h2 className="dnf-Title4 text-Gray-10 m-0">
-                분석을 의뢰했어요!
-              </h2>
-              <p className="pretendard-Caption2 text-Gray-6 m-0 leading-5 tracking-[-0.04em] text-center">
-                루키 · 프로 · 탱커가 {stockName} 보고서를 쓰고 있어요.<br />
+              <h2 className="dnf-Title4 text-Gray-10 m-0">분석을 의뢰했어요!</h2>
+              <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
+                루키 · 프로 · 탱커가 {stockName} 보고서를 쓰고 있어요.
+                <br />
                 사무실에서 진행 상황을 볼 수 있어요!
               </p>
             </Modal.Header>
-            <Modal.Footer className="mt-5 w-full flex flex-col items-center gap-2">
+            <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-2">
               <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
                 내일까지 기다리기
               </Button>
@@ -60,17 +57,18 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">AP가 부족해요</h2>
-              <div className="flex flex-col items-center gap-1 text-Yellow-40">
+              <div className="text-Yellow-40 flex flex-col items-center gap-1">
                 <span className="pretendard-Caption1 text-Gray-6">부족한 AP</span>
                 <span className="dnf-Title3">{shortageAP}AP</span>
               </div>
-              <p className="pretendard-Button2 text-Gray-6 m-0 leading-5 tracking-[-0.04em] text-center">
-                사원들에게 일급을 주려면 AP가 더 필요해요.<br />
+              <p className="pretendard-Button2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
+                사원들에게 일급을 주려면 AP가 더 필요해요.
+                <br />
                 출석하거나 신용대출로 채울 수 있어요.
               </p>
             </Modal.Header>
-            <Modal.Footer className="mt-5 w-full flex flex-col items-center gap-3.5">
-              <div className="flex w-full gap-2 flex-col">
+            <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
+              <div className="flex w-full flex-col gap-2">
                 <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
                   복기 리포트 보기
                 </Button>
@@ -80,7 +78,7 @@ export function AnalyzeRequestModal({
               </div>
               <button
                 type="button"
-                className="pretendard-Caption1 text-Gray-6 underline underline-offset-2 bg-transparent border-none cursor-pointer"
+                className="pretendard-Caption1 text-Gray-6 cursor-pointer border-none bg-transparent underline underline-offset-2"
                 onClick={onClose}
               >
                 다음에 할게요
@@ -93,16 +91,17 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">오늘은 여기까지</h2>
-              <div className="flex flex-col items-center gap-1 text-Yellow-40">
+              <div className="text-Yellow-40 flex flex-col items-center gap-1">
                 <span className="pretendard-Caption1 text-Gray-6">부족한 AP</span>
                 <span className="dnf-Title3">{shortageAP}AP</span>
               </div>
-              <p className="pretendard-Caption2 text-Gray-6 m-0 leading-5 tracking-[-0.04em] text-center">
-                출석 보너스도 신용대출도 이미 받았어요.<br />
+              <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
+                출석 보너스도 신용대출도 이미 받았어요.
+                <br />
                 내일 출석하면 +50 AP를 다시 드릴게요!
               </p>
             </Modal.Header>
-            <Modal.Footer className="mt-5 w-full flex flex-col items-center gap-3">
+            <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3">
               <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
                 내일까지 기다리기
               </Button>
@@ -116,21 +115,21 @@ export function AnalyzeRequestModal({
               <h2 className="dnf-Title4 text-Gray-10 m-0">
                 <span className="text-Yellow-40">{employeeName}</span>의 분석이 실패했어요
               </h2>
-              <div className="flex flex-col items-center gap-1 text-Yellow-40">
-                <span className="pretendard-Caption1 text-Gray-6 ">재의뢰 비용</span>
+              <div className="text-Yellow-40 flex flex-col items-center gap-1">
+                <span className="pretendard-Caption1 text-Gray-6">재의뢰 비용</span>
                 <span className="dnf-Title3">{shortageAP} AP</span>
               </div>
-              <p className="pretendard-Caption2 text-Gray-6 m-0 text-center whitespace-pre-wrap leading-5 tracking-[-0.04em]">
+              <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em] whitespace-pre-wrap">
                 {`${employeeName}가 분석에 실패했어요.\n의뢰비는 환불됐어요. 다시 시도할까요?`}
               </p>
             </Modal.Header>
-            <Modal.Footer className="mt-5 w-full flex flex-col items-center gap-3.5">
+            <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
               <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
                 다시 시도하기 ({shortageAP}AP)
               </Button>
               <button
                 type="button"
-                className="pretendard-Caption1 text-Gray-6 font-semibold underline underline-offset-2 bg-transparent border-none cursor-pointer"
+                className="pretendard-Caption1 text-Gray-6 cursor-pointer border-none bg-transparent font-semibold underline underline-offset-2"
                 onClick={onClose}
               >
                 다음에 할게요
@@ -142,21 +141,20 @@ export function AnalyzeRequestModal({
         return (
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
-              <h2 className="dnf-Title4 text-Gray-10 m-0">
-                잠시후 다시 시도해주세요
-              </h2>
-              <div className="flex flex-col items-center gap-1 text-Yellow-40">
+              <h2 className="dnf-Title4 text-Gray-10 m-0">잠시후 다시 시도해주세요</h2>
+              <div className="text-Yellow-40 flex flex-col items-center gap-1">
                 <span className="pretendard-Caption1 text-Gray-6">오늘 재시도</span>
                 <span className="dnf-Title3">
                   {retryCount}/{maxRetryCount}
                 </span>
               </div>
-              <p className="pretendard-Caption2 text-Gray-6 m-0 leading-5 tracking-[-0.04em] text-center">
-                {employeeName} 분석이 계속 실패하고 있어요.<br />
+              <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
+                {employeeName} 분석이 계속 실패하고 있어요.
+                <br />
                 잠시 후 다시 시도해 주세요.
               </p>
             </Modal.Header>
-            <Modal.Footer className="mt-5 w-full flex flex-col items-center gap-3.5">
+            <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
               <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
                 확인
               </Button>
@@ -170,9 +168,7 @@ export function AnalyzeRequestModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} ariaLabel="분석 의뢰 상태 모달">
-      <div className="flex flex-col items-center w-full">
-        {renderContent()}
-      </div>
+      <div className="flex w-full flex-col items-center">{renderContent()}</div>
     </Modal>
   )
 }

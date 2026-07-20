@@ -74,9 +74,7 @@ export function BriefingCard({
       <div className="flex w-full items-center justify-between px-5 py-3">
         <div className="flex items-center gap-2">
           {rank != null && (
-            <span
-              className={`dnf-Subtitle3 w-4.5 text-center transition-colors ${rankClass}`}
-            >
+            <span className={`dnf-Subtitle3 w-4.5 text-center transition-colors ${rankClass}`}>
               {rank}
             </span>
           )}
@@ -92,7 +90,9 @@ export function BriefingCard({
       </div>
 
       {/* 하단 라인: 3개의 개별 에이전트 완료/진행중 배지 */}
-      <div className={`flex w-full items-center gap-3 px-4 py-2 transition-colors ${bottomBgClass}`}>
+      <div
+        className={`flex w-full items-center gap-3 px-4 py-2 transition-colors ${bottomBgClass}`}
+      >
         <Badge type={rookieStatus === '완료' ? 'rookie-complete' : 'rookie-progress'}>
           {`루키 ${rookieStatus}`}
         </Badge>

@@ -1,5 +1,5 @@
-import Modal from '@/components/common/Modal'
 import Button from '@/components/common/Button'
+import Modal from '@/components/common/Modal'
 import { StockSummaryCard } from '@/components/feature/stock/StockSummaryCard'
 
 export interface PredictionCompleteModalProps {

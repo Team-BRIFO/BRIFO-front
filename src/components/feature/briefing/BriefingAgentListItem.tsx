@@ -15,9 +15,7 @@ export function BriefingAgentListItem({
   agentType,
   agentName,
   badgeType,
-  badgeText,
   comment,
-  className = '',
   ...props
 }: BriefingAgentListItemProps) {
   return (
