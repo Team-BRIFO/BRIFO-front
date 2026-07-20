@@ -8,6 +8,9 @@ export interface ProgressBarProps {
   /** 동그라미(Thumb) 표시 여부 (기본: false) */
   hasThumb?: boolean
 
+  /** 부드러운 애니메이션 적용 여부 (기본: true, 슬라이더 드래그 시 false 권장) */
+  isAnimated?: boolean
+
   /** 프로그레스 바 색상 (기본: bg-Yellow-45) */
   barColor?: string
 
@@ -27,6 +30,7 @@ export interface ProgressBarProps {
 export function ProgressBar({
   progress,
   hasThumb = false,
+  isAnimated = true,
   barColor = 'bg-Yellow-45',
   trackColor = 'bg-Gray-2',
   heightClassName = 'h-2',
@@ -48,9 +52,12 @@ export function ProgressBar({
     >
       <div
         className={[
-          'absolute top-0 left-0 h-full rounded-[inherit] transition-all duration-300 ease-in-out',
+          'absolute top-0 left-0 h-full rounded-[inherit]',
+          isAnimated ? 'transition-all duration-300 ease-in-out' : '',
           barColor,
-        ].join(' ')}
+        ]
+          .filter(Boolean)
+          .join(' ')}
         style={{ width: `${clampedProgress}%` }}
       >
         {hasThumb && (

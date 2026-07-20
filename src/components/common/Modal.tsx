@@ -137,7 +137,7 @@ function Modal({
         aria-modal="true"
         aria-label={ariaLabel}
         tabIndex={-1}
-        className={`bg-White w-82.5 rounded-3xl px-6 py-7 shadow-lg ${className} `}
+        className={`bg-White w-82.5 rounded-3xl px-5 py-6 shadow-lg ${className} `}
         onClick={(event) => event.stopPropagation()}
       >
         {children}
@@ -163,7 +163,7 @@ interface ModalFooterProps {
 }
 
 function Header({ children, className = '' }: ModalHeaderProps) {
-  return <header className={`mb-4 text-center ${className}`}>{children}</header>
+  return <header className={`text-center ${className}`}>{children}</header>
 }
 
 function Body({ children, className = '' }: ModalBodyProps) {
@@ -171,7 +171,7 @@ function Body({ children, className = '' }: ModalBodyProps) {
 }
 
 function Footer({ children, className = '' }: ModalFooterProps) {
-  return <footer className={`mt-8 flex w-full flex-col gap-2 ${className}`}>{children}</footer>
+  return <footer className={`flex w-full flex-col gap-2 ${className}`}>{children}</footer>
 }
 
 Modal.Header = Header

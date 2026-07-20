@@ -26,7 +26,7 @@ export function StockPriceChange({
   const formattedChangeRate = isPositive ? `+${changeRate}%` : `${changeRate}%`
 
   return (
-    <div className={`flex flex-col gap-0.5 ${alignmentClass} ${className}`}>
+    <div className={`flex flex-col gap-1 ${alignmentClass} ${className}`}>
       <span className={`dnf-Caption1 ${textColor}`}>{price.toLocaleString()}</span>
       <span className={`pretendard-Caption1 ${textColor}`}>{formattedChangeRate}</span>
     </div>

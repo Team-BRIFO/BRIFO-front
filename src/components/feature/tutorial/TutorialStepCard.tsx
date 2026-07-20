@@ -18,7 +18,7 @@ export default function TutorialStepCard({ step, title, description }: TutorialS
 
         <span className="pretendard-Body1-Semibold text-Gray-9 mt-1">{title}</span>
 
-        <span className="pretendard-Caption2 mt-1 max-w-48 leading-[132%] text-[#8A8499]">
+        <span className="pretendard-Caption2 text-Gray-6 mt-1 max-w-48 leading-[1.32]">
           {description}
         </span>
       </div>

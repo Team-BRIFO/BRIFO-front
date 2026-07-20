@@ -2,6 +2,9 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { AuthLayout } from '@/layouts/AuthLayout'
+import { BriefingAssignPage } from '@/pages/briefing/BriefingAssignPage'
+import { BriefingCompletePage } from '@/pages/briefing/BriefingCompletePage'
+import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
 import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
 import { CardNewsDetailPage } from '@/pages/CardNewsDetailPage/CardNewsDetailPage'
 import { DiaryCalendarPage } from '@/pages/Diary/DiaryCalendarPage/DiaryCalendarPage'
@@ -60,6 +63,18 @@ export const router = createBrowserRouter([
       {
         path: PATH.BRIEFING,
         element: <BriefingPage />,
+      },
+      {
+        path: PATH.BRIEFING_ASSIGN_ROUTE,
+        element: <BriefingAssignPage />,
+      },
+      {
+        path: PATH.BRIEFING_COMPLETE_ROUTE,
+        element: <BriefingCompletePage />,
+      },
+      {
+        path: PATH.BRIEFING_DETAIL_ROUTE,
+        element: <BriefingDetailPage />,
       },
 
       // 팀 탭
