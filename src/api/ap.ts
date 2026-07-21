@@ -10,7 +10,7 @@ interface GetApTransactionsParams {
  * @param params 커서(cursor)와 조회 개수(size, 기본값 20)
  */
 export const getApTransactions = async (
-  params?: GetApTransactionsParams
+  params?: GetApTransactionsParams,
 ): Promise<ApTransactionResponse> => {
   // TODO: 공통 apiClient(src/api/axios.ts) 연동
   return {
