@@ -137,12 +137,13 @@ export function AnalyzeCard({
                     {stock.price.toLocaleString()}
                   </span>
                   <span
-                    className={`pretendard-Caption3 ${stock.changeRate > 0
-                      ? 'text-Pink-30'
-                      : stock.changeRate < 0
-                        ? 'text-Green-30'
-                        : 'text-Gray-6'
-                      }`}
+                    className={`pretendard-Caption3 ${
+                      stock.changeRate > 0
+                        ? 'text-Pink-30'
+                        : stock.changeRate < 0
+                          ? 'text-Green-30'
+                          : 'text-Gray-6'
+                    }`}
                   >
                     {stock.changeRate > 0 ? '+' : ''}
                     {stock.changeRate}%
@@ -170,8 +171,8 @@ export function AnalyzeCard({
       {/* Bottom_Footer_Bar */}
       {type === 'normal' && (
         <>
-          {resultType === 'HASHTAG'
-            ? stock.keywords &&
+          {resultType === 'HASHTAG' ? (
+            stock.keywords &&
             stock.keywords.length > 0 && (
               <div className="bg-Gray-1 text-Gray-6 pretendard-Caption1 flex flex-wrap gap-2 px-4 py-2">
                 {stock.keywords.map((keyword, idx) => (
@@ -181,51 +182,47 @@ export function AnalyzeCard({
                 ))}
               </div>
             )
-            : resultType === 'BRIEFING'
-              ? briefingFooter && (
-                <div
-                  className="bg-Gray-1 flex items-center justify-between px-4 py-2"
-                >
-                  <div className="flex flex-1 items-center gap-3 overflow-hidden">
-                    <span className="text-Gray-8 pretendard-Caption2 shrink-0">
-                      카드뉴스 {briefingFooter.newsCount}건
-                    </span>
-                    <span className="pretendard-Caption2 text-Gray-6 truncate max-w-[171px]">
-                      {briefingFooter.headline}
-                    </span>
-                  </div>
+          ) : resultType === 'BRIEFING' ? (
+            briefingFooter && (
+              <div className="bg-Gray-1 flex items-center justify-between px-4 py-2">
+                <div className="flex flex-1 items-center gap-3 overflow-hidden">
+                  <span className="text-Gray-8 pretendard-Caption2 shrink-0">
+                    카드뉴스 {briefingFooter.newsCount}건
+                  </span>
+                  <span className="pretendard-Caption2 text-Gray-6 max-w-[171px] truncate">
+                    {briefingFooter.headline}
+                  </span>
                 </div>
-              )
-              : resultType === 'ERROR'
-                ? (
-                  <div className="bg-Gray-1 flex items-center justify-between px-4 py-1">
-                    <span className={twMerge('pretendard-Caption2 text-Pink-30')}>
-                      오류
-                    </span>
-                    {stock.tradeDate && (
-                      <span className={twMerge('pretendard-Caption2 text-Pink-30')}>
-                        {stock.tradeDate.replace(/-/g, '.')}
-                      </span>
-                    )}
-                  </div>
-                )
-                : footerConfig && (
-                  <div
-                    className={twMerge(
-                      'flex items-center justify-between px-4 py-1',
-                      footerConfig.bgClass,
-                    )}
-                  >
-                    <span className={twMerge('pretendard-Caption2', footerConfig.labelClass)}>
-                      {footerConfig.label}
-                    </span>
-                    {stock.tradeDate && (
-                      <span className={twMerge('pretendard-Caption2 text-Gray-4')}>
-                        {stock.tradeDate.replace(/-/g, '.')}
-                      </span>
-                    )}
-                  </div>
+              </div>
+            )
+          ) : resultType === 'ERROR' ? (
+            <div className="bg-Gray-1 flex items-center justify-between px-4 py-1">
+              <span className={twMerge('pretendard-Caption2 text-Pink-30')}>오류</span>
+              {stock.tradeDate && (
+                <span className={twMerge('pretendard-Caption2 text-Pink-30')}>
+                  {stock.tradeDate.replace(/-/g, '.')}
+                </span>
+              )}
+            </div>
+          ) : (
+            footerConfig && (
+              <div
+                className={twMerge(
+                  'flex items-center justify-between px-4 py-1',
+                  footerConfig.bgClass,
                 )}
+              >
+                <span className={twMerge('pretendard-Caption2', footerConfig.labelClass)}>
+                  {footerConfig.label}
+                </span>
+                {stock.tradeDate && (
+                  <span className={twMerge('pretendard-Caption2 text-Gray-4')}>
+                    {stock.tradeDate.replace(/-/g, '.')}
+                  </span>
+                )}
+              </div>
+            )
+          )}
         </>
       )}
     </div>
