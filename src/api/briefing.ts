@@ -88,7 +88,7 @@ export const postBriefingRequest = async (
           requestedAgents: req.agentIds.map((agentId) => ({
             agentId,
             briefingId: `mock-briefing-${agentId}`,
-            agentType: 'rookie', // mock type
+            agentType: 'ROOKIE', // mock type
             salaryCost: 100,
           })),
         },
