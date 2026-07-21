@@ -182,10 +182,7 @@ function BottomSheet({
         onClick={(event) => event.stopPropagation()}
       >
         {showHandle && (
-          <div
-            aria-hidden="true"
-            className="bg-Gray-3 mx-auto h-1 w-30 shrink-0 rounded-full"
-          />
+          <div aria-hidden="true" className="bg-Gray-3 mx-auto h-1 w-30 shrink-0 rounded-full" />
         )}
 
         {hasHeader && (
@@ -200,7 +197,7 @@ function BottomSheet({
           </div>
         )}
 
-        <div className={`flex-1 w-full overflow-y-auto px-6 ${hasFooter ? '' : 'pb-7'}`}>
+        <div className={`w-full flex-1 overflow-y-auto px-6 ${hasFooter ? '' : 'pb-7'}`}>
           {resolvedBody}
         </div>
 

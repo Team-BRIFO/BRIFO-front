@@ -61,7 +61,7 @@ export function DecisionBottomSheet({
       <BottomSheet.Body className="flex flex-col gap-6">
         <div className="flex flex-col gap-3">
           {/* 바텀시트 헤더 (타이틀) */}
-          <div className="text-center mt-4.5">
+          <div className="mt-4.5 text-center">
             <h2 className="dnf-Subtitle2 text-Gray-10 text-center">투자 결정</h2>
           </div>
           {/* 주식 요약 카드 */}

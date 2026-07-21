@@ -36,14 +36,14 @@ export function PredictionCompleteModal({
           </div>
 
           {/* 주식 정보 카드 */}
-          <AnalyzeCard 
+          <AnalyzeCard
             type="normal"
             resultType="HASHTAG"
             stock={{
               ...stock,
               tags: stock.hashtags,
-            }} 
-            className="w-full" 
+            }}
+            className="w-full"
           />
 
           {/* 안내 텍스트 */}

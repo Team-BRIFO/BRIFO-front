@@ -6,10 +6,14 @@ import { StockPriceChange } from '@/components/domain/stock/StockPriceChange'
 
 export type AnalyzeType = 'normal' | 'Analyze_small'
 export type AnalyzeResultType =
-  | 'SUCCESS_UP' | 'FAIL_UP'
-  | 'SUCCESS_DOWN' | 'FAIL_DOWN'
-  | 'SUCCESS_HOLD' | 'FAIL_HOLD'
-  | 'ERROR' | 'HASHTAG'
+  | 'SUCCESS_UP'
+  | 'FAIL_UP'
+  | 'SUCCESS_DOWN'
+  | 'FAIL_DOWN'
+  | 'SUCCESS_HOLD'
+  | 'FAIL_HOLD'
+  | 'ERROR'
+  | 'HASHTAG'
 
 export interface AnalyzeCardProps {
   /** 카드 레이아웃 형태 (normal: 하단바/해시태그 포함, Analyze_small: 상단 간단형) */
@@ -42,7 +46,10 @@ export function AnalyzeCard({
   className,
 }: AnalyzeCardProps) {
   const getBadgeConfig = () => {
-    const configMap: Record<AnalyzeResultType, { type: BadgeType; text: string; apColor: string } | null> = {
+    const configMap: Record<
+      AnalyzeResultType,
+      { type: BadgeType; text: string; apColor: string } | null
+    > = {
       HASHTAG: null,
       ERROR: { type: 'error', text: '에러', apColor: 'text-Pink-30' },
       SUCCESS_UP: { type: 'rise', text: '적중', apColor: 'text-Pink-30' },
@@ -56,7 +63,10 @@ export function AnalyzeCard({
   }
 
   const getFooterConfig = () => {
-    const configMap: Record<AnalyzeResultType, { bgClass?: string; label: string; labelClass?: string } | null> = {
+    const configMap: Record<
+      AnalyzeResultType,
+      { bgClass?: string; label: string; labelClass?: string } | null
+    > = {
       HASHTAG: null,
       ERROR: { bgClass: 'bg-Gray-1', label: '오류', labelClass: 'text-Pink-30' },
       SUCCESS_UP: { bgClass: 'bg-Gray-1', label: '상승 예측 성공', labelClass: 'text-Gray-4' },
@@ -110,12 +120,13 @@ export function AnalyzeCard({
                     {stock.price.toLocaleString()}
                   </span>
                   <span
-                    className={`pretendard-Caption3 ${stock.changeRate > 0
-                      ? 'text-Pink-30'
-                      : stock.changeRate < 0
-                        ? 'text-Green-30'
-                        : 'text-Gray-6'
-                      }`}
+                    className={`pretendard-Caption3 ${
+                      stock.changeRate > 0
+                        ? 'text-Pink-30'
+                        : stock.changeRate < 0
+                          ? 'text-Green-30'
+                          : 'text-Gray-6'
+                    }`}
                   >
                     {stock.changeRate > 0 ? '+' : ''}
                     {stock.changeRate}%
@@ -143,33 +154,37 @@ export function AnalyzeCard({
       {/* Bottom_Footer_Bar */}
       {type === 'normal' && (
         <>
-          {resultType === 'HASHTAG' ? (
-            stock.tags && stock.tags.length > 0 && (
-              <div className="bg-Gray-1 text-Gray-6 pretendard-Caption1 flex flex-wrap gap-2 px-4 py-3">
-                {stock.tags.map((tag, idx) => (
-                  <span key={idx}>#{tag}</span>
-                ))}
-              </div>
-            )
-          ) : (
-            footerConfig && (
-              <div
-                className={twMerge(
-                  'flex items-center justify-between px-4 py-1',
-                  footerConfig.bgClass,
-                )}
-              >
-                <span className={twMerge('pretendard-Caption2', footerConfig.labelClass)}>
-                  {footerConfig.label}
-                </span>
-                {dateText && (
-                  <span className={twMerge('pretendard-Caption2', footerConfig.labelClass || 'text-Gray-4')}>
-                    {dateText}
+          {resultType === 'HASHTAG'
+            ? stock.tags &&
+              stock.tags.length > 0 && (
+                <div className="bg-Gray-1 text-Gray-6 pretendard-Caption1 flex flex-wrap gap-2 px-4 py-3">
+                  {stock.tags.map((tag, idx) => (
+                    <span key={idx}>#{tag}</span>
+                  ))}
+                </div>
+              )
+            : footerConfig && (
+                <div
+                  className={twMerge(
+                    'flex items-center justify-between px-4 py-1',
+                    footerConfig.bgClass,
+                  )}
+                >
+                  <span className={twMerge('pretendard-Caption2', footerConfig.labelClass)}>
+                    {footerConfig.label}
                   </span>
-                )}
-              </div>
-            )
-          )}
+                  {dateText && (
+                    <span
+                      className={twMerge(
+                        'pretendard-Caption2',
+                        footerConfig.labelClass || 'text-Gray-4',
+                      )}
+                    >
+                      {dateText}
+                    </span>
+                  )}
+                </div>
+              )}
         </>
       )}
     </div>

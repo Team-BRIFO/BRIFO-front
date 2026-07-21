@@ -26,21 +26,16 @@ export function GlossaryBottomSheet({
   if (!term) return null
 
   return (
-    <BottomSheet isOpen={isOpen} onClose={onClose} className='items-center gap-4.5'>
-      <BottomSheet.Body className='flex flex-1 flex-col gap-5'>
-        <div className='flex flex-col gap-2 items-center'>
+    <BottomSheet isOpen={isOpen} onClose={onClose} className="items-center gap-4.5">
+      <BottomSheet.Body className="flex flex-1 flex-col gap-5">
+        <div className="flex flex-col items-center gap-2">
           <Badge size="md" type="normal">
             주식 용어
           </Badge>
-          <p className='dnf-Title4'>
-            {term.surface}
-          </p>
+          <p className="dnf-Title4">{term.surface}</p>
         </div>
-        <div className='flex flex-col gap-2'>
-          <AgentChat
-            type="rookie"
-            message="이 단어, 제가 쉽게 알려드릴게요!"
-          />
+        <div className="flex flex-col gap-2">
+          <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
           <GlossaryDefinition>{definition}</GlossaryDefinition>
         </div>
         <div className="flex w-full justify-center">
@@ -48,7 +43,7 @@ export function GlossaryBottomSheet({
         </div>
       </BottomSheet.Body>
 
-      <BottomSheet.Footer className="flex flex-col w-full">
+      <BottomSheet.Footer className="flex w-full flex-col">
         <Button size="lg" isFullWidth className="w-full" onClick={onClose}>
           이해했어요
         </Button>

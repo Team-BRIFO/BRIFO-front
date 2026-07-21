@@ -29,7 +29,7 @@ export function NewsCardIndicator({ total, currentIndex, className = '' }: NewsC
           <div
             key={idx}
             className={`h-2 shrink-0 rounded-full transition-all duration-300 ${
-              isActive ? 'w-6 bg-Yellow-50' : 'w-2 bg-Gray-3'
+              isActive ? 'bg-Yellow-50 w-6' : 'bg-Gray-3 w-2'
             }`}
             aria-current={isActive ? 'page' : undefined}
           />

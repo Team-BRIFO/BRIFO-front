@@ -14,7 +14,7 @@ export interface NewsCardPointListProps {
 const renderHighlightedText = (
   text: string,
   terms?: GlossaryTerm[],
-  onTermClick?: (termId: string) => void
+  onTermClick?: (termId: string) => void,
 ): ReactNode => {
   if (!terms || terms.length === 0) return text
 
@@ -38,7 +38,7 @@ const renderHighlightedText = (
               onClick={onTermClick}
             >
               {term.surface}
-            </GlossaryHighlightText>
+            </GlossaryHighlightText>,
           )
         }
       })
@@ -49,7 +49,13 @@ const renderHighlightedText = (
   return <>{elements}</>
 }
 
-export function NewsCardPointList({ title, points, terms, onTermClick, className = '' }: NewsCardPointListProps) {
+export function NewsCardPointList({
+  title,
+  points,
+  terms,
+  onTermClick,
+  className = '',
+}: NewsCardPointListProps) {
   if (!points || points.length === 0) return null
 
   return (

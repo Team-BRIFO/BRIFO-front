@@ -51,7 +51,11 @@ export function NewsCard({ data, onTermClick, className = '' }: NewsCardProps) {
               {data.relatedStocks.map((stock, idx) => {
                 const isPositive = stock.changeRate > 0
                 const isNegative = stock.changeRate < 0
-                const badgeType: BadgeType = isPositive ? 'stock-rise' : isNegative ? 'stock-fall' : 'gray'
+                const badgeType: BadgeType = isPositive
+                  ? 'stock-rise'
+                  : isNegative
+                    ? 'stock-fall'
+                    : 'gray'
                 const sign = isPositive ? '+' : ''
                 return (
                   <Badge key={idx} type={badgeType}>

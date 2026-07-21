@@ -35,9 +35,8 @@ export function NewsCardPage() {
     setSelectedTermId(null)
   }
 
-  const selectedTerm = MOCK_CARDS
-    .flatMap((c) => c.terms || [])
-    .find((t) => t.termId === selectedTermId) || null
+  const selectedTerm =
+    MOCK_CARDS.flatMap((c) => c.terms || []).find((t) => t.termId === selectedTermId) || null
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return
@@ -56,8 +55,8 @@ export function NewsCardPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      <main className="flex-1 gap-8 mx-5 mt-5">
-        <div className='flex flex-col gap-3 overflow-x-hidden overflow-y-auto '>
+      <main className="mx-5 mt-5 flex-1 gap-8">
+        <div className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto">
           <div
             ref={scrollContainerRef}
             className="flex w-full snap-x snap-mandatory overflow-x-auto [&::-webkit-scrollbar]:hidden"
@@ -77,11 +76,7 @@ export function NewsCardPage() {
           <p className="text-Gray-6 pretendard-Caption2 text-center">
             카드뉴스 {MOCK_CARDS.length}건을 사원이 모두 읽고 분석해요 · 종목당 1회
           </p>
-          <Button 
-            size="lg" 
-            isFullWidth
-            onClick={() => navigate(PATH.BRIEFING_ASSIGN(id || ''))}
-          >
+          <Button size="lg" isFullWidth onClick={() => navigate(PATH.BRIEFING_ASSIGN(id || ''))}>
             사원에게 분석 의뢰하기
           </Button>
         </div>
