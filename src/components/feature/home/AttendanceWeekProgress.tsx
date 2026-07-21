@@ -39,7 +39,7 @@ export default function AttendanceWeekProgress({
                 }`}
               >
                 {isAttended ? (
-                  <CheckIcon className="w- h-6 text-white" />
+                  <CheckIcon className="h-6 w-6 text-white" />
                 ) : (
                   <StarIcon className="text-Gray-3 h-6 w-6" />
                 )}

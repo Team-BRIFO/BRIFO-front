@@ -17,7 +17,7 @@ export default function NotificationItem({
     <button
       type="button"
       onClick={onClick}
-      className="border-Gray-2 } flex w-full items-start gap-3 rounded-lg border bg-white p-3 text-left"
+      className="border-Gray-2 flex w-full items-start gap-3 rounded-lg border bg-white p-3 text-left"
     >
       <NotificationIcon className="h-10 w-10 shrink-0" />
 
