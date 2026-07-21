@@ -21,6 +21,8 @@ import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
+import AgreementPage from '@/pages/AgreementPage/AgreementPage'
+import AgreementDetailPage from '@/pages/AgreementPage/AgreementDetailPage'
 
 export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
@@ -30,6 +32,14 @@ export const router = createBrowserRouter([
       {
         path: PATH.SPLASH,
         element: <SplashPage />,
+      },
+      {
+        path: PATH.AGREEMENT,
+        element: <AgreementPage />,
+      },
+      {
+        path: PATH.AGREEMENT_DETAIL,
+        element: <AgreementDetailPage />,
       },
       {
         path: PATH.ONBOARDING,
