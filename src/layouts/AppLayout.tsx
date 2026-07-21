@@ -39,7 +39,7 @@ export function AppLayout() {
     <Container
       variant="page"
       padding="none"
-      className="relative mx-auto h-[100dvh] overflow-hidden shadow-xl"
+      className="relative mx-auto h-[100dvh] overflow-hidden"
     >
       <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         <Outlet />
