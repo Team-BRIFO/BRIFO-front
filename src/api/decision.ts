@@ -21,10 +21,14 @@ export const postDecision = async (
 
   return new Promise((resolve) => {
     setTimeout(() => {
+      const mock = MOCK_POST_DECISION_RESPONSE.default
       resolve({
-        ...MOCK_POST_DECISION_RESPONSE.default,
-        direction: req.direction,
-        confidenceLevel: req.confidenceLevel,
+        ...mock,
+        result: {
+          ...mock.result,
+          direction: req.direction,
+          confidenceLevel: req.confidenceLevel,
+        },
       })
     }, 500)
   })
