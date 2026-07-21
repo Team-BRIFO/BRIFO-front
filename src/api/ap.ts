@@ -1,17 +1,9 @@
 import type { ApTransactionResponse } from '@/types/api/ap'
 
-interface GetApTransactionsParams {
-  cursor?: string
-  size?: number
-}
-
 /**
  * AP 거래 내역 조회 API
- * @param params 커서(cursor)와 조회 개수(size, 기본값 20)
  */
-export const getApTransactions = async (
-  params?: GetApTransactionsParams,
-): Promise<ApTransactionResponse> => {
+export const getApTransactions = async (): Promise<ApTransactionResponse> => {
   // TODO: 공통 apiClient(src/api/axios.ts) 연동
   return {
     success: true,

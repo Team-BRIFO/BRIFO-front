@@ -1,5 +1,5 @@
-import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
 import type { AnalyzeResultType } from '@/components/feature/stock/AnalyzeCard'
+import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
 
 const MOCK_STOCK = {
   stockId: '1',

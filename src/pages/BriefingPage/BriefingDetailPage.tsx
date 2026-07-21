@@ -25,8 +25,8 @@ export function BriefingDetailPage() {
   const { data: response, isLoading, isError } = useGetBriefingDetail(briefingId ?? null)
   const { mutate: submitDecision } = usePostDecision(briefingId ?? '')
 
-  // 탭 상태 (API 응답 기반으로 동기화)
-  const activeTab = (response?.agent?.agentType.toLowerCase() as AgentType) || 'rookie'
+  // 임시로 응답 데이터 중 agent 정보를 이용해 agentType 판단
+  const activeTab = (response?.result?.agent?.agentType.toLowerCase() as AgentType) || 'rookie'
 
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
@@ -66,7 +66,8 @@ export function BriefingDetailPage() {
     )
   }
 
-  const { stock, agent, newsCard, briefing } = response
+  // 응답 데이터 분해
+  const { stock, agent, newsCard, briefing } = response.result
 
   // 실제 API 연동 전이므로, Agent 상세 모의 데이터를 가져와서 UI 스펙에 맞게 주입
   const agentDetail = MOCK_AGENT_DETAIL_RESPONSES[agent.agentId]?.result

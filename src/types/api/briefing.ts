@@ -1,4 +1,6 @@
-export interface BriefingDetailStock {
+import type { ApiResponse } from './common'
+
+export interface BriefingStockDTO {
   stockId: string
   name: string
   price: number
@@ -7,19 +9,19 @@ export interface BriefingDetailStock {
   hashtags?: string[]
 }
 
-export interface BriefingDetailAgent {
+export interface BriefingAgentDTO {
   agentId: string
   agentType: string
   nickname: string
   modelName: string
 }
 
-export interface BriefingDetailNewsCard {
+export interface BriefingNewsCardDTO {
   cardId: string
   headline: string | null
 }
 
-export interface BriefingDetailData {
+export interface BriefingDataDTO {
   briefingId: string
   direction: 'UP' | 'DOWN' | 'NEUTRAL'
   confidenceRate: number
@@ -28,15 +30,16 @@ export interface BriefingDetailData {
 }
 
 // 1. GET /api/briefings/{briefingId} (기존 단건 조회)
-export interface BriefingDetailResponse {
-  stock: BriefingDetailStock
-  agent: BriefingDetailAgent
-  newsCard: BriefingDetailNewsCard
-  briefing: BriefingDetailData
+export interface BriefingDetailResult {
+  stock: BriefingStockDTO
+  agent: BriefingAgentDTO
+  newsCard: BriefingNewsCardDTO
+  briefing: BriefingDataDTO
 }
+export type BriefingDetailResponse = ApiResponse<BriefingDetailResult>
 
 // 2. GET /api/news/{cardId}/briefing (카드뉴스 기준 다건 조회)
-export interface BriefingListItem {
+export interface BriefingListItemDTO {
   briefingId: string
   oneLiner: string
   direction: 'UP' | 'DOWN' | 'NEUTRAL'
@@ -45,13 +48,14 @@ export interface BriefingListItem {
   agentType: string
 }
 
-export interface BriefingListByCardResponse {
-  stock: BriefingDetailStock
-  items: BriefingListItem[]
+export interface BriefingListByCardResult {
+  stock: BriefingStockDTO
+  items: BriefingListItemDTO[]
 }
+export type BriefingListByCardResponse = ApiResponse<BriefingListByCardResult>
 
 // 3. GET /api/briefings/office (오피스 전체 브리핑 조회)
-export interface OfficeAgentStatus {
+export interface OfficeAgentStatusDTO {
   briefingId: string
   agentId: string
   nickname: string
@@ -59,29 +63,31 @@ export interface OfficeAgentStatus {
   status: 'PENDING' | 'ANALYZING' | 'COMPLETED' | 'FAILED'
 }
 
-export interface OfficeBriefingItem {
+export interface OfficeBriefingItemDTO {
   stockName: string
-  agents: OfficeAgentStatus[]
+  agents: OfficeAgentStatusDTO[]
 }
 
-export interface OfficeBriefingListResponse {
-  items: OfficeBriefingItem[]
+export interface OfficeBriefingListResult {
+  items: OfficeBriefingItemDTO[]
 }
+export type OfficeBriefingListResponse = ApiResponse<OfficeBriefingListResult>
 
 // 4. POST /api/news/{cardId}/briefings (브리핑 요청 생성)
 export interface PostBriefingRequest {
   agentIds: string[]
 }
 
-export interface RequestedAgentData {
+export interface RequestedAgentDataDTO {
   briefingId: string
   agentId: string
   agentType: string
   salaryCost: number
 }
 
-export interface PostBriefingResponse {
+export interface PostBriefingResult {
   requestedCount: number
   totalSalaryCost: number
-  requestedAgents: RequestedAgentData[]
+  requestedAgents: RequestedAgentDataDTO[]
 }
+export type PostBriefingResponse = ApiResponse<PostBriefingResult>

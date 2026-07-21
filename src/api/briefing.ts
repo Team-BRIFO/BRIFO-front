@@ -79,14 +79,19 @@ export const postBriefingRequest = async (
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
-        requestedCount: req.agentIds.length,
-        totalSalaryCost: req.agentIds.length * 100, // mock salary cost
-        requestedAgents: req.agentIds.map((agentId) => ({
-          agentId,
-          briefingId: `mock-briefing-${agentId}`,
-          agentType: 'rookie', // mock type
-          salaryCost: 100,
-        })),
+        success: true,
+        code: 'COMMON_200',
+        message: '요청에 성공했습니다.',
+        result: {
+          requestedCount: req.agentIds.length,
+          totalSalaryCost: req.agentIds.length * 100, // mock salary cost
+          requestedAgents: req.agentIds.map((agentId) => ({
+            agentId,
+            briefingId: `mock-briefing-${agentId}`,
+            agentType: 'rookie', // mock type
+            salaryCost: 100,
+          })),
+        },
       })
     }, 500)
   })

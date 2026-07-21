@@ -16,7 +16,7 @@ export function BriefingPage() {
   const cardId = searchParams.get('cardId') ?? 'mock-card-id'
   const navigate = useNavigate()
 
-  const { data: response, isLoading, isError } = useGetCardNewsBriefings(cardId)
+  const { data: response, isLoading, isError } = useGetCardNewsBriefings(cardId ?? null)
 
   if (isLoading) {
     return (
@@ -34,7 +34,7 @@ export function BriefingPage() {
     )
   }
 
-  const { stock, items } = response
+  const { stock, items } = response?.result || {}
 
   const directionMap = {
     UP: { badgeType: 'rise' as const, badgeText: '상승 예측' },
