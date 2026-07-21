@@ -2,14 +2,17 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { AuthLayout } from '@/layouts/AuthLayout'
+import { BriefingAssignPage } from '@/pages/BriefingPage/BriefingAssignPage'
+import { BriefingCompletePage } from '@/pages/BriefingPage/BriefingCompletePage'
+import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
 import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
-import { CardNewsDetailPage } from '@/pages/CardNewsDetailPage/CardNewsDetailPage'
 import { DiaryCalendarPage } from '@/pages/Diary/DiaryCalendarPage/DiaryCalendarPage'
 import { DiaryDetailPage } from '@/pages/Diary/DiaryDetailPage/DiaryDetailPage'
 import { DiaryListPage } from '@/pages/Diary/DiaryListPage/DiaryListPage'
 import { NotFoundPage } from '@/pages/error/NotFoundPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyPage } from '@/pages/MyPage/MyPage'
+import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
 import { OfficePage } from '@/pages/OfficePage/OfficePage'
 import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
@@ -50,7 +53,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/card-news/:id',
-        element: <CardNewsDetailPage />,
+        element: <NewsCardPage />,
       },
       {
         path: PATH.NOTIFICATION,
@@ -65,6 +68,18 @@ export const router = createBrowserRouter([
       {
         path: PATH.BRIEFING,
         element: <BriefingPage />,
+      },
+      {
+        path: PATH.BRIEFING_ASSIGN_ROUTE,
+        element: <BriefingAssignPage />,
+      },
+      {
+        path: PATH.BRIEFING_COMPLETE_ROUTE,
+        element: <BriefingCompletePage />,
+      },
+      {
+        path: PATH.BRIEFING_DETAIL_ROUTE,
+        element: <BriefingDetailPage />,
       },
 
       // 팀 탭
