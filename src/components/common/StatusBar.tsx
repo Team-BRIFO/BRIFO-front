@@ -70,7 +70,7 @@ export function StatusBarSkipButton({
       type="button"
       className={twMerge(
         'pretendard-Caption1 text-Gray-6 shrink-0',
-        'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
+        'focus-visible:ring-Yellow-45 underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
       {...props}
