@@ -8,6 +8,7 @@ export interface GlossaryStatusBadgeProps {
 }
 
 export function GlossaryStatusBadge({ isLearned, className = '' }: GlossaryStatusBadgeProps) {
+  // TODO: isLearned === true일 때 "이미 저장된 용어" 상태 뱃지 노출 (나중에 구현)
   if (isLearned) {
     return null
   }

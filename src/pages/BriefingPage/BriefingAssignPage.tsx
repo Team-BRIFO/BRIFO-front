@@ -24,7 +24,7 @@ export function BriefingAssignPage() {
 
   // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
   const { data: cardNewsData } = useGetCardNewsBriefings(cardId ?? null)
-  const stockName = cardNewsData?.stock?.name ?? '삼성전자'
+  const stockName = cardNewsData?.result?.stock?.name ?? '삼성전자'
 
   const agentsList = MOCK_AGENT_LIST_RESPONSE.result.items
 

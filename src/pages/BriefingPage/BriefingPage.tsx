@@ -6,7 +6,7 @@ import {
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
 import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
-import { StockSummaryCard } from '@/components/feature/stock/StockSummaryCard'
+import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
 import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
 import type { AgentType } from '@/types/domain/agent'
 
@@ -16,7 +16,7 @@ export function BriefingPage() {
   const cardId = searchParams.get('cardId') ?? 'mock-card-id'
   const navigate = useNavigate()
 
-  const { data: response, isLoading, isError } = useGetCardNewsBriefings(cardId)
+  const { data: response, isLoading, isError } = useGetCardNewsBriefings(cardId ?? null)
 
   if (isLoading) {
     return (
@@ -34,7 +34,7 @@ export function BriefingPage() {
     )
   }
 
-  const { stock, items } = response
+  const { stock, items } = response.result
 
   const directionMap = {
     UP: { badgeType: 'rise' as const, badgeText: '상승 예측' },
@@ -56,10 +56,12 @@ export function BriefingPage() {
       <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
         <div className="flex flex-col gap-8">
           {/* 주식 요약 카드 */}
-          <StockSummaryCard
+          <AnalyzeCard
+            type="normal"
+            resultType="HASHTAG"
             stock={{
               ...stock,
-              hashtags: ['HBM', '반도체', '외국인 순매수'],
+              keywords: stock.hashtags,
             }}
           />
 

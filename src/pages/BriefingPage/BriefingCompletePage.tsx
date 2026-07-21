@@ -14,9 +14,9 @@ export function BriefingCompletePage() {
   const location = useLocation()
   const result = location.state?.result as { requestedAgents: { agentId: string }[] } | undefined
 
-  // 임시: 카드뉴스 브리핑 데이터에서 주식명 가져오기
+  // 해당 카드뉴스 종목명 확보를 위해 브리핑 목록 조회 재사용 (이미 캐싱되어 빠름)
   const { data: cardNewsData } = useGetCardNewsBriefings(cardId ?? null)
-  const stockName = cardNewsData?.stock?.name ?? '삼성전자'
+  const stockName = cardNewsData?.result?.stock?.name ?? '삼성전자'
 
   const agentCount = result?.requestedAgents?.length ?? 3
 
