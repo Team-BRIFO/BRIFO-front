@@ -34,7 +34,7 @@ export function BriefingPage() {
     )
   }
 
-  const { stock, items } = response?.result || {}
+  const { stock, items } = response.result
 
   const directionMap = {
     UP: { badgeType: 'rise' as const, badgeText: '상승 예측' },
