@@ -1,14 +1,18 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import Logo from '@/assets/logo/brifo_logo.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import AttendanceBonusCard from '@/components/feature/home/AttendanceBonusCard'
 import AttendanceModal from '@/components/feature/home/AttendanceModal'
+import HomeCardNewsSection from '@/components/feature/home/HomeCardNewsSection'
 import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
-import { useNavigate } from 'react-router-dom'
+import { PATH } from '@/routes/paths'
+
+import { HOME_CARD_NEWS_MOCK_DATA } from './mockData'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -16,8 +20,9 @@ export function HomePage() {
 
   return (
     <>
-      <main className="flex min-h-screen justify-center bg-white px-6">
-        <div className="flex w-82 flex-col">
+      <main className="min-h-screen bg-white">
+        {/* 상단 흰색 영역 */}
+        <div className="mx-auto flex w-82 flex-col pb-7">
           <StatusBar
             hasStatusArea
             className="w-full [&>div:last-child]:px-0"
@@ -28,7 +33,7 @@ export function HomePage() {
                   1280 AP
                 </div>
 
-                <StatusBarNotificationButton onClick={() => navigate('/notification')} />
+                <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
               </div>
             }
           />
@@ -51,6 +56,18 @@ export function HomePage() {
             />
           </div>
         </div>
+
+        {/* 카드뉴스 회색 영역 */}
+        <section className="bg-Gray-1 w-full pt-6 pb-24">
+          <div className="px-4">
+            <HomeCardNewsSection
+              items={HOME_CARD_NEWS_MOCK_DATA}
+              date="5/28"
+              time="09:30"
+              onItemClick={(id) => navigate(PATH.CARD_NEWS_DETAIL(String(id)))}
+            />
+          </div>
+        </section>
       </main>
 
       <AttendanceModal

@@ -153,7 +153,15 @@ export function AnalyzeCard({
             </div>
             {badgeConfig && (
               <div className="flex items-center gap-1">
-                <Badge type={badgeConfig.type} size="md">
+                <Badge
+                  type={badgeConfig.type}
+                  size="md"
+                  className={
+                    resultType === 'BRIEFING' && !briefingFooter?.isCompleted
+                      ? 'bg-Pink-60 text-Pink-30'
+                      : ''
+                  }
+                >
                   {badgeConfig.text}
                 </Badge>
                 {apAmount !== 0 && (
