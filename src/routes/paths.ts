@@ -18,6 +18,9 @@ export const PATH = {
   /** 홈 탭: 메인 랜딩 */
   HOME: '/',
 
+  /** 홈 탭 - SCR-17: 알림 */
+  NOTIFICATION: '/notification',
+
   /** 홈 탭 - SCR-05: 카드뉴스 상세 (동적 라우트) */
   CARD_NEWS_DETAIL: (id: string) => `/card-news/${id}`,
 

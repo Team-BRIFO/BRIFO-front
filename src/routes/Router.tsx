@@ -17,6 +17,7 @@ import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
+import { NotificationPage } from '@/pages/NotificationPage/NotificationPage'
 
 export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
       {
         path: '/card-news/:id',
         element: <CardNewsDetailPage />,
+      },
+      {
+        path: PATH.NOTIFICATION,
+        element: <NotificationPage />,
       },
 
       // 사무실 탭
