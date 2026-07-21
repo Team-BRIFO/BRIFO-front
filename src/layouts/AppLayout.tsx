@@ -1,8 +1,9 @@
-import NavigationBar from '@/components/common/NavigationBar'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { PATH } from '@/routes/paths'
-import { type NavigationValue } from '@/components/common/NavigationBar'
+
 import { Container } from '@/components/common/Container'
+import NavigationBar from '@/components/common/NavigationBar'
+import { type NavigationValue } from '@/components/common/NavigationBar'
+import { PATH } from '@/routes/paths'
 
 const NAVIGATION_PATHS: Record<NavigationValue, string> = {
   briefing: PATH.BRIEFING,

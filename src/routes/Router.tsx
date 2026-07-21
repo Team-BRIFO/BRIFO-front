@@ -13,6 +13,7 @@ import { NotFoundPage } from '@/pages/error/NotFoundPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyPage } from '@/pages/MyPage/MyPage'
 import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
+import { NotificationPage } from '@/pages/NotificationPage/NotificationPage'
 import { OfficePage } from '@/pages/OfficePage/OfficePage'
 import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
@@ -20,7 +21,6 @@ import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
-import { NotificationPage } from '@/pages/NotificationPage/NotificationPage'
 
 export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
