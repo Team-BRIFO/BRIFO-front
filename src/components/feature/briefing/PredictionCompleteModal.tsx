@@ -41,7 +41,7 @@ export function PredictionCompleteModal({
             resultType="HASHTAG"
             stock={{
               ...stock,
-              tags: stock.hashtags,
+              keywords: stock.hashtags,
             }}
             className="w-full"
           />

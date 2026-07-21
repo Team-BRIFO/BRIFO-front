@@ -12,7 +12,7 @@ export interface StockInfoProps {
 
 export function StockInfo({ logoUrl, name, code, marketType, className = '' }: StockInfoProps) {
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center gap-4 ${className}`}>
       {logoUrl ? (
         <img
           src={logoUrl}
