@@ -226,7 +226,7 @@ function Body({ children, className = '' }: BottomSheetSectionProps) {
 }
 
 function Footer({ children, className = '' }: BottomSheetSectionProps) {
-  return <footer className={`flex w-full flex-col ${className}`}>{children}</footer>
+  return <footer className={`mt-6 flex w-full flex-col gap-2 ${className}`}>{children}</footer>
 }
 
 BottomSheet.Header = Header

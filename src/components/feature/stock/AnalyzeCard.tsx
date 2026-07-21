@@ -56,7 +56,7 @@ export function AnalyzeCard({
       SUCCESS_DOWN: { type: 'rise', text: '적중', apColor: 'text-Pink-30' },
       SUCCESS_HOLD: { type: 'watch', text: '관망', apColor: 'text-Gray-6' },
       FAIL_UP: { type: 'fall', text: '실패', apColor: 'text-Green-30' },
-      FAIL_DOWN: { type: 'fall', text: '하락', apColor: 'text-Green-30' },
+      FAIL_DOWN: { type: 'fall', text: '실패', apColor: 'text-Green-30' },
       FAIL_HOLD: { type: 'fall', text: '실패', apColor: 'text-Green-30' },
     }
     return configMap[resultType]

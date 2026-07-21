@@ -23,6 +23,9 @@ export function NewsCardIndicator({ total, currentIndex, className = '' }: NewsC
       aria-label="카드 뉴스 인디케이터"
       className={`inline-flex items-center justify-center gap-1.5 py-2.5 ${className}`}
     >
+      <span className="sr-only">
+        현재 {currentIndex + 1} / {total}번째 카드
+      </span>
       {Array.from({ length: total }).map((_, idx) => {
         const isActive = idx === currentIndex
         return (
@@ -31,7 +34,7 @@ export function NewsCardIndicator({ total, currentIndex, className = '' }: NewsC
             className={`h-2 shrink-0 rounded-full transition-all duration-300 ${
               isActive ? 'bg-Yellow-50 w-6' : 'bg-Gray-3 w-2'
             }`}
-            aria-current={isActive ? 'page' : undefined}
+            aria-hidden="true"
           />
         )
       })}

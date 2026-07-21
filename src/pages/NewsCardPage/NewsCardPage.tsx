@@ -10,9 +10,8 @@ import {
 import { GlossaryBottomSheet } from '@/components/feature/glossary/GlossaryBottomSheet'
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicator'
+import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
 import { PATH } from '@/routes/paths'
-
-import { MOCK_NEWS_CARDS } from './newsCard'
 
 /** 홈 탭 - SCR-05: 카드뉴스 상세 */
 export function NewsCardPage() {
@@ -47,6 +46,11 @@ export function NewsCardPage() {
     }
   }
 
+  const TERM_DEFINITIONS: Record<string, string> = {
+    '1': '증권사에서 발표하는 특정 주식의 적정 주가를 의미해요. 보통 향후 6개월~1년 내 도달 가능성을 바탕으로 산정돼요.',
+    '2': '산 금액이 판 금액보다 많은 상태예요. 외국인·기관의 순매수는 매수세가 우세하다는 뜻으로 읽혀요.',
+  }
+
   return (
     <div className="bg-White flex h-[100dvh] w-full flex-col">
       <StatusBar
@@ -55,7 +59,7 @@ export function NewsCardPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      <main className="mx-5 mt-5 flex-1 gap-8">
+      <main className="mx-5 mt-5 flex flex-1 flex-col gap-8">
         <div className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto">
           <div
             ref={scrollContainerRef}
@@ -86,6 +90,7 @@ export function NewsCardPage() {
         isOpen={selectedTermId !== null}
         onClose={handleCloseBottomSheet}
         term={selectedTerm}
+        definition={selectedTerm ? TERM_DEFINITIONS[selectedTerm.termId] : undefined}
       />
     </div>
   )

@@ -53,7 +53,7 @@ export function NewsCardInfo({
             <NewsPublishedTime time={publishedDate} />
           </div>
         </div>
-        <p className="text-Gray-9 pretendard-Body1-Semibold">{headline}</p>
+        <h2 className="text-Gray-9 pretendard-Body1-Semibold">{headline}</h2>
       </div>
       {imageUrl && (
         <div className="bg-Gray-2 aspect-[2/1] w-full shrink-0 overflow-hidden rounded-lg">

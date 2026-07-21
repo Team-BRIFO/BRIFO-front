@@ -4,6 +4,7 @@ export interface BriefingDetailStock {
   price: number
   changeRate: number
   tradeDate: string
+  hashtags?: string[]
 }
 
 export interface BriefingDetailAgent {

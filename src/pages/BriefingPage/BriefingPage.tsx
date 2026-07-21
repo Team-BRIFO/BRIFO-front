@@ -61,7 +61,7 @@ export function BriefingPage() {
             resultType="HASHTAG"
             stock={{
               ...stock,
-              tags: ['HBM', '반도체', '외국인 순매수'],
+              tags: stock.hashtags,
             }}
           />
 
