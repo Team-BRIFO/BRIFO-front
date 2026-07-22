@@ -6,6 +6,7 @@ import { BriefingAssignPage } from '@/pages/BriefingPage/BriefingAssignPage'
 import { BriefingCompletePage } from '@/pages/BriefingPage/BriefingCompletePage'
 import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
 import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
+import { PredictionListPage } from '@/pages/DecisionPage/PredictionListPage'
 import { DiaryCalendarPage } from '@/pages/Diary/DiaryCalendarPage/DiaryCalendarPage'
 import { DiaryDetailPage } from '@/pages/Diary/DiaryDetailPage/DiaryDetailPage'
 import { DiaryListPage } from '@/pages/Diary/DiaryListPage/DiaryListPage'
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
       {
         path: PATH.OFFICE,
         element: <OfficePage />,
+      },
+      {
+        path: PATH.OFFICE_PREDICTION,
+        element: <PredictionListPage />,
       },
       {
         path: PATH.BRIEFING,

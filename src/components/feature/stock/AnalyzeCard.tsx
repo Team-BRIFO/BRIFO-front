@@ -15,6 +15,7 @@ export type AnalyzeResultType =
   | 'ERROR'
   | 'HASHTAG'
   | 'BRIEFING'
+  | 'PREDICTION'
 
 export interface BriefingCardFooterBarProps {
   /** 카드뉴스 건수 (예: 2 -> "카드뉴스 2건") */
@@ -25,6 +26,13 @@ export interface BriefingCardFooterBarProps {
   isCompleted: boolean
 }
 
+export interface PredictionFooterBarProps {
+  /** 분석/정산 상태 */
+  status: 'ANALYZING' | 'COMPLETED' | 'WAITING' | 'SETTLED'
+  /** 현재 수익률 (예: 6.3) */
+  currentRate: number
+}
+
 export interface AnalyzeCardProps {
   /** 카드 레이아웃 형태 (normal: 하단바/해시태그 포함, Analyze_small: 상단 간단형) */
   type?: AnalyzeType
@@ -32,13 +40,15 @@ export interface AnalyzeCardProps {
   resultType: AnalyzeResultType
   /** 브리핑 카드 하단 바 전용 데이터 */
   briefingFooter?: BriefingCardFooterBarProps
+  /** 예측 카드 하단 바 전용 데이터 */
+  predictionFooter?: PredictionFooterBarProps
   /** 종목 기본 정보 */
   stock: {
     name: string
     code?: string
     marketType?: string
     logoUrl?: string | null
-    price: number
+    price?: number
     changeRate: number
     keywords?: string[]
     tradeDate?: string
@@ -54,6 +64,7 @@ export function AnalyzeCard({
   stock,
   apAmount = 0,
   briefingFooter,
+  predictionFooter,
   className,
 }: AnalyzeCardProps) {
   const getBadgeConfig = () => {
@@ -72,6 +83,20 @@ export function AnalyzeCard({
       BRIEFING: briefingFooter?.isCompleted
         ? { type: 'complete', text: '분석 완료', apColor: '' }
         : { type: 'progress', text: '분석 중', apColor: '' },
+      PREDICTION: (() => {
+        switch (predictionFooter?.status) {
+          case 'ANALYZING':
+            return { type: 'progress', text: '분석 중', apColor: '' }
+          case 'COMPLETED':
+            return { type: 'complete', text: '분석 완료', apColor: '' }
+          case 'WAITING':
+            return { type: 'gray', text: '정산대기', apColor: 'text-Gray-7' }
+          case 'SETTLED':
+            return { type: 'gray', text: '정산완료', apColor: 'text-Gray-7' }
+          default:
+            return { type: 'gray', text: '정산대기', apColor: 'text-Gray-7' }
+        }
+      })(),
     }
     return configMap[resultType]
   }
@@ -90,6 +115,7 @@ export function AnalyzeCard({
       FAIL_DOWN: { bgClass: 'bg-Gray-1', label: '하락 예측 실패', labelClass: 'text-Gray-4' },
       FAIL_HOLD: { bgClass: 'bg-Gray-1', label: '관망 예측 실패', labelClass: 'text-Gray-4' },
       BRIEFING: null,
+      PREDICTION: null,
     }
     return configMap[resultType]
   }
@@ -114,7 +140,13 @@ export function AnalyzeCard({
               marketType={stock.marketType}
               logoUrl={stock.logoUrl}
             />
-            <StockPriceChange price={stock.price} changeRate={stock.changeRate} textAlign="right" />
+            {stock.price !== undefined && (
+              <StockPriceChange
+                price={stock.price}
+                changeRate={stock.changeRate}
+                textAlign="right"
+              />
+            )}
           </>
         ) : (
           <>
@@ -133,11 +165,13 @@ export function AnalyzeCard({
                   <span className="text-Gray-10 pretendard-Body2-Semibold">{stock.name}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-Gray-5 pretendard-Caption3">
-                    {stock.price.toLocaleString()}
-                  </span>
+                  {stock.price !== undefined && (
+                    <span className="text-Gray-5 pretendard-Caption2">
+                      {stock.price.toLocaleString()}
+                    </span>
+                  )}
                   <span
-                    className={`pretendard-Caption3 ${
+                    className={`pretendard-Caption1 ${
                       stock.changeRate > 0
                         ? 'text-Pink-30'
                         : stock.changeRate < 0
@@ -153,7 +187,7 @@ export function AnalyzeCard({
             </div>
             {badgeConfig && (
               <div className="flex items-center gap-1">
-                <Badge type={badgeConfig.type} size="md">
+                <Badge type={badgeConfig.type} size="md" className="px-3">
                   {badgeConfig.text}
                 </Badge>
                 {apAmount !== 0 && (
@@ -192,6 +226,18 @@ export function AnalyzeCard({
                   <span className="pretendard-Caption2 text-Gray-6 max-w-[171px] truncate">
                     {briefingFooter.headline}
                   </span>
+                </div>
+              </div>
+            )
+          ) : resultType === 'PREDICTION' ? (
+            predictionFooter && (
+              <div className="bg-Gray-1 flex items-center justify-between px-4 py-2">
+                <div className="flex items-center gap-3">
+                  <span className="pretendard-Caption1 text-Gray-8">
+                    현재 {predictionFooter.currentRate > 0 ? '+' : ''}
+                    {predictionFooter.currentRate}%
+                  </span>
+                  <span className="pretendard-Caption1 text-Gray-6">15분 지연</span>
                 </div>
               </div>
             )
