@@ -52,14 +52,15 @@ export const PATH = {
   TEAM_DETAIL_ROUTE: '/team/:agentId',
 
   // ─── AppLayout - 피드 탭 (결정 일기) ───────────────────────────
-  /** 피드 탭 - SCR-08: 결정 일기 캘린더 뷰 */
-  DIARY_CALENDAR: '/diary',
+  /**
+   * 피드 탭 - SCR-08~10: 결정 일기 (캘린더 · 리스트 · 통계)
+   * 세 뷰는 한 페이지에서 탭으로 전환하며, 선택된 탭은 `?view=list|statistics` 로 남는다.
+   */
+  DIARY: '/diary',
 
-  /** 피드 탭 - SCR-09: 일기 리스트 필터 뷰 */
-  DIARY_LIST: '/diary/list',
-
-  /** 피드 탭 - SCR-10: 일기 상세 및 메모 입력 (동적 라우트) */
+  /** 피드 탭 - SCR-10: 결정 카드 상세 (동적 라우트) */
   DIARY_DETAIL: (id: string) => `/diary/${id}`,
+  DIARY_DETAIL_ROUTE: '/diary/:id',
 
   // ─── AppLayout - 마이 탭 ───────────────────────────────────────
   /** 마이 탭 - SCR-11, 13: 프로필, 설정, 용어장 및 My Stats 통계 차트 통합 */
