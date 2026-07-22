@@ -13,6 +13,7 @@ import { NotFoundPage } from '@/pages/error/NotFoundPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyPage } from '@/pages/MyPage/MyPage'
 import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
+import { NotificationPage } from '@/pages/NotificationPage/NotificationPage'
 import { OfficePage } from '@/pages/OfficePage/OfficePage'
 import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
       {
         path: '/card-news/:id',
         element: <NewsCardPage />,
+      },
+      {
+        path: PATH.NOTIFICATION,
+        element: <NotificationPage />,
       },
 
       // 사무실 탭
