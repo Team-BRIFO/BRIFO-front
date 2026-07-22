@@ -6,15 +6,15 @@ import { type NavigationValue } from '@/components/common/NavigationBar'
 import { PATH } from '@/routes/paths'
 
 const NAVIGATION_PATHS: Record<NavigationValue, string> = {
-  briefing: PATH.BRIEFING,
   team: PATH.TEAM,
+  office: PATH.OFFICE,
   home: PATH.HOME,
   diary: PATH.DIARY_CALENDAR,
   my: PATH.MY_PAGE,
 }
 
 function getNavigationValue(pathname: string): NavigationValue {
-  if (pathname.startsWith(PATH.BRIEFING)) return 'briefing'
+  if (pathname.startsWith(PATH.OFFICE)) return 'office'
   if (pathname.startsWith(PATH.TEAM)) return 'team'
   if (pathname.startsWith(PATH.DIARY_CALENDAR)) return 'diary'
   if (pathname.startsWith(PATH.MY_PAGE)) return 'my'

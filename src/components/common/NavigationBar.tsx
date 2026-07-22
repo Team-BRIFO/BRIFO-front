@@ -7,7 +7,7 @@ import HomeIcon from '@/assets/icons/home-5.svg?react'
 import MyIcon from '@/assets/icons/user-2.svg?react'
 import NavigationItem from '@/components/common/NavigationItem'
 
-export type NavigationValue = 'briefing' | 'team' | 'home' | 'diary' | 'my'
+export type NavigationValue = 'office' | 'team' | 'home' | 'diary' | 'my'
 
 interface NavigationBarProps {
   value?: NavigationValue
@@ -19,13 +19,13 @@ interface NavigationBarProps {
 
 const NAV_ITEMS = [
   {
-    value: 'briefing',
-    label: '브리핑',
+    value: 'team',
+    label: '사원',
     icon: BriefingIcon,
   },
   {
-    value: 'team',
-    label: '팀',
+    value: 'office',
+    label: '사무실',
     icon: TeamIcon,
   },
   {
