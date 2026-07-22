@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 
 import HeartIcon from '@/assets/icons/heart.svg?react'
+import FilledHeartIcon from '@/assets/icons/filledHeart.svg?react'
 
 interface StockRankItemProps {
   rank?: number
@@ -56,11 +57,11 @@ export default function StockRankItem({
         aria-label={isFavorite ? '관심 종목 해제' : '관심 종목 추가'}
         className="ml-4 flex h-5 w-5 shrink-0 items-center justify-center"
       >
-        <HeartIcon
-          className={`h-5 w-5 ${
-            isFavorite ? 'fill-Yellow-45 text-Yellow-45' : 'text-Yellow-45 fill-none'
-          }`}
-        />
+        {isFavorite ? (
+          <FilledHeartIcon className="text-Yellow-45 h-5 w-5" aria-hidden="true" />
+        ) : (
+          <HeartIcon className="text-Yellow-45 h-5 w-5" aria-hidden="true" />
+        )}
       </button>
     </div>
   )

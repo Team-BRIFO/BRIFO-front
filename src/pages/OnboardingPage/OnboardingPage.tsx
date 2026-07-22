@@ -1,4 +1,185 @@
-/** SCR-02: 온보딩 (닉네임/회사 설정 및 종목 선택) */
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import Button from '@/components/common/Button'
+import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
+import { TextField } from '@/components/common/TextField'
+import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
+import { PATH } from '@/routes/paths'
+
+import { ONBOARDING_STOCKS } from './mockStocks'
+import StockSearchView from '@/components/feature/onboarding/StockSearchView'
+
+const MIN_STOCK_COUNT = 3
+const MAX_STOCK_COUNT = 5
+const MIN_NAME_LENGTH = 4
+const MAX_NAME_LENGTH = 5
+
+const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사', 'zI존']
+
+function getNameError(value: string) {
+  if (value.length === 0) return ''
+
+  if (value.length < MIN_NAME_LENGTH) {
+    return '4~5 글자 제한을 넘거나 특수문자가 있어요'
+  }
+
+  if (value.length > MAX_NAME_LENGTH) {
+    return '4~5 글자 제한을 넘거나 특수문자가 있어요'
+  }
+
+  return ''
+}
+
 export function OnboardingPage() {
-  return <div>OnboardingPage</div>
+  const navigate = useNavigate()
+
+  const [nickname, setNickname] = useState('')
+  const [companyName, setCompanyName] = useState('')
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const [selectedStockIds, setSelectedStockIds] = useState<number[]>([])
+  const [isStockSearchOpen, setIsStockSearchOpen] = useState(false)
+
+  const nicknameError = getNameError(nickname)
+  const companyNameError = getNameError(companyName)
+
+  const hasValidNickname = nickname.length >= MIN_NAME_LENGTH && nickname.length <= MAX_NAME_LENGTH
+
+  const hasValidCompanyName =
+    companyName.length >= MIN_NAME_LENGTH && companyName.length <= MAX_NAME_LENGTH
+
+  const hasValidStockCount =
+    selectedStockIds.length >= MIN_STOCK_COUNT && selectedStockIds.length <= MAX_STOCK_COUNT
+
+  const isFormValid = hasValidNickname && hasValidCompanyName && hasValidStockCount
+
+  const handleToggleStock = (stockId: number) => {
+    setSelectedStockIds((previous) => {
+      const isSelected = previous.includes(stockId)
+
+      if (isSelected) {
+        return previous.filter((id) => id !== stockId)
+      }
+
+      if (previous.length >= MAX_STOCK_COUNT) {
+        return previous
+      }
+
+      return [...previous, stockId]
+    })
+  }
+
+  const handleSubmit = () => {
+    if (!isFormValid) return
+
+    const onboardingData = {
+      nickname: nickname.trim(),
+      companyName: companyName.trim(),
+      stockIds: selectedStockIds,
+    }
+
+    // TODO: 온보딩 프로필 API 호출
+    console.log(onboardingData)
+
+    navigate(PATH.TUTORIAL)
+  }
+  if (isStockSearchOpen) {
+    return (
+      <StockSearchView
+        stocks={ONBOARDING_STOCKS}
+        searchKeyword={searchKeyword}
+        selectedStockIds={selectedStockIds}
+        onSearchKeywordChange={setSearchKeyword}
+        onToggleStock={handleToggleStock}
+        onBack={() => {
+          setSearchKeyword('')
+          setIsStockSearchOpen(false)
+        }}
+        onComplete={() => {
+          setSearchKeyword('')
+          setIsStockSearchOpen(false)
+        }}
+      />
+    )
+  }
+
+  return (
+    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
+      <StatusBar
+        hasStatusArea
+        className="w-full [&>div:last-child]:px-0"
+        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
+      />
+
+      <section className="mt-8 flex flex-1 flex-col">
+        <div>
+          <h1 className="dnf-Title3 text-Gray-10 leading-[1.25]">
+            사장님의 프로필을
+            <br />
+            <span className="text-[#FFBE00]">알려주세요!</span>
+          </h1>
+
+          <p className="pretendard-Caption1 text-Gray-6 mt-3">
+            닉네임 · 회사명 · 관심 종목 3~5개를 골라주세요
+          </p>
+        </div>
+
+        <div className="mt-8 flex flex-col gap-5">
+          <TextField
+            id="onboarding-nickname"
+            name="nickname"
+            label="닉네임"
+            value={nickname}
+            placeholder="4~5글자 제한, 특수문자 금지"
+            errorMessage={nicknameError}
+            className="[&>span:last-child]:ml-3"
+            onChange={(event) => setNickname(event.target.value)}
+          />
+
+          <TextField
+            id="onboarding-company-name"
+            name="companyName"
+            label="회사명"
+            value={companyName}
+            placeholder="4~5글자 제한, 특수문자 금지"
+            errorMessage={companyNameError}
+            className="[&>span:last-child]:ml-3"
+            onChange={(event) => setCompanyName(event.target.value)}
+          />
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-1">
+          {PROFILE_KEYWORDS.map((keyword) => (
+            <span
+              key={keyword}
+              className="pretendard-Caption2 bg-Yellow-100 text-Yellow-10 rounded-full px-3 py-1.5"
+            >
+              # {keyword}
+            </span>
+          ))}
+        </div>
+
+        <InterestStockSection
+          stocks={ONBOARDING_STOCKS}
+          searchKeyword={searchKeyword}
+          selectedStockIds={selectedStockIds}
+          onSearchKeywordChange={setSearchKeyword}
+          onToggleStock={handleToggleStock}
+          onOpenSearch={() => setIsStockSearchOpen(true)}
+        />
+      </section>
+
+      <Button
+        type="button"
+        size="lg"
+        color="primary"
+        isFullWidth
+        disabled={!isFormValid}
+        onClick={handleSubmit}
+        className="mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
+      >
+        다음
+      </Button>
+    </main>
+  )
 }
