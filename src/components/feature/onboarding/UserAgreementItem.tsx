@@ -1,5 +1,3 @@
-import { twMerge } from 'tailwind-merge'
-
 import CheckIcon from '@/assets/icons/check.svg?react'
 import ChevronRightIcon from '@/assets/icons/chevron-right.svg?react'
 

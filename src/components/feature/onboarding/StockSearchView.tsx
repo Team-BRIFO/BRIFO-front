@@ -1,12 +1,11 @@
 import { useMemo } from 'react'
 
+import NotFound from '@/assets/images/not_found.svg?react'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import StockRankItem from '@/components/domain/stock/StockRankItem'
-
 import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
-import NotFound from '@/assets/images/not_found.svg?react'
 
 interface StockSearchViewProps {
   stocks: OnboardingStock[]

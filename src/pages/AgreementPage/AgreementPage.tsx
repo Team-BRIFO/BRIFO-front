@@ -6,7 +6,7 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
 import { PATH } from '@/routes/paths'
 
-import { AGREEMENTS, type AgreementId } from './agreement'
+import { type AgreementId, AGREEMENTS } from './agreement'
 
 type AgreementCheckedState = Record<AgreementId, boolean>
 
@@ -36,6 +36,7 @@ export default function AgreementPage() {
     const checkedAgreementId = state?.checkedAgreementId
 
     if (!checkedAgreementId) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setChecked((previous) => ({
       ...previous,
       [checkedAgreementId]: true,

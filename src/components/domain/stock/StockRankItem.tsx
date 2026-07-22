@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
-import HeartIcon from '@/assets/icons/heart.svg?react'
 import FilledHeartIcon from '@/assets/icons/filledHeart.svg?react'
+import HeartIcon from '@/assets/icons/heart.svg?react'
 
 interface StockRankItemProps {
   rank?: number

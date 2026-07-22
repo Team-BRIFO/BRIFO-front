@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 
-import StockRankItem from '@/components/domain/stock/StockRankItem'
 import { TextField } from '@/components/common/TextField'
-
+import StockRankItem from '@/components/domain/stock/StockRankItem'
 import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
 
 interface InterestStockSectionProps {
@@ -57,8 +56,6 @@ export default function InterestStockSection({
         <div className="border-Gray-2 mt-3 overflow-hidden rounded-xl border">
           {filteredStocks.length > 0 ? (
             filteredStocks.map((stock, index) => {
-              const isSelected = selectedStockIds.includes(stock.id)
-
               return (
                 <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
                   <StockRankItem

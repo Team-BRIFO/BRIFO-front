@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { AuthLayout } from '@/layouts/AuthLayout'
+import AgreementDetailPage from '@/pages/AgreementPage/AgreementDetailPage'
+import AgreementPage from '@/pages/AgreementPage/AgreementPage'
 import { BriefingAssignPage } from '@/pages/BriefingPage/BriefingAssignPage'
 import { BriefingCompletePage } from '@/pages/BriefingPage/BriefingCompletePage'
 import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
@@ -21,8 +23,6 @@ import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
-import AgreementPage from '@/pages/AgreementPage/AgreementPage'
-import AgreementDetailPage from '@/pages/AgreementPage/AgreementDetailPage'
 
 export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────

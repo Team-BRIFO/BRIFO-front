@@ -5,7 +5,7 @@ import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { PATH } from '@/routes/paths'
 
-import { SERVICE_TERMS, type AgreementId } from './agreement'
+import { type AgreementId, SERVICE_TERMS } from './agreement'
 
 interface AgreementDetailLocationState {
   agreementId?: AgreementId

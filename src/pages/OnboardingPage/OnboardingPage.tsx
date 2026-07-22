@@ -5,10 +5,10 @@ import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
+import StockSearchView from '@/components/feature/onboarding/StockSearchView'
 import { PATH } from '@/routes/paths'
 
 import { ONBOARDING_STOCKS } from './mockStocks'
-import StockSearchView from '@/components/feature/onboarding/StockSearchView'
 
 const MIN_STOCK_COUNT = 3
 const MAX_STOCK_COUNT = 5
