@@ -1,0 +1,61 @@
+import type { ReactNode } from 'react'
+
+import { Badge } from '@/components/common/Badge'
+import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import Logo from '@/components/logos/logo-small.svg?react'
+
+import { type DiaryView, DiaryViewTabs } from './DiaryViewTabs'
+
+// TODO: User 도메인 연동 시 보유 AP로 대체
+const MOCK_AP = 1280
+
+export interface DiaryTabScreenProps {
+  /** 현재 활성 탭 */
+  view: DiaryView
+  /** 탭 전환 시 */
+  onChangeView: (view: DiaryView) => void
+  children: ReactNode
+}
+
+/**
+ * 캘린더 / 리스트 / 통계 3개 뷰가 공유하는 화면 틀.
+ * StatusBar · 페이지 헤더 · 세그먼트 탭을 담당하고, 탭 상태 관리는 페이지가 맡는다.
+ * 하단 NavigationBar 는 루트 레이아웃에서 배치되므로 여기서는 여백만 확보한다.
+ */
+export function DiaryTabScreen({ view, onChangeView, children }: DiaryTabScreenProps) {
+  return (
+    <div className="bg-Background1 flex min-h-full flex-col">
+      <StatusBar
+        hasStatusArea={false}
+        left={<Logo width={84} height={24} aria-label="BRIFO" />}
+        right={
+          <div className="flex items-center gap-3">
+            <Badge type="ap" className="bg-Yellow-80 text-Yellow-20">
+              {`${MOCK_AP.toLocaleString()} AP`}
+            </Badge>
+            <StatusBarNotificationButton />
+          </div>
+        }
+      />
+
+      {/* StatusBar → 헤더 12px, 헤더 블록 → 본문 22px (피그마 #564:2629) */}
+      <div className="flex flex-1 flex-col items-center gap-5.5 pt-3">
+        {/* 제목 그룹 → 세그먼트 탭 12px */}
+        <div className="flex w-full flex-col gap-3 px-4">
+          <header className="flex w-full flex-col gap-1">
+            <h1 className="dnf-Subtitle2 text-Gray-10">결정일기</h1>
+            {/* Main/Caption/Reaular14 — 대응 유틸리티가 없어 값으로 지정 */}
+            <p className="text-Gray-6 text-[14px] leading-5 font-normal tracking-[-0.04em]">
+              내 AI 사원들을 관리하세요
+            </p>
+          </header>
+
+          <DiaryViewTabs value={view} onChange={onChangeView} />
+        </div>
+
+        {/* 하단 NavigationBar(약 72px) 에 가리지 않도록 여백 확보 */}
+        <div className="w-full flex-1 px-4 pb-20">{children}</div>
+      </div>
+    </div>
+  )
+}
