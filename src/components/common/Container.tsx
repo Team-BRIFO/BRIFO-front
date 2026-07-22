@@ -67,8 +67,7 @@ export function Container({
 
   // 3. Variant별 고유 스타일 (피그마 스펙 반영)
   // page: 화면 꽉 차는 높이, 세로 배치, 흰색 배경, 피그마에서 요청한 0.5px 검은 테두리
-  const variantClass =
-    variant === 'page' ? 'min-h-screen flex flex-col bg-White border-[0.5px] border-Black' : ''
+  const variantClass = variant === 'page' ? 'min-h-screen flex flex-col bg-White ' : ''
 
   const baseClass = [widthClass, centerClass, paddingClass, variantClass, className]
     .filter(Boolean)
