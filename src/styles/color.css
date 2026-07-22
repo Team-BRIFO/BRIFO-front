@@ -39,6 +39,9 @@
   --color-White: #ffffff;
   --color-Black: #000000;
 
+  /* Background - 화면 바닥색 (피그마 변수명 Background1) */
+  --color-Background1: #f8f8f8;
+
   /* Gray */
   --color-Gray-1: #f3f3f3;
   --color-Gray-2: #e6e6e6;
