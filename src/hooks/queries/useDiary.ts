@@ -26,21 +26,23 @@ export const DIARY_QUERY_KEYS = {
 }
 
 /** [다건] 월별 캘린더 조회 */
-export function useDiaryCalendar(year: number, month: number) {
+export function useDiaryCalendar(year: number, month: number, enabled: boolean = true) {
   return useQuery<DiaryCalendarResult, Error>({
     queryKey: DIARY_QUERY_KEYS.calendar(year, month),
     queryFn: () => getDiaryCalendar(year, month),
+    enabled,
   })
 }
 
 /** [다건] 결정일기 목록 (커서 기반 무한 스크롤) */
-export function useDiaryList(size: number = DIARY_PAGE_SIZE) {
+export function useDiaryList(size: number = DIARY_PAGE_SIZE, enabled: boolean = true) {
   return useInfiniteQuery<DiaryListResult, Error>({
     queryKey: DIARY_QUERY_KEYS.list(),
     queryFn: ({ pageParam }) => getDiaries(pageParam as string | null, size),
     initialPageParam: null,
     getNextPageParam: (lastPage) =>
       lastPage.page.hasNext ? (lastPage.page.nextCursor ?? undefined) : undefined,
+    enabled,
   })
 }
 
@@ -54,10 +56,11 @@ export function useDiaryDetail(diaryId: string | null) {
 }
 
 /** [다건] 결정일기 통계 조회 */
-export function useDiaryStats() {
+export function useDiaryStats(enabled: boolean = true) {
   return useQuery<DiaryStatsResult, Error>({
     queryKey: DIARY_QUERY_KEYS.stats(),
     queryFn: getDiaryStats,
+    enabled,
   })
 }
 

@@ -51,7 +51,7 @@ export function DiaryHitRateCard({
       {isStatistics ? (
         rateText
       ) : (
-        // 백엔드 문의: 라벨(적중/오답/관망)은 시안 그대로지만 실제 데이터는 방향이다 — diaryTheme 주석 참고
+        // 범례는 현재 API가 제공하는 결정 방향을 표시한다 — diaryTheme 주석 참고
         <ul className="flex flex-col gap-2">
           {DIARY_LEGEND.map(({ direction, label }) => (
             <li key={direction} className="flex items-center gap-1">

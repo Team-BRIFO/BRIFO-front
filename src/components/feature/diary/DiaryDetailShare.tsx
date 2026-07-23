@@ -20,7 +20,7 @@ const SHARE_ACTIONS: ShareAction[] = [
   {
     target: 'kakao',
     label: '카카오톡으로 공유',
-    className: 'bg-[#FEE500]',
+    className: 'bg-Kakao',
     icon: KakaoIcon,
     iconSize: 16,
   },
@@ -67,7 +67,7 @@ export interface DiaryDetailShareProps {
  * 디자인 문의: 관망(NEUTRAL) 결정카드 시안이 없다. 적중/실패 두 장뿐인데
  * 관망 결정도 정산되면 상세 진입이 가능하다.
  *
- * TODO: 공유 동작 구현 (카카오 SDK · 이미지 저장)
+ * 공유 대상별 동작은 부모가 `onShare`로 제공한다. 핸들러가 없으면 버튼을 노출하지 않는다.
  */
 export function DiaryDetailShare({
   shareImageUrl,
@@ -111,26 +111,28 @@ export function DiaryDetailShare({
         </div>
       )}
 
-      <div className="flex items-center gap-2">
-        {SHARE_ACTIONS.map(({ target, label, className, icon: Icon, iconSize }) => (
-          <button
-            key={target}
-            type="button"
-            aria-label={label}
-            disabled={!hasImage}
-            onClick={() => onShare?.(target)}
-            className={twMerge(
-              'flex h-10.5 w-10.5 items-center justify-center rounded-full',
-              'shadow-[0px_4px_40px_0px_color-mix(in_srgb,var(--color-Gray-2)_15%,transparent)]',
-              'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-hidden',
-              'disabled:cursor-not-allowed disabled:opacity-40',
-              className,
-            )}
-          >
-            <Icon width={iconSize} height={iconSize} aria-hidden="true" />
-          </button>
-        ))}
-      </div>
+      {onShare && (
+        <div className="flex items-center gap-2">
+          {SHARE_ACTIONS.map(({ target, label, className, icon: Icon, iconSize }) => (
+            <button
+              key={target}
+              type="button"
+              aria-label={label}
+              disabled={!hasImage}
+              onClick={() => onShare(target)}
+              className={twMerge(
+                'flex h-10.5 w-10.5 items-center justify-center rounded-full',
+                'shadow-[0px_4px_40px_0px_color-mix(in_srgb,var(--color-Gray-2)_15%,transparent)]',
+                'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-hidden',
+                'disabled:cursor-not-allowed disabled:opacity-40',
+                className,
+              )}
+            >
+              <Icon width={iconSize} height={iconSize} aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

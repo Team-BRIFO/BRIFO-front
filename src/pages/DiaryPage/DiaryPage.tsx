@@ -41,9 +41,9 @@ export function DiaryPage() {
     month: MOCK_DIARY_MONTH,
   })
 
-  const calendarQuery = useDiaryCalendar(year, month)
-  const listQuery = useDiaryList()
-  const statsQuery = useDiaryStats()
+  const calendarQuery = useDiaryCalendar(year, month, view === 'calendar')
+  const listQuery = useDiaryList(undefined, view === 'list')
+  const statsQuery = useDiaryStats(view === 'statistics')
 
   const handleChangeView = (next: DiaryView) => {
     // 기본 탭(캘린더)은 파라미터 없이 /diary 로 유지

@@ -27,7 +27,7 @@ export function DiaryDetailPage() {
   const detail = data ? mapDiaryDetail(data) : undefined
   const needsShareImage = Boolean(detail && !detail.shareImageUrl)
 
-  // 공유 이미지가 아직 없으면 한 번만 생성 요청 (성공 시 상세 쿼리가 무효화되어 URL 이 채워진다)
+  // 공유 이미지가 아직 없으면 한 번만 생성 요청 (성공 시 상세 캐시의 shareImageUrl을 직접 갱신한다)
   useEffect(() => {
     if (!id || !needsShareImage || !isShareImageIdle) return
 
@@ -54,7 +54,6 @@ export function DiaryDetailPage() {
         )}
 
         {detail && (
-          // TODO: 공유 동작 구현 (카카오 SDK · 이미지 저장)
           <DiaryDetailShare
             shareImageUrl={detail.shareImageUrl}
             stockName={detail.stockName}

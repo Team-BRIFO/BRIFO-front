@@ -22,7 +22,7 @@ export interface DiaryCalendarDayProps extends Omit<
 /**
  * 캘린더 한 칸 (40×40 · 날짜 + 결과 점, 최대 3개)
  *
- * 백엔드 문의: 시안은 적중/오답/관망 점인데 API 가 방향만 내려준다.
+ * 백엔드 문의: API가 제공하는 방향(상승/하락/관망)을 점으로 표시한다.
  * 지금은 방향으로 점을 채우고 있어 의미가 맞지 않는다 — diaryTheme 주석 참고.
  */
 export function DiaryCalendarDay({

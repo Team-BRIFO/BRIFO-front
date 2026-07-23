@@ -9,14 +9,14 @@ const NAVIGATION_PATHS: Record<NavigationValue, string> = {
   briefing: PATH.BRIEFING,
   team: PATH.TEAM,
   home: PATH.HOME,
-  diary: PATH.DIARY_CALENDAR,
+  diary: PATH.DIARY,
   my: PATH.MY_PAGE,
 }
 
 function getNavigationValue(pathname: string): NavigationValue {
   if (pathname.startsWith(PATH.BRIEFING)) return 'briefing'
   if (pathname.startsWith(PATH.TEAM)) return 'team'
-  if (pathname.startsWith(PATH.DIARY_CALENDAR)) return 'diary'
+  if (pathname.startsWith(PATH.DIARY)) return 'diary'
   if (pathname.startsWith(PATH.MY_PAGE)) return 'my'
   return 'home'
 }
