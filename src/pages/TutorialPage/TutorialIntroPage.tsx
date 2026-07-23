@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 
+import Step1Image from '@/assets/characters/tutorial_step1.svg?react'
+import Step2Image from '@/assets/characters/tutorial_step2.svg?react'
+import Step3Image from '@/assets/characters/tutorial_step3.svg?react'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import TutorialStepCard from '@/components/feature/tutorial/TutorialStepCard'
 import { PATH } from '@/routes/paths'
-import Step1Image from '@/assets/characters/tutorial_step1.svg?react'
-import Step2Image from '@/assets/characters/tutorial_step2.svg?react'
-import Step3Image from '@/assets/characters/tutorial_step3.svg?react'
 
 const TUTORIAL_STEPS = [
   {

@@ -21,9 +21,9 @@ import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
 import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
+import { TutorialIntroPage } from '@/pages/TutorialPage/TutorialIntroPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
-import { TutorialIntroPage } from '@/pages/TutorialPage/TutorialIntroPage'
 
 export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
