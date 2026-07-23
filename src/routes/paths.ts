@@ -16,6 +16,7 @@ export const PATH = {
   ONBOARDING: '/onboarding',
 
   /** SCR-03: 튜토리얼 (3스텝 강제 진행) */
+  TUTORIAL_INTRO: '/tutorial/intro',
   TUTORIAL: '/tutorial',
 
   // ─── AppLayout - 홈 탭 ─────────────────────────────────────────

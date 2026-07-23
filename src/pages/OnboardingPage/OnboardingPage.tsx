@@ -81,7 +81,7 @@ export function OnboardingPage() {
     // TODO: 온보딩 프로필 API 호출
     console.log(onboardingData)
 
-    navigate(PATH.TUTORIAL)
+    navigate(PATH.TUTORIAL_INTRO)
   }
   if (isStockSearchOpen) {
     return (

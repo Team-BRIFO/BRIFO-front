@@ -23,6 +23,7 @@ import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
+import { TutorialIntroPage } from '@/pages/TutorialPage/TutorialIntroPage'
 
 export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: PATH.ONBOARDING,
         element: <OnboardingPage />,
+      },
+      {
+        path: PATH.TUTORIAL_INTRO,
+        element: <TutorialIntroPage />,
       },
       {
         path: PATH.TUTORIAL,
