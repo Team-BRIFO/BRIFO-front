@@ -1,7 +1,4 @@
-import {
-  AnalyzeCard,
-  type AnalyzeResultType,
-} from '@/components/feature/analyze/AnalyzeCard'
+import { AnalyzeCard, type AnalyzeResultType } from '@/components/feature/analyze/AnalyzeCard'
 import type { DiaryEntry } from '@/types/domain/diary'
 
 /** DiaryEntry(방향 + 적중 여부) → 기존 AnalyzeCard 의 resultType */
