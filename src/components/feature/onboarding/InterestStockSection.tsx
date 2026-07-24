@@ -8,7 +8,6 @@ interface InterestStockSectionProps {
   stocks: OnboardingStock[]
   searchKeyword: string
   selectedStockIds: number[]
-  onSearchKeywordChange: (value: string) => void
   onToggleStock: (stockId: number) => void
   onOpenSearch: () => void
 }
@@ -17,7 +16,6 @@ export default function InterestStockSection({
   stocks,
   searchKeyword,
   selectedStockIds,
-  onSearchKeywordChange,
   onToggleStock,
   onOpenSearch,
 }: InterestStockSectionProps) {
@@ -34,9 +32,16 @@ export default function InterestStockSection({
     [selectedStockIds, stocks],
   )
 
+  const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      onOpenSearch()
+    }
+  }
+
   return (
     <section className="mt-8">
-      <button type="button" onClick={onOpenSearch} className="w-full text-left">
+      <div onClick={onOpenSearch} onKeyDown={handleSearchKeyDown} className="cursor-pointer">
         <div className="pointer-events-none">
           <TextField
             name="stockSearch"
@@ -44,39 +49,37 @@ export default function InterestStockSection({
             label="관심종목"
             value={searchKeyword}
             placeholder="코스피 200 종목 검색"
-            onChange={(event) => onSearchKeywordChange(event.target.value)}
-            onClear={() => onSearchKeywordChange('')}
+            readOnly
+            onChange={() => {}}
           />
         </div>
-      </button>
+      </div>
 
       <div className="mt-5">
         <h2 className="pretendard-Caption1 text-Yellow-30">현재 인기 종목</h2>
 
         <div className="border-Gray-2 mt-3 overflow-hidden rounded-xl border">
           {filteredStocks.length > 0 ? (
-            filteredStocks.map((stock, index) => {
-              return (
-                <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
-                  <StockRankItem
-                    rank={index + 1}
-                    logo={
-                      <img
-                        src={stock.logoUrl}
-                        alt={`${stock.name} 로고`}
-                        className="h-full w-full object-cover"
-                      />
-                    }
-                    name={stock.name}
-                    price={stock.price}
-                    changeRate={stock.changeRate}
-                    isFavorite={selectedStockIds.includes(stock.id)}
-                    onToggleFavorite={() => onToggleStock(stock.id)}
-                    onClick={() => onToggleStock(stock.id)}
-                  />
-                </div>
-              )
-            })
+            filteredStocks.map((stock, index) => (
+              <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
+                <StockRankItem
+                  rank={index + 1}
+                  logo={
+                    <img
+                      src={stock.logoUrl}
+                      alt={`${stock.name} 로고`}
+                      className="h-full w-full object-cover"
+                    />
+                  }
+                  name={stock.name}
+                  price={stock.price}
+                  changeRate={stock.changeRate}
+                  isFavorite={selectedStockIds.includes(stock.id)}
+                  onToggleFavorite={() => onToggleStock(stock.id)}
+                  onClick={() => onToggleStock(stock.id)}
+                />
+              </div>
+            ))
           ) : (
             <div className="pretendard-Body2-Regular text-Gray-5 flex h-24 items-center justify-center">
               검색 결과가 없습니다.
