@@ -6,7 +6,6 @@ import NotificationItem from '@/components/feature/notification/NotificationItem
 import NotificationTabs, {
   type NotificationCategory,
 } from '@/components/feature/notification/NotificationTabs'
-
 import { NOTIFICATION_MOCK_DATA } from '@/pages/NotificationPage/mockData'
 
 export function NotificationPage() {

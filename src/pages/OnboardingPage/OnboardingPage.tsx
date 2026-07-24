@@ -6,31 +6,15 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
 import StockSearchView from '@/components/feature/onboarding/StockSearchView'
+import { useProfileNameValidation } from '@/hooks/useProfileNameValidation'
+import { ONBOARDING_STOCKS } from '@/pages/OnboardingPage/mockStocks'
 import { PATH } from '@/routes/paths'
 import { useProfileStore } from '@/stores/useProfileStore'
 
-import { ONBOARDING_STOCKS } from '@/pages/OnboardingPage/mockStocks'
-
 const MIN_STOCK_COUNT = 3
 const MAX_STOCK_COUNT = 5
-const MIN_NAME_LENGTH = 4
-const MAX_NAME_LENGTH = 5
 
 const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사', 'zI존']
-
-function getNameError(value: string) {
-  if (value.length === 0) return ''
-
-  if (value.length < MIN_NAME_LENGTH) {
-    return '4~5 글자 제한을 넘거나 특수문자가 있어요'
-  }
-
-  if (value.length > MAX_NAME_LENGTH) {
-    return '4~5 글자 제한을 넘거나 특수문자가 있어요'
-  }
-
-  return ''
-}
 
 export function OnboardingPage() {
   const navigate = useNavigate()
@@ -42,13 +26,10 @@ export function OnboardingPage() {
   const [selectedStockIds, setSelectedStockIds] = useState<number[]>([])
   const [isStockSearchOpen, setIsStockSearchOpen] = useState(false)
 
-  const nicknameError = getNameError(nickname)
-  const companyNameError = getNameError(companyName)
-
-  const hasValidNickname = nickname.length >= MIN_NAME_LENGTH && nickname.length <= MAX_NAME_LENGTH
-
-  const hasValidCompanyName =
-    companyName.length >= MIN_NAME_LENGTH && companyName.length <= MAX_NAME_LENGTH
+  const { isValid: hasValidNickname, errorMessage: nicknameError } =
+    useProfileNameValidation(nickname)
+  const { isValid: hasValidCompanyName, errorMessage: companyNameError } =
+    useProfileNameValidation(companyName)
 
   const hasValidStockCount =
     selectedStockIds.length >= MIN_STOCK_COUNT && selectedStockIds.length <= MAX_STOCK_COUNT
