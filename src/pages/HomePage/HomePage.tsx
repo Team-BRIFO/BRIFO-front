@@ -46,7 +46,7 @@ export function HomePage() {
 
             <div className="grid grid-cols-2 gap-3">
               <SettlementCard remainingTime="02:18:42" />
-              <PredictionCard count={3} />
+              <PredictionCard count={3} onClick={() => navigate(PATH.OFFICE_PREDICTION)} />
             </div>
 
             <AttendanceBonusCard

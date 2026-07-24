@@ -5,8 +5,8 @@ import {
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
+import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
-import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
 import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
 import type { AgentType } from '@/types/domain/agent'
 

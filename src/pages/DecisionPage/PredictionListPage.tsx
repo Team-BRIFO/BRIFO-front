@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
-import { BriefingResultModal } from '@/components/feature/decision/BriefingResultModal'
-import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
+import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
+import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
 import { MOCK_DECISIONS } from '@/pages/DecisionPage/mockDecision'
 
 export function PredictionListPage() {
@@ -64,7 +64,7 @@ export function PredictionListPage() {
       </div>
 
       {selectedDecision && (
-        <BriefingResultModal
+        <DecisionResultModal
           isOpen={!!selectedDecisionId}
           isSuccess={true} // 더미 데이터 (목록 API에 정보 없음)
           points={100} // 더미 데이터
@@ -73,10 +73,7 @@ export function PredictionListPage() {
             name: selectedDecision.stock.name,
             changeRate: selectedDecision.stock.changeRate,
           }}
-          onAction={() => {
-            // 결정일기 리스트 이동 혹은 모달 닫기
-            setSelectedDecisionId(null)
-          }}
+          onAction={() => setSelectedDecisionId(null)}
           onClose={() => setSelectedDecisionId(null)}
         />
       )}

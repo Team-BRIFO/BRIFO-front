@@ -11,7 +11,7 @@ import { AgentCard } from '@/components/domain/agent/AgentCard'
 import {
   type AnalyzeModalType,
   AnalyzeRequestModal,
-} from '@/components/feature/briefing/AnalyzeRequestModal'
+} from '@/components/feature/analyze/AnalyzeRequestModal'
 import { useGetCardNewsBriefings, usePostBriefingRequest } from '@/hooks/queries/useBriefing'
 import { MOCK_AGENT_LIST_RESPONSE } from '@/pages/TeamPage/mockAgents'
 import { PATH } from '@/routes/paths'

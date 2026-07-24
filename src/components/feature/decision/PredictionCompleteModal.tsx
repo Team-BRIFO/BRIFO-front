@@ -1,6 +1,6 @@
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
-import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
+import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 
 export interface PredictionCompleteModalProps {
   isOpen: boolean
