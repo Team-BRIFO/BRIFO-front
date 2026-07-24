@@ -66,7 +66,7 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">AP가 부족해요</h2>
-              <ApShortageBadge label="부족한 AP" value={`${shortageAP}AP`} />
+              <ApShortageBadge label="부족한 AP" value={`${shortageAP} AP`} />
               <p className="pretendard-Button2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 사원들에게 일급을 주려면 AP가 더 필요해요.
                 <br />
@@ -97,7 +97,7 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">오늘은 여기까지</h2>
-              <ApShortageBadge label="부족한 AP" value={`${shortageAP}AP`} />
+              <ApShortageBadge label="부족한 AP" value={`${shortageAP} AP`} />
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 출석 보너스도 신용대출도 이미 받았어요.
                 <br />
@@ -141,7 +141,7 @@ export function AnalyzeRequestModal({
         return (
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
-              <h2 className="dnf-Title4 text-Gray-10 m-0">잠시후 다시 시도해주세요</h2>
+              <h2 className="dnf-Title4 text-Gray-10 m-0">잠시 후 다시 시도해주세요</h2>
               <ApShortageBadge label="오늘 재시도" value={`${retryCount}/${maxRetryCount}`} />
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 {employeeName} 분석이 계속 실패하고 있어요.

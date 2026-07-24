@@ -36,7 +36,11 @@ export function DecisionResultModal({
 
   const handleActionClick = () => {
     onAction()
-    navigate(PATH.DIARY)
+    if (isSuccess) {
+      navigate(PATH.DIARY)
+    } else {
+      onClose()
+    }
   }
 
   return (
@@ -78,15 +82,17 @@ export function DecisionResultModal({
         {/* 4. 하단 버튼 영역 */}
         <div className="flex w-full flex-col items-center gap-3.5">
           <Button isFullWidth size="lg" color="primary" onClick={handleActionClick}>
-            결정일기에서 보기
+            {isSuccess ? '결정일기에서 보기' : '확인'}
           </Button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-Gray-6 p-1 text-xs underline underline-offset-2"
-          >
-            확인
-          </button>
+          {isSuccess && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-Gray-6 p-1 text-xs underline underline-offset-2"
+            >
+              확인
+            </button>
+          )}
         </div>
       </div>
     </Modal>
