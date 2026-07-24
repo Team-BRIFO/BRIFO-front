@@ -1,6 +1,6 @@
 import { Badge } from '@/components/common/Badge'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { Office } from '@/components/feature/office/Office'
+import { Office, type AgentStatusMap } from '@/components/feature/office/Office'
 import { OfficeProgressSection } from '@/components/feature/office/OfficeProgressSection'
 import Logo from '@/components/logos/logo-small.svg?react'
 import { useGetOfficeBriefings } from '@/hooks/queries/useBriefing'
@@ -15,7 +15,7 @@ export function OfficePage() {
   const availableCount = MOCK_OFFICE_DATA.maxRequestCount - items.length
 
   return (
-    <div className="flex min-h-[100dvh] w-full flex-col">
+    <div className="flex min-h-[100dvh] w-full flex-col pb-24">
       {/* 상단 StatusBar */}
       <StatusBar
         hasStatusArea={false}
@@ -48,13 +48,10 @@ export function OfficePage() {
         <Office
           agentStatusMap={
             items.length > 0
-              ? items[0].agents.reduce(
-                  (acc, agent) => {
-                    acc[agent.agentType.toUpperCase() as Uppercase<AgentType>] = agent.status
-                    return acc
-                  },
-                  {} as Record<string, string>,
-                )
+              ? items[0].agents.reduce<AgentStatusMap>((acc, agent) => {
+                acc[agent.agentType.toUpperCase() as Uppercase<AgentType>] = agent.status
+                return acc
+              }, {})
               : {}
           }
         />

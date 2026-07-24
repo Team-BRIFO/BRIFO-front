@@ -45,7 +45,11 @@ export function OfficeProgressSection({ items, availableCount }: OfficeProgressS
         /* 브리핑 목록 */
         <div className="flex flex-col gap-4">
           {items.map((item, index) => {
-            const isCompleted = item.agents.every((a) => a.status === 'COMPLETED')
+            const REQUIRED_AGENTS = ['ROOKIE', 'PRO', 'TANKER']
+            const isCompleted = REQUIRED_AGENTS.every((type) => {
+              const agent = item.agents.find((a) => a.agentType === type)
+              return agent && agent.status === 'COMPLETED'
+            })
             const cardType = isCompleted ? '완료' : '진행중'
 
             const getAgentStatus = (agentType: string) => {

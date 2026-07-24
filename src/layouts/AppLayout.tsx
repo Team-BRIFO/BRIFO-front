@@ -18,7 +18,10 @@ function getNavigationValue(pathname: string): NavigationValue {
   if (pathname.startsWith(PATH.TEAM)) return 'team'
   if (pathname.startsWith(PATH.DIARY_CALENDAR)) return 'diary'
   if (pathname.startsWith(PATH.MY_PAGE)) return 'my'
-  return 'home'
+  if (pathname === PATH.HOME || pathname.startsWith('/card-news') || pathname.startsWith(PATH.NOTIFICATION)) return 'home'
+  
+  // 그 외(사무실, 에러 페이지, 로딩 페이지, 404 등)는 사무실(브리핑) 탭 활성화
+  return 'briefing'
 }
 
 /**

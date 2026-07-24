@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 import ProComplete from '@/assets/characters/pro-complete.svg?react'
 import ProIng from '@/assets/characters/pro-ing.svg?react'
 import ProNormal from '@/assets/characters/pro-normal.svg?react'
@@ -7,7 +9,7 @@ import RookieNormal from '@/assets/characters/rookie-normal.svg?react'
 import TankerComplete from '@/assets/characters/tanker-complete.svg?react'
 import TankerIng from '@/assets/characters/tanker-ing.svg?react'
 import TankerNormal from '@/assets/characters/tanker-normal.svg?react'
-// import OfficeBg from '@/assets/images/image-1.svg?react'
+import OfficeBg from '@/assets/images/OfficeBackground.svg?react'
 import type { OfficeAgentStatusDTO } from '@/types/api/briefing'
 
 /** 캐릭터 타입별 상태 이미지 맵 */
@@ -53,7 +55,7 @@ export interface OfficeProps {
 }
 
 /** 책상 고정 위치 및 에이전트 배치 순서 (오피스 이미지 좌표 기준) */
-const DESK_SLOTS: { agentType: AgentCharacterType; style: React.CSSProperties }[] = [
+const DESK_SLOTS: { agentType: AgentCharacterType; style: CSSProperties }[] = [
   { agentType: 'TANKER', style: { bottom: '20%', left: '5%', width: 95 } }, // 좌하단
   { agentType: 'ROOKIE', style: { bottom: '38%', left: '36%', width: 95 } }, // 중앙
   { agentType: 'PRO', style: { bottom: '20%', right: '5%', width: 95 } }, // 우하단
@@ -62,9 +64,9 @@ const DESK_SLOTS: { agentType: AgentCharacterType; style: React.CSSProperties }[
 /** 사무실 배경 + 캐릭터 상태를 결합한 오피스 컴포넌트 */
 export function Office({ agentStatusMap = {} }: OfficeProps) {
   return (
-    <div className="bg-White relative w-full" style={{ height: 263 }}>
-      {/* 배경 (이미지 준비 후 주석 해제) */}
-      {/* <OfficeBg className="h-auto w-full" aria-hidden="true" /> */}
+    <div className="bg-White relative w-full rounded-xl" style={{ height: 263 }}>
+      {/* 배경 */}
+      <OfficeBg className="h-auto w-full rounded-xl" aria-hidden="true" />
 
       {/* 캐릭터 레이어 */}
       {DESK_SLOTS.map(({ agentType, style }) => {
