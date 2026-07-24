@@ -182,7 +182,7 @@ export function BriefingDetailPage() {
         earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
         onConfirm={() => {
           setIsCompleteModalOpen(false)
-          navigate(PATH.DIARY_CALENDAR)
+          navigate(PATH.DIARY)
         }}
       />
       {errorModalMsg && (

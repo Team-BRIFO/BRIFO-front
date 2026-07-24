@@ -48,8 +48,10 @@ export interface AnalyzeCardProps {
     code?: string
     marketType?: string
     logoUrl?: string | null
+    /** 주가. 없으면 가격/등락률 줄을 렌더하지 않는다 (결정일기 목록 API 미제공) */
     price?: number
-    changeRate: number
+    /** 등락률(%). price 와 함께 있어야 표시된다 */
+    changeRate?: number
     keywords?: string[]
     tradeDate?: string
   }
@@ -140,7 +142,7 @@ export function AnalyzeCard({
               marketType={stock.marketType}
               logoUrl={stock.logoUrl}
             />
-            {stock.price !== undefined && (
+            {stock.price !== undefined && stock.changeRate !== undefined && (
               <StockPriceChange
                 price={stock.price}
                 changeRate={stock.changeRate}
@@ -164,30 +166,38 @@ export function AnalyzeCard({
                 <div className="flex items-center gap-1.5">
                   <span className="text-Gray-10 pretendard-Body2-Semibold">{stock.name}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  {stock.price !== undefined && (
-                    <span className="text-Gray-5 pretendard-Caption2">
+                {stock.price !== undefined && stock.changeRate !== undefined && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-Gray-5 pretendard-Caption3">
                       {stock.price.toLocaleString()}
                     </span>
-                  )}
-                  <span
-                    className={`pretendard-Caption1 ${
-                      stock.changeRate > 0
-                        ? 'text-Pink-30'
-                        : stock.changeRate < 0
-                          ? 'text-Green-30'
-                          : 'text-Gray-6'
-                    }`}
-                  >
-                    {stock.changeRate > 0 ? '+' : ''}
-                    {stock.changeRate}%
-                  </span>
-                </div>
+                    <span
+                      className={`pretendard-Caption1 ${
+                        stock.changeRate > 0
+                          ? 'text-Pink-30'
+                          : stock.changeRate < 0
+                            ? 'text-Green-30'
+                            : 'text-Gray-6'
+                      }`}
+                    >
+                      {stock.changeRate > 0 ? '+' : ''}
+                      {stock.changeRate}%
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             {badgeConfig && (
               <div className="flex items-center gap-1">
-                <Badge type={badgeConfig.type} size="md" className="px-3">
+                <Badge
+                  type={badgeConfig.type}
+                  size="md"
+                  className={
+                    resultType === 'BRIEFING' && !briefingFooter?.isCompleted
+                      ? 'px-3 bg-Pink-60 text-Pink-30'
+                      : 'px-3'
+                  }
+                >
                   {badgeConfig.text}
                 </Badge>
                 {apAmount !== 0 && (
@@ -258,11 +268,12 @@ export function AnalyzeCard({
                   footerConfig.bgClass,
                 )}
               >
-                <span className={twMerge('pretendard-Caption2', footerConfig.labelClass)}>
+                {/* 피그마 Analyze_Card 푸터는 Main/Caption/SemiBold12 */}
+                <span className={twMerge('pretendard-Caption1', footerConfig.labelClass)}>
                   {footerConfig.label}
                 </span>
                 {stock.tradeDate && (
-                  <span className={twMerge('pretendard-Caption2 text-Gray-4')}>
+                  <span className={twMerge('pretendard-Caption1 text-Gray-4')}>
                     {stock.tradeDate.replace(/-/g, '.')}
                   </span>
                 )}

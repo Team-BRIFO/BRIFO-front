@@ -7,13 +7,13 @@ import { BriefingCompletePage } from '@/pages/BriefingPage/BriefingCompletePage'
 import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
 import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
 import { PredictionListPage } from '@/pages/DecisionPage/PredictionListPage'
-import { DiaryCalendarPage } from '@/pages/Diary/DiaryCalendarPage/DiaryCalendarPage'
-import { DiaryDetailPage } from '@/pages/Diary/DiaryDetailPage/DiaryDetailPage'
-import { DiaryListPage } from '@/pages/Diary/DiaryListPage/DiaryListPage'
+import { DiaryDetailPage } from '@/pages/DiaryPage/DiaryDetailPage'
+import { DiaryPage } from '@/pages/DiaryPage/DiaryPage'
 import { NotFoundPage } from '@/pages/error/NotFoundPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyPage } from '@/pages/MyPage/MyPage'
 import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
+import { NotificationPage } from '@/pages/NotificationPage/NotificationPage'
 import { OfficePage } from '@/pages/OfficePage/OfficePage'
 import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
@@ -55,6 +55,10 @@ export const router = createBrowserRouter([
         path: '/card-news/:id',
         element: <NewsCardPage />,
       },
+      {
+        path: PATH.NOTIFICATION,
+        element: <NotificationPage />,
+      },
 
       // 사무실 탭
       {
@@ -92,17 +96,13 @@ export const router = createBrowserRouter([
         element: <TeamDetailPage />,
       },
 
-      // 피드 탭 - 결정 일기
+      // 피드 탭 - 결정 일기 (캘린더/리스트/통계는 ?view= 로 전환)
       {
-        path: PATH.DIARY_CALENDAR,
-        element: <DiaryCalendarPage />,
+        path: PATH.DIARY,
+        element: <DiaryPage />,
       },
       {
-        path: PATH.DIARY_LIST,
-        element: <DiaryListPage />,
-      },
-      {
-        path: '/diary/:id',
+        path: PATH.DIARY_DETAIL_ROUTE,
         element: <DiaryDetailPage />,
       },
 

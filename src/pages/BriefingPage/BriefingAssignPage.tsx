@@ -140,7 +140,7 @@ export function BriefingAssignPage() {
           size="lg"
           color="primary"
           onClick={handleStartAnalysis}
-          className="!rounded-full"
+          className="rounded-full!"
           disabled={isPending || selectedIds.size === 0}
         >
           {isPending ? '분석 요청 중...' : '분석 시작하기'}
