@@ -77,12 +77,7 @@ export function BriefingResultModal({
         </div>
         {/* 4. 하단 버튼 영역 */}
         <div className="flex w-full flex-col items-center gap-3.5">
-          <Button
-            isFullWidth
-            size="lg"
-            color="primary"
-            onClick={handleActionClick}
-          >
+          <Button isFullWidth size="lg" color="primary" onClick={handleActionClick}>
             결정일기에서 보기
           </Button>
           <button
