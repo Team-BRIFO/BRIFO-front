@@ -36,10 +36,10 @@ export function DiaryRateProgressCard({ group, className = '' }: DiaryRateProgre
         <p className="pretendard-Caption3 text-Gray-6">{subtitle}</p>
       </header>
 
-      {/* 행 간격 · 행 내부 간격 모두 9px (피그마 #584:5665) */}
-      <div className="flex flex-col gap-[9px]">
+      {/* 행 간격 · 행 내부 간격 모두 9px (피그마 #584:5665) → gap-2.25 */}
+      <div className="flex flex-col gap-2.25">
         {rows.map((row, index) => (
-          <div key={row.label} className="flex items-center gap-[9px]">
+          <div key={row.label} className="flex items-center gap-2.25">
             <span className="pretendard-Caption3 text-Gray-6 w-10 shrink-0 truncate">
               {row.label}
             </span>

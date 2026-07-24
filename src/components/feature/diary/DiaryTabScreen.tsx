@@ -44,10 +44,7 @@ export function DiaryTabScreen({ view, onChangeView, children }: DiaryTabScreenP
         <div className="flex w-full flex-col gap-3 px-4">
           <header className="flex w-full flex-col gap-1">
             <h1 className="dnf-Subtitle2 text-Gray-10">결정일기</h1>
-            {/* Main/Caption/Reaular14 — 대응 유틸리티가 없어 값으로 지정 */}
-            <p className="text-Gray-6 text-[14px] leading-5 font-normal tracking-[-0.04em]">
-              내 AI 사원들을 관리하세요
-            </p>
+            <p className="pretendard-Body2-Regular text-Gray-6">내 AI 사원들을 관리하세요</p>
           </header>
 
           <DiaryViewTabs value={view} onChange={onChangeView} />

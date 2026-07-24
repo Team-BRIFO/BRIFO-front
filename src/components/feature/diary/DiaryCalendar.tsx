@@ -33,7 +33,7 @@ export function DiaryCalendar({
   return (
     <div className="flex flex-col gap-4">
       {/* 월 네비 → 그리드 13px (피그마 #587:4790) */}
-      <div className="flex flex-col gap-[13px]">
+      <div className="flex flex-col gap-3.25">
         <div className="flex items-center justify-between">
           <button
             type="button"
