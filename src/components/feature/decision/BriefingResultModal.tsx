@@ -36,7 +36,7 @@ export function BriefingResultModal({
 
   const handleActionClick = () => {
     onAction()
-    navigate(PATH.DIARY_LIST)
+    navigate(PATH.DIARY)
   }
 
   return (

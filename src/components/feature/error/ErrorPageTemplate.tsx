@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import LoaderIcon from '@/assets/icons/loader-1.svg?react'
 import Logo from '@/assets/logo/brifo_logo.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { type AgentStatusMap,Office } from '@/components/feature/office/Office'
+import { type AgentStatusMap, Office } from '@/components/feature/office/Office'
 import { PATH } from '@/routes/paths'
 
 import { ErrorView, type ErrorViewProps } from './ErrorView'
