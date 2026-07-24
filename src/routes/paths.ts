@@ -72,7 +72,7 @@ export const PATH = {
   // ─── 에러 ──────────────────────────────────────────────────────
   /** 404 */
   NOT_FOUND: '*',
-  
+
   ERROR_404: '/error/404',
   ERROR_500: '/error/500',
   ERROR_NETWORK: '/error/network',

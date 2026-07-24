@@ -4,6 +4,7 @@ import { ErrorPageTemplate } from '@/components/feature/error/ErrorPageTemplate'
 export function LoadingPage() {
   return (
     <ErrorPageTemplate
+      headerText="로딩 중..."
       agentStatusMap={{
         ROOKIE: 'ANALYZING',
         PRO: 'ANALYZING',

@@ -194,7 +194,7 @@ export function AnalyzeCard({
                   size="md"
                   className={
                     resultType === 'BRIEFING' && !briefingFooter?.isCompleted
-                      ? 'px-3 bg-Pink-60 text-Pink-30'
+                      ? 'bg-Pink-60 text-Pink-30 px-3'
                       : 'px-3'
                   }
                 >

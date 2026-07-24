@@ -1,6 +1,6 @@
 import { Badge } from '@/components/common/Badge'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { Office, type AgentStatusMap } from '@/components/feature/office/Office'
+import { type AgentStatusMap,Office } from '@/components/feature/office/Office'
 import { OfficeProgressSection } from '@/components/feature/office/OfficeProgressSection'
 import Logo from '@/components/logos/logo-small.svg?react'
 import { useGetOfficeBriefings } from '@/hooks/queries/useBriefing'
@@ -49,9 +49,9 @@ export function OfficePage() {
           agentStatusMap={
             items.length > 0
               ? items[0].agents.reduce<AgentStatusMap>((acc, agent) => {
-                acc[agent.agentType.toUpperCase() as Uppercase<AgentType>] = agent.status
-                return acc
-              }, {})
+                  acc[agent.agentType.toUpperCase() as Uppercase<AgentType>] = agent.status
+                  return acc
+                }, {})
               : {}
           }
         />

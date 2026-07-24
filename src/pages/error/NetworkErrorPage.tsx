@@ -4,8 +4,15 @@ import { ErrorPageTemplate } from '@/components/feature/error/ErrorPageTemplate'
 export function NetworkErrorPage() {
   return (
     <ErrorPageTemplate
+      headerText="네트워크 연결 오류"
       title="인터넷이 불안정해요"
-      description="연결 상태를 확인하고\n다시 시도해 주세요."
+      description={
+        <>
+          연결 상태를 확인하고
+          <br />
+          다시 시도해 주세요.
+        </>
+      }
       buttonText="다시 시도"
       onButtonClick={() => window.location.reload()}
     />
