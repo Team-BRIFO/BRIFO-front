@@ -7,6 +7,7 @@ import { TextField } from '@/components/common/TextField'
 import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
 import StockSearchView from '@/components/feature/onboarding/StockSearchView'
 import { PATH } from '@/routes/paths'
+import { useProfileStore } from '@/stores/useProfileStore'
 
 import { ONBOARDING_STOCKS } from './mockStocks'
 
@@ -33,6 +34,7 @@ function getNameError(value: string) {
 
 export function OnboardingPage() {
   const navigate = useNavigate()
+  const setProfile = useProfileStore((state) => state.setProfile)
 
   const [nickname, setNickname] = useState('')
   const [companyName, setCompanyName] = useState('')
@@ -72,14 +74,14 @@ export function OnboardingPage() {
   const handleSubmit = () => {
     if (!isFormValid) return
 
-    const onboardingData = {
+    const profile = {
       nickname: nickname.trim(),
       companyName: companyName.trim(),
       stockIds: selectedStockIds,
     }
 
     // TODO: 온보딩 프로필 API 호출
-    console.log(onboardingData)
+    setProfile(profile)
 
     navigate(PATH.TUTORIAL_INTRO)
   }
@@ -163,7 +165,6 @@ export function OnboardingPage() {
           stocks={ONBOARDING_STOCKS}
           searchKeyword={searchKeyword}
           selectedStockIds={selectedStockIds}
-          onSearchKeywordChange={setSearchKeyword}
           onToggleStock={handleToggleStock}
           onOpenSearch={() => setIsStockSearchOpen(true)}
         />

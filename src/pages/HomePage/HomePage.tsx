@@ -11,12 +11,15 @@ import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
 import { PATH } from '@/routes/paths'
+import { useProfileStore } from '@/stores/useProfileStore'
 
 import { HOME_CARD_NEWS_MOCK_DATA } from './mockData'
 
 export function HomePage() {
   const navigate = useNavigate()
   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false)
+  const nickname = useProfileStore((state) => state.nickname)
+  const companyName = useProfileStore((state) => state.companyName)
 
   return (
     <>
@@ -38,8 +41,7 @@ export function HomePage() {
             }
           />
 
-          {/*TODO: 닉네임, 회사명 API 연동*/}
-          <HomeHeader nickname="포롱" companyName="가즈아 투자사" />
+          <HomeHeader nickname={nickname} companyName={companyName} />
 
           <div className="flex flex-col gap-3">
             <OfficeCard />
