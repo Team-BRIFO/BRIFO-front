@@ -48,7 +48,19 @@ export function PredictionListPage() {
                   setSelectedDecisionId(item.decisionId)
                 }
               }}
-              className={item.isSettled ? 'cursor-pointer' : ''}
+              onKeyDown={(e) => {
+                if (item.isSettled && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault()
+                  setSelectedDecisionId(item.decisionId)
+                }
+              }}
+              role={item.isSettled ? 'button' : undefined}
+              tabIndex={item.isSettled ? 0 : undefined}
+              className={
+                item.isSettled
+                  ? 'focus-visible:ring-Pink-30 cursor-pointer rounded-xl focus:outline-none focus-visible:ring-2'
+                  : ''
+              }
             >
               <AnalyzeCard
                 resultType="PREDICTION"

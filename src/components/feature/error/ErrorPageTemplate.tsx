@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import LoaderIcon from '@/assets/icons/loader-1.svg?react'
 import Logo from '@/assets/logo/brifo_logo.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { ErrorView, type ErrorViewProps } from '@/components/feature/error/ErrorView'
 import { type AgentStatusMap, Office } from '@/components/feature/office/Office'
 import { PATH } from '@/routes/paths'
-
-import { ErrorView, type ErrorViewProps } from './ErrorView'
 
 export interface ErrorPageTemplateProps extends ErrorViewProps {
   /** 에이전트 상태 (로딩중 등 캐릭터 애니메이션 조정용) */
