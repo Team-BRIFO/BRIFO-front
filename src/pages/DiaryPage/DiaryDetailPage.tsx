@@ -19,6 +19,7 @@ export function DiaryDetailPage() {
   const { data, isPending, isError } = useDiaryDetail(id ?? null)
   const {
     mutate: createShareImage,
+    reset: resetShareImage,
     isIdle: isShareImageIdle,
     isPending: isGeneratingShareImage,
     isError: isShareImageFailed,
@@ -26,6 +27,11 @@ export function DiaryDetailPage() {
 
   const detail = data ? mapDiaryDetail(data) : undefined
   const needsShareImage = Boolean(detail && !detail.shareImageUrl)
+
+  // 다른 일기로 이동하면 이전 생성 요청의 상태를 비워 새 카드 생성 여부를 판단한다.
+  useEffect(() => {
+    resetShareImage()
+  }, [id, resetShareImage])
 
   // 공유 이미지가 아직 없으면 한 번만 생성 요청 (성공 시 상세 캐시의 shareImageUrl을 직접 갱신한다)
   useEffect(() => {
