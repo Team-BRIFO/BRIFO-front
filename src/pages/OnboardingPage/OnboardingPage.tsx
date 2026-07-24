@@ -9,7 +9,7 @@ import StockSearchView from '@/components/feature/onboarding/StockSearchView'
 import { PATH } from '@/routes/paths'
 import { useProfileStore } from '@/stores/useProfileStore'
 
-import { ONBOARDING_STOCKS } from './mockStocks'
+import { ONBOARDING_STOCKS } from '@/pages/OnboardingPage/mockStocks'
 
 const MIN_STOCK_COUNT = 3
 const MAX_STOCK_COUNT = 5

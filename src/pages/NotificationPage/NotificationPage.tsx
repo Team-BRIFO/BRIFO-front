@@ -7,7 +7,7 @@ import NotificationTabs, {
   type NotificationCategory,
 } from '@/components/feature/notification/NotificationTabs'
 
-import { NOTIFICATION_MOCK_DATA } from './mockData'
+import { NOTIFICATION_MOCK_DATA } from '@/pages/NotificationPage/mockData'
 
 export function NotificationPage() {
   const navigate = useNavigate()
