@@ -82,9 +82,8 @@ export function BriefingResultModal({
             size="lg"
             color="primary"
             onClick={handleActionClick}
-            className="!rounded-full"
           >
-            {isSuccess ? '결정일기에서 보기' : '복기 리포트 보기'}
+            결정일기에서 보기
           </Button>
           <button
             type="button"
