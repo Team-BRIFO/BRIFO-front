@@ -51,7 +51,7 @@ export function DiaryHitRateCard({
       {isStatistics ? (
         rateText
       ) : (
-        // 범례는 현재 API가 제공하는 결정 방향을 표시한다 — diaryTheme 주석 참고
+        // 범례는 화면 요구사항인 결과 유형을 표시한다 — diaryTheme 주석 참고
         <ul className="flex flex-col gap-2">
           {DIARY_LEGEND.map(({ direction, label }) => (
             <li key={direction} className="flex items-center gap-1">

@@ -7,8 +7,9 @@ import type { DiaryDirection } from '@/types/domain/diary'
  * `GET /api/diaries/calendar` 는 `days[].direction = { up, down, neutral }` 로
  * **방향만** 내려준다. `correctDecisionCount` 는 월 합계라 날짜별로 쪼갤 수 없다.
  *
- * 그래서 현재 점과 범례는 모두 방향(상승·하락·관망)을 표현한다.
- * 날짜별 outcome(correct / incorrect / neutral)이 추가되면 결과 기준 표현으로 교체한다.
+ * 화면 요구사항에 따라 범례는 결과 유형(적중·오답·관망)을 유지한다.
+ * 날짜별 outcome(correct / incorrect / neutral)이 추가되면 방향값을 결과로 간주하는
+ * 현재 임시 매핑을 실제 결과 데이터로 교체한다.
  */
 export const DIARY_DIRECTION_DOT: Record<DiaryDirection, string> = {
   up: 'bg-Green-50',
@@ -17,11 +18,11 @@ export const DIARY_DIRECTION_DOT: Record<DiaryDirection, string> = {
 }
 
 /**
- * 캘린더 범례 — 현재 API가 제공하는 방향(상승 / 하락 / 관망)을 따른다.
+ * 캘린더 범례 — 화면 요구사항인 결과 유형(적중 / 오답 / 관망)을 따른다.
  */
 export const DIARY_LEGEND: { direction: DiaryDirection; label: string }[] = [
-  { direction: 'up', label: '상승' },
-  { direction: 'down', label: '하락' },
+  { direction: 'up', label: '적중' },
+  { direction: 'down', label: '오답' },
   { direction: 'neutral', label: '관망' },
 ]
 
