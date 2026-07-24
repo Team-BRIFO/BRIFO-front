@@ -46,14 +46,16 @@ export function OfficePage() {
 
         {/* 오피스 일러스트 + 캐릭터 */}
         <Office
-          agentStatusMap={
-            items.length > 0
-              ? items[0].agents.reduce<AgentStatusMap>((acc, agent) => {
-                  acc[agent.agentType.toUpperCase() as Uppercase<AgentType>] = agent.status
-                  return acc
-                }, {})
-              : {}
-          }
+          agentStatusMap={items.reduce<AgentStatusMap>((acc, item) => {
+            item.agents.forEach((agent) => {
+              const key = agent.agentType.toUpperCase() as Uppercase<AgentType>
+              const current = acc[key]
+              if (current !== 'ANALYZING' && current !== 'PENDING') {
+                acc[key] = agent.status
+              }
+            })
+            return acc
+          }, {})}
         />
 
         {/* 진행사항 섹션 */}
