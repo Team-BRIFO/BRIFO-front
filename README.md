@@ -40,11 +40,11 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ## 👥 팀원 및 프론트엔드 역할 분담
 
-| 이름 | GitHub | 담당 역할 |
+| 이름 | GitHub | 담당 화면 및 역할 |
 | ---- | ------ | --------- |
-|      |        |           |
-|      |        |           |
-|      |        |           |
+| 조호연 (누아) | [@whghdus](https://github.com/whghdus) | 사무실 탭(대시보드, 예측, 브리핑), 마이 탭, 뉴스카드 상세, 에러 및 로딩 |
+| 황유빈 (비니) | [@bini0918](https://github.com/bini0918) | 초기 진입(스플래시, 약관, 온보딩, 튜토리얼), 홈 탭, 알림 |
+| 김해원 (엠버) | [@haewonwon](https://github.com/haewonwon) | 팀 탭(AI 사원 관리), 피드 탭(결정 일기 및 통계) |
 
 ---
 
@@ -53,14 +53,12 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 | 분류            | 기술                                                                                                                            |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | 코어            | `React 19`, `TypeScript`, `Vite`, `pnpm`                                                                                        |
-| 스타일링        | `TailwindCSS v4`(`@tailwindcss/vite`), 디자인 토큰(BERIFO 디자인 시스템), `Radix UI`(Dialog/Select/Tabs/Slider), `lucide-react` |
-| 서버 상태       | `TanStack Query (React Query) v5`                                                                                               |
+| 스타일링        | `TailwindCSS v4`(`@tailwindcss/vite`), 커스텀 UI 컴포넌트, `lucide-react`, `svgr` |
+| 서버 상태       | `TanStack Query (React Query) v5` *(도입 예정)*                                                                                 |
 | 클라이언트 상태 | `Zustand v5`                                                                                                                    |
 | 라우팅          | `React Router DOM v7`                                                                                                           |
-| 폼 / 검증       | `React Hook Form` + `Zod`                                                                                                       |
-| HTTP            | `Axios` (인터셉터로 JWT 주입 / 401 처리)                                                                                        |
-| 애니메이션      | `Framer Motion`                                                                                                                 |
-| 차트            | `Recharts`                                                                                                                      |
+| 폼 / 검증       | 커스텀 훅을 활용한 제어 (Controlled Component 방식)                                                                             |
+| HTTP            | `Axios` *(도입 예정)*                                                                                        |
 | 린트 / 포맷     | `ESLint 9`(flat config) + `typescript-eslint`, `Prettier`                                                                       |
 
 ---
@@ -97,33 +95,20 @@ src/
 │   ├── domain/           # 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
 │   └── feature/          # common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
 ├── pages/                # 라우트 단위 화면 (routing·query·store 연결 담당)
-│   ├── SplashPage/
-│   │   └── SplashPage.tsx         # SCR-01
-│   ├── OnboardingPage/
-│   │   └── OnboardingPage.tsx     # SCR-02
-│   ├── TutorialPage/
-│   │   └── TutorialPage.tsx       # SCR-03
-│   ├── HomePage/
-│   │   └── HomePage.tsx           # 홈 탭 메인
-│   ├── CardNewsDetailPage/
-│   │   └── CardNewsDetailPage.tsx # SCR-05 (/card-news/:id)
-│   ├── OfficePage/
-│   │   └── OfficePage.tsx         # SCR-04
-│   ├── BriefingPage/
-│   │   └── BriefingPage.tsx       # SCR-06, 07
-│   ├── TeamPage/
-│   │   └── TeamPage.tsx           # SCR-12
-│   ├── Diary/
-│   │   ├── DiaryCalendarPage/
-│   │   │   └── DiaryCalendarPage.tsx  # SCR-08 (/diary)
-│   │   ├── DiaryListPage/
-│   │   │   └── DiaryListPage.tsx      # SCR-09 (/diary/list)
-│   │   └── DiaryDetailPage/
-│   │       └── DiaryDetailPage.tsx    # SCR-10 (/diary/:id)
-│   ├── MyPage/
-│   │   └── MyPage.tsx             # SCR-11, 13
-│   └── error/
-│       └── NotFoundPage.tsx       # 404
+│   ├── AgreementPage/    # 약관 동의 관련 화면
+│   ├── BriefingPage/     # AI 사원 보고서 리스트 및 브리핑 관련 화면
+│   ├── DecisionPage/     # 투자 의사 결정 관련 화면
+│   ├── DiaryPage/        # 결정 일기 캘린더/리스트/통계 화면
+│   ├── HomePage/         # 홈 탭 메인 랜딩
+│   ├── MyPage/           # 마이 탭 (프로필, 설정, 통계)
+│   ├── NewsCardPage/     # 카드뉴스 상세 화면
+│   ├── NotificationPage/ # 알림 리스트 화면
+│   ├── OfficePage/       # 사무실 대시보드 화면
+│   ├── OnboardingPage/   # 사용자 온보딩 화면
+│   ├── SplashPage/       # 앱 초기 스플래시 화면
+│   ├── TeamPage/         # AI 사원 관리(인사팀) 화면
+│   ├── TutorialPage/     # 초기 튜토리얼 화면
+│   └── error/            # 404, 500, 네트워크 에러, 글로벌 로딩 화면
 ├── hooks/
 │   ├── queries/          # 전역 재사용 query hook
 │   ├── mutations/        # 전역 재사용 mutation hook
