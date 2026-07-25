@@ -4,7 +4,7 @@ import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
 import { PATH } from '@/routes/paths'
 
-export interface BriefingResultModalProps {
+export interface DecisionResultModalProps {
   isOpen: boolean
   isSuccess?: boolean
   points?: number
@@ -15,28 +15,36 @@ export interface BriefingResultModalProps {
   comment?: string
   resultText?: string
   confidenceLevel?: number
+  decisionId?: string
   onAction: () => void
   onClose: () => void
 }
 
-export function BriefingResultModal({
+export function DecisionResultModal({
   isOpen,
   isSuccess = true,
   points = 100,
   stockInfo = { name: '삼성전자', changeRate: 8.1 },
-  comment = '사장님, 제가 된다고 했잖아요!',
+  comment = '아쉬운 결과지만, 이번 경험을 바탕으로 다음 예측에서 더 좋은 결과를 얻을 수 있을 거예요!',
   resultText,
   confidenceLevel = 5,
+  decisionId,
   onAction,
   onClose,
-}: BriefingResultModalProps) {
+}: DecisionResultModalProps) {
   const defaultResultText = isSuccess ? '상승 적중' : '상승 예측 빗나감'
   const displayResultText = resultText || defaultResultText
   const navigate = useNavigate()
 
   const handleActionClick = () => {
     onAction()
-    navigate(PATH.DIARY)
+    if (isSuccess && decisionId) {
+      navigate(PATH.DIARY_DETAIL(decisionId))
+    } else if (isSuccess) {
+      navigate(PATH.DIARY)
+    } else {
+      onClose()
+    }
   }
 
   return (
@@ -80,13 +88,15 @@ export function BriefingResultModal({
           <Button isFullWidth size="lg" color="primary" onClick={handleActionClick}>
             결정일기에서 보기
           </Button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-Gray-6 p-1 text-xs underline underline-offset-2"
-          >
-            확인
-          </button>
+          {isSuccess && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-Gray-6 p-1 text-xs underline underline-offset-2"
+            >
+              확인
+            </button>
+          )}
         </div>
       </div>
     </Modal>

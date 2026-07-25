@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
-import { BriefingResultModal } from '@/components/feature/decision/BriefingResultModal'
-import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
+import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
+import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
 import { MOCK_DECISIONS, MOCK_GET_DECISION_RESPONSES } from '@/pages/DecisionPage/mockDecision'
 
 export function PredictionListPage() {
@@ -79,19 +79,17 @@ export function PredictionListPage() {
       </div>
 
       {selectedDecision && selectedDecisionDetail && (
-        <BriefingResultModal
+        <DecisionResultModal
           isOpen={!!selectedDecisionId}
+          decisionId={selectedDecisionId ?? undefined}
           isSuccess={selectedDecisionDetail.isCorrect ?? false}
-          points={selectedDecisionDetail.apDelta ?? 0}
+          points={Math.abs(selectedDecisionDetail.apDelta ?? 0)}
           confidenceLevel={selectedDecision.confidenceLevel}
           stockInfo={{
             name: selectedDecision.stock.name,
             changeRate: selectedDecisionDetail.stock.changeRate ?? 0,
           }}
-          onAction={() => {
-            // 결정일기 리스트 이동 혹은 모달 닫기
-            setSelectedDecisionId(null)
-          }}
+          onAction={() => setSelectedDecisionId(null)}
           onClose={() => setSelectedDecisionId(null)}
         />
       )}

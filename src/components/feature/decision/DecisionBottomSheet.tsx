@@ -6,7 +6,7 @@ import { BriefingReviewSection } from '@/components/domain/briefing/BriefingRevi
 import { ConfidenceSliderSection } from '@/components/domain/decision/ConfidenceSliderSection'
 import type { PredictionType } from '@/components/domain/decision/DirectionSelectorGroup'
 import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSelectorGroup'
-import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
+import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import type { ConfidenceLevel } from '@/types/api/decision'
 
 export interface DecisionBottomSheetProps {

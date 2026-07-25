@@ -1,4 +1,4 @@
-import { AnalyzeCard } from '@/components/feature/stock/AnalyzeCard'
+import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 
 interface HomeCardNewsItem {
   id: number
