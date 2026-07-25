@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from 'react'
+
 import { Badge } from '@/components/common/Badge'
 import { StockInfo } from '@/components/domain/stock/StockInfo'
 
@@ -68,10 +70,20 @@ export function BriefingCard({
   const proStatus = agentStatuses?.pro ?? type
   const tankerStatus = agentStatuses?.tanker ?? type
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
     <div
       onClick={onClick}
-      className={`shadow-card box-border flex w-full flex-col items-start overflow-hidden rounded-lg border transition-colors ${onClick ? 'cursor-pointer' : ''} ${containerBgClass} ${borderClass} ${className}`}
+      onKeyDown={onClick ? handleKeyDown : undefined}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      className={`shadow-card box-border flex w-full flex-col items-start overflow-hidden rounded-lg border transition-colors ${onClick ? 'focus-visible:ring-Pink-30 cursor-pointer focus:outline-none focus-visible:ring-2' : ''} ${containerBgClass} ${borderClass} ${className}`}
     >
       {/* 상단 라인: 순위, 로고, 종목명 및 우측 상태 배지 */}
       <div className="flex w-full items-center justify-between px-5 py-3">

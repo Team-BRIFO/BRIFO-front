@@ -9,7 +9,10 @@ import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
 import { PredictionListPage } from '@/pages/DecisionPage/PredictionListPage'
 import { DiaryDetailPage } from '@/pages/DiaryPage/DiaryDetailPage'
 import { DiaryPage } from '@/pages/DiaryPage/DiaryPage'
+import { LoadingPage } from '@/pages/error/LoadingPage'
+import { NetworkErrorPage } from '@/pages/error/NetworkErrorPage'
 import { NotFoundPage } from '@/pages/error/NotFoundPage'
+import { ServerErrorPage } from '@/pages/error/ServerErrorPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyPage } from '@/pages/MyPage/MyPage'
 import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
@@ -111,12 +114,27 @@ export const router = createBrowserRouter([
         path: PATH.MY_PAGE,
         element: <MyPage />,
       },
+      // ─── 에러 및 로딩 ──────────────────────────────────────────────
+      {
+        path: PATH.ERROR_404,
+        element: <NotFoundPage />,
+      },
+      {
+        path: PATH.ERROR_500,
+        element: <ServerErrorPage />,
+      },
+      {
+        path: PATH.ERROR_NETWORK,
+        element: <NetworkErrorPage />,
+      },
+      {
+        path: PATH.LOADING,
+        element: <LoadingPage />,
+      },
+      {
+        path: PATH.NOT_FOUND,
+        element: <NotFoundPage />,
+      },
     ],
-  },
-
-  // ─── 404 ──────────────────────────────────────────────────────────
-  {
-    path: PATH.NOT_FOUND,
-    element: <NotFoundPage />,
   },
 ])

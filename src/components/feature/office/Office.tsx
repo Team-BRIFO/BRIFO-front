@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 import ProComplete from '@/assets/characters/pro-complete.svg?react'
 import ProIng from '@/assets/characters/pro-ing.svg?react'
 import ProNormal from '@/assets/characters/pro-normal.svg?react'
@@ -53,7 +55,7 @@ export interface OfficeProps {
 }
 
 /** 책상 고정 위치 및 에이전트 배치 순서 (오피스 이미지 좌표 기준) */
-const DESK_SLOTS: { agentType: AgentCharacterType; style: React.CSSProperties }[] = [
+const DESK_SLOTS: { agentType: AgentCharacterType; style: CSSProperties }[] = [
   { agentType: 'TANKER', style: { bottom: '20%', left: '5%', width: 95 } }, // 좌하단
   { agentType: 'ROOKIE', style: { bottom: '38%', left: '36%', width: 95 } }, // 중앙
   { agentType: 'PRO', style: { bottom: '20%', right: '5%', width: 95 } }, // 우하단

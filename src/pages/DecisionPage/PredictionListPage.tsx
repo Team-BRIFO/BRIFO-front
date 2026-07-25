@@ -4,13 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
-import { MOCK_DECISIONS } from '@/pages/DecisionPage/mockDecision'
+import { MOCK_DECISIONS, MOCK_GET_DECISION_RESPONSES } from '@/pages/DecisionPage/mockDecision'
 
 export function PredictionListPage() {
   const navigate = useNavigate()
   const [selectedDecisionId, setSelectedDecisionId] = useState<string | null>(null)
 
   const selectedDecision = MOCK_DECISIONS.find((d) => d.decisionId === selectedDecisionId)
+  const selectedDecisionDetail = selectedDecisionId
+    ? MOCK_GET_DECISION_RESPONSES[selectedDecisionId]?.result
+    : null
 
   return (
     <div className="bg-White flex min-h-[100dvh] w-full flex-col pb-10">
@@ -45,7 +48,19 @@ export function PredictionListPage() {
                   setSelectedDecisionId(item.decisionId)
                 }
               }}
-              className={item.isSettled ? 'cursor-pointer' : ''}
+              onKeyDown={(e) => {
+                if (item.isSettled && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault()
+                  setSelectedDecisionId(item.decisionId)
+                }
+              }}
+              role={item.isSettled ? 'button' : undefined}
+              tabIndex={item.isSettled ? 0 : undefined}
+              className={
+                item.isSettled
+                  ? 'focus-visible:ring-Pink-30 cursor-pointer rounded-xl focus:outline-none focus-visible:ring-2'
+                  : ''
+              }
             >
               <AnalyzeCard
                 resultType="PREDICTION"
@@ -63,15 +78,15 @@ export function PredictionListPage() {
         </div>
       </div>
 
-      {selectedDecision && (
+      {selectedDecision && selectedDecisionDetail && (
         <DecisionResultModal
           isOpen={!!selectedDecisionId}
-          isSuccess={true} // 더미 데이터 (목록 API에 정보 없음)
-          points={100} // 더미 데이터
+          isSuccess={selectedDecisionDetail.isCorrect ?? false}
+          points={selectedDecisionDetail.apDelta ?? 0}
           confidenceLevel={selectedDecision.confidenceLevel}
           stockInfo={{
             name: selectedDecision.stock.name,
-            changeRate: selectedDecision.stock.changeRate,
+            changeRate: selectedDecisionDetail.stock.changeRate ?? 0,
           }}
           onAction={() => setSelectedDecisionId(null)}
           onClose={() => setSelectedDecisionId(null)}
