@@ -9,15 +9,17 @@ const NAVIGATION_PATHS: Record<NavigationValue, string> = {
   team: PATH.TEAM,
   office: PATH.OFFICE,
   home: PATH.HOME,
-  diary: PATH.DIARY_CALENDAR,
+  diary: PATH.DIARY,
   my: PATH.MY_PAGE,
 }
 
 function getNavigationValue(pathname: string): NavigationValue {
-  if (pathname.startsWith(PATH.OFFICE)) return 'office'
+  if (pathname.startsWith(PATH.OFFICE) || pathname.startsWith(PATH.BRIEFING)) return 'office'
   if (pathname.startsWith(PATH.TEAM)) return 'team'
-  if (pathname.startsWith(PATH.DIARY_CALENDAR)) return 'diary'
+  if (pathname.startsWith(PATH.DIARY)) return 'diary'
   if (pathname.startsWith(PATH.MY_PAGE)) return 'my'
+
+  // 그 외(홈, 에러 페이지, 로딩 페이지 등)는 홈 탭 활성화
   return 'home'
 }
 

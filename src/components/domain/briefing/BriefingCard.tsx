@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from 'react'
+
 import { Badge } from '@/components/common/Badge'
 import { StockInfo } from '@/components/domain/stock/StockInfo'
 
@@ -22,6 +24,7 @@ export interface BriefingCardProps {
     tanker?: '완료' | '진행중'
   }
   className?: string
+  onClick?: () => void
 }
 
 export function BriefingCard({
@@ -31,6 +34,7 @@ export function BriefingCard({
   stock,
   agentStatuses,
   className = '',
+  onClick,
 }: BriefingCardProps) {
   // 상태 및 활성화 여부에 따른 동적 스타일 매핑
   let containerBgClass = 'bg-White'
@@ -66,15 +70,26 @@ export function BriefingCard({
   const proStatus = agentStatuses?.pro ?? type
   const tankerStatus = agentStatuses?.tanker ?? type
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
     <div
-      className={`shadow-card box-border flex w-full cursor-pointer flex-col items-start overflow-hidden rounded-lg border transition-colors ${containerBgClass} ${borderClass} ${className}`}
+      onClick={onClick}
+      onKeyDown={onClick ? handleKeyDown : undefined}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      className={`shadow-card box-border flex w-full flex-col items-start overflow-hidden rounded-lg border transition-colors ${onClick ? 'focus-visible:ring-Pink-30 cursor-pointer focus:outline-none focus-visible:ring-2' : ''} ${containerBgClass} ${borderClass} ${className}`}
     >
       {/* 상단 라인: 순위, 로고, 종목명 및 우측 상태 배지 */}
       <div className="flex w-full items-center justify-between px-5 py-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3.5">
           {rank != null && (
-            <span className={`dnf-Subtitle3 w-4.5 text-center transition-colors ${rankClass}`}>
+            <span className={`dnf-Subtitle3 text-center transition-colors ${rankClass}`}>
               {rank}
             </span>
           )}

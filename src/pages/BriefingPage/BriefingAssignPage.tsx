@@ -8,10 +8,8 @@ import {
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
-import {
-  type AnalyzeModalType,
-  AnalyzeRequestModal,
-} from '@/components/feature/briefing/AnalyzeRequestModal'
+import type { AnalyzeModalType } from '@/components/feature/analyze/AnalyzeRequestModal'
+import { AnalyzeRequestModal } from '@/components/feature/analyze/AnalyzeRequestModal'
 import { useGetCardNewsBriefings, usePostBriefingRequest } from '@/hooks/queries/useBriefing'
 import { MOCK_AGENT_LIST_RESPONSE } from '@/pages/TeamPage/mockAgents'
 import { PATH } from '@/routes/paths'
@@ -140,7 +138,7 @@ export function BriefingAssignPage() {
           size="lg"
           color="primary"
           onClick={handleStartAnalysis}
-          className="!rounded-full"
+          className="rounded-full!"
           disabled={isPending || selectedIds.size === 0}
         >
           {isPending ? '분석 요청 중...' : '분석 시작하기'}

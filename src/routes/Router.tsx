@@ -8,10 +8,13 @@ import { BriefingAssignPage } from '@/pages/BriefingPage/BriefingAssignPage'
 import { BriefingCompletePage } from '@/pages/BriefingPage/BriefingCompletePage'
 import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
 import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
-import { DiaryCalendarPage } from '@/pages/Diary/DiaryCalendarPage/DiaryCalendarPage'
-import { DiaryDetailPage } from '@/pages/Diary/DiaryDetailPage/DiaryDetailPage'
-import { DiaryListPage } from '@/pages/Diary/DiaryListPage/DiaryListPage'
+import { PredictionListPage } from '@/pages/DecisionPage/PredictionListPage'
+import { DiaryDetailPage } from '@/pages/DiaryPage/DiaryDetailPage'
+import { DiaryPage } from '@/pages/DiaryPage/DiaryPage'
+import { LoadingPage } from '@/pages/error/LoadingPage'
+import { NetworkErrorPage } from '@/pages/error/NetworkErrorPage'
 import { NotFoundPage } from '@/pages/error/NotFoundPage'
+import { ServerErrorPage } from '@/pages/error/ServerErrorPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyPage } from '@/pages/MyPage/MyPage'
 import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
@@ -81,6 +84,10 @@ export const router = createBrowserRouter([
         element: <OfficePage />,
       },
       {
+        path: PATH.OFFICE_PREDICTION,
+        element: <PredictionListPage />,
+      },
+      {
         path: PATH.BRIEFING,
         element: <BriefingPage />,
       },
@@ -107,17 +114,13 @@ export const router = createBrowserRouter([
         element: <TeamDetailPage />,
       },
 
-      // 피드 탭 - 결정 일기
+      // 피드 탭 - 결정 일기 (캘린더/리스트/통계는 ?view= 로 전환)
       {
-        path: PATH.DIARY_CALENDAR,
-        element: <DiaryCalendarPage />,
+        path: PATH.DIARY,
+        element: <DiaryPage />,
       },
       {
-        path: PATH.DIARY_LIST,
-        element: <DiaryListPage />,
-      },
-      {
-        path: '/diary/:id',
+        path: PATH.DIARY_DETAIL_ROUTE,
         element: <DiaryDetailPage />,
       },
 
@@ -126,12 +129,23 @@ export const router = createBrowserRouter([
         path: PATH.MY_PAGE,
         element: <MyPage />,
       },
+      // ─── 에러 및 로딩 ──────────────────────────────────────────────
+      {
+        path: PATH.ERROR_404,
+        element: <NotFoundPage />,
+      },
+      {
+        path: PATH.ERROR_500,
+        element: <ServerErrorPage />,
+      },
+      {
+        path: PATH.ERROR_NETWORK,
+        element: <NetworkErrorPage />,
+      },
+      {
+        path: PATH.LOADING,
+        element: <LoadingPage />,
+      },
     ],
-  },
-
-  // ─── 404 ──────────────────────────────────────────────────────────
-  {
-    path: PATH.NOT_FOUND,
-    element: <NotFoundPage />,
   },
 ])
