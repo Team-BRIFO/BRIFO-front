@@ -1,4 +1,4 @@
-import type { AnalyzeResultType } from '@/components/feature/stock/AnalyzeCard'
+import type { AnalyzeResultType } from '@/components/feature/analyze/AnalyzeCard'
 
 export const MOCK_STOCK = {
   stockId: '1',

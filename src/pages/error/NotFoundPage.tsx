@@ -1,16 +1,25 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
+import { ErrorPageTemplate } from '@/components/feature/error/ErrorPageTemplate'
 import { PATH } from '@/routes/paths'
 
 /** 404 페이지 */
 export function NotFoundPage() {
+  const navigate = useNavigate()
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="text-2xl font-bold">404 - 페이지를 찾을 수 없습니다</h1>
-      <p className="text-Gray-6">요청하신 페이지가 존재하지 않습니다.</p>
-      <Link to={PATH.HOME} className="text-Yellow-50 underline">
-        홈으로 돌아가기
-      </Link>
-    </div>
+    <ErrorPageTemplate
+      headerText="404 Not Found"
+      title="길을 잘못 드셨어요"
+      description={
+        <>
+          찾는 페이지가 없어요.
+          <br />
+          홈으로 돌아갈까요?
+        </>
+      }
+      buttonText="홈으로 가기"
+      onButtonClick={() => navigate(PATH.HOME)}
+    />
   )
 }

@@ -8,9 +8,9 @@ import {
 } from '@/components/common/StatusBar'
 import { Tabs } from '@/components/common/Tabs'
 import { BriefingMainContentSheet } from '@/components/feature/briefing/BriefingMainContentSheet'
-import { PredictionCompleteModal } from '@/components/feature/briefing/PredictionCompleteModal'
-import { BriefingResultModal } from '@/components/feature/decision/BriefingResultModal'
 import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
+import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
+import { PredictionCompleteModal } from '@/components/feature/decision/PredictionCompleteModal'
 import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
 import { usePostDecision } from '@/hooks/queries/useDecision'
 import { MOCK_AGENT_DETAIL_RESPONSES } from '@/pages/TeamPage/mockAgents'
@@ -182,11 +182,11 @@ export function BriefingDetailPage() {
         earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
         onConfirm={() => {
           setIsCompleteModalOpen(false)
-          navigate(PATH.DIARY_CALENDAR)
+          navigate(PATH.DIARY)
         }}
       />
       {errorModalMsg && (
-        <BriefingResultModal
+        <DecisionResultModal
           isOpen={!!errorModalMsg}
           isSuccess={false}
           points={0}
