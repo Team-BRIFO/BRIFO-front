@@ -1,38 +1,14 @@
-import type { ApTransactionResponse } from '@/types/api/ap'
+import { MOCK_AP_TRANSACTIONS_RESPONSE } from '@/pages/MyPage/mockMy'
+import type { ApTransactionResult } from '@/types/api/ap'
 
-/**
- * AP 거래 내역 조회 API
- */
-export const getApTransactions = async (): Promise<ApTransactionResponse> => {
-  // TODO: 공통 apiClient(src/api/axios.ts) 연동
-  return {
-    success: true,
-    code: 'COMMON_200',
-    message: '요청에 성공했습니다.',
-    result: {
-      summary: {
-        balanceAp: 1280,
-        monthlyEarnedAp: 620,
-        monthlyLostAp: 140,
-      },
-      page: {
-        items: [
-          {
-            apTransactionId: '1bcbac27-b08b-452e-a88a-3b7a41c1fe54',
-            reason: 'DECISION_WIN',
-            amount: 80,
-            createdAt: '2026-07-03T15:30:00',
-          },
-          {
-            apTransactionId: '7fdfc1be-b994-4f12-9a49-bac9f1b27f10',
-            reason: 'DECISION_LOSE',
-            amount: -40,
-            createdAt: '2026-07-02T15:30:00',
-          },
-        ],
-        nextCursor: '7fdfc1be-b994-4f12-9a49-bac9f1b27f10',
-        hasNext: true,
-      },
-    },
-  }
+export const AP_TRANSACTION_PAGE_SIZE = 20
+
+/** TODO: GET /api/ap/transactions 실 API 연동 */
+export async function getApTransactions(
+  cursor?: string | null,
+  size: number = AP_TRANSACTION_PAGE_SIZE,
+): Promise<ApTransactionResult> {
+  void cursor
+  void size
+  return MOCK_AP_TRANSACTIONS_RESPONSE.result
 }

@@ -37,5 +37,5 @@ export interface ApTransactionPage {
   hasNext: boolean
 }
 
-/** AP 내역 기간 필터 */
-export type ApPeriod = 'all' | 'week' | 'month'
+/** AP 내역 흐름 필터 (피그마: 전체 / 획득 / 사용) */
+export type ApPeriod = 'all' | 'earned' | 'spent'
