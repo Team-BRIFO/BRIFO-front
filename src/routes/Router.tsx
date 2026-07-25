@@ -14,7 +14,12 @@ import { NetworkErrorPage } from '@/pages/error/NetworkErrorPage'
 import { NotFoundPage } from '@/pages/error/NotFoundPage'
 import { ServerErrorPage } from '@/pages/error/ServerErrorPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
+import { MyApPage } from '@/pages/MyPage/MyApPage'
+import { MyBadgePage } from '@/pages/MyPage/MyBadgePage'
+import { MyGlossaryPage } from '@/pages/MyPage/MyGlossaryPage'
 import { MyPage } from '@/pages/MyPage/MyPage'
+import { MyProfileEditPage } from '@/pages/MyPage/MyProfileEditPage'
+import { MySettingsPage } from '@/pages/MyPage/MySettingsPage'
 import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
 import { NotificationPage } from '@/pages/NotificationPage/NotificationPage'
 import { OfficePage } from '@/pages/OfficePage/OfficePage'
@@ -114,6 +119,27 @@ export const router = createBrowserRouter([
         path: PATH.MY_PAGE,
         element: <MyPage />,
       },
+      {
+        path: PATH.MY_AP,
+        element: <MyApPage />,
+      },
+      {
+        path: PATH.MY_BADGES,
+        element: <MyBadgePage />,
+      },
+      {
+        path: PATH.MY_GLOSSARY,
+        element: <MyGlossaryPage />,
+      },
+      {
+        path: PATH.MY_EDIT,
+        element: <MyProfileEditPage />,
+      },
+      {
+        path: PATH.MY_SETTINGS,
+        element: <MySettingsPage />,
+      },
+
       // ─── 에러 및 로딩 ──────────────────────────────────────────────
       {
         path: PATH.ERROR_404,

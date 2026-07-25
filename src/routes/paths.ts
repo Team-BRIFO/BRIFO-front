@@ -68,6 +68,16 @@ export const PATH = {
   // ─── AppLayout - 마이 탭 ───────────────────────────────────────
   /** 마이 탭 - SCR-11, 13: 프로필, 설정, 용어장 및 My Stats 통계 차트 통합 */
   MY_PAGE: '/my',
+  /** 마이 탭 - SCR-15: AP 내역 */
+  MY_AP: '/my/ap',
+  /** 마이 탭 - SCR-14: 업적 · 배지 */
+  MY_BADGES: '/my/badges',
+  /** 마이 탭 - SCR-16: 내 용어장 */
+  MY_GLOSSARY: '/my/glossary',
+  /** 마이 탭 - SCR-13: 프로필 편집 */
+  MY_EDIT: '/my/edit',
+  /** 마이 탭 - SCR-13: 설정 */
+  MY_SETTINGS: '/my/settings',
 
   // ─── 에러 ──────────────────────────────────────────────────────
   /** 404 */
