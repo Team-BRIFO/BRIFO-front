@@ -28,6 +28,9 @@ export const PATH = {
   /** 사무실 탭 - SCR-04: 메인 대시보드 */
   OFFICE: '/office',
 
+  /** 사무실 탭 - 오늘의 예측 리스트 */
+  OFFICE_PREDICTION: '/office/predictions',
+
   /** 사무실 탭 - SCR-07: AI 사원 보고서 리스트 (메인) */
   BRIEFING: '/briefing',
 
@@ -69,4 +72,9 @@ export const PATH = {
   // ─── 에러 ──────────────────────────────────────────────────────
   /** 404 */
   NOT_FOUND: '*',
+
+  ERROR_404: '/error/404',
+  ERROR_500: '/error/500',
+  ERROR_NETWORK: '/error/network',
+  LOADING: '/loading',
 } as const

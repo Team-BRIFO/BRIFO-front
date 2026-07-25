@@ -37,3 +37,20 @@ export interface GetDecisionResult {
 }
 
 export type GetDecisionResponse = ApiResponse<GetDecisionResult>
+
+export interface DecisionListItemStockDTO {
+  stockId: string
+  name: string
+  changeRate: number
+  tradeDate: string
+}
+
+export interface DecisionItemDTO {
+  decisionId: string
+  direction: 'UP' | 'DOWN' | 'NEUTRAL'
+  confidenceLevel: number
+  isSettled: boolean
+  stock: DecisionListItemStockDTO
+}
+
+export type DecisionListResponse = ApiResponse<{ items: DecisionItemDTO[] }>

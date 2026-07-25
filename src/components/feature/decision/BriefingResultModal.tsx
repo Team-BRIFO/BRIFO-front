@@ -1,5 +1,8 @@
+import { useNavigate } from 'react-router-dom'
+
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
+import { PATH } from '@/routes/paths'
 
 export interface BriefingResultModalProps {
   isOpen: boolean
@@ -29,6 +32,12 @@ export function BriefingResultModal({
 }: BriefingResultModalProps) {
   const defaultResultText = isSuccess ? '상승 적중' : '상승 예측 빗나감'
   const displayResultText = resultText || defaultResultText
+  const navigate = useNavigate()
+
+  const handleActionClick = () => {
+    onAction()
+    navigate(PATH.DIARY)
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -47,7 +56,7 @@ export function BriefingResultModal({
           {/* 2. 상세 정보 */}
           <div className="flex flex-col items-center gap-1 text-center">
             <p className="pretendard-Button2 text-Gray-6 m-0">
-              {stockInfo.name}
+              {stockInfo.name}{' '}
               <span className={isSuccess ? 'text-Pink-30' : 'text-Green-40'}>
                 {stockInfo.changeRate}%
               </span>{' '}
@@ -68,14 +77,8 @@ export function BriefingResultModal({
         </div>
         {/* 4. 하단 버튼 영역 */}
         <div className="flex w-full flex-col items-center gap-3.5">
-          <Button
-            isFullWidth
-            size="lg"
-            color="primary"
-            onClick={onAction}
-            className="!rounded-full"
-          >
-            {isSuccess ? '결정일기에서 보기' : '복기 리포트 보기'}
+          <Button isFullWidth size="lg" color="primary" onClick={handleActionClick}>
+            결정일기에서 보기
           </Button>
           <button
             type="button"
