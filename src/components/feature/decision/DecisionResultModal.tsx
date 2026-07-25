@@ -15,6 +15,7 @@ export interface DecisionResultModalProps {
   comment?: string
   resultText?: string
   confidenceLevel?: number
+  decisionId?: string
   onAction: () => void
   onClose: () => void
 }
@@ -24,9 +25,10 @@ export function DecisionResultModal({
   isSuccess = true,
   points = 100,
   stockInfo = { name: '삼성전자', changeRate: 8.1 },
-  comment = '사장님, 제가 된다고 했잖아요!',
+  comment = '아쉬운 결과지만, 이번 경험을 바탕으로 다음 예측에서 더 좋은 결과를 얻을 수 있을 거예요!',
   resultText,
   confidenceLevel = 5,
+  decisionId,
   onAction,
   onClose,
 }: DecisionResultModalProps) {
@@ -36,7 +38,9 @@ export function DecisionResultModal({
 
   const handleActionClick = () => {
     onAction()
-    if (isSuccess) {
+    if (isSuccess && decisionId) {
+      navigate(PATH.DIARY_DETAIL(decisionId))
+    } else if (isSuccess) {
       navigate(PATH.DIARY)
     } else {
       onClose()
@@ -82,7 +86,7 @@ export function DecisionResultModal({
         {/* 4. 하단 버튼 영역 */}
         <div className="flex w-full flex-col items-center gap-3.5">
           <Button isFullWidth size="lg" color="primary" onClick={handleActionClick}>
-            {isSuccess ? '결정일기에서 보기' : '확인'}
+            결정일기에서 보기
           </Button>
           {isSuccess && (
             <button

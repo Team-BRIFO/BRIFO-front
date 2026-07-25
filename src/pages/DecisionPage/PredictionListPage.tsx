@@ -81,8 +81,9 @@ export function PredictionListPage() {
       {selectedDecision && selectedDecisionDetail && (
         <DecisionResultModal
           isOpen={!!selectedDecisionId}
+          decisionId={selectedDecisionId ?? undefined}
           isSuccess={selectedDecisionDetail.isCorrect ?? false}
-          points={selectedDecisionDetail.apDelta ?? 0}
+          points={Math.abs(selectedDecisionDetail.apDelta ?? 0)}
           confidenceLevel={selectedDecision.confidenceLevel}
           stockInfo={{
             name: selectedDecision.stock.name,

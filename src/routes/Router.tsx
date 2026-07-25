@@ -131,10 +131,6 @@ export const router = createBrowserRouter([
         path: PATH.LOADING,
         element: <LoadingPage />,
       },
-      {
-        path: PATH.NOT_FOUND,
-        element: <NotFoundPage />,
-      },
     ],
   },
 ])
