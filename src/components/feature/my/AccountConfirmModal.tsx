@@ -50,7 +50,7 @@ export function AccountConfirmModal({
     ACCOUNT_ACTION_CONTENT[type]
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} ariaLabel={title} className="w-[330px] rounded-xl">
+    <Modal isOpen={isOpen} onClose={onClose} ariaLabel={title} className="w-82.5 rounded-xl">
       <Modal.Header className="flex flex-col items-center gap-4 text-center">
         <h2 className="dnf-Title4 text-Gray-10">{title}</h2>
         {description && (
