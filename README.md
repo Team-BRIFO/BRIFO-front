@@ -40,26 +40,26 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ## 👥 팀원 및 프론트엔드 역할 분담
 
-| 이름 | GitHub | 담당 화면 및 역할 |
-| ---- | ------ | --------- |
-| 조호연 (누아) | [@whghdus](https://github.com/whghdus) | 사무실 탭(대시보드, 예측, 브리핑), 마이 탭, 뉴스카드 상세, 에러 및 로딩 |
-| 황유빈 (비니) | [@bini0918](https://github.com/bini0918) | 초기 진입(스플래시, 약관, 온보딩, 튜토리얼), 홈 탭, 알림 |
-| 김해원 (엠버) | [@haewonwon](https://github.com/haewonwon) | 팀 탭(AI 사원 관리), 피드 탭(결정 일기 및 통계) |
+| 이름          | GitHub                                     | 담당 화면 및 역할                                                       |
+| ------------- | ------------------------------------------ | ----------------------------------------------------------------------- |
+| 조호연 (누아) | [@whghdus](https://github.com/whghdus)     | 사무실 탭(대시보드, 예측, 브리핑), 마이 탭, 뉴스카드 상세, 에러 및 로딩 |
+| 황유빈 (비니) | [@bini0918](https://github.com/bini0918)   | 초기 진입(스플래시, 약관, 온보딩, 튜토리얼), 홈 탭, 알림                |
+| 김해원 (엠버) | [@haewonwon](https://github.com/haewonwon) | 팀 탭(AI 사원 관리), 피드 탭(결정 일기 및 통계)                         |
 
 ---
 
 ## 🛠 기술 스택
 
-| 분류            | 기술                                                                                                                            |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| 코어            | `React 19`, `TypeScript`, `Vite`, `pnpm`                                                                                        |
+| 분류            | 기술                                                                              |
+| --------------- | --------------------------------------------------------------------------------- |
+| 코어            | `React 19`, `TypeScript`, `Vite`, `pnpm`                                          |
 | 스타일링        | `TailwindCSS v4`(`@tailwindcss/vite`), 커스텀 UI 컴포넌트, `lucide-react`, `svgr` |
-| 서버 상태       | `TanStack Query (React Query) v5` *(도입 예정)*                                                                                 |
-| 클라이언트 상태 | `Zustand v5`                                                                                                                    |
-| 라우팅          | `React Router DOM v7`                                                                                                           |
-| 폼 / 검증       | 커스텀 훅을 활용한 제어 (Controlled Component 방식)                                                                             |
-| HTTP            | `Axios` *(도입 예정)*                                                                                        |
-| 린트 / 포맷     | `ESLint 9`(flat config) + `typescript-eslint`, `Prettier`                                                                       |
+| 서버 상태       | `TanStack Query (React Query) v5` _(도입 예정)_                                   |
+| 클라이언트 상태 | `Zustand v5`                                                                      |
+| 라우팅          | `React Router DOM v7`                                                             |
+| 폼 / 검증       | 커스텀 훅을 활용한 제어 (Controlled Component 방식)                               |
+| HTTP            | `Axios` _(도입 예정)_                                                             |
+| 린트 / 포맷     | `ESLint 9`(flat config) + `typescript-eslint`, `Prettier`                         |
 
 ---
 
