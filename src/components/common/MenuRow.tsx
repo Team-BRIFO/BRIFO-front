@@ -50,7 +50,7 @@ export function MenuRow({
     >
       <span className="flex min-w-0 items-center gap-3">
         {icon && (
-          <span className="bg-Yellow-80 [&_path]:fill-Yellow-20 flex h-9 w-9 shrink-0 items-center justify-center rounded-full [&_svg]:h-[22px] [&_svg]:w-[22px]">
+          <span className="bg-Yellow-80 [&_path]:fill-Yellow-20 flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full [&_svg]:size-[22px]">
             {icon}
           </span>
         )}
