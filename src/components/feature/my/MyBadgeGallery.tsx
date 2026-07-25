@@ -1,4 +1,6 @@
+// 대체: domain/badge — 배지 그리드 아이템 (BadgeUnlockModal과 동일)
 import { BadgeItem } from '@/components/domain/badge/BadgeItem'
+// 대체: domain/badge — 해금 진행률 카드
 import { BadgeProgressCard } from '@/components/domain/badge/BadgeProgressCard'
 import type { Badge, BadgeProgress } from '@/types/domain/badge'
 
@@ -17,7 +19,7 @@ export function MyBadgeGallery({ badges, progress, onSelectBadge }: MyBadgeGalle
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       <BadgeProgressCard progress={badgeProgress} />
 
       {badges.length === 0 ? (
@@ -25,7 +27,7 @@ export function MyBadgeGallery({ badges, progress, onSelectBadge }: MyBadgeGalle
           아직 도전할 수 있는 업적이 없어요.
         </p>
       ) : (
-        <ul className="grid grid-cols-3 gap-x-2 gap-y-5">
+        <ul className="border-Gray-2 bg-White grid grid-cols-4 gap-x-0 gap-y-3 rounded-lg border px-3 py-4">
           {badges.map((badge) => (
             <li key={badge.id} className="flex justify-center">
               <BadgeItem badge={badge} onClick={() => onSelectBadge?.(badge.id)} />

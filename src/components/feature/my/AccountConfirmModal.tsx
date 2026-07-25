@@ -7,22 +7,24 @@ interface AccountActionContent {
   title: string
   description: string
   confirmLabel: string
-  /** 확인 버튼 색 — 탈퇴는 되돌릴 수 없으므로 보조 색으로 낮춘다 */
-  confirmColor: 'primary' | 'assistive'
+  cancelLabel: string
+  /** true면 취소(Primary)가 위, 확인(Secondary)이 아래 — 탈퇴 플로우 */
+  isConfirmSecondary?: boolean
 }
 
 const ACCOUNT_ACTION_CONTENT: Record<AccountActionType, AccountActionContent> = {
   logout: {
     title: '로그아웃 하시겠어요?',
-    description: '다시 로그인하면 사원과 기록은 그대로 남아 있어요.',
-    confirmLabel: '로그아웃',
-    confirmColor: 'primary',
+    description: '',
+    confirmLabel: '예',
+    cancelLabel: '아니요',
   },
   withdraw: {
-    title: '정말 탈퇴하시겠어요?',
-    description: '탈퇴하면 사원·결정 일기·보유 AP가 모두 삭제되며 복구할 수 없어요.',
-    confirmLabel: '탈퇴하기',
-    confirmColor: 'assistive',
+    title: '탈퇴하시겠습니까?',
+    description: '탈퇴시 구매하신 AP는 되돌아오지 않으며\n서비스 이용료는 환불 되지않습니다.',
+    confirmLabel: '그래도 탈퇴하기',
+    cancelLabel: '서비스로 돌아가기',
+    isConfirmSecondary: true,
   },
 }
 
@@ -31,31 +33,66 @@ export interface AccountConfirmModalProps {
   type: AccountActionType
   onConfirm: () => void
   onClose: () => void
+  isConfirming?: boolean
+  errorMessage?: string
 }
 
-/** 로그아웃 / 회원 탈퇴 확인 모달 */
+/** 로그아웃 / 회원 탈퇴 확인 모달 — 피그마 탈퇴 로그아웃 모달 */
 export function AccountConfirmModal({
   isOpen,
   type,
   onConfirm,
   onClose,
+  isConfirming = false,
+  errorMessage,
 }: AccountConfirmModalProps) {
-  const { title, description, confirmLabel, confirmColor } = ACCOUNT_ACTION_CONTENT[type]
+  const { title, description, confirmLabel, cancelLabel, isConfirmSecondary } =
+    ACCOUNT_ACTION_CONTENT[type]
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} ariaLabel={title}>
-      <Modal.Header className="flex flex-col gap-2">
-        <h2 className="pretendard-Subtitle6 text-Gray-10">{title}</h2>
-        <p className="pretendard-Caption2 text-Gray-6 leading-relaxed">{description}</p>
+    <Modal isOpen={isOpen} onClose={onClose} ariaLabel={title} className="w-[330px] rounded-xl">
+      <Modal.Header className="flex flex-col items-center gap-4 text-center">
+        <h2 className="dnf-Title4 text-Gray-10">{title}</h2>
+        {description && (
+          <p className="font-pretendard text-Gray-6 text-[14px] leading-5 font-normal tracking-[-0.56px] whitespace-pre-line">
+            {description}
+          </p>
+        )}
+        {errorMessage && <p className="pretendard-Caption2 text-Pink-30">{errorMessage}</p>}
       </Modal.Header>
 
-      <Modal.Footer className="mt-6">
-        <Button color={confirmColor} size="semilg" isFullWidth onClick={onConfirm}>
-          {confirmLabel}
-        </Button>
-        <Button variant="outline" color="assistive" size="semilg" isFullWidth onClick={onClose}>
-          취소
-        </Button>
+      <Modal.Footer className="mt-5 flex flex-col gap-2">
+        {isConfirmSecondary ? (
+          <>
+            <Button size="lg" isFullWidth disabled={isConfirming} onClick={onClose}>
+              {cancelLabel}
+            </Button>
+            <Button
+              color="assistive"
+              size="lg"
+              isFullWidth
+              disabled={isConfirming}
+              onClick={onConfirm}
+            >
+              {isConfirming ? '처리 중...' : confirmLabel}
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button size="lg" isFullWidth disabled={isConfirming} onClick={onConfirm}>
+              {isConfirming ? '처리 중...' : confirmLabel}
+            </Button>
+            <Button
+              color="assistive"
+              size="lg"
+              isFullWidth
+              disabled={isConfirming}
+              onClick={onClose}
+            >
+              {cancelLabel}
+            </Button>
+          </>
+        )}
       </Modal.Footer>
     </Modal>
   )

@@ -1,14 +1,16 @@
 import Button from '@/components/common/Button'
 import { Tabs } from '@/components/common/Tabs'
-import { ApBalanceCard } from '@/components/domain/ap/ApBalanceCard'
+// 대체: domain/ap — AP 잔액·획득·사용 요약 카드
+import { ApHistorySummaryCard } from '@/components/domain/ap/ApHistorySummaryCard'
+// 대체: domain/ap — AP 입출금 행 (라벨은 apTransactionMeta)
 import { ApTransactionRow } from '@/components/domain/ap/ApTransactionRow'
 import type { ApPeriod, ApSummary, ApTransaction } from '@/types/domain/ap'
 
-/** 기간 필터 항목 — 라벨은 AP 카드 증감 라벨로도 재사용한다 */
+/** 피그마 Mypage_AP 필터: 전체 / 획득 / 사용 */
 const AP_PERIOD_ITEMS: { value: ApPeriod; label: string }[] = [
   { value: 'all', label: '전체' },
-  { value: 'week', label: '이번주' },
-  { value: 'month', label: '이번달' },
+  { value: 'earned', label: '획득' },
+  { value: 'spent', label: '사용' },
 ]
 
 export interface MyApHistoryProps {
@@ -22,7 +24,7 @@ export interface MyApHistoryProps {
   isLoading?: boolean
 }
 
-/** AP 내역 화면(SCR-15) 본문 — 요약 카드 · 기간 필터 · 입출금 리스트 */
+/** AP 내역 화면(SCR-15) 본문 — 요약 카드 · 흐름 필터 · 입출금 리스트 */
 export function MyApHistory({
   summary,
   transactions,
@@ -32,31 +34,31 @@ export function MyApHistory({
   onLoadMore,
   isLoading = false,
 }: MyApHistoryProps) {
-  const periodLabel = AP_PERIOD_ITEMS.find((item) => item.value === period)?.label
-
   return (
     <div className="flex flex-col gap-5">
-      <ApBalanceCard summary={summary} deltaLabel={period === 'all' ? undefined : periodLabel} />
+      <ApHistorySummaryCard summary={summary} />
 
-      <Tabs
-        value={period}
-        onChange={(value) => onChangePeriod(value as ApPeriod)}
-        items={AP_PERIOD_ITEMS}
-        variant="pill"
-        ariaLabel="AP 내역 기간 필터"
-      />
+      <div className="flex flex-col gap-2">
+        <Tabs
+          value={period}
+          onChange={(value) => onChangePeriod(value as ApPeriod)}
+          items={AP_PERIOD_ITEMS}
+          variant="pill"
+          ariaLabel="AP 내역 필터"
+        />
 
-      {transactions.length === 0 ? (
-        <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
-          해당 기간의 AP 내역이 없어요.
-        </p>
-      ) : (
-        <ul className="border-Gray-2 bg-White flex flex-col overflow-hidden rounded-lg border">
-          {transactions.map((transaction) => (
-            <ApTransactionRow key={transaction.id} transaction={transaction} />
-          ))}
-        </ul>
-      )}
+        {transactions.length === 0 ? (
+          <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
+            해당 내역이 없어요.
+          </p>
+        ) : (
+          <ul className="overflow-hidden rounded-lg">
+            {transactions.map((transaction) => (
+              <ApTransactionRow key={transaction.id} transaction={transaction} />
+            ))}
+          </ul>
+        )}
+      </div>
 
       {hasNext && (
         <Button
