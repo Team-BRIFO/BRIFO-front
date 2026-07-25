@@ -2,6 +2,7 @@ import type { HTMLAttributes } from 'react'
 import { Fragment } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+// 대체: domain/agent — AgentCard/AgentChat과 동일 아바타 (마이 프로필용)
 import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { UserProfile } from '@/types/domain/user'
 
@@ -26,17 +27,16 @@ export function UserProfileCard({
   return (
     <div
       className={twMerge(
-        'border-Gray-2 bg-White rounded-lg border px-3 py-3.5',
-        'shadow-[0px_4px_40px_0px_rgba(224,224,224,0.15)]',
+        'border-Gray-2 bg-White shadow-card overflow-hidden rounded-lg border px-3 py-3.5',
         className,
       )}
       {...props}
     >
-      <div className="flex items-center gap-[15px]">
+      <div className="flex items-center gap-3.75">
         <AgentAvatar type={characterType} size={avatarSize} />
 
         <div className="flex min-w-0 flex-col justify-center gap-2">
-          <span className="dnf-Subtitle2 text-Gray-10 truncate">{nickname}</span>
+          <span className="dnf-Subtitle2 text-Gray-10 truncate leading-none">{nickname}</span>
 
           {metaItems.length > 0 && (
             <div className="flex items-center gap-1">
@@ -48,7 +48,9 @@ export function UserProfileCard({
                       aria-hidden="true"
                     />
                   )}
-                  <span className="pretendard-Caption3 text-Gray-6 truncate">{item}</span>
+                  <span className="pretendard-Caption3 text-Gray-6 truncate leading-none">
+                    {item}
+                  </span>
                 </Fragment>
               ))}
             </div>

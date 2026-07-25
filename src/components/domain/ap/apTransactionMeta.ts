@@ -33,11 +33,21 @@ export function getApAmountColorClass(amount: number) {
 
 /** ISO 8601 → 2026.07.03 형식 */
 export function formatApTransactionDate(isoDate: string) {
-  const date = new Date(isoDate)
-  if (Number.isNaN(date.getTime())) return isoDate
+  // API는 Asia/Seoul 기준의 offset 없는 LocalDateTime을 준다. Date로 파싱하면 브라우저
+  // 시간대에 따라 날짜가 달라질 수 있으므로 날짜 문자열을 그대로 포맷한다.
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate)
+  return match ? `${match[1]}.${match[2]}.${match[3]}` : isoDate
+}
 
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
+/** ISO 8601 → 피그마 AP 행용 { date: '5/28', time: '15:30' } */
+export function formatApTransactionDateTime(isoDate: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/.exec(isoDate)
+  if (!match) return { date: formatApTransactionDate(isoDate), time: '' }
 
-  return `${date.getFullYear()}.${month}.${day}`
+  const month = Number(match[2])
+  const day = Number(match[3])
+  return {
+    date: `${month}/${day}`,
+    time: `${match[4]}:${match[5]}`,
+  }
 }
