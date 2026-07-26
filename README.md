@@ -83,7 +83,7 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ## 📁 폴더 구조
 
-```
+```text
 src/
 ├── main.tsx              # RouterProvider, QueryClientProvider 연결
 ├── api/                  # 도메인별 API 함수 (현재 Mock 응답)

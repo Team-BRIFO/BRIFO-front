@@ -8,17 +8,14 @@ import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { AgentType } from '@/types/domain/agent'
 import type { UserInterestStock, UserProfileFormValues } from '@/types/domain/user'
 
-/**
- * 닉네임 정책.
- * TODO: 피그마 헬퍼 문구는 "4~5글자 제한"이지만 목업 닉네임(포롱)이 2글자라 정책이 상충한다.
- *       기획 확정되면 아래 상수만 조정할 것.
- */
+/** 닉네임 정책: 앞뒤 공백을 제외한 1~50자, 문자 종류 제한 없음 */
 const NICKNAME_MIN_LENGTH = 1
 const NICKNAME_MAX_LENGTH = 50
 
-const NICKNAME_HELPER_TEXT = '4~5글자 제한, 특수문자 금지'
+const NICKNAME_HELPER_TEXT = '1~50글자 제한'
 
 const COMPANY_NAME_MAX_LENGTH = 100
+const COMPANY_NAME_HELPER_TEXT = '100글자 이내'
 const INTEREST_STOCK_MIN_COUNT = 1
 const INTEREST_STOCK_MAX_COUNT = 3
 
@@ -27,7 +24,7 @@ function validateNickname(value: string) {
 
   if (trimmed.length === 0) return '닉네임을 입력해주세요.'
   if (trimmed.length < NICKNAME_MIN_LENGTH || trimmed.length > NICKNAME_MAX_LENGTH) {
-    return '4~5글자 제한을 넘거나 특수문자가 있어요'
+    return `닉네임은 ${NICKNAME_MIN_LENGTH}~${NICKNAME_MAX_LENGTH}자로 입력해주세요.`
   }
   return undefined
 }
@@ -128,7 +125,7 @@ export function MyProfileEdit({
           label="회사명"
           value={companyName}
           onChange={(event) => setCompanyName(event.target.value)}
-          placeholder={NICKNAME_HELPER_TEXT}
+          placeholder={COMPANY_NAME_HELPER_TEXT}
           errorMessage={isSubmitAttempted ? companyNameError : undefined}
           required
         />

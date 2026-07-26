@@ -21,7 +21,7 @@ export interface MyApHistoryProps {
   /** 다음 페이지 존재 여부 (커서 기반) */
   hasNext?: boolean
   onLoadMore?: () => void
-  isLoading?: boolean
+  isLoadingMore?: boolean
 }
 
 /** AP 내역 화면(SCR-15) 본문 — 요약 카드 · 흐름 필터 · 입출금 리스트 */
@@ -32,7 +32,7 @@ export function MyApHistory({
   onChangePeriod,
   hasNext = false,
   onLoadMore,
-  isLoading = false,
+  isLoadingMore = false,
 }: MyApHistoryProps) {
   return (
     <div className="flex flex-col gap-5">
@@ -66,10 +66,10 @@ export function MyApHistory({
           color="assistive"
           size="md"
           isFullWidth
-          disabled={isLoading}
+          disabled={isLoadingMore}
           onClick={onLoadMore}
         >
-          {isLoading ? '불러오는 중...' : '더 보기'}
+          {isLoadingMore ? '불러오는 중...' : '더 보기'}
         </Button>
       )}
     </div>

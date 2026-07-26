@@ -46,7 +46,7 @@ export function MyApPage() {
         onChangePeriod={setPeriod}
         hasNext={query.hasNextPage}
         onLoadMore={() => query.fetchNextPage()}
-        isLoading={query.isFetchingNextPage}
+        isLoadingMore={query.isFetchingNextPage}
       />
     </MyPageLayout>
   )

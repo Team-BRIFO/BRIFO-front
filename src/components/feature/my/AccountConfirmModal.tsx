@@ -21,7 +21,7 @@ const ACCOUNT_ACTION_CONTENT: Record<AccountActionType, AccountActionContent> = 
   },
   withdraw: {
     title: '탈퇴하시겠습니까?',
-    description: '탈퇴시 구매하신 AP는 되돌아오지 않으며\n서비스 이용료는 환불 되지않습니다.',
+    description: '탈퇴시 구매하신 AP는 되돌아오지 않으며\n서비스 이용료는 환불되지 않습니다.',
     confirmLabel: '그래도 탈퇴하기',
     cancelLabel: '서비스로 돌아가기',
     isConfirmSecondary: true,

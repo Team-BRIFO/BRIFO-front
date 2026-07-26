@@ -15,7 +15,11 @@ export function MyBadgePage() {
   const badgesQuery = useMyBadges()
   const detailQuery = useMyBadgeDetail(selectedId)
   useEffect(() => {
-    if (params.get('newBadgeId')) setParams({}, { replace: true })
+    if (params.get('newBadgeId')) {
+      const next = new URLSearchParams(params)
+      next.delete('newBadgeId')
+      setParams(next, { replace: true })
+    }
   }, [params, setParams])
   if (badgesQuery.isError)
     return (

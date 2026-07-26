@@ -17,6 +17,7 @@ export function mapMyUser(result: MyUserResult): {
 } {
   return {
     profile: {
+      // TODO: 실 API 응답에 프로필 메타 필드가 추가되면 MY_PROFILE_META 대신 result를 사용한다.
       id: MY_PROFILE_META.id,
       nickname: result.nickname,
       companyName: result.companyName,
@@ -36,6 +37,7 @@ export function mapProfileFormValues(result: MyUserResult): UserProfileFormValue
   return {
     nickname: result.nickname,
     companyName: result.companyName,
+    // TODO: 실 API 응답에 관심 종목이 추가되면 MY_PROFILE_META 대신 result를 사용한다.
     interestStocks: MY_PROFILE_META.interestStocks,
   }
 }
@@ -67,6 +69,7 @@ export function mapBadge(item: BadgeListItemResponse): Badge {
   }
 }
 export function mapBadgeDetail(result: BadgeDetailResult): Badge {
+  // BadgeDetailResult는 사용자 보유 배지 상세 응답이므로 성공 시 해금 상태로 매핑한다.
   return {
     id: result.badgeId,
     name: result.name,
