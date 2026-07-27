@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { AuthLayout } from '@/layouts/AuthLayout'
+import AgreementDetailPage from '@/pages/AgreementPage/AgreementDetailPage'
+import AgreementPage from '@/pages/AgreementPage/AgreementPage'
 import { BriefingAssignPage } from '@/pages/BriefingPage/BriefingAssignPage'
 import { BriefingCompletePage } from '@/pages/BriefingPage/BriefingCompletePage'
 import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
@@ -22,6 +24,7 @@ import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
 import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
+import { TutorialIntroPage } from '@/pages/TutorialPage/TutorialIntroPage'
 import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
 import { PATH } from '@/routes/paths'
 
@@ -35,8 +38,20 @@ export const router = createBrowserRouter([
         element: <SplashPage />,
       },
       {
+        path: PATH.AGREEMENT,
+        element: <AgreementPage />,
+      },
+      {
+        path: PATH.AGREEMENT_DETAIL,
+        element: <AgreementDetailPage />,
+      },
+      {
         path: PATH.ONBOARDING,
         element: <OnboardingPage />,
+      },
+      {
+        path: PATH.TUTORIAL_INTRO,
+        element: <TutorialIntroPage />,
       },
       {
         path: PATH.TUTORIAL,

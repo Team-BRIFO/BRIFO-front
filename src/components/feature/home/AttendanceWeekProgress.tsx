@@ -6,13 +6,10 @@ const DAYS = ['월', '화', '수', '목', '금', '토', '일'] as const
 
 interface AttendanceWeekProgressProps {
   attendedDays: number
-  totalDays?: number
 }
 
-export default function AttendanceWeekProgress({
-  attendedDays,
-  totalDays = 7,
-}: AttendanceWeekProgressProps) {
+export default function AttendanceWeekProgress({ attendedDays }: AttendanceWeekProgressProps) {
+  const totalDays = DAYS.length
   const safeAttendedDays = Math.min(Math.max(attendedDays, 0), totalDays)
 
   return (

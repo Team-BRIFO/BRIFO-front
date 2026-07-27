@@ -8,10 +8,15 @@ export const PATH = {
   /** SCR-01: 스플래시 / 로그인 */
   SPLASH: '/splash',
 
+  /** SCR-01a,b: 약관 동의 / 약관 상세 */
+  AGREEMENT: '/agreement',
+  AGREEMENT_DETAIL: '/agreement/detail',
+
   /** SCR-02: 온보딩 (닉네임/회사 설정 및 종목 선택) */
   ONBOARDING: '/onboarding',
 
   /** SCR-03: 튜토리얼 (3스텝 강제 진행) */
+  TUTORIAL_INTRO: '/tutorial/intro',
   TUTORIAL: '/tutorial',
 
   // ─── AppLayout - 홈 탭 ─────────────────────────────────────────
