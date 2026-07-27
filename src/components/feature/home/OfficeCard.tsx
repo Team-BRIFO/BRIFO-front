@@ -12,34 +12,40 @@ export default function OfficeCard() {
       name: '루키',
       level: 5,
       Character: Rookie,
-      imageClassName: 'absolute left-[112px] top-[74px]  w-[102px] h-[108px]',
-      badgeClassName: 'absolute left-[137px] top-[24px]',
+      imageClassName: 'absolute',
+      imageStyle: { left: '34.1%', top: '28.1%', width: '31%', height: '41%' },
+      badgeClassName: 'absolute',
+      badgeStyle: { left: '41.7%', top: '9.1%' },
     },
     {
       name: '탱커',
       level: 5,
       Character: Tanker,
-      imageClassName: 'absolute left-[15px] top-[135px]  w-[102px] h-[108px]',
-      badgeClassName: 'absolute left-[40px] top-[85px]',
+      imageClassName: 'absolute',
+      imageStyle: { left: '4.5%', top: '51.3%', width: '31%', height: '41%' },
+      badgeClassName: 'absolute',
+      badgeStyle: { left: '12.1%', top: '32.3%' },
     },
     {
       name: '프로',
       level: 5,
       Character: Pro,
-      imageClassName: 'absolute right-[16px] top-[133px] h-[108px] w-[102px]',
-      badgeClassName: 'absolute right-[41px] top-[83px]',
+      imageClassName: 'absolute',
+      imageStyle: { right: '4.8%', top: '50.5%', width: '31%', height: '41%' },
+      badgeClassName: 'absolute',
+      badgeStyle: { right: '12.5%', top: '31.5%' },
     },
   ]
 
   return (
-    <div className="relative h-65.75 w-82">
+    <div className="relative mx-auto w-full max-w-[768px] aspect-[328/263] overflow-hidden">
       <OfficeBackground className="absolute inset-0 h-full w-full rounded-xl" />
 
-      {employees.map(({ name, level, Character, imageClassName, badgeClassName }) => (
+      {employees.map(({ name, level, Character, imageClassName, imageStyle, badgeClassName, badgeStyle }) => (
         <div key={name}>
-          <Character className={imageClassName} />
+          <Character className={imageClassName} style={imageStyle} />
 
-          <EmployeeLevelBadge level={level} name={name} className={badgeClassName} />
+          <EmployeeLevelBadge level={level} name={name} className={badgeClassName} style={badgeStyle} />
         </div>
       ))}
     </div>

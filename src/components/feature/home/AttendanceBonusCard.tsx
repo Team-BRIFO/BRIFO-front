@@ -6,7 +6,7 @@ interface AttendanceBonusCardProps {
 
 export default function AttendanceBonusCard({ bonus, endTime, onClick }: AttendanceBonusCardProps) {
   return (
-    <div className="bg-Yellow-100 flex h-17 w-82 items-center justify-between rounded-lg px-4 py-3.5">
+    <div className="bg-Yellow-100 flex h-17 w-full items-center justify-between rounded-lg px-4 py-3.5">
       <div className="flex flex-col gap-1">
         <p className="pretendard-Button3 text-Yellow-5 font-bold">
           🔥 오늘의 출석 보너스 +{bonus} AP

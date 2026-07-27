@@ -1,4 +1,5 @@
 import Button from '@/components/common/Button'
+import { Image } from '@/components/common/Image'
 import { StatusBar, StatusBarBackButton, StatusBarSkipButton } from '@/components/common/StatusBar'
 
 interface OnboardingSlideProps {
@@ -27,7 +28,7 @@ export default function OnboardingSlide({
   const titleParts = title.split(highlightedText)
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
+    <div className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
       <div className="flex h-15 items-center justify-between">
         <StatusBar
           className="w-full [&>div:last-child]:px-0"
@@ -39,7 +40,7 @@ export default function OnboardingSlide({
 
       <div className="flex flex-1 flex-col items-center">
         <div className="mt-8 flex h-52 w-full items-center justify-center">
-          <img src={image} alt="" aria-hidden="true" className="h-full w-full object-contain" />
+          <Image src={image} alt="" aria-hidden="true" responsiveSize="none" className="h-full w-full object-contain" />
         </div>
 
         <div className="mt-7 text-center">
@@ -79,7 +80,7 @@ export default function OnboardingSlide({
         color="primary"
         isFullWidth
         onClick={onNext}
-        className="mx-auto h-15 w-82 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
+        className="mx-auto h-15 w-full md:max-w-[400px] shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
       >
         다음
       </Button>

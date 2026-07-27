@@ -141,14 +141,16 @@ function getContainerClass(
   if (variant === 'segmented') {
     // 피그마 스펙 대응
     if (segmentedType === 2) {
-      // Type 2 (사원/시스템 등, 316px)
       base.push(
-        isFullWidth ? 'w-full' : 'w-[316px]',
-        'h-[24px] justify-between rounded-[40px] bg-Gray-1',
+        isFullWidth ? 'w-full' : 'w-[87.77%]',
+        'aspect-[316/24] justify-between rounded-[40px] bg-Gray-1',
       )
     } else {
       // Type 1 (리스트/통계 등, 213px)
-      base.push(isFullWidth ? 'w-full' : 'w-[213px]', 'h-[24px] gap-[4px] rounded-[30px] bg-Gray-2')
+      base.push(
+        isFullWidth ? 'w-full' : 'w-[59.16%]',
+        'aspect-[213/24] gap-[4px] rounded-[30px] bg-Gray-2',
+      )
     }
   } else if (variant === 'underline') {
     base.push('border-b border-Gray-2 gap-4')

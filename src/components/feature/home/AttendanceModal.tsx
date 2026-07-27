@@ -20,12 +20,7 @@ export default function AttendanceModal({
   onComplete,
 }: AttendanceModalProps) {
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      ariaLabel="출석 보상"
-      className="w-82.5 rounded-xl px-5 py-6"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} ariaLabel="출석 보상" className="rounded-xl px-5 py-6">
       <Modal.Body className="flex flex-col">
         {/* 고정 보너스 안내 */}
         <div className="border-Yellow-80 bg-Yellow-100 rounded-lg border px-4 py-3.5">

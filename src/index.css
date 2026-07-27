@@ -15,4 +15,9 @@
   --font-pretendard: 'Pretendard', sans-serif;
   --font-dnf: 'DNFBitBitv2', sans-serif;
   --shadow-card: 0px 4px 40px 0px rgba(224, 224, 224, 0.15);
+  
+  /* 반응형 브레이크포인트 제한 (sm: 640px, md: 768px) */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
 }

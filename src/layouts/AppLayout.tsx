@@ -1,6 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
-import { Container } from '@/components/common/Container'
 import NavigationBar from '@/components/common/NavigationBar'
 import { type NavigationValue } from '@/components/common/NavigationBar'
 import { PATH } from '@/routes/paths'
@@ -39,11 +38,7 @@ export function AppLayout() {
     navigate(NAVIGATION_PATHS[value])
   }
   return (
-    <Container
-      variant="page"
-      padding="none"
-      className="relative mx-auto h-[100dvh] overflow-hidden"
-    >
+    <div className="relative mx-auto flex h-[100dvh] w-full max-w-[768px] flex-col overflow-hidden">
       <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         <Outlet />
       </main>
@@ -52,9 +47,9 @@ export function AppLayout() {
           value={selectedNavigation}
           onChange={handleNavigationChange}
           isFullWidth
-          className="max-w-md"
+          className="max-md:w-full md:max-w-[768px]"
         />
       </div>
-    </Container>
+    </div>
   )
 }

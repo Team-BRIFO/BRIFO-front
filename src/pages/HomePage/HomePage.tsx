@@ -25,7 +25,7 @@ export function HomePage() {
     <>
       <main className="min-h-screen bg-white">
         {/* 상단 흰색 영역 */}
-        <div className="mx-auto flex w-82 flex-col pb-7">
+        <div className="flex w-full flex-col px-4 pb-7">
           <StatusBar
             hasStatusArea
             className="w-full [&>div:last-child]:px-0"

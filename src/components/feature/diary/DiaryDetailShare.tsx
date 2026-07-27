@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import DownloadIcon from '@/assets/icons/share/download.svg?react'
 import InstagramIcon from '@/assets/icons/share/instagram.svg?react'
 import KakaoIcon from '@/assets/icons/share/kakao.svg?react'
+import { Image } from '@/components/common/Image'
 import { Loading } from '@/components/common/Loading'
 
 export type DiaryShareTarget = 'kakao' | 'instagram' | 'download'
@@ -83,10 +84,15 @@ export function DiaryDetailShare({
     <div className="flex w-full flex-col items-center gap-3">
       {hasImage ? (
         // 서버가 렌더한 PNG 는 자체 여백·그림자를 포함하므로 테두리를 덧대지 않는다
-        <img src={shareImageUrl!} alt={`${stockName} 결정카드`} className="w-80 max-w-full" />
+        <Image
+          src={shareImageUrl!}
+          alt={`${stockName} 결정카드`}
+          responsiveSize="md"
+          className="mx-auto"
+        />
       ) : (
         <div
-          className="border-Gray-2 bg-White flex w-80 max-w-full items-center justify-center rounded-xl border"
+          className="border-Gray-2 bg-White mx-auto flex w-full max-w-[320px] items-center justify-center rounded-xl border"
           style={{ aspectRatio: CARD_ASPECT }}
         >
           {isFailed ? (
