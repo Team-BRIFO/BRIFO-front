@@ -47,7 +47,7 @@ export function AgentChat({
           </div>
         )}
 
-        <p className="pretendard-Caption2 text-Gray-6 w-full leading-[1.32] break-keep">
+        <p className="pretendard-Caption2 text-Gray-6 w-full leading-[1.32] break-keep whitespace-pre-wrap">
           {message}
         </p>
       </div>
