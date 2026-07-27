@@ -233,7 +233,7 @@ export function AnalyzeCard({
                   <span className="text-Gray-8 pretendard-Caption2 shrink-0">
                     카드뉴스 {briefingFooter.newsCount}건
                   </span>
-                  <span className="pretendard-Caption2 text-Gray-6 max-w-[171px] truncate">
+                  <span className="pretendard-Caption2 text-Gray-6 max-w-42.75 truncate">
                     {briefingFooter.headline}
                   </span>
                 </div>

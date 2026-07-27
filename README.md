@@ -40,87 +40,73 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ## 👥 팀원 및 프론트엔드 역할 분담
 
-| 이름          | GitHub                                     | 담당 화면 및 역할                                                       |
-| ------------- | ------------------------------------------ | ----------------------------------------------------------------------- |
-| 조호연 (누아) | [@whghdus](https://github.com/whghdus)     | 사무실 탭(대시보드, 예측, 브리핑), 마이 탭, 뉴스카드 상세, 에러 및 로딩 |
-| 황유빈 (비니) | [@bini0918](https://github.com/bini0918)   | 초기 진입(스플래시, 약관, 온보딩, 튜토리얼), 홈 탭, 알림                |
-| 김해원 (엠버) | [@haewonwon](https://github.com/haewonwon) | 팀 탭(AI 사원 관리), 피드 탭(결정 일기 및 통계)                         |
+| 이름          | GitHub                                     | 담당 역할                                                                                          |
+| ------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| 비니 / 황유빈 | [@bini0918](https://github.com/bini0918)   | 인증·온보딩(스플래시, 약관, 프로필·관심 종목 설정, 튜토리얼), 홈 및 알림 화면                      |
+| 누아 / 조호연 | [@whghdus](https://github.com/whghdus)     | 뉴스 카드 상세, 사무실 대시보드, 브리핑 흐름(요청·도착·상세), 공통 에러·로딩 화면, 배포            |
+| 엠버 / 김해원 | [@haewonwon](https://github.com/haewonwon) | 프론트엔드 아키텍처 설계, 팀 탭(사원 목록·상세), 결정 일기, 마이페이지(프로필·AP·배지·용어장·설정) |
 
 ---
 
 ## 🛠 기술 스택
 
-| 분류            | 기술                                                                              |
-| --------------- | --------------------------------------------------------------------------------- |
-| 코어            | `React 19`, `TypeScript`, `Vite`, `pnpm`                                          |
-| 스타일링        | `TailwindCSS v4`(`@tailwindcss/vite`), 커스텀 UI 컴포넌트, `lucide-react`, `svgr` |
-| 서버 상태       | `TanStack Query (React Query) v5` _(도입 예정)_                                   |
-| 클라이언트 상태 | `Zustand v5`                                                                      |
-| 라우팅          | `React Router DOM v7`                                                             |
-| 폼 / 검증       | 커스텀 훅을 활용한 제어 (Controlled Component 방식)                               |
-| HTTP            | `Axios` _(도입 예정)_                                                             |
-| 린트 / 포맷     | `ESLint 9`(flat config) + `typescript-eslint`, `Prettier`                         |
+| 분류            | 기술                                                       |
+| --------------- | ---------------------------------------------------------- |
+| 코어            | `React 19`, `TypeScript`, `Vite`, `pnpm`                   |
+| 스타일링        | `TailwindCSS v4`(`@tailwindcss/vite`), `lucide-react`      |
+| 서버 상태       | `TanStack Query (React Query) v5`                          |
+| 클라이언트 상태 | React Hook (`useState`, `useRef`), `Zustand v5`(도입 준비) |
+| 라우팅          | `React Router DOM v7`                                      |
+| HTTP            | `Axios` (백엔드 API 연동 준비)                             |
+| 린트 / 포맷     | `ESLint 9`(flat config) + `typescript-eslint`, `Prettier`  |
+
+---
+
+## 🔄 데이터 및 상태 관리
+
+### 데이터 통신 및 API 연동
+
+현재 화면은 도메인별 `mock*.ts` 파일의 정적 데이터를 기반으로 동작합니다. `src/api`와 `src/hooks/queries`에 API 함수 및 React Query Hook을 분리해 두었으며, 현재는 Mock 응답을 반환합니다. 백엔드 연동 시 API 함수 내부를 Axios 기반 실제 요청으로 교체할 수 있도록 구성되어 있습니다.
+
+- **Mock Data**: `pages/HomePage`, `BriefingPage`, `DecisionPage`, `DiaryPage`, `OfficePage`, `TeamPage`, `NotificationPage`, `MyPage`의 `mock*.ts`
+- **API 레이어**: `src/api`의 도메인별 API 함수
+- **서버 상태**: React Query의 `useQuery`, `useMutation`, `useInfiniteQuery` 및 Query Cache 사용
+- **향후 계획**: Axios 공통 클라이언트와 인증·에러 인터셉터를 구성하고, Zod 기반 폼·응답 검증 및 Orval 기반 OpenAPI 타입·API 클라이언트 자동 생성을 도입합니다.
+
+### 상태 관리
+
+- **서버 상태**: `QueryClientProvider`와 React Query로 관리합니다. 조회·변경 결과, 로딩·에러 상태, 캐시 갱신을 도메인별 Query Hook에서 처리합니다.
+- **지역 UI 상태**: 모달 열림 여부, 탭·슬라이드 선택, 폼 입력값 등 컴포넌트 내부 상태는 React의 `useState`, `useRef`로 관리합니다.
+- **전역 클라이언트 상태**: Zustand는 의존성에 포함되어 있으나 현재 Store는 구현되지 않았습니다. 로그인 사용자 정보나 온보딩 진행 상태처럼 여러 화면에서 공유할 클라이언트 상태가 필요할 때 적용할 예정입니다. 서버 응답 데이터는 Zustand가 아닌 React Query Cache로 관리합니다.
 
 ---
 
 ## 📁 폴더 구조
 
-```
+```text
 src/
-├── main.tsx              # React root 렌더링 진입점 (RouterProvider 연결)
-├── App.tsx               # (레거시, 현재 미사용)
-├── assets/               # 아이콘, 캐릭터, 이미지 등 정적 에셋
-│   ├── characters/       # 캐릭터 SVG (rookie, pro, tanker × normal/select/complete, celebration)
-│   ├── icons/            # 커스텀 아이콘 SVG (svgr ?react 방식으로 임포트)
-│   └── images/           # 배경/일러스트 이미지 (image-1~3.svg)
-├── routes/               # 라우팅 전체 관리
-│   ├── paths.ts          # PATH 경로 상수 (동적 경로는 함수로 정의)
-│   └── Router.tsx        # createBrowserRouter 라우트 트리
-├── layouts/              # 레이아웃 컴포넌트
-│   ├── AuthLayout.tsx    # 비로그인 레이아웃 (스플래시, 온보딩, 튜토리얼)
-│   └── AppLayout.tsx     # 로그인 레이아웃 (하단 GNB 탭 포함)
-├── providers/            # QueryClientProvider 등 전역 Provider
+├── main.tsx              # RouterProvider, QueryClientProvider 연결
+├── api/                  # 도메인별 API 함수 (현재 Mock 응답)
+├── assets/               # 캐릭터·아이콘·이미지·로고 에셋
 ├── components/
-│   ├── common/           # 순수 공용 UI 컴포넌트 (API/store 의존 없음)
-│   │   ├── Icon.tsx      # SVG 레지스트리 기반 아이콘 컴포넌트
-│   │   ├── Chip.tsx
-│   │   ├── Toggle.tsx
-│   │   ├── ProgressBar.tsx
-│   │   ├── Loading.tsx
-│   │   ├── Tabs.tsx
-│   │   ├── Pagination.tsx
-│   │   ├── TextField.tsx
-│   │   ├── IconButton.tsx
-│   │   └── Container.tsx
-│   ├── domain/           # 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
-│   └── feature/          # common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
-├── pages/                # 라우트 단위 화면 (routing·query·store 연결 담당)
-│   ├── AgreementPage/    # 약관 동의 관련 화면
-│   ├── BriefingPage/     # AI 사원 보고서 리스트 및 브리핑 관련 화면
-│   ├── DecisionPage/     # 투자 의사 결정 관련 화면
-│   ├── DiaryPage/        # 결정 일기 캘린더/리스트/통계 화면
-│   ├── HomePage/         # 홈 탭 메인 랜딩
-│   ├── MyPage/           # 마이 탭 (프로필, 설정, 통계)
-│   ├── NewsCardPage/     # 카드뉴스 상세 화면
-│   ├── NotificationPage/ # 알림 리스트 화면
-│   ├── OfficePage/       # 사무실 대시보드 화면
-│   ├── OnboardingPage/   # 사용자 온보딩 화면
-│   ├── SplashPage/       # 앱 초기 스플래시 화면
-│   ├── TeamPage/         # AI 사원 관리(인사팀) 화면
-│   ├── TutorialPage/     # 초기 튜토리얼 화면
-│   └── error/            # 404, 500, 네트워크 에러, 글로벌 로딩 화면
+│   ├── common/           # 공용 UI 컴포넌트
+│   ├── domain/           # 도메인별 재사용 컴포넌트
+│   └── feature/          # 화면 기능 단위 컴포넌트
+├── constants/            # 화면·도메인 공통 상수
 ├── hooks/
-│   ├── queries/          # 전역 재사용 query hook
-│   ├── mutations/        # 전역 재사용 mutation hook
-│   └── ui/               # 서버와 무관한 UI hook
-├── services/
-│   └── api/              # axios client와 도메인별 API 함수 레이어
-├── stores/               # Zustand 전역 client state
+│   └── queries/          # React Query 기반 도메인별 Hook
+├── layouts/              # AuthLayout, AppLayout
+├── pages/                # 라우트 단위 페이지
+│   ├── BriefingPage/     # 브리핑 목록·요청·도착·상세
+│   ├── DiaryPage/        # 결정 일기·상세
+│   ├── MyPage/           # 마이 메인·AP·배지·용어장·프로필·설정
+│   ├── TeamPage/         # 사원 목록·상세
+│   └── error/            # 404·500·네트워크·로딩 화면
+├── routes/               # PATH 상수 및 createBrowserRouter 설정
 ├── types/
-│   ├── domain/           # 프론트 도메인 타입
-│   └── api/              # API 요청/응답 타입
-├── utils/                # 순수 유틸 함수
-└── styles/               # 디자인 토큰과 전역 스타일
+│   ├── api/              # API 요청·응답 타입
+│   └── domain/           # 도메인 타입
+└── utils/                # 도메인 데이터 매핑 및 순수 유틸
 ```
 
 - **Import 경로**: 항상 `@/` alias 사용 (상대경로 `../../` 지양)
@@ -134,10 +120,9 @@ import type { Agent } from '@/types/domain/agent'
 - `components/common`: API 호출, store 접근, routing 의존성이 없는 순수 공용 UI
 - `components/domain`: 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
 - `components/feature`: common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
-- `pages`: routing, query/mutation 연결, store 연결, loading/error 처리, feature 조립 담당
-- `pages/*/use<Page>Data.ts`: 특정 page에만 쓰이는 데이터 조합 hook (추가 예정)
-- `hooks/queries`, `hooks/mutations`, `hooks/ui`: 전역 재사용 가능한 hook
-- `services/api`: axios client와 도메인별 API 함수 레이어
+- `pages`: 라우트 단위로 Query Hook과 화면 기능 컴포넌트를 조합하고, 로딩·에러 UI를 처리
+- `api`: 도메인별 데이터 조회·변경 함수. 현재는 Mock 응답을 반환하며 API 연동 시 실제 요청으로 교체
+- `hooks/queries`: 도메인별 React Query Hook
 - `routes/paths.ts`: `PATH` 경로 상수 — 하드코딩 금지, 동적 경로는 함수로 정의
 
 ---
@@ -221,35 +206,23 @@ cd BRIFO-front
 # 2. 의존성 설치
 pnpm install
 
-# 3. 환경 변수 설정 (.env.example 참고하여 .env 생성)
-cp .env.example .env
-
-# 4. 개발 서버 실행
+# 3. 개발 서버 실행
 pnpm dev
 
-# 5. 빌드
+# 4. 빌드
 pnpm build
 
-# 6. 빌드 결과 미리보기
+# 5. 빌드 결과 미리보기
 pnpm preview
 
-# 7. 린트
+# 6. 린트
 pnpm lint
 pnpm lint:fix
 
-# 8. 포맷팅
+# 7. 포맷팅
 pnpm format
 pnpm format:check
 ```
-
-### 환경 변수
-
-- Vite 환경 변수는 `VITE_` 접두사 필수 (`import.meta.env.VITE_*`)
-- `.env`는 커밋 금지, `.env.example`로 키 목록만 공유
-- 주요 키
-  - `VITE_API_BASE_URL` — BE 서버 주소 (기본 `http://localhost:8080`)
-  - `VITE_KAKAO_CLIENT_ID` — 카카오 소셜 로그인
-  - `VITE_NAVER_CLIENT_ID` — 네이버 소셜 로그인
 
 ---
 
@@ -261,8 +234,6 @@ pnpm format:check
 
 ```text
 [스플래시] → [소셜 로그인 (카카오 / 네이버)]
-       ↓
-[약관 동의 (필수 4 + 선택 1)]
        ↓
 [닉네임 + 회사명 입력 (🎲 랜덤 추천)]
        ↓
@@ -276,10 +247,7 @@ pnpm format:check
 | 화면 ID | 화면명                    | 주요 컴포넌트 / 내용                                                                                       |
 | ------- | ------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | SCR-01  | 스플래시 / 로그인         | 로고 + 캐릭터 등장 애니메이션, 소셜 로그인 버튼 2종(카카오·네이버)                                         |
-| SCR-01a | 약관 동의                 | 전체 동의 + 필수 4 / 선택 1 체크, 항목별 "보기 >", 만 14세 확인                                            |
-| SCR-01b | 약관 상세                 | 이용약관 / 개인정보 / 투자 유의사항 전문 스크롤                                                            |
-| SCR-01c | 프로필 입력               | 닉네임, 회사명 + 🎲 주사위 랜덤 버튼                                                                       |
-| SCR-02  | 온보딩 - 종목 선택        | 검색바, 종목 카드 그리드, 선택 카운터 `n/3`                                                                |
+| SCR-02  | 온보딩                    | 닉네임·회사명 입력, 🎲 랜덤 추천, 관심 종목 검색 및 선택 카운터 `n/3`                                      |
 | SCR-03  | 튜토리얼 (3스텝)          | 단계 인디케이터, 캐릭터 말풍선 가이드, 강조 오버레이                                                       |
 | SCR-04  | 홈 (메인 대시보드)        | 사원 도트 3명, **종목별 그룹 카드**(대표 헤드라인 · 카드뉴스 N건 · 의뢰 상태칩), AP 잔액, 오늘의 예측 배너 |
 | SCR-05  | 종목 카드뉴스 (슬라이드)  | 종목 헤더(현재가·지연), 카드뉴스 가로 캐러셀, 용어 형광펜 + 정의 팝업, '사원에게 분석 의뢰' CTA            |
@@ -327,7 +295,9 @@ pnpm format:check
 
 ### 라우트 구조
 
-- `AuthLayout`(비로그인) / `AppLayout`(로그인 가드 + 하단 탭) 두 레이아웃으로 구성
-- 하단 탭 5종: **사원 · 사무실 · 홈 · 일기 · 마이** (홈이 가운데, 모바일 우선 `max-w-md` 컨테이너)
-- 브리핑은 별도 탭이 없습니다. **사무실의 분석 큐에서 완료된 종목을 탭하면 브리핑 상세로** 들어갑니다.
-- 상세 화면(브리핑 상세 · 사원 상세 · 설정 등)은 하단 탭을 숨기고 백 버튼만 둡니다.
+- `AuthLayout`은 하단 GNB 없이 스플래시(`/splash`), 온보딩(`/onboarding`), 튜토리얼(`/tutorial`)을 렌더링합니다.
+- `AppLayout`은 하단 GNB와 함께 홈, 사무실·브리핑, 팀, 결정 일기, 마이페이지 라우트를 렌더링합니다.
+- 하단 탭 5종은 **브리핑 · 팀 · 홈 · 일기 · 마이**이며, 브리핑 탭은 `/briefing`으로 이동합니다. 사무실(`/office`)과 오늘의 예측(`/office/predictions`)은 브리핑 탭 범위에 포함됩니다.
+- 결정 일기의 캘린더·리스트·통계 뷰는 `/diary`에서 `?view=list`, `?view=statistics` 쿼리로 전환합니다.
+- 마이 탭은 메인 외에도 AP 내역(`/my/ap`), 업적·배지(`/my/badges`), 내 용어장(`/my/glossary`), 프로필 편집(`/my/edit`), 설정(`/my/settings`) 하위 라우트를 제공합니다.
+- 현재 `AppLayout`은 상세 화면을 포함한 모든 하위 라우트에서 GNB를 렌더링합니다.

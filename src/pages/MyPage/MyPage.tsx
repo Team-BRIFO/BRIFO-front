@@ -1,4 +1,56 @@
-/** 마이 탭 - SCR-11, 13: 프로필, 설정, 용어장 및 My Stats 통계 차트 통합 */
+import { useNavigate } from 'react-router-dom'
+
+import { Badge } from '@/components/common/Badge'
+import { Loading } from '@/components/common/Loading'
+import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { MyHome } from '@/components/feature/my/MyHome'
+import Logo from '@/components/logos/logo-small.svg?react'
+import type { MyMenuKey } from '@/constants/myMenu'
+import { useMyUser } from '@/hooks/queries/useMy'
+import { PATH } from '@/routes/paths'
+import { mapMyUser } from '@/utils/myMapper'
+
+import { MyPageError } from './MyPageLayout'
+
+const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
+  profileEdit: PATH.MY_EDIT,
+  glossary: PATH.MY_GLOSSARY,
+  apHistory: PATH.MY_AP,
+  badges: PATH.MY_BADGES,
+}
+
+/** SCR-13 마이 메인 */
 export function MyPage() {
-  return <div>MyPage</div>
+  const navigate = useNavigate()
+  const userQuery = useMyUser()
+  if (userQuery.isError) return <MyPageError onRetry={() => userQuery.refetch()} />
+  if (!userQuery.data) return <Loading className="py-10" />
+  const { profile, stats, apSummary } = mapMyUser(userQuery.data)
+  const handleMenu = (key: MyMenuKey) => {
+    const path = MENU_PATHS[key]
+    if (path) navigate(path)
+  }
+
+  return (
+    <div className="bg-Background1 flex min-h-full flex-col">
+      <StatusBar
+        hasStatusArea={false}
+        left={<Logo width={84} height={24} aria-label="BRIFO" />}
+        right={
+          <div className="flex items-center gap-3">
+            <Badge
+              type="ap"
+              className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 h-auto gap-0.5 rounded-2xl py-2 pr-3 pl-4"
+            >
+              {`${apSummary.balance.toLocaleString()} AP`}
+            </Badge>
+            <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
+          </div>
+        }
+      />
+      <div className="px-4 pt-3 pb-24">
+        <MyHome profile={profile} stats={stats} apSummary={apSummary} onSelectMenu={handleMenu} />
+      </div>
+    </div>
+  )
 }

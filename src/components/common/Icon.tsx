@@ -3,6 +3,7 @@ import type { ElementType } from 'react'
 import AlertCircleIcon from '@/assets/icons/alert-circle.svg?react'
 import CloseIcon from '@/assets/icons/close.svg?react'
 import SearchIcon from '@/assets/icons/search.svg?react'
+import SettingIcon from '@/assets/icons/setting.svg?react'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -56,6 +57,7 @@ const ICON_REGISTRY: Record<IconVariant, Record<string, ElementType>> = {
     search: SearchIcon,
     close: CloseIcon,
     'alert-circle': AlertCircleIcon,
+    setting: SettingIcon,
   },
   filled: {},
   brand: {},
