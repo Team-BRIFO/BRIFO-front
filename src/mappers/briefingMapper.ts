@@ -1,3 +1,4 @@
+import { mapAgentType } from '@/mappers/agentMapper'
 import type { AgentDetailResponse } from '@/types/api/agent'
 import type {
   BriefingDetailResult,
@@ -13,8 +14,7 @@ import type {
   BriefingStock,
   OfficeBriefingItem,
 } from '@/types/domain/briefing'
-
-import { mapAgentType } from './agentMapper'
+import { getAgentLevelProgress } from '@/utils/agentLevel'
 
 const DIRECTION_META: Record<
   'UP' | 'DOWN' | 'NEUTRAL',
@@ -66,7 +66,7 @@ export function mapBriefingDetail(
       name: result.agent.nickname,
       modelName: result.agent.modelName,
       level: agentDetail?.level ?? 1,
-      levelProgress: agentDetail?.exp ? agentDetail.exp % 100 : 0,
+      levelProgress: getAgentLevelProgress(agentDetail?.exp ?? 0),
       hitRate: agentDetail?.accuracyRate ?? 0,
       dailyAP: agentDetail?.dailySalary ?? 0,
     },
