@@ -41,7 +41,7 @@ export function AppLayout() {
     <div className="bg-White relative mx-auto flex h-[100dvh] w-full max-w-[768px] flex-col overflow-hidden shadow-xl">
       <main
         className={`flex min-h-0 flex-1 flex-col overflow-y-auto ${
-          selectedNavigation === 'diary' ? 'bg-Background1' : ''
+          selectedNavigation === 'home' ? 'bg-White' : 'bg-Background1'
         }`}
       >
         <Outlet />

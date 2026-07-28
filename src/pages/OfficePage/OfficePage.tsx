@@ -18,7 +18,7 @@ export function OfficePage() {
   const availableCount = MOCK_OFFICE_DATA.maxRequestCount - items.length
 
   return (
-    <div className="flex min-h-[100dvh] w-full flex-col pb-24">
+    <div className="flex flex-1 w-full flex-col pb-24">
       {/* 상단 StatusBar */}
       <StatusBar
         hasStatusArea={false}
@@ -33,7 +33,7 @@ export function OfficePage() {
         }
       />
 
-      <div className="bg-Background1 flex flex-col gap-5.5 px-4">
+      <div className="flex flex-col gap-5.5 px-4">
         {/* 헤더 */}
         <header className="flex items-center justify-between pt-3">
           <div className="flex flex-col gap-2">
@@ -41,7 +41,7 @@ export function OfficePage() {
             <p className="pretendard-Button2 text-Gray-6">내 AI 사원들을 관리하세요</p>
           </div>
           {items.length > 0 && (
-            <Badge type="gray" size="md" className="pretendard-Caption1 justify-center px-3.5">
+            <Badge type="gray" size="md" className="bg-Gray-2 text-Gray-6 pretendard-Caption1 justify-center px-3.5">
               {items[0].stockName}
             </Badge>
           )}

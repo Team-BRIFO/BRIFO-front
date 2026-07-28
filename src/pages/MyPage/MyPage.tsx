@@ -31,7 +31,7 @@ export function MyPage() {
   }
 
   return (
-    <div className="bg-Background1 flex min-h-full flex-col">
+    <div className="flex flex-1 flex-col">
       <StatusBar
         hasStatusArea={false}
         left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
