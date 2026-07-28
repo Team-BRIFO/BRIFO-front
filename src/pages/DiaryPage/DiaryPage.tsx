@@ -7,11 +7,16 @@ import { DiaryList } from '@/components/feature/diary/DiaryList'
 import { DiaryStatistics } from '@/components/feature/diary/DiaryStatistics'
 import { DiaryTabScreen } from '@/components/feature/diary/DiaryTabScreen'
 import type { DiaryView } from '@/components/feature/diary/DiaryViewTabs'
-import { useDiaryCalendar, useDiaryList, useDiaryStats } from '@/hooks/queries/useDiary'
+import { ErrorView } from '@/components/feature/error/ErrorView'
+import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { PATH } from '@/routes/paths'
 import { shiftMonth } from '@/utils/diaryCalendar'
-import { mapDiaryCalendar, mapDiaryEntry, mapDiaryStatistics } from '@/utils/diaryMapper'
 
+import {
+  useDiaryCalendarQuery,
+  useDiaryListQuery,
+  useDiaryStatisticsQuery,
+} from './hooks/useDiaryQueries'
 import { MOCK_DIARY_MONTH, MOCK_DIARY_YEAR } from './mockDiary'
 
 /** 탭 상태를 담는 쿼리 파라미터 키 (/diary?view=statistics) */
@@ -41,9 +46,11 @@ export function DiaryPage() {
     month: MOCK_DIARY_MONTH,
   })
 
-  const calendarQuery = useDiaryCalendar(year, month, view === 'calendar')
-  const listQuery = useDiaryList(undefined, view === 'list')
-  const statsQuery = useDiaryStats(view === 'statistics')
+  const calendarQuery = useDiaryCalendarQuery(year, month, view === 'calendar')
+  const listQuery = useDiaryListQuery(undefined, view === 'list')
+  const statsQuery = useDiaryStatisticsQuery(view === 'statistics')
+  const userQuery = useUserProfileQuery()
+  const balanceAp = userQuery.data?.apSummary.balance
 
   const handleChangeView = (next: DiaryView) => {
     // 기본 탭(캘린더)은 파라미터 없이 /diary 로 유지
@@ -52,9 +59,19 @@ export function DiaryPage() {
 
   const renderView = () => {
     if (view === 'calendar') {
+      if (calendarQuery.isError && !calendarQuery.data) {
+        return (
+          <ErrorView
+            title="결정 일기를 불러오지 못했어요"
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => calendarQuery.refetch()}
+          />
+        )
+      }
       if (!calendarQuery.data) return <Loading className="py-10" />
 
-      const { marks, hitRate } = mapDiaryCalendar(calendarQuery.data)
+      const { marks, hitRate } = calendarQuery.data
 
       return (
         <DiaryCalendar
@@ -70,9 +87,24 @@ export function DiaryPage() {
     }
 
     if (view === 'list') {
+      if (listQuery.isError && !listQuery.data) {
+        return (
+          <ErrorView
+            title="결정 기록을 불러오지 못했어요"
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => listQuery.refetch()}
+          />
+        )
+      }
       if (!listQuery.data) return <Loading className="py-10" />
 
-      const entries = listQuery.data.pages.flatMap((page) => page.page.items.map(mapDiaryEntry))
+      const entries = listQuery.data.pages.flatMap((page) => page.entries)
+      if (entries.length === 0) {
+        return (
+          <ErrorView title="아직 결정 기록이 없어요" description="첫 번째 결정을 기록해보세요." />
+        )
+      }
 
       return (
         <DiaryList
@@ -85,13 +117,33 @@ export function DiaryPage() {
       )
     }
 
+    if (statsQuery.isError && !statsQuery.data) {
+      return (
+        <ErrorView
+          title="결정 통계를 불러오지 못했어요"
+          description="잠시 후 다시 시도해주세요."
+          buttonText="다시 시도"
+          onButtonClick={() => statsQuery.refetch()}
+        />
+      )
+    }
     if (!statsQuery.data) return <Loading className="py-10" />
 
-    return <DiaryStatistics statistics={mapDiaryStatistics(statsQuery.data)} />
+    if (
+      statsQuery.data.hitRate.totalCount === 0 &&
+      statsQuery.data.items.length === 0 &&
+      statsQuery.data.groups.length === 0
+    ) {
+      return (
+        <ErrorView title="아직 집계된 통계가 없어요" description="결정을 기록하면 통계가 쌓여요." />
+      )
+    }
+
+    return <DiaryStatistics statistics={statsQuery.data} />
   }
 
   return (
-    <DiaryTabScreen view={view} onChangeView={handleChangeView}>
+    <DiaryTabScreen view={view} onChangeView={handleChangeView} balanceAp={balanceAp ?? 0}>
       {renderView()}
     </DiaryTabScreen>
   )

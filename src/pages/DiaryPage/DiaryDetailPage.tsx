@@ -8,24 +8,24 @@ import {
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
 import { DiaryDetailShare } from '@/components/feature/diary/DiaryDetailShare'
-import { useCreateDiaryShareImage, useDiaryDetail } from '@/hooks/queries/useDiary'
-import { mapDiaryDetail } from '@/utils/diaryMapper'
+
+import { useCreateDiaryShareImageMutation } from './hooks/useCreateDiaryShareImageMutation'
+import { useDiaryDetailQuery } from './hooks/useDiaryQueries'
 
 /** 피드 탭 - SCR-10: 결정 카드 상세 (서버 렌더 공유 이미지 · 공유) */
 export function DiaryDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { data, isPending, isError } = useDiaryDetail(id ?? null)
+  const { data: detail, isPending, isError } = useDiaryDetailQuery(id ?? null)
   const {
     mutate: createShareImage,
     reset: resetShareImage,
     isIdle: isShareImageIdle,
     isPending: isGeneratingShareImage,
     isError: isShareImageFailed,
-  } = useCreateDiaryShareImage()
+  } = useCreateDiaryShareImageMutation()
 
-  const detail = data ? mapDiaryDetail(data) : undefined
   const needsShareImage = Boolean(detail && !detail.shareImageUrl)
 
   // 다른 일기로 이동하면 이전 생성 요청의 상태를 비워 새 카드 생성 여부를 판단한다.
@@ -53,7 +53,7 @@ export function DiaryDetailPage() {
       <div className="flex flex-1 flex-col items-center px-5 pt-6 pb-20">
         {isPending && <Loading className="py-10" />}
 
-        {isError && (
+        {isError && !detail && (
           <p className="pretendard-Body2-Regular text-Gray-6 py-10 text-center">
             결정 카드를 찾을 수 없어요.
           </p>

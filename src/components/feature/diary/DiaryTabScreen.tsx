@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import Logo from '@/components/logos/logo-small.svg?react'
-import { useMyUser } from '@/hooks/queries/useMy'
 
 import { type DiaryView, DiaryViewTabs } from './DiaryViewTabs'
 export interface DiaryTabScreenProps {
@@ -10,6 +9,7 @@ export interface DiaryTabScreenProps {
   view: DiaryView
   /** 탭 전환 시 */
   onChangeView: (view: DiaryView) => void
+  balanceAp: number
   children: ReactNode
 }
 
@@ -18,10 +18,7 @@ export interface DiaryTabScreenProps {
  * StatusBar · 페이지 헤더 · 세그먼트 탭을 담당하고, 탭 상태 관리는 페이지가 맡는다.
  * 하단 NavigationBar 는 루트 레이아웃에서 배치되므로 여기서는 여백만 확보한다.
  */
-export function DiaryTabScreen({ view, onChangeView, children }: DiaryTabScreenProps) {
-  const { data: userResponse } = useMyUser()
-  const balanceAp = userResponse?.balanceAp ?? 0
-
+export function DiaryTabScreen({ view, onChangeView, balanceAp, children }: DiaryTabScreenProps) {
   return (
     <div className="bg-Background1 flex flex-1 flex-col">
       <StatusBar
