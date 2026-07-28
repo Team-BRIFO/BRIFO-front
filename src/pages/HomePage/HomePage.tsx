@@ -33,7 +33,7 @@ export function HomePage() {
       <main className="min-h-screen bg-white">
         <StatusBar
           hasStatusArea={false}
-          left={<Logo className="h-[1.5rem] w-[5.25rem]" />}
+          left={<Logo className="h-6 w-21" />}
           right={
             <div className="flex items-center gap-3">
               <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">

@@ -29,7 +29,7 @@ export default function OfficeCard() {
   ]
 
   return (
-    <div className="relative mx-auto aspect-[328/263] w-full max-w-[768px] overflow-hidden">
+    <div className="relative mx-auto aspect-328/263 w-full max-w-3xl overflow-hidden">
       <OfficeBackground className="absolute inset-0 h-full w-full rounded-xl" />
 
       {employees.map(({ name, level, Character, wrapperStyle }) => (

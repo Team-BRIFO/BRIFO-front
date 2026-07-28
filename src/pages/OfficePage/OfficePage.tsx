@@ -24,10 +24,10 @@ export function OfficePage() {
 
   if (briefingsQuery.isError && !items) {
     return (
-      <div className="flex min-h-[100dvh] w-full flex-col pb-4">
+      <div className="flex min-h-dvh w-full flex-col pb-4">
         <StatusBar
           hasStatusArea={false}
-          left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
+          left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
           right={<StatusBarNotificationButton />}
         />
         <div className="bg-Background1 flex-1 px-4 py-5">
@@ -44,10 +44,10 @@ export function OfficePage() {
 
   if (!items) {
     return (
-      <div className="flex min-h-[100dvh] w-full flex-col pb-4">
+      <div className="flex min-h-dvh w-full flex-col pb-4">
         <StatusBar
           hasStatusArea={false}
-          left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
+          left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
           right={<StatusBarNotificationButton />}
         />
         <div className="bg-Background1 flex-1 px-4 py-5">
@@ -60,11 +60,11 @@ export function OfficePage() {
   const availableCount = MOCK_OFFICE_DATA.maxRequestCount - items.length
 
   return (
-    <div className="flex min-h-[100dvh] w-full flex-col pb-4">
+    <div className="flex min-h-dvh w-full flex-col pb-4">
       {/* 상단 StatusBar */}
       <StatusBar
         hasStatusArea={false}
-        left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
+        left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
         right={
           <div className="flex items-center gap-3">
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">

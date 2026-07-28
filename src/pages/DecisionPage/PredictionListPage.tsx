@@ -20,7 +20,7 @@ export function PredictionListPage() {
   const selectedDecision = decisions?.find((decision) => decision.id === selectedDecisionId)
 
   return (
-    <div className="bg-White flex min-h-[100dvh] w-full flex-col pb-10">
+    <div className="bg-White flex min-h-dvh w-full flex-col pb-10">
       <StatusBar
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}

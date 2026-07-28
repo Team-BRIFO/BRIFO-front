@@ -96,7 +96,7 @@ export function OnboardingPage() {
 
       <section className="mt-8 flex flex-1 flex-col">
         <div>
-          <h1 className="dnf-Title3 text-Gray-10 leading-[1.25]">
+          <h1 className="dnf-Title3 text-Gray-10 leading-tight">
             사장님의 프로필을
             <br />
             <span className="text-[#FFBE00]">알려주세요!</span>

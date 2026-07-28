@@ -62,7 +62,7 @@ const DESK_SLOTS: { agentType: AgentCharacterType; style: CSSProperties }[] = [
 /** 사무실 배경 + 캐릭터 상태를 결합한 오피스 컴포넌트 */
 export function Office({ agentStatusMap = {} }: OfficeProps) {
   return (
-    <div className="bg-White relative aspect-[328/263] w-full overflow-hidden rounded-xl">
+    <div className="bg-White relative aspect-328/263 w-full overflow-hidden rounded-xl">
       {/* 배경 */}
       <OfficeBg className="h-auto w-full rounded-xl" aria-hidden="true" />
 

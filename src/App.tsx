@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="mx-auto flex min-h-[100dvh] w-full flex-col bg-white max-md:w-full md:max-w-[768px] md:shadow-xl">
+      <div className="mx-auto flex min-h-dvh w-full flex-col bg-white max-md:w-full md:max-w-3xl md:shadow-xl">
         <RouterProvider router={router} />
       </div>
     </QueryClientProvider>

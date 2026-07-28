@@ -29,11 +29,11 @@ export function ErrorPageTemplate({
   const navigate = useNavigate()
 
   return (
-    <div className="bg-Background1 flex min-h-[100dvh] w-full flex-col">
+    <div className="bg-Background1 flex min-h-dvh w-full flex-col">
       <StatusBar
         hasStatusArea
         className="bg-White w-full"
-        left={<Logo className="h-[1.5rem] w-[5.25rem]" />}
+        left={<Logo className="h-6 w-21" />}
         right={
           <div className="flex items-center gap-3">
             <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
