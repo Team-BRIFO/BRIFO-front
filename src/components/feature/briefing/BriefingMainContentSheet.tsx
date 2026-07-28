@@ -34,7 +34,7 @@ export function BriefingMainContentSheet({
   className,
 }: BriefingMainContentSheetProps) {
   return (
-    <div className={twMerge('flex h-132 w-82 flex-col items-stretch overflow-hidden', className)}>
+    <div className={twMerge('flex h-132 w-full flex-col items-stretch overflow-hidden', className)}>
       <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
         <AgentCard agent={agent} />
         <BriefingTopCard

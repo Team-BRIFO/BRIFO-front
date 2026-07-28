@@ -41,7 +41,7 @@ export function MenuRow({
       className={twMerge(
         'flex w-full items-center justify-between gap-3 px-4 py-3',
         'border-Gray-2 border-t first:border-t-0',
-        'hover:bg-Gray-1 transition-colors duration-150',
+        'hover:bg-Background1 transition-colors duration-150',
         'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
         'disabled:cursor-not-allowed disabled:opacity-40',
         className,

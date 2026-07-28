@@ -43,9 +43,9 @@ const SIZE_MAP: Record<IconButtonSize, { button: string; icon: 16 | 20 | 24 | 28
 }
 
 const VARIANT_CLASS: Record<Exclude<IconButtonVariant, 'brand'>, string> = {
-  ghost: 'bg-transparent text-Gray-9 hover:bg-Gray-1 active:bg-Gray-2',
+  ghost: 'bg-transparent text-Gray-9 hover:bg-Background1 active:bg-Gray-2',
   solid: 'bg-Gray-2 text-Gray-9 hover:bg-Gray-3',
-  outline: 'bg-transparent border border-Gray-2 text-Gray-9 hover:bg-Gray-1',
+  outline: 'bg-transparent border border-Gray-2 text-Gray-9 hover:bg-Background1',
   danger: 'bg-Pink-60 text-Pink-30 hover:opacity-80',
 }
 
@@ -54,7 +54,7 @@ const VARIANT_CLASS: Record<Exclude<IconButtonVariant, 'brand'>, string> = {
 function getBrandClass(): string {
   // 아이콘 이름에 따라 고유 브랜드 색상을 반환합니다.
   // 커스텀 브랜드 색상이 필요하다면 이곳에 추가하세요.
-  return 'bg-White hover:bg-Gray-1'
+  return 'bg-White hover:bg-Background1'
 }
 
 function getColorClass(variant: IconButtonVariant): string {

@@ -20,7 +20,7 @@ export default function NotificationTabs({ value, onChange }: NotificationTabsPr
     <div
       role="tablist"
       aria-label="알림 카테고리"
-      className="bg-Gray-1 flex h-6 w-full items-center rounded-full"
+      className="bg-Background1 flex h-6 w-full items-center rounded-full"
     >
       {TAB_ITEMS.map((tab) => {
         const isActive = value === tab.value

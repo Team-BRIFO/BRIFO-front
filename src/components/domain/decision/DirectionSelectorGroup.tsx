@@ -56,7 +56,7 @@ function PredictionOption({
 
   const dynamicClass = isSelected
     ? 'border-Yellow-30 bg-Yellow-100 text-Yellow-30'
-    : 'border-Gray-2 bg-White text-Gray-5 hover:bg-Gray-1'
+    : 'border-Gray-2 bg-White text-Gray-5 hover:bg-Background1'
 
   return (
     <button

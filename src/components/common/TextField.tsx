@@ -124,7 +124,7 @@ export const TextField = ({
       {/* Input Wrapper */}
       <div
         className={[
-          'flex h-[47px] w-full items-center gap-3',
+          'flex h-[2.9375rem] w-full items-center gap-3',
           'bg-White rounded-[20px] border',
           'px-6 py-3 transition-colors duration-150',
           borderClass,

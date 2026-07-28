@@ -12,7 +12,7 @@ export function MySettings({ onSelectMenu }: MySettingsProps) {
     <div className="flex flex-col gap-4">
       {MY_SETTINGS_SECTIONS.map(({ title, items }) => (
         <section key={title} className="flex flex-col gap-2">
-          <h2 className="font-pretendard text-Gray-6 text-[14px] leading-5 font-normal tracking-[-0.56px]">
+          <h2 className="font-pretendard text-Gray-6 text-[0.875rem] leading-5 font-normal tracking-[-0.56px]">
             {title}
           </h2>
 

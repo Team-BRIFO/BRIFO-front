@@ -15,4 +15,21 @@
   --font-pretendard: 'Pretendard', sans-serif;
   --font-dnf: 'DNFBitBitv2', sans-serif;
   --shadow-card: 0px 4px 40px 0px rgba(224, 224, 224, 0.15);
+
+  /* 반응형 브레이크포인트 제한 (sm: 640px, md: 768px) */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-gray-1);
+    margin: 0;
+  }
+
+  html {
+    /* 360px 기준 16px. 최대 768px 너비까지만 비례해서 커짐 */
+    font-size: calc(min(100vw, 768px) / 360 * 16);
+  }
 }

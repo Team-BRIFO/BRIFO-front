@@ -47,7 +47,9 @@ export function DiaryCalendarDay({
       {...props}
     >
       {/* Main/Subtitle/Bold16 — 유틸리티가 Semibold 라 굵기만 덮어쓴다 */}
-      <span className="pretendard-Body1-Semibold text-Gray-8 font-bold">{day}</span>
+      <span className="pretendard-Body1-Semibold text-Gray-8 text-sm font-bold md:text-base">
+        {day}
+      </span>
 
       <span className="flex items-center gap-0.5" aria-hidden="true">
         {hasDecision ? (
@@ -58,7 +60,7 @@ export function DiaryCalendarDay({
             />
           ))
         ) : (
-          <span className="bg-Gray-1 h-1 w-1 rounded-full" />
+          <span className="bg-Background1 h-1 w-1 rounded-full" />
         )}
       </span>
     </button>

@@ -110,12 +110,20 @@ export function AnalyzeCard({
     > = {
       HASHTAG: null,
       ERROR: null,
-      SUCCESS_UP: { bgClass: 'bg-Gray-1', label: '상승 예측 성공', labelClass: 'text-Gray-4' },
-      SUCCESS_DOWN: { bgClass: 'bg-Gray-1', label: '하락 예측 성공', labelClass: 'text-Gray-4' },
-      SUCCESS_HOLD: { bgClass: 'bg-Gray-1', label: '관망 예측 성공', labelClass: 'text-Gray-4' },
-      FAIL_UP: { bgClass: 'bg-Gray-1', label: '상승 예측 실패', labelClass: 'text-Gray-4' },
-      FAIL_DOWN: { bgClass: 'bg-Gray-1', label: '하락 예측 실패', labelClass: 'text-Gray-4' },
-      FAIL_HOLD: { bgClass: 'bg-Gray-1', label: '관망 예측 실패', labelClass: 'text-Gray-4' },
+      SUCCESS_UP: { bgClass: 'bg-Background1', label: '상승 예측 성공', labelClass: 'text-Gray-4' },
+      SUCCESS_DOWN: {
+        bgClass: 'bg-Background1',
+        label: '하락 예측 성공',
+        labelClass: 'text-Gray-4',
+      },
+      SUCCESS_HOLD: {
+        bgClass: 'bg-Background1',
+        label: '관망 예측 성공',
+        labelClass: 'text-Gray-4',
+      },
+      FAIL_UP: { bgClass: 'bg-Background1', label: '상승 예측 실패', labelClass: 'text-Gray-4' },
+      FAIL_DOWN: { bgClass: 'bg-Background1', label: '하락 예측 실패', labelClass: 'text-Gray-4' },
+      FAIL_HOLD: { bgClass: 'bg-Background1', label: '관망 예측 실패', labelClass: 'text-Gray-4' },
       BRIEFING: null,
       PREDICTION: null,
     }
@@ -218,7 +226,7 @@ export function AnalyzeCard({
           {resultType === 'HASHTAG' ? (
             stock.keywords &&
             stock.keywords.length > 0 && (
-              <div className="bg-Gray-1 text-Gray-6 pretendard-Caption1 flex flex-wrap gap-2 px-4 py-2">
+              <div className="bg-Background1 text-Gray-6 pretendard-Caption1 flex flex-wrap gap-2 px-4 py-2">
                 {stock.keywords.map((keyword, idx) => (
                   <Badge key={idx} type="tag">
                     {`# ${keyword}`}
@@ -228,7 +236,7 @@ export function AnalyzeCard({
             )
           ) : resultType === 'BRIEFING' ? (
             briefingFooter && (
-              <div className="bg-Gray-1 flex items-center justify-between px-4 py-2">
+              <div className="bg-Background1 flex items-center justify-between px-4 py-2">
                 <div className="flex flex-1 items-center gap-3 overflow-hidden">
                   <span className="text-Gray-8 pretendard-Caption2 shrink-0">
                     카드뉴스 {briefingFooter.newsCount}건
@@ -241,7 +249,7 @@ export function AnalyzeCard({
             )
           ) : resultType === 'PREDICTION' ? (
             predictionFooter && (
-              <div className="bg-Gray-1 flex items-center justify-between px-4 py-2">
+              <div className="bg-Background1 flex items-center justify-between px-4 py-2">
                 <div className="flex items-center gap-3">
                   <span className="pretendard-Caption1 text-Gray-8">
                     현재 {predictionFooter.currentRate > 0 ? '+' : ''}
@@ -252,7 +260,7 @@ export function AnalyzeCard({
               </div>
             )
           ) : resultType === 'ERROR' ? (
-            <div className="bg-Gray-1 flex items-center justify-between px-4 py-1">
+            <div className="bg-Background1 flex items-center justify-between px-4 py-1">
               <span className={twMerge('pretendard-Caption2 text-Pink-30')}>오류</span>
               {stock.tradeDate && (
                 <span className={twMerge('pretendard-Caption2 text-Pink-30')}>

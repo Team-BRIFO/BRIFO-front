@@ -141,14 +141,16 @@ function getContainerClass(
   if (variant === 'segmented') {
     // 피그마 스펙 대응
     if (segmentedType === 2) {
-      // Type 2 (사원/시스템 등, 316px)
       base.push(
-        isFullWidth ? 'w-full' : 'w-[316px]',
-        'h-[24px] justify-between rounded-[40px] bg-Gray-1',
+        isFullWidth ? 'w-full' : 'w-[87.77%]',
+        'h-[1.5rem] justify-between rounded-[40px] bg-Background1',
       )
     } else {
       // Type 1 (리스트/통계 등, 213px)
-      base.push(isFullWidth ? 'w-full' : 'w-[213px]', 'h-[24px] gap-[4px] rounded-[30px] bg-Gray-2')
+      base.push(
+        isFullWidth ? 'w-full' : 'w-[59.16%]',
+        'h-[1.5rem] gap-[4px] rounded-[30px] bg-Gray-2',
+      )
     }
   } else if (variant === 'underline') {
     base.push('border-b border-Gray-2 gap-4')
@@ -186,15 +188,15 @@ function getItemClass(
       if (isActive) base.push('bg-Yellow-40')
     }
   } else if (variant === 'underline') {
-    base.push('h-[40px] pretendard-Button2')
+    base.push('h-[2.5rem] pretendard-Button2')
     base.push(
       isActive
         ? 'border-b-2 border-Gray-9 text-Gray-9'
         : 'border-b-2 border-transparent text-Gray-5',
     )
   } else if (variant === 'pill') {
-    base.push('h-[32px] px-4 rounded-full pretendard-Button2')
-    base.push(isActive ? 'bg-Gray-9 text-White' : 'bg-Gray-1 text-Gray-6')
+    base.push('h-[2rem] px-4 rounded-full pretendard-Button2')
+    base.push(isActive ? 'bg-Gray-9 text-White' : 'bg-Background1 text-Gray-6')
   } else if (variant === 'plain') {
     base.push('pretendard-Button2')
     base.push(isActive ? 'text-Gray-9 font-bold' : 'text-Gray-5')

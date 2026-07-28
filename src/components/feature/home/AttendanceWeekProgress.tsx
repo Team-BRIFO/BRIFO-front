@@ -32,7 +32,7 @@ export default function AttendanceWeekProgress({ attendedDays }: AttendanceWeekP
             <div key={day} className="flex flex-col items-center gap-1.5">
               <div
                 className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                  isAttended ? 'bg-Yellow-40' : 'bg-Gray-1'
+                  isAttended ? 'bg-Yellow-40' : 'bg-Background1'
                 }`}
               >
                 {isAttended ? (

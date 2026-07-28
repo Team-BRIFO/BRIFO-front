@@ -10,10 +10,10 @@ import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
+import { useMyUser } from '@/hooks/queries/useMy'
+import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
 import { PATH } from '@/routes/paths'
 import { useProfileStore } from '@/stores/useProfileStore'
-
-import { HOME_CARD_NEWS_MOCK_DATA } from './mockData'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -21,26 +21,28 @@ export function HomePage() {
   const nickname = useProfileStore((state) => state.nickname)
   const companyName = useProfileStore((state) => state.companyName)
 
+  const { data: userResponse } = useMyUser()
+  const balanceAp = userResponse?.balanceAp ?? 0
+
   return (
     <>
       <main className="min-h-screen bg-white">
-        {/* 상단 흰색 영역 */}
-        <div className="mx-auto flex w-82 flex-col pb-7">
-          <StatusBar
-            hasStatusArea
-            className="w-full [&>div:last-child]:px-0"
-            left={<Logo className="w-23" />}
-            right={
-              <div className="flex items-center gap-3">
-                <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-                  1280 AP
-                </div>
-
-                <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
+        <StatusBar
+          hasStatusArea={false}
+          left={<Logo className="h-[1.5rem] w-[5.25rem]" />}
+          right={
+            <div className="flex items-center gap-3">
+              <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
+                {`${balanceAp.toLocaleString()} AP`}
               </div>
-            }
-          />
 
+              <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
+            </div>
+          }
+        />
+
+        {/* 상단 흰색 영역 */}
+        <div className="flex w-full flex-col px-4 pb-7">
           <HomeHeader nickname={nickname} companyName={companyName} />
 
           <div className="flex flex-col gap-3">
@@ -60,7 +62,7 @@ export function HomePage() {
         </div>
 
         {/* 카드뉴스 회색 영역 */}
-        <section className="bg-Gray-1 w-full pt-6 pb-24">
+        <section className="bg-Background1 w-full pt-6 pb-24">
           <div className="px-4">
             <HomeCardNewsSection
               items={HOME_CARD_NEWS_MOCK_DATA}

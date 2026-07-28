@@ -87,7 +87,7 @@ export function OnboardingPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
+    <main className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
       <StatusBar
         hasStatusArea
         className="w-full [&>div:last-child]:px-0"

@@ -131,17 +131,19 @@ function Modal({
       className="bg-Black/50 fixed inset-0 z-50 flex items-center justify-center"
       onClick={shouldCloseOnOverlayClick ? onClose : undefined}
     >
-      <section
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ariaLabel}
-        tabIndex={-1}
-        className={`bg-White w-82.5 rounded-3xl px-5 py-6 shadow-lg ${className} `}
-        onClick={(event) => event.stopPropagation()}
-      >
-        {children}
-      </section>
+      <div className="flex w-full max-w-[768px] items-center justify-center">
+        <section
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={ariaLabel}
+          tabIndex={-1}
+          className={`bg-White w-[calc(100%-2rem)] max-w-[20.625rem] rounded-3xl px-5 py-6 shadow-lg ${className || ''} `}
+          onClick={(event) => event.stopPropagation()}
+        >
+          {children}
+        </section>
+      </div>
     </div>,
     document.body,
   )

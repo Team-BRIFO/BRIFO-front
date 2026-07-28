@@ -20,9 +20,9 @@ export function BadgeUnlockModal({ isOpen, badge, rewardAp, onClose }: BadgeUnlo
   return (
     <Modal isOpen={isOpen} onClose={onClose} ariaLabel="새 배지 획득" className="w-70 rounded-xl">
       <Modal.Header className="flex flex-col items-center gap-4">
-        <h2 className="dnf-Title4 text-Gray-10">새 뱃지 획득!</h2>
+        <h2 className="dnf-Title4 text-Gray-10 mt-6">{badge.name} 획득!</h2>
         <BadgeItem badge={{ ...badge, isUnlocked: true }} size={60} disabled />
-        <p className="font-pretendard text-Gray-6 text-center text-[14px] leading-5 font-normal tracking-[-0.56px]">
+        <p className="font-pretendard text-Gray-6 text-center text-[0.875rem] leading-5 font-normal tracking-[-0.56px]">
           {badge.description}
         </p>
         {rewardAp !== undefined && (

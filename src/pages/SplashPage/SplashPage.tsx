@@ -5,9 +5,8 @@ import SplashBackground from '@/assets/images/splash_background.svg?react'
 import Logo from '@/assets/logo/brifo_logo.svg?react'
 import LoginSection from '@/components/feature/onboarding/LoginSection'
 import OnboardingSlide from '@/components/feature/onboarding/OnboardingSlide'
+import { SPLASH_SLIDES } from '@/pages/SplashPage/splash'
 import { PATH } from '@/routes/paths'
-
-import { SPLASH_SLIDES } from './splash'
 
 const SPLASH_DURATION = 3000
 
@@ -53,7 +52,7 @@ export function SplashPage() {
   // 최초 로고 스플래시
   if (isSplashVisible) {
     return (
-      <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col overflow-hidden bg-white">
+      <main className="flex w-full flex-1 flex-col overflow-hidden">
         <div className="flex flex-1 flex-col items-center justify-center">
           <Logo className="w-50" />
 
@@ -70,7 +69,7 @@ export function SplashPage() {
   // 튜토리얼 완료 후 로그인
   if (isLoginStep) {
     return (
-      <div className="mx-auto w-full max-w-90">
+      <div className="w-full">
         <LoginSection
           onKakaoLogin={handleKakaoLogin}
           onNaverLogin={handleNaverLogin}

@@ -39,7 +39,7 @@ export function BriefingCard({
   // 상태 및 활성화 여부에 따른 동적 스타일 매핑
   let containerBgClass = 'bg-White'
   let borderClass = 'border-Gray-2'
-  let bottomBgClass = 'bg-Gray-1'
+  let bottomBgClass = 'bg-Background1'
   let rankClass = 'text-Gray-5'
 
   if (type === '완료') {
@@ -51,18 +51,18 @@ export function BriefingCard({
     } else {
       containerBgClass = 'bg-White'
       borderClass = 'border-Gray-2'
-      bottomBgClass = 'bg-Gray-1'
+      bottomBgClass = 'bg-Background1'
     }
   } else if (type === '진행중') {
     rankClass = 'text-Gray-5'
     if (active) {
-      containerBgClass = 'bg-Gray-1'
+      containerBgClass = 'bg-Background1'
       borderClass = 'border-Gray-2' // 피그마 액티브 테두리 명세
       bottomBgClass = 'bg-Gray-2'
     } else {
       containerBgClass = 'bg-White'
       borderClass = 'border-Gray-2'
-      bottomBgClass = 'bg-Gray-1'
+      bottomBgClass = 'bg-Background1'
     }
   }
 

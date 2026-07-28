@@ -44,7 +44,7 @@ export function DiaryCalendar({
             <ChevronLeftIcon width={24} height={24} aria-hidden="true" />
           </button>
 
-          <p className="dnf-Caption1 text-Gray-10 flex items-center gap-0.5">
+          <p className="dnf-Caption1 text-Gray-10 flex items-center gap-0.5 text-sm md:text-base">
             <span>{year}.</span>
             <span>{String(month).padStart(2, '0')}</span>
           </p>
@@ -59,28 +59,33 @@ export function DiaryCalendar({
           </button>
         </div>
 
-        <div className="flex flex-col gap-0.5">
-          <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex flex-col gap-0.5 px-2">
+          <div className="grid grid-cols-7 py-3">
             {WEEKDAYS.map((weekday) => (
-              <span key={weekday} className="pretendard-Body1-Semibold text-Gray-10">
-                {weekday}
-              </span>
+              <div key={weekday} className="flex items-center justify-center">
+                <span className="pretendard-Body1-Semibold text-Gray-10 text-sm md:text-base">
+                  {weekday}
+                </span>
+              </div>
             ))}
           </div>
 
           <div className="flex flex-col gap-2.5">
             {weeks.map((week, weekIndex) => (
-              <div key={weekIndex} className="flex items-center gap-2">
+              <div key={weekIndex} className="grid grid-cols-7">
                 {week.map(({ day, directions }, cellIndex) =>
                   day === null ? (
-                    <span key={`empty-${cellIndex}`} className="h-10 w-10 shrink-0" />
+                    <div key={`empty-${cellIndex}`} className="flex items-center justify-center">
+                      <span className="h-10 w-10 shrink-0" />
+                    </div>
                   ) : (
-                    <DiaryCalendarDay
-                      key={day}
-                      day={day}
-                      directions={directions}
-                      onClick={() => onSelectDate?.(toDateKey(year, month, day))}
-                    />
+                    <div key={day} className="flex items-center justify-center">
+                      <DiaryCalendarDay
+                        day={day}
+                        directions={directions}
+                        onClick={() => onSelectDate?.(toDateKey(year, month, day))}
+                      />
+                    </div>
                   ),
                 )}
               </div>

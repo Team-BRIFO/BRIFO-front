@@ -20,7 +20,7 @@ export function NotificationPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="mx-auto flex w-82 flex-col gap-3">
+      <div className="flex w-full flex-col gap-3 px-4">
         <StatusBar
           className="w-full [&>div:last-child]:px-0"
           left={<StatusBarBackButton onClick={() => navigate(-1)} />}

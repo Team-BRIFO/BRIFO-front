@@ -32,4 +32,18 @@ export const ONBOARDING_STOCKS: OnboardingStock[] = [
     changeRate: -6.3,
     logoUrl: SamsungElectroMechanicsLogo,
   },
+  {
+    id: 4,
+    name: '카카오',
+    price: '45,200',
+    changeRate: -1.2,
+    logoUrl: SkHynixLogo,
+  },
+  {
+    id: 5,
+    name: '네이버',
+    price: '185,000',
+    changeRate: 0.5,
+    logoUrl: SkHynixLogo,
+  },
 ]

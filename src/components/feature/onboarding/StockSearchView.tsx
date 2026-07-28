@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import NotFound from '@/assets/images/not_found.svg?react'
 import Button from '@/components/common/Button'
+import { Image } from '@/components/common/Image'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import StockRankItem from '@/components/domain/stock/StockRankItem'
@@ -42,7 +43,7 @@ export default function StockSearchView({
   const hasSearchResult = filteredStocks.length > 0
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
+    <main className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
       <StatusBar
         hasStatusArea
         className="w-full [&>div:last-child]:px-0"
@@ -93,9 +94,10 @@ export default function StockSearchView({
                   <StockRankItem
                     rank={searchKeyword.trim() ? undefined : index + 1}
                     logo={
-                      <img
-                        src={stock.logoUrl}
+                      <Image
+                        src={stock.logoUrl!}
                         alt={`${stock.name} 로고`}
+                        responsiveSize="none"
                         className="h-full w-full object-cover"
                       />
                     }
