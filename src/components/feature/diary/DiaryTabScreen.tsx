@@ -1,14 +1,11 @@
 import type { ReactNode } from 'react'
 
-import { Badge } from '@/components/common/Badge'
+
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import Logo from '@/components/logos/logo-small.svg?react'
+import { useMyUser } from '@/hooks/queries/useMy'
 
 import { type DiaryView, DiaryViewTabs } from './DiaryViewTabs'
-
-// TODO: User 도메인 연동 시 보유 AP로 대체
-const MOCK_AP = 1280
-
 export interface DiaryTabScreenProps {
   /** 현재 활성 탭 */
   view: DiaryView
@@ -23,16 +20,19 @@ export interface DiaryTabScreenProps {
  * 하단 NavigationBar 는 루트 레이아웃에서 배치되므로 여기서는 여백만 확보한다.
  */
 export function DiaryTabScreen({ view, onChangeView, children }: DiaryTabScreenProps) {
+  const { data: userResponse } = useMyUser()
+  const balanceAp = userResponse?.balanceAp ?? 0
+
   return (
     <div className="bg-Background1 flex min-h-full flex-col">
       <StatusBar
         hasStatusArea={false}
-        left={<Logo width={84} height={24} aria-label="BRIFO" />}
+        left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
         right={
           <div className="flex items-center gap-3">
-            <Badge type="ap" className="bg-Yellow-80 text-Yellow-20">
-              {`${MOCK_AP.toLocaleString()} AP`}
-            </Badge>
+            <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
+              {`${balanceAp.toLocaleString()} AP`}
+            </div>
             <StatusBarNotificationButton />
           </div>
         }

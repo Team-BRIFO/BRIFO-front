@@ -46,7 +46,7 @@ const BADGE_STYLES: Record<BadgeType, BadgeStyle> = {
     size: 'lg',
   },
   gray: {
-    className: 'bg-Gray-1 text-Gray-5',
+    className: 'bg-Background1 text-Gray-5',
     size: 'lg',
   },
   hash: {
@@ -62,7 +62,7 @@ const BADGE_STYLES: Record<BadgeType, BadgeStyle> = {
     size: 'sm',
   },
   watch: {
-    className: 'bg-Gray-1 text-Gray-5',
+    className: 'bg-Background1 text-Gray-5',
     size: 'sm',
   },
   fall: {
@@ -82,7 +82,7 @@ const BADGE_STYLES: Record<BadgeType, BadgeStyle> = {
     size: 'lg',
   },
   progress: {
-    className: 'bg-Gray-1 text-Gray-5',
+    className: 'bg-Background1 text-Gray-5',
     size: 'lg',
   },
   hot: {
@@ -134,7 +134,7 @@ const SIZE_STYLES: Record<BadgeSize, string> = {
   sm: 'h-4 px-2 pretendard-Caption1',
   md: 'h-5 px-2 pretendard-Caption1 gap-1',
   lg: 'h-6 px-3 pretendard-Caption1',
-  xl: 'h-[26px] px-3 pretendard-Caption1',
+  xl: 'h-[1.625rem] px-3 pretendard-Caption1',
 }
 
 const INDICATOR_SIZE_STYLES: Record<BadgeSize, string> = {

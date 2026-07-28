@@ -38,11 +38,15 @@ export function AppLayout() {
     navigate(NAVIGATION_PATHS[value])
   }
   return (
-    <div className="relative mx-auto flex h-[100dvh] w-full max-w-[768px] flex-col overflow-hidden">
-      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+    <div className="bg-White relative mx-auto flex h-[100dvh] w-full max-w-[768px] flex-col overflow-hidden shadow-xl">
+      <main
+        className={`flex min-h-0 flex-1 flex-col overflow-y-auto ${
+          selectedNavigation === 'diary' ? 'bg-Background1' : ''
+        }`}
+      >
         <Outlet />
       </main>
-      <div className="fixed right-0 bottom-0 left-0 z-40 flex justify-center">
+      <div className="z-40 flex w-full shrink-0 justify-center">
         <NavigationBar
           value={selectedNavigation}
           onChange={handleNavigationChange}

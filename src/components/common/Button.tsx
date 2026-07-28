@@ -29,7 +29,7 @@ const solidStyles = {
     'bg-Yellow-80 text-Yellow-20 hover:bg-Yellow-70 hover:text-Yellow-10 active:bg-Yellow-60 active:text-Yellow-5 disabled:bg-Gray-3 disabled:text-Gray-5',
 
   assistive:
-    'bg-Gray-1 text-Gray-7 hover:bg-Gray-2 active:bg-Gray-3 active:text-Gray-8 disabled:bg-Gray-3 disabled:text-Gray-5',
+    'bg-Background1 text-Gray-7 hover:bg-Gray-2 active:bg-Gray-3 active:text-Gray-8 disabled:bg-Gray-3 disabled:text-Gray-5',
 }
 
 const outlineStyles = {

@@ -34,7 +34,7 @@ export function StatusBarBackButton({ className = '', ...props }: StatusBarActio
       )}
       {...props}
     >
-      <ChevronLeftIcon width={24} height={24} aria-hidden="true" />
+      <ChevronLeftIcon className="h-full w-full" aria-hidden="true" />
     </button>
   )
 }
@@ -55,7 +55,7 @@ export function StatusBarNotificationButton({
       )}
       {...props}
     >
-      <BellIcon width={24} height={24} aria-hidden="true" />
+      <BellIcon className="h-full w-full" aria-hidden="true" />
     </button>
   )
 }

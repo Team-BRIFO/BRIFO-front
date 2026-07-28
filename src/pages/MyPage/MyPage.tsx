@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-import { Badge } from '@/components/common/Badge'
+
 import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import { MyHome } from '@/components/feature/my/MyHome'
@@ -35,15 +35,12 @@ export function MyPage() {
     <div className="bg-Background1 flex min-h-full flex-col">
       <StatusBar
         hasStatusArea={false}
-        left={<Logo width={84} height={24} aria-label="BRIFO" />}
+        left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
         right={
           <div className="flex items-center gap-3">
-            <Badge
-              type="ap"
-              className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 h-auto gap-0.5 rounded-2xl py-2 pr-3 pl-4"
-            >
+            <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
               {`${apSummary.balance.toLocaleString()} AP`}
-            </Badge>
+            </div>
             <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
           </div>
         }

@@ -86,8 +86,7 @@ export function Icon({
 
   return (
     <IconComponent
-      width={size}
-      height={size}
+      style={{ width: `${size / 16}rem`, height: `${size / 16}rem` }}
       className={finalClassName || undefined}
       aria-hidden={isDecorative ? 'true' : undefined}
       aria-label={!isDecorative ? ariaLabel : undefined}

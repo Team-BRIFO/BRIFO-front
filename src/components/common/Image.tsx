@@ -23,11 +23,11 @@ export function Image({
 }: ImageProps) {
   let sizeClasses = ''
   if (responsiveSize === 'sm') {
-    sizeClasses = 'max-w-[120px] md:max-w-[200px]'
+    sizeClasses = 'max-w-[7.5rem] md:max-w-[12.5rem]'
   } else if (responsiveSize === 'md') {
-    sizeClasses = 'max-w-[200px] md:max-w-[300px]'
+    sizeClasses = 'max-w-[12.5rem] md:max-w-[18.75rem]'
   } else if (responsiveSize === 'lg') {
-    sizeClasses = 'max-w-full md:max-w-[500px]'
+    sizeClasses = 'max-w-full md:max-w-[31.25rem]'
   }
 
   return (

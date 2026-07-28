@@ -60,7 +60,7 @@ export function DiaryCalendarDay({
             />
           ))
         ) : (
-          <span className="bg-Gray-1 h-1 w-1 rounded-full" />
+          <span className="bg-Background1 h-1 w-1 rounded-full" />
         )}
       </span>
     </button>

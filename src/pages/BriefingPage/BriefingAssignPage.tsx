@@ -123,7 +123,7 @@ export function BriefingAssignPage() {
               )
             })}
             {/* 합계 AP 문구 */}
-            <div className="bg-Gray-1 flex w-full items-center justify-between rounded-lg px-4 py-3">
+            <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
               <span className="pretendard-Caption1 text-Gray-9">선택한 사원 일급 합계</span>
               <span className="dnf-Caption1 text-Pink-30">{totalAP} AP</span>
             </div>

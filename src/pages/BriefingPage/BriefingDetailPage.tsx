@@ -52,7 +52,7 @@ export function BriefingDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="bg-Gray-1 flex h-screen w-full flex-col items-center justify-center">
+      <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
         <p className="pretendard-Body1 text-Gray-6">브리핑을 불러오는 중...</p>
       </div>
     )
@@ -60,7 +60,7 @@ export function BriefingDetailPage() {
 
   if (isError || !response) {
     return (
-      <div className="bg-Gray-1 flex h-screen w-full flex-col items-center justify-center">
+      <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
         <p className="pretendard-Body1 text-Pink-30">브리핑 데이터를 불러오지 못했습니다.</p>
       </div>
     )
@@ -102,7 +102,7 @@ export function BriefingDetailPage() {
   }
 
   return (
-    <div className="bg-Gray-1 flex h-screen w-full flex-col gap-3">
+    <div className="bg-Background1 flex h-screen w-full flex-col gap-3">
       {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
       <StatusBar
         className="bg-White"

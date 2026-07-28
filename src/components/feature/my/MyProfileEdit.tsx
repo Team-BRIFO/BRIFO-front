@@ -160,7 +160,7 @@ export function MyProfileEdit({
                 disabled
                 aria-disabled="true"
                 title="종목 추가 플로우는 디자인 확인 후 연결 예정"
-                className="pretendard-Caption1 text-Gray-5 bg-Gray-1 w-fit cursor-not-allowed rounded-[20px] px-3 py-1.5 leading-none"
+                className="pretendard-Caption1 text-Gray-5 bg-Background1 w-fit cursor-not-allowed rounded-[20px] px-3 py-1.5 leading-none"
               >
                 + 종목추가
               </button>

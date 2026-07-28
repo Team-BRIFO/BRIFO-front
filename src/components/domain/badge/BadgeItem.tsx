@@ -11,12 +11,12 @@ export interface BadgeItemProps extends Omit<ButtonHTMLAttributes<HTMLButtonElem
    * TODO: 배지 아이콘 에셋(iconKey → SVG) 확정 전까지는 미전달 시 기본 아이콘으로 대체된다.
    */
   icon?: ReactNode
-  /** 아이콘 원 크기(px). 기본 60 (피그마) */
-  size?: number
+  /** 아이콘 원 크기 (기본값 w-full). 더 이상 px 기반으로 고정되지 않고 css width에 비례합니다. */
+  size?: number | string
 }
 
 /** 업적 배지 한 개 (획득/미획득 상태) — 피그마 업적 */
-export function BadgeItem({ badge, icon, size = 60, className = '', ...props }: BadgeItemProps) {
+export function BadgeItem({ badge, icon, size, className = '', ...props }: BadgeItemProps) {
   const { name, isUnlocked } = badge
 
   return (
@@ -31,10 +31,15 @@ export function BadgeItem({ badge, icon, size = 60, className = '', ...props }: 
       {...props}
     >
       <span
-        style={{ width: size, height: size }}
+        style={
+          typeof size === 'number'
+            ? { width: `${size / 16}rem`, height: `${size / 16}rem` }
+            : undefined
+        }
         className={twMerge(
           'flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-solid',
-          isUnlocked ? 'border-Yellow-60 bg-Yellow-100' : 'border-Gray-2 bg-Gray-1',
+          size === undefined && 'aspect-square w-full',
+          isUnlocked ? 'border-Yellow-60 bg-Yellow-100' : 'border-Gray-2 bg-Background1',
         )}
       >
         <span
