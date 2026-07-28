@@ -3,22 +3,25 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import CelebrationImage from '@/assets/characters/celebration.svg?react'
 import Button from '@/components/common/Button'
+import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { BriefingCard } from '@/components/domain/briefing/BriefingCard'
-import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
+import { ErrorView } from '@/components/feature/error/ErrorView'
 import { PATH } from '@/routes/paths'
+import type { BriefingRequestResult } from '@/types/domain/briefing'
+
+import { useCardNewsBriefingsQuery } from './hooks/useBriefingQueries'
 
 export function BriefingCompletePage() {
   const { cardId } = useParams<{ cardId: string }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const result = location.state?.result as { requestedAgents: { agentId: string }[] } | undefined
+  const briefingRequest = location.state?.briefingRequest as BriefingRequestResult | undefined
 
   // 해당 카드뉴스 종목명 확보를 위해 브리핑 목록 조회 재사용 (이미 캐싱되어 빠름)
-  const { data: cardNewsData } = useGetCardNewsBriefings(cardId ?? null)
-  const stockName = cardNewsData?.result?.stock?.name ?? '삼성전자'
+  const cardNewsQuery = useCardNewsBriefingsQuery(cardId ?? null)
 
-  const agentCount = result?.requestedAgents?.length ?? 3
+  const agentCount = briefingRequest?.requestedAgents.length ?? 3
 
   // 임시 테스트용 상태 (순차적 뱃지 변경)
   const [mockAgents, setMockAgents] = useState<string[]>([])
@@ -38,6 +41,28 @@ export function BriefingCompletePage() {
   // 모든 사원이 완료되었는지 확인
   const isAllComplete =
     mockAgents.includes('rookie') && mockAgents.includes('pro') && mockAgents.includes('tanker')
+
+  if (cardNewsQuery.isError && !cardNewsQuery.data) {
+    return (
+      <div className="bg-Background1 flex min-h-screen flex-col">
+        <StatusBar left={<StatusBarBackButton />} />
+        <div className="px-4 py-6">
+          <ErrorView
+            title="브리핑 정보를 불러오지 못했어요"
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => cardNewsQuery.refetch()}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  if (!cardNewsQuery.data) {
+    return <Loading className="py-10" />
+  }
+
+  const stockName = cardNewsQuery.data.stock.name
 
   return (
     <div className="bg-White box-border flex h-screen w-full flex-col px-4">

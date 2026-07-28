@@ -1,22 +1,26 @@
 import { useNavigate } from 'react-router-dom'
 
+import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { ErrorView } from '@/components/feature/error/ErrorView'
 import { AgentListSection } from '@/components/feature/myEmployee/AgentListSection'
 import Logo from '@/components/logos/logo-small.svg?react'
-import { useMyUser } from '@/hooks/queries/useMy'
+import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
+import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { PATH } from '@/routes/paths'
-import { mapAgentListItem } from '@/utils/agentMapper'
 
-import { MOCK_AGENT_LIST_RESPONSE } from './mockAgents'
 /** 팀 탭 - SCR-12: 사원 관리 인사팀 화면 (Level/EXP, 일급) */
 export function TeamPage() {
   const navigate = useNavigate()
 
-  // TODO: useQuery 로 교체 (지금은 mock 응답 → 도메인 매핑)
-  const agents = MOCK_AGENT_LIST_RESPONSE.result.items.map(mapAgentListItem)
-
-  const { data: userResponse } = useMyUser()
-  const balanceAp = userResponse?.balanceAp ?? 0
+  const agentsQuery = useAgentListQuery()
+  const userQuery = useUserProfileQuery()
+  const balanceText = userQuery.data
+    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
+    : userQuery.isError
+      ? 'AP 조회 실패'
+      : 'AP 불러오는 중'
+  const agents = agentsQuery.data
 
   return (
     <div className="flex flex-1 flex-col">
@@ -26,7 +30,7 @@ export function TeamPage() {
         right={
           <div className="flex items-center gap-3">
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-              {`${balanceAp.toLocaleString()} AP`}
+              {balanceText}
             </div>
             <StatusBarNotificationButton />
           </div>
@@ -34,10 +38,23 @@ export function TeamPage() {
       />
 
       <div className="px-4 py-4">
-        <AgentListSection
-          agents={agents}
-          onSelectAgent={(agentId) => navigate(PATH.TEAM_DETAIL(agentId))}
-        />
+        {agentsQuery.isError && !agents ? (
+          <ErrorView
+            title="사원 목록을 불러오지 못했어요"
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => agentsQuery.refetch()}
+          />
+        ) : !agents ? (
+          <Loading className="py-10" />
+        ) : agents.length === 0 ? (
+          <ErrorView title="아직 등록된 사원이 없어요" description="새 사원을 배치해보세요." />
+        ) : (
+          <AgentListSection
+            agents={agents}
+            onSelectAgent={(agentId) => navigate(PATH.TEAM_DETAIL(agentId))}
+          />
+        )}
       </div>
     </div>
   )
