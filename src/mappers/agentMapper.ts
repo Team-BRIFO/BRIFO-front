@@ -1,20 +1,23 @@
 import type { AgentDetailResponse, AgentListItemResponse, AgentTypeCode } from '@/types/api/agent'
 import type { AgentDetail, AgentSummary, AgentType } from '@/types/domain/agent'
 
-/** 서버 타입 코드 → 도메인 타입 */
 export const AGENT_TYPE_BY_CODE: Record<AgentTypeCode, AgentType> = {
   ROOKIE: 'rookie',
   PRO: 'pro',
   TANKER: 'tanker',
 }
 
-// TODO: 백엔드에서 레벨별 필요 EXP(nextLevelExp) 확정 시 교체 — 현재는 임시 규칙(레벨당 고정)
+export function mapAgentType(code: string): AgentType {
+  if (code === 'PRO') return 'pro'
+  if (code === 'TANKER') return 'tanker'
+  return 'rookie'
+}
+
 const EXP_PER_LEVEL = 500
 
 const getLevelProgress = (exp: number, max: number) =>
   max > 0 ? Math.min(Math.max(Math.round((exp / max) * 100), 0), 100) : 0
 
-/** 목록 아이템 응답 → 도메인 AgentSummary */
 export function mapAgentListItem(item: AgentListItemResponse): AgentSummary {
   return {
     id: item.agentId,
@@ -28,7 +31,6 @@ export function mapAgentListItem(item: AgentListItemResponse): AgentSummary {
   }
 }
 
-/** 상세 응답 → 도메인 AgentDetail */
 export function mapAgentDetail(res: AgentDetailResponse): AgentDetail {
   const max = EXP_PER_LEVEL
 

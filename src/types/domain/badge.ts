@@ -25,3 +25,8 @@ export interface BadgeProgress {
   /** 전체 배지 수 */
   totalCount: number
 }
+
+export interface BadgeDetail {
+  badge: Badge
+  rewardAp: number
+}

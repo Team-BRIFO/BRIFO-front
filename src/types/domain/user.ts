@@ -41,3 +41,22 @@ export interface UserProfileFormValues {
   companyName: string
   interestStocks: UserInterestStock[]
 }
+
+/** 프로필 저장 API가 필드 단위로 반환할 수 있는 오류 */
+export type UserProfileFieldErrors = Partial<Record<keyof UserProfileFormValues, string>>
+
+/** Swagger 연동 전 mock이 보완하는 프로필 표시 정보 */
+export interface UserProfileMeta {
+  id: string
+  jobTitle: string
+  characterType: AgentType
+  interestStocks: UserInterestStock[]
+}
+
+/** 사용자 Query Cache에 저장되는 화면 모델 */
+export interface UserOverview {
+  profile: UserProfile
+  stats: UserStats
+  apSummary: import('./ap').ApSummary
+  profileFormValues: UserProfileFormValues
+}

@@ -1,7 +1,7 @@
 /**
  * 결정일기(Decision Diary) 도메인 타입
  * - SCR-08 캘린더 / SCR-09 리스트 / SCR-10 결정카드 상세 / 통계
- * - 서버 응답 → 도메인 변환은 utils/diaryMapper 에서 처리한다.
+ * - 서버 응답 → 도메인 변환은 mappers/diaryMapper 에서 처리한다.
  */
 
 /** 결정 방향 (상승 / 하락 / 관망) */
@@ -78,6 +78,16 @@ export interface DiaryDetail {
   shareImageUrl: string | null
   /** 이미지 대체 텍스트에만 사용 */
   stockName: string
+}
+
+export interface DiaryShareImage {
+  diaryId: string
+  shareImageUrl: string
+}
+
+export interface DiaryCalendarData {
+  marks: DiaryDayMark[]
+  hitRate: DiaryHitRate
 }
 
 /** 통계 상단 요약 타일 1개 */
