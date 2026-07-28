@@ -1,0 +1,1566 @@
+﻿diff --git a/src/components/common/NavigationBar.tsx b/src/components/common/NavigationBar.tsx
+index b20460b..7711222 100644
+--- a/src/components/common/NavigationBar.tsx
++++ b/src/components/common/NavigationBar.tsx
+@@ -7,7 +7,7 @@ import HomeIcon from '@/assets/icons/home-5.svg?react'
+ import MyIcon from '@/assets/icons/user-2.svg?react'
+ import NavigationItem from '@/components/common/NavigationItem'
+ 
+-export type NavigationValue = 'briefing' | 'team' | 'home' | 'diary' | 'my'
++export type NavigationValue = 'office' | 'team' | 'home' | 'diary' | 'my'
+ 
+ interface NavigationBarProps {
+   value?: NavigationValue
+@@ -19,13 +19,13 @@ interface NavigationBarProps {
+ 
+ const NAV_ITEMS = [
+   {
+-    value: 'briefing',
+-    label: '釉뚮━??,
++    value: 'team',
++    label: '?ъ썝',
+     icon: BriefingIcon,
+   },
+   {
+-    value: 'team',
+-    label: '?',
++    value: 'office',
++    label: '?щТ??,
+     icon: TeamIcon,
+   },
+   {
+diff --git a/src/components/common/StatusBar.tsx b/src/components/common/StatusBar.tsx
+index c76f18d..b9482ea 100644
+--- a/src/components/common/StatusBar.tsx
++++ b/src/components/common/StatusBar.tsx
+@@ -70,7 +70,7 @@ export function StatusBarSkipButton({
+       type="button"
+       className={twMerge(
+         'pretendard-Caption1 text-Gray-6 shrink-0',
+-        'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
++        'focus-visible:ring-Yellow-45 underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none',
+         className,
+       )}
+       {...props}
+diff --git a/src/components/domain/stock/StockRankItem.tsx b/src/components/domain/stock/StockRankItem.tsx
+index 7ec125c..969d028 100644
+--- a/src/components/domain/stock/StockRankItem.tsx
++++ b/src/components/domain/stock/StockRankItem.tsx
+@@ -1,5 +1,6 @@
+ import type { ReactNode } from 'react'
+ 
++import FilledHeartIcon from '@/assets/icons/filledHeart.svg?react'
+ import HeartIcon from '@/assets/icons/heart.svg?react'
+ 
+ interface StockRankItemProps {
+@@ -56,11 +57,11 @@ export default function StockRankItem({
+         aria-label={isFavorite ? '愿??醫낅ぉ ?댁젣' : '愿??醫낅ぉ 異붽?'}
+         className="ml-4 flex h-5 w-5 shrink-0 items-center justify-center"
+       >
+-        <HeartIcon
+-          className={`h-5 w-5 ${
+-            isFavorite ? 'fill-Yellow-45 text-Yellow-45' : 'text-Yellow-45 fill-none'
+-          }`}
+-        />
++        {isFavorite ? (
++          <FilledHeartIcon className="text-Yellow-45 h-5 w-5" aria-hidden="true" />
++        ) : (
++          <HeartIcon className="text-Yellow-45 h-5 w-5" aria-hidden="true" />
++        )}
+       </button>
+     </div>
+   )
+diff --git a/src/components/feature/home/AttendanceWeekProgress.tsx b/src/components/feature/home/AttendanceWeekProgress.tsx
+index 38b1ec9..9c6b628 100644
+--- a/src/components/feature/home/AttendanceWeekProgress.tsx
++++ b/src/components/feature/home/AttendanceWeekProgress.tsx
+@@ -6,13 +6,10 @@ const DAYS = ['??, '??, '??, '紐?, '湲?, '??, '??] as const
+ 
+ interface AttendanceWeekProgressProps {
+   attendedDays: number
+-  totalDays?: number
+ }
+ 
+-export default function AttendanceWeekProgress({
+-  attendedDays,
+-  totalDays = 7,
+-}: AttendanceWeekProgressProps) {
++export default function AttendanceWeekProgress({ attendedDays }: AttendanceWeekProgressProps) {
++  const totalDays = DAYS.length
+   const safeAttendedDays = Math.min(Math.max(attendedDays, 0), totalDays)
+ 
+   return (
+diff --git a/src/components/feature/onboarding/InterestStockSection.tsx b/src/components/feature/onboarding/InterestStockSection.tsx
+new file mode 100644
+index 0000000..b40e50a
+--- /dev/null
++++ b/src/components/feature/onboarding/InterestStockSection.tsx
+@@ -0,0 +1,115 @@
++import { useMemo } from 'react'
++
++import { TextField } from '@/components/common/TextField'
++import StockRankItem from '@/components/domain/stock/StockRankItem'
++import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
++
++interface InterestStockSectionProps {
++  stocks: OnboardingStock[]
++  searchKeyword: string
++  selectedStockIds: number[]
++  onToggleStock: (stockId: number) => void
++  onOpenSearch: () => void
++}
++
++export default function InterestStockSection({
++  stocks,
++  searchKeyword,
++  selectedStockIds,
++  onToggleStock,
++  onOpenSearch,
++}: InterestStockSectionProps) {
++  const filteredStocks = useMemo(() => {
++    const normalizedKeyword = searchKeyword.trim().toLowerCase()
++
++    if (!normalizedKeyword) return stocks
++
++    return stocks.filter((stock) => stock.name.toLowerCase().includes(normalizedKeyword))
++  }, [searchKeyword, stocks])
++
++  const selectedStocks = useMemo(
++    () => stocks.filter((stock) => selectedStockIds.includes(stock.id)),
++    [selectedStockIds, stocks],
++  )
++
++  const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
++    if (event.key === 'Enter') {
++      event.preventDefault()
++      onOpenSearch()
++    }
++  }
++
++  return (
++    <section className="mt-8">
++      <div onClick={onOpenSearch} onKeyDown={handleSearchKeyDown} className="cursor-pointer">
++        <div className="pointer-events-none">
++          <TextField
++            name="stockSearch"
++            variant="search"
++            label="愿?ъ쥌紐?
++            value={searchKeyword}
++            placeholder="肄붿뒪??200 醫낅ぉ 寃??
++            readOnly
++            onChange={() => {}}
++          />
++        </div>
++      </div>
++
++      <div className="mt-5">
++        <h2 className="pretendard-Caption1 text-Yellow-30">?꾩옱 ?멸린 醫낅ぉ</h2>
++
++        <div className="border-Gray-2 mt-3 overflow-hidden rounded-xl border">
++          {filteredStocks.length > 0 ? (
++            filteredStocks.map((stock, index) => (
++              <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
++                <StockRankItem
++                  rank={index + 1}
++                  logo={
++                    <img
++                      src={stock.logoUrl}
++                      alt={`${stock.name} 濡쒓퀬`}
++                      className="h-full w-full object-cover"
++                    />
++                  }
++                  name={stock.name}
++                  price={stock.price}
++                  changeRate={stock.changeRate}
++                  isFavorite={selectedStockIds.includes(stock.id)}
++                  onToggleFavorite={() => onToggleStock(stock.id)}
++                  onClick={() => onToggleStock(stock.id)}
++                />
++              </div>
++            ))
++          ) : (
++            <div className="pretendard-Body2-Regular text-Gray-5 flex h-24 items-center justify-center">
++              寃??寃곌낵媛 ?놁뒿?덈떎.
++            </div>
++          )}
++        </div>
++      </div>
++
++      <div className="mt-5">
++        <h2 className="pretendard-Body2-Medium text-Yellow-30 font-semibold">?섏쓽 愿?ъ쥌紐?/h2>
++
++        {selectedStocks.length > 0 ? (
++          <div className="mt-3 flex flex-wrap gap-2">
++            {selectedStocks.map((stock) => (
++              <button
++                key={stock.id}
++                type="button"
++                onClick={() => onToggleStock(stock.id)}
++                className="pretendard-Caption2 bg-Yellow-100 text-Yellow-20 flex items-center gap-2 rounded-full px-3 py-1.5"
++              >
++                <span>{stock.name}</span>
++                <span aria-hidden="true">횞</span>
++                <span className="sr-only">{stock.name} 愿??醫낅ぉ ?댁젣</span>
++              </button>
++            ))}
++          </div>
++        ) : (
++          <p className="pretendard-Caption2 text-Gray-5 mt-3">{/*?뺤씤 ?꾩슂*/}</p>
++        )}
++      </div>
++    </section>
++  )
++}
+diff --git a/src/components/feature/onboarding/LoginSection.tsx b/src/components/feature/onboarding/LoginSection.tsx
+new file mode 100644
+index 0000000..1ae9d8a
+--- /dev/null
++++ b/src/components/feature/onboarding/LoginSection.tsx
+@@ -0,0 +1,40 @@
++import Logo from '@/assets/logo/brifo_logo.svg?react'
++import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
++import SocialLoginButton from '@/components/feature/onboarding/SocialLoginButton'
++
++interface LoginSectionProps {
++  onKakaoLogin: () => void
++  onNaverLogin: () => void
++  onBack: () => void
++}
++
++export default function LoginSection({ onKakaoLogin, onNaverLogin, onBack }: LoginSectionProps) {
++  return (
++    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
++      <div className="flex h-15 items-center justify-between">
++        <StatusBar
++          className="w-full [&>div:last-child]:px-0"
++          hasStatusArea
++          left={<StatusBarBackButton onClick={onBack} />}
++        />
++      </div>
++
++      <div className="flex flex-1 flex-col items-center pt-44">
++        <Logo className="w-50" />
++
++        <p className="pretendard-Body1-Semibold mt-2 text-[#FF9500]">?섎뒗 ?ъ옣, AI???ъ썝</p>
++
++        <div className="mt-26 flex w-full flex-col gap-2 px-4">
++          <SocialLoginButton provider="kakao" onClick={onKakaoLogin} />
++          <SocialLoginButton provider="naver" onClick={onNaverLogin} />
++        </div>
++      </div>
++
++      <p className="pretendard-Caption3 text-Gray-5 pb-8 text-center whitespace-pre-line">
++        濡쒓렇????蹂??쒕퉬???쎄????숈쓽??寃껋쑝濡?+        {'\n'}
++        媛꾩＜?⑸땲??
++      </p>
++    </main>
++  )
++}
+diff --git a/src/components/feature/onboarding/OnboardingSlide.tsx b/src/components/feature/onboarding/OnboardingSlide.tsx
+new file mode 100644
+index 0000000..81f7f21
+--- /dev/null
++++ b/src/components/feature/onboarding/OnboardingSlide.tsx
+@@ -0,0 +1,88 @@
++import Button from '@/components/common/Button'
++import { StatusBar, StatusBarBackButton, StatusBarSkipButton } from '@/components/common/StatusBar'
++
++interface OnboardingSlideProps {
++  image: string
++  title: string
++  highlightedText: string
++  description: string
++  currentStep: number
++  totalSteps: number
++  onNext: () => void
++  onBack?: () => void
++  onSkip?: () => void
++}
++
++export default function OnboardingSlide({
++  image,
++  title,
++  highlightedText,
++  description,
++  currentStep,
++  totalSteps,
++  onNext,
++  onBack,
++  onSkip,
++}: OnboardingSlideProps) {
++  const titleParts = title.split(highlightedText)
++
++  return (
++    <div className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
++      <div className="flex h-15 items-center justify-between">
++        <StatusBar
++          className="w-full [&>div:last-child]:px-0"
++          hasStatusArea
++          left={onBack ? <StatusBarBackButton onClick={onBack} /> : undefined}
++          right={<StatusBarSkipButton onClick={onSkip} />}
++        />
++      </div>
++
++      <div className="flex flex-1 flex-col items-center">
++        <div className="mt-8 flex h-52 w-full items-center justify-center">
++          <img src={image} alt="" aria-hidden="true" className="h-full w-full object-contain" />
++        </div>
++
++        <div className="mt-7 text-center">
++          <h1 className="dnf-Title2 text-Gray-10 whitespace-pre-line">
++            {titleParts[0]}
++            <span className="text-Yellow-40">{highlightedText}</span>
++            {titleParts[1]}
++          </h1>
++
++          <p className="pretendard-Body2-Semibold mt-4 whitespace-pre-line text-[#8A8499]">
++            {description}
++          </p>
++        </div>
++
++        <div
++          className="mt-6 flex items-center gap-1.5"
++          aria-label={`${totalSteps}?④퀎 以?${currentStep}?④퀎`}
++        >
++          {Array.from({ length: totalSteps }, (_, index) => {
++            const isActive = index + 1 === currentStep
++
++            return (
++              <span
++                key={index}
++                className={`h-2.5 rounded-full transition-all ${
++                  isActive ? 'bg-Yellow-45 w-6' : 'bg-Gray-3 w-2.5'
++                }`}
++              />
++            )
++          })}
++        </div>
++      </div>
++
++      <Button
++        type="button"
++        size="lg"
++        color="primary"
++        isFullWidth
++        onClick={onNext}
++        className="mx-auto h-15 w-82 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
++      >
++        ?ㅼ쓬
++      </Button>
++    </div>
++  )
++}
+diff --git a/src/components/feature/onboarding/StockSearchView.tsx b/src/components/feature/onboarding/StockSearchView.tsx
+new file mode 100644
+index 0000000..d2031cb
+--- /dev/null
++++ b/src/components/feature/onboarding/StockSearchView.tsx
+@@ -0,0 +1,131 @@
++import { useMemo } from 'react'
++
++import NotFound from '@/assets/images/not_found.svg?react'
++import Button from '@/components/common/Button'
++import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
++import { TextField } from '@/components/common/TextField'
++import StockRankItem from '@/components/domain/stock/StockRankItem'
++import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
++
++interface StockSearchViewProps {
++  stocks: OnboardingStock[]
++  searchKeyword: string
++  selectedStockIds: number[]
++  onSearchKeywordChange: (value: string) => void
++  onToggleStock: (stockId: number) => void
++  onBack: () => void
++  onComplete: () => void
++}
++
++export default function StockSearchView({
++  stocks,
++  searchKeyword,
++  selectedStockIds,
++  onSearchKeywordChange,
++  onToggleStock,
++  onBack,
++  onComplete,
++}: StockSearchViewProps) {
++  const selectedStocks = useMemo(
++    () => stocks.filter((stock) => selectedStockIds.includes(stock.id)),
++    [stocks, selectedStockIds],
++  )
++
++  const filteredStocks = useMemo(() => {
++    const keyword = searchKeyword.trim().toLowerCase()
++
++    if (!keyword) return stocks
++
++    return stocks.filter((stock) => stock.name.toLowerCase().includes(keyword))
++  }, [stocks, searchKeyword])
++
++  const hasSearchResult = filteredStocks.length > 0
++
++  return (
++    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
++      <StatusBar
++        hasStatusArea
++        className="w-full [&>div:last-child]:px-0"
++        left={<StatusBarBackButton onClick={onBack} />}
++      />
++
++      <div className="mt-4">
++        <TextField
++          name="stockSearch"
++          variant="search"
++          value={searchKeyword}
++          placeholder="肄붿뒪??200 醫낅ぉ 寃??
++          onChange={(event) => onSearchKeywordChange(event.target.value)}
++          onClear={() => onSearchKeywordChange('')}
++        />
++      </div>
++
++      {!searchKeyword.trim() && selectedStocks.length > 0 && (
++        <section className="mt-5">
++          <h2 className="pretendard-Body2-Semibold text-Yellow-30">?섏쓽 愿?ъ쥌紐?/h2>
++
++          <div className="mt-3 flex flex-wrap gap-2">
++            {selectedStocks.map((stock) => (
++              <button
++                key={stock.id}
++                type="button"
++                onClick={() => onToggleStock(stock.id)}
++                className="pretendard-Caption2 bg-Yellow-100 text-Yellow-20 flex items-center gap-1 rounded-full px-3 py-1.5"
++              >
++                {stock.name}
++                <span aria-hidden="true">횞</span>
++              </button>
++            ))}
++          </div>
++        </section>
++      )}
++
++      <section className="mt-7 flex-1">
++        {hasSearchResult ? (
++          <>
++            {!searchKeyword.trim() && (
++              <h2 className="pretendard-Body2-Semibold text-Yellow-30 mb-3">?꾩옱 ?멸린 醫낅ぉ ??궧</h2>
++            )}
++
++            <div className="border-Gray-2 overflow-hidden rounded-xl border">
++              {filteredStocks.map((stock, index) => (
++                <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
++                  <StockRankItem
++                    rank={searchKeyword.trim() ? undefined : index + 1}
++                    logo={
++                      <img
++                        src={stock.logoUrl}
++                        alt={`${stock.name} 濡쒓퀬`}
++                        className="h-full w-full object-cover"
++                      />
++                    }
++                    name={stock.name}
++                    price={stock.price}
++                    changeRate={stock.changeRate}
++                    isFavorite={selectedStockIds.includes(stock.id)}
++                    onToggleFavorite={() => onToggleStock(stock.id)}
++                    onClick={() => onToggleStock(stock.id)}
++                  />
++                </div>
++              ))}
++            </div>
++          </>
++        ) : (
++          <div className="flex h-full min-h-80 flex-col items-center justify-center">
++            <NotFound className="h-34 w-40" />
++          </div>
++        )}
++      </section>
++
++      <Button
++        type="button"
++        isFullWidth
++        disabled={selectedStockIds.length < 3}
++        onClick={onComplete}
++        className="mt-6"
++      >
++        ?꾨즺
++      </Button>
++    </main>
++  )
++}
+diff --git a/src/components/feature/onboarding/UserAgreementItem.tsx b/src/components/feature/onboarding/UserAgreementItem.tsx
+index 391ae5f..06849cf 100644
+--- a/src/components/feature/onboarding/UserAgreementItem.tsx
++++ b/src/components/feature/onboarding/UserAgreementItem.tsx
+@@ -7,6 +7,9 @@ interface UserAgreementItemProps {
+   checked: boolean
+   onToggle?: () => void
+   onView?: () => void
++  showType?: boolean
++  className?: string
++  variant?: 'default' | 'all'
+ }
+ 
+ export default function UserAgreementItem({
+@@ -15,27 +18,43 @@ export default function UserAgreementItem({
+   checked,
+   onToggle,
+   onView,
++  showType = true,
++  className = '',
++  variant = 'default',
+ }: UserAgreementItemProps) {
+   return (
+-    <div className="flex items-center justify-between px-3 py-3">
++    <div className="flex items-center justify-between py-3">
+       <button type="button" onClick={onToggle} className="flex items-center gap-3">
+-        <CheckIcon className={`h-5 w-5 ${checked ? 'text-Yellow-45' : 'text-Gray-6'}`} />
++        {variant === 'all' ? (
++          <span
++            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
++              checked ? 'bg-Yellow-45' : 'bg-Gray-3'
++            }`}
++          >
++            <CheckIcon className={`h-4 w-4 ${checked ? 'text-White' : 'text-Gray-6'}`} />
++          </span>
++        ) : (
++          <CheckIcon className={`h-5 w-5 shrink-0 ${checked ? 'text-Yellow-45' : 'text-Gray-6'}`} />
++        )}
++        <span className={className || 'pretendard-Caption2 text-Gray-7'}>
++          {showType && type === 'required' && <span className="text-Pink-30 mr-1">(?꾩닔)</span>}
++
++          {showType && type === 'optional' && <span className="text-Gray-5 mr-1">(?좏깮)</span>}
+ 
+-        <span className="pretendard-Caption2 text-Gray-7">
+-          {type === 'required' && <span className="text-Pink-30 mr-1">(?꾩닔)</span>}
+-          {type === 'optional' && <span className="text-Gray-5 mr-1">(?좏깮)</span>}
+           {label}
+         </span>
+       </button>
+ 
+-      <button
+-        type="button"
+-        onClick={onView}
+-        className="pretendard-Caption1 text-Gray-5 flex items-center gap-1"
+-      >
+-        蹂닿린
+-        <ChevronRightIcon className="h-3 w-3" />
+-      </button>
++      {onView && (
++        <button
++          type="button"
++          onClick={onView}
++          className="pretendard-Caption1 text-Gray-5 flex items-center gap-1"
++        >
++          蹂닿린
++          <ChevronRightIcon className="h-3 w-3" />
++        </button>
++      )}
+     </div>
+   )
+ }
+diff --git a/src/components/feature/tutorial/TutorialStepCard.tsx b/src/components/feature/tutorial/TutorialStepCard.tsx
+index 66ff6ba..5062393 100644
+--- a/src/components/feature/tutorial/TutorialStepCard.tsx
++++ b/src/components/feature/tutorial/TutorialStepCard.tsx
+@@ -1,15 +1,21 @@
+-import TutorialCard from '@/assets/characters/Brifo_tutorial_step.svg?react'
++import type { FunctionComponent, SVGProps } from 'react'
+ 
+ interface TutorialStepCardProps {
+   step: number
+   title: string
+   description: string
++  Image: FunctionComponent<SVGProps<SVGSVGElement>>
+ }
+ 
+-export default function TutorialStepCard({ step, title, description }: TutorialStepCardProps) {
++export default function TutorialStepCard({
++  step,
++  title,
++  description,
++  Image,
++}: TutorialStepCardProps) {
+   return (
+     <div className="flex items-center gap-5 rounded-2xl bg-white px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+-      <TutorialCard className="h-11 w-11 shrink-0" />
++      <Image className="h-11 w-11 shrink-0" />
+ 
+       <div className="flex flex-col">
+         <span className="pretendard-Caption1 text-Gray-5">
+@@ -18,7 +24,7 @@ export default function TutorialStepCard({ step, title, description }: TutorialS
+ 
+         <span className="pretendard-Body1-Semibold text-Gray-9 mt-1">{title}</span>
+ 
+-        <span className="pretendard-Caption2 text-Gray-6 mt-1 max-w-48 leading-[1.32]">
++        <span className="pretendard-Caption2 mt-1 max-w-48 leading-[1.32] whitespace-pre-line text-[#8A8499]">
+           {description}
+         </span>
+       </div>
+diff --git a/src/hooks/useProfileNameValidation.ts b/src/hooks/useProfileNameValidation.ts
+new file mode 100644
+index 0000000..54a1856
+--- /dev/null
++++ b/src/hooks/useProfileNameValidation.ts
+@@ -0,0 +1,32 @@
++const MIN_PROFILE_NAME_LENGTH = 4
++const MAX_PROFILE_NAME_LENGTH = 5
++const PROFILE_NAME_PATTERN = /^[媛-?쥱-Za-z0-9]+$/
++const PROFILE_NAME_ERROR_MESSAGE = '4~5湲???쒗븳???섍굅???뱀닔臾몄옄媛 ?덉뼱??
++
++interface ProfileNameValidationResult {
++  isValid: boolean
++  errorMessage: string
++}
++
++export function validateProfileName(value: string): ProfileNameValidationResult {
++  if (value.length === 0) {
++    return {
++      isValid: false,
++      errorMessage: '',
++    }
++  }
++
++  const hasValidLength =
++    value.length >= MIN_PROFILE_NAME_LENGTH && value.length <= MAX_PROFILE_NAME_LENGTH
++  const hasOnlyAllowedCharacters = PROFILE_NAME_PATTERN.test(value)
++  const isValid = hasValidLength && hasOnlyAllowedCharacters
++
++  return {
++    isValid,
++    errorMessage: isValid ? '' : PROFILE_NAME_ERROR_MESSAGE,
++  }
++}
++
++export function useProfileNameValidation(value: string): ProfileNameValidationResult {
++  return validateProfileName(value)
++}
+diff --git a/src/layouts/AppLayout.tsx b/src/layouts/AppLayout.tsx
+index c185652..db924d4 100644
+--- a/src/layouts/AppLayout.tsx
++++ b/src/layouts/AppLayout.tsx
+@@ -6,8 +6,8 @@ import { type NavigationValue } from '@/components/common/NavigationBar'
+ import { PATH } from '@/routes/paths'
+ 
+ const NAVIGATION_PATHS: Record<NavigationValue, string> = {
+-  briefing: PATH.BRIEFING,
+   team: PATH.TEAM,
++  office: PATH.OFFICE,
+   home: PATH.HOME,
+   diary: PATH.DIARY,
+   my: PATH.MY_PAGE,
+@@ -15,11 +15,10 @@ const NAVIGATION_PATHS: Record<NavigationValue, string> = {
+ 
+ function getNavigationValue(pathname: string): NavigationValue {
+   if (
+-    pathname === PATH.OFFICE ||
+-    pathname.startsWith(PATH.OFFICE_PREDICTION) ||
++    pathname.startsWith(PATH.OFFICE) ||
+     pathname.startsWith(PATH.BRIEFING)
+   )
+-    return 'briefing'
++    return 'office'
+   if (pathname.startsWith(PATH.TEAM)) return 'team'
+   if (pathname.startsWith(PATH.DIARY)) return 'diary'
+   if (pathname.startsWith(PATH.MY_PAGE)) return 'my'
+diff --git a/src/pages/AgreementPage/AgreementDetailPage.tsx b/src/pages/AgreementPage/AgreementDetailPage.tsx
+new file mode 100644
+index 0000000..cd980eb
+--- /dev/null
++++ b/src/pages/AgreementPage/AgreementDetailPage.tsx
+@@ -0,0 +1,97 @@
++import { useEffect, useRef, useState } from 'react'
++import { useLocation, useNavigate } from 'react-router-dom'
++
++import Button from '@/components/common/Button'
++import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
++import { PATH } from '@/routes/paths'
++
++import { type AgreementId, SERVICE_TERMS } from './agreement'
++
++interface AgreementDetailLocationState {
++  agreementId?: AgreementId
++}
++
++export default function AgreementDetailPage() {
++  const navigate = useNavigate()
++  const location = useLocation()
++
++  const scrollContainerRef = useRef<HTMLDivElement>(null)
++  const [hasReachedBottom, setHasReachedBottom] = useState(false)
++
++  const { agreementId = 'service' } = (location.state as AgreementDetailLocationState | null) ?? {}
++
++  const checkScrollBottom = () => {
++    const container = scrollContainerRef.current
++
++    if (!container) return
++
++    const isBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 4
++
++    if (isBottom) {
++      setHasReachedBottom(true)
++    }
++  }
++
++  useEffect(() => {
++    checkScrollBottom()
++  }, [])
++
++  const handleConfirm = () => {
++    if (!hasReachedBottom) return
++
++    navigate(PATH.AGREEMENT, {
++      replace: true,
++      state: {
++        checkedAgreementId: agreementId,
++      },
++    })
++  }
++
++  return (
++    <main className="mx-auto flex h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
++      <StatusBar
++        hasStatusArea
++        className="w-full [&>div:last-child]:px-0"
++        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
++        title="?쎄?"
++      />
++
++      <div
++        ref={scrollContainerRef}
++        onScroll={checkScrollBottom}
++        className="min-h-0 flex-1 overflow-y-auto px-2 py-6"
++      >
++        <h1 className="pretendard-Subtitle2 text-Gray-10">{SERVICE_TERMS.title}</h1>
++
++        <p className="pretendard-Caption2 text-Gray-5 mt-2">
++          ?쒗뻾??{SERVICE_TERMS.effectiveDate}
++          <span className="mx-2">쨌</span>
++          踰꾩쟾 {SERVICE_TERMS.version}
++        </p>
++
++        <div className="mt-8 flex flex-col gap-6">
++          {SERVICE_TERMS.sections.map((section) => (
++            <section key={section.title}>
++              <h2 className="pretendard-Subtitle6 text-Gray-6">{section.title}</h2>
++
++              <p className="pretendard-Button2 font-regular text-Gray-6 mt-1.5 leading-6 whitespace-pre-line">
++                {section.content}
++              </p>
++            </section>
++          ))}
++        </div>
++      </div>
++
++      <Button
++        type="button"
++        size="lg"
++        color="primary"
++        isFullWidth
++        disabled={!hasReachedBottom}
++        onClick={handleConfirm}
++      >
++        ?뺤씤?덉뼱??+      </Button>
++    </main>
++  )
++}
+diff --git a/src/pages/AgreementPage/AgreementPage.tsx b/src/pages/AgreementPage/AgreementPage.tsx
+new file mode 100644
+index 0000000..e5d6744
+--- /dev/null
++++ b/src/pages/AgreementPage/AgreementPage.tsx
+@@ -0,0 +1,123 @@
++import { useEffect, useState } from 'react'
++import { useLocation, useNavigate } from 'react-router-dom'
++
++import Button from '@/components/common/Button'
++import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
++import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
++import { PATH } from '@/routes/paths'
++
++import { type AgreementId, AGREEMENTS } from './agreement'
++
++type AgreementCheckedState = Record<AgreementId, boolean>
++
++interface AgreementLocationState {
++  checkedAgreementId?: AgreementId
++}
++
++const INITIAL_CHECKED_STATE: AgreementCheckedState = {
++  age: false,
++  service: false,
++  privacy: false,
++  investment: false,
++  marketing: false,
++}
++
++const REQUIRED_AGREEMENT_IDS: AgreementId[] = ['age', 'service', 'privacy', 'investment']
++
++export default function AgreementPage() {
++  const navigate = useNavigate()
++  const location = useLocation()
++  const [checked, setChecked] = useState<AgreementCheckedState>(INITIAL_CHECKED_STATE)
++  const isAllChecked = Object.values(checked).every(Boolean)
++  const isRequiredChecked = REQUIRED_AGREEMENT_IDS.every((id) => checked[id])
++
++  useEffect(() => {
++    const state = location.state as AgreementLocationState | null
++    const checkedAgreementId = state?.checkedAgreementId
++
++    if (!checkedAgreementId) return
++    // eslint-disable-next-line react-hooks/set-state-in-effect
++    setChecked((previous) => ({
++      ...previous,
++      [checkedAgreementId]: true,
++    }))
++    navigate(PATH.AGREEMENT, {
++      replace: true,
++
++      state: null,
++    })
++  }, [location.state, navigate])
++
++  const handleToggle = (id: AgreementId) => {
++    setChecked((previous) => ({
++      ...previous,
++      [id]: !previous[id],
++    }))
++  }
++
++  const handleToggleAll = () => {
++    const nextChecked = !isAllChecked
++
++    setChecked({
++      age: nextChecked,
++      service: nextChecked,
++      privacy: nextChecked,
++      investment: nextChecked,
++      marketing: nextChecked,
++    })
++  }
++
++  return (
++    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
++      <StatusBar
++        hasStatusArea
++        className="w-full [&>div:last-child]:px-0"
++        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
++        title="?쎄??숈쓽"
++      />
++
++      <div className="mt-8">
++        <h1 className="dnf-Title3 text-Gray-10 leading-[1.2] whitespace-pre-line">
++          ?쒖옉?섍린 ?꾩뿉{'\n'}
++          <span className="text-[#FFBE00]">?쎄????숈쓽?댁＜?몄슂</span>
++        </h1>
++      </div>
++
++      <div className="mt-8">
++        <UserAgreementItem
++          label="?쎄????꾩껜 ?숈쓽"
++          checked={isAllChecked}
++          showType={false}
++          variant="all"
++          onToggle={handleToggleAll}
++          className="pretendard-Body2-Semibold text-Gray-9"
++        />
++
++        <div className="border-Gray-2 mt-2 border-t">
++          {AGREEMENTS.map((agreement) => (
++            <UserAgreementItem
++              key={agreement.id}
++              label={agreement.label}
++              type={agreement.type}
++              checked={checked[agreement.id]}
++              onToggle={() => handleToggle(agreement.id)}
++              onView={() =>
++                navigate(PATH.AGREEMENT_DETAIL, {
++                  state: {
++                    agreementId: agreement.id,
++                  },
++                })
++              }
++            />
++          ))}
++        </div>
++      </div>
++
++      <div className="mt-auto">
++        <Button isFullWidth disabled={!isRequiredChecked} onClick={() => navigate(PATH.ONBOARDING)}>
++          ?ㅼ쓬
++        </Button>
++      </div>
++    </main>
++  )
++}
+diff --git a/src/pages/AgreementPage/agreement.ts b/src/pages/AgreementPage/agreement.ts
+new file mode 100644
+index 0000000..233a4f9
+--- /dev/null
++++ b/src/pages/AgreementPage/agreement.ts
+@@ -0,0 +1,76 @@
++export type AgreementId = 'age' | 'service' | 'privacy' | 'investment' | 'marketing'
++
++export interface Agreement {
++  id: AgreementId
++  label: string
++  type: 'required' | 'optional'
++}
++
++export interface AgreementDetail {
++  title: string
++  effectiveDate: string
++  version: string
++  sections: {
++    title: string
++    content: string
++  }[]
++}
++export const AGREEMENTS: Agreement[] = [
++  {
++    id: 'age',
++    label: '留?14???댁긽?낅땲??',
++    type: 'required',
++  },
++  {
++    id: 'service',
++    label: '?쒕퉬???댁슜?쎄?',
++    type: 'required',
++  },
++  {
++    id: 'privacy',
++    label: '媛쒖씤?뺣낫 泥섎━諛⑹묠',
++    type: 'required',
++  },
++  {
++    id: 'investment',
++    label: '?ъ옄 ?뺣낫 ?좎쓽?ы빆',
++    type: 'required',
++  },
++  {
++    id: 'marketing',
++    label: '愿묎퀬???뺣낫 ?섏떊',
++    type: 'optional',
++  },
++]
++
++export const SERVICE_TERMS: AgreementDetail = {
++  title: 'BRIFO ?쒕퉬???댁슜?쎄?',
++  effectiveDate: '2026.07.01',
++  version: 'v1.0',
++  sections: [
++    {
++      title: '??議?(紐⑹쟻)',
++      content:
++        '蹂??쎄?? BRIFO(?댄븯 "?쒕퉬??)媛 ?쒓났?섎뒗 紐⑤뱺 ?ъ옄 ?먮떒 愿???쒕퉬?ㅼ쓽 ?댁슜 議곌굔 諛??덉감瑜?洹쒖젙?⑥쓣 紐⑹쟻?쇰줈 ?⑸땲??',
++    },
++    {
++      title: '??議?(?쒕퉬?ㅼ쓽 ?깃꺽)',
++      content:
++        '??蹂??쒕퉬?ㅺ? ?쒓났?섎뒗 AI ?쒗솴 遺꾩꽍쨌釉뚮━?묒? ?뺣낫 ?쒓났???꾪븳 寃껋씠硫??ъ옄 沅뚯쑀媛 ?꾨떃?덈떎.\n??蹂??쒕퉬?ㅼ쓽 ?덉륫? ?ㅼ젣 留ㅻℓ媛 ?꾨땶 紐⑥쓽 ?먮떒?대ŉ, ?대뼚??湲덉쟾???섏씡 ?먯떎??蹂댁옣?섏? ?딆뒿?덈떎.',
++    },
++    {
++      title: '??議?(怨꾩젙)',
++      content:
++        '???댁슜?먮뒗 ?뚯뀥 濡쒓렇??移댁뭅?ㅒ룸꽕?대쾭)???듯빐 媛?낇빀?덈떎.\n??留?14??誘몃쭔? 媛?낇븷 ???놁뒿?덈떎.',
++    },
++    {
++      title: '??議?(API)',
++      content: 'API???쒕퉬????寃뚯엫 ?ы솕?대ŉ ?꾧툑?쇰줈 ?섏쟾?섏? ?딆뒿?덈떎.',
++    },
++    {
++      title: '??議?(硫댁콉)',
++      content:
++        '?쒕퉬?ㅺ? ?쒓났?섎뒗 ?댁뒪 ?붿빟, AI ?쒗솴 遺꾩꽍???뺥솗?깆쓣 蹂댁옣?섏? ?딆쑝硫? ?대? 洹쇨굅濡????ㅼ젣 ?ъ옄??梨낆엫? ?댁슜?먯뿉寃??덉뒿?덈떎.',
++    },
++  ],
++}
+diff --git a/src/pages/HomePage/HomePage.tsx b/src/pages/HomePage/HomePage.tsx
+index da68ba2..bceb326 100644
+--- a/src/pages/HomePage/HomePage.tsx
++++ b/src/pages/HomePage/HomePage.tsx
+@@ -11,12 +11,15 @@ import OfficeCard from '@/components/feature/home/OfficeCard'
+ import PredictionCard from '@/components/feature/home/PredictionCard'
+ import SettlementCard from '@/components/feature/home/SettlementCard'
+ import { PATH } from '@/routes/paths'
++import { useProfileStore } from '@/stores/useProfileStore'
+ 
+ import { HOME_CARD_NEWS_MOCK_DATA } from './mockData'
+ 
+ export function HomePage() {
+   const navigate = useNavigate()
+   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false)
++  const nickname = useProfileStore((state) => state.nickname)
++  const companyName = useProfileStore((state) => state.companyName)
+ 
+   return (
+     <>
+@@ -38,8 +41,7 @@ export function HomePage() {
+             }
+           />
+ 
+-          {/*TODO: ?됰꽕?? ?뚯궗紐?API ?곕룞*/}
+-          <HomeHeader nickname="?щ”" companyName="媛利덉븘 ?ъ옄?? />
++          <HomeHeader nickname={nickname} companyName={companyName} />
+ 
+           <div className="flex flex-col gap-3">
+             <OfficeCard />
+diff --git a/src/pages/NotificationPage/NotificationPage.tsx b/src/pages/NotificationPage/NotificationPage.tsx
+index 8c74297..96c71c7 100644
+--- a/src/pages/NotificationPage/NotificationPage.tsx
++++ b/src/pages/NotificationPage/NotificationPage.tsx
+@@ -6,8 +6,7 @@ import NotificationItem from '@/components/feature/notification/NotificationItem
+ import NotificationTabs, {
+   type NotificationCategory,
+ } from '@/components/feature/notification/NotificationTabs'
+-
+-import { NOTIFICATION_MOCK_DATA } from './mockData'
++import { NOTIFICATION_MOCK_DATA } from '@/pages/NotificationPage/mockData'
+ 
+ export function NotificationPage() {
+   const navigate = useNavigate()
+diff --git a/src/pages/OnboardingPage/OnboardingPage.tsx b/src/pages/OnboardingPage/OnboardingPage.tsx
+index e62dbac..459079f 100644
+--- a/src/pages/OnboardingPage/OnboardingPage.tsx
++++ b/src/pages/OnboardingPage/OnboardingPage.tsx
+@@ -1,4 +1,167 @@
+-/** SCR-02: ?⑤낫??(?됰꽕???뚯궗 ?ㅼ젙 諛?醫낅ぉ ?좏깮) */
++import { useState } from 'react'
++import { useNavigate } from 'react-router-dom'
++
++import Button from '@/components/common/Button'
++import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
++import { TextField } from '@/components/common/TextField'
++import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
++import StockSearchView from '@/components/feature/onboarding/StockSearchView'
++import { useProfileNameValidation } from '@/hooks/useProfileNameValidation'
++import { ONBOARDING_STOCKS } from '@/pages/OnboardingPage/mockStocks'
++import { PATH } from '@/routes/paths'
++import { useProfileStore } from '@/stores/useProfileStore'
++
++const MIN_STOCK_COUNT = 3
++const MAX_STOCK_COUNT = 5
++
++const PROFILE_KEYWORDS = ['?꾨챸?쒗닾??, '?숉븰媛쒕??대룞', '?쇱㎟?뚯궗', 'zI議?]
++
+ export function OnboardingPage() {
+-  return <div>OnboardingPage</div>
++  const navigate = useNavigate()
++  const setProfile = useProfileStore((state) => state.setProfile)
++
++  const [nickname, setNickname] = useState('')
++  const [companyName, setCompanyName] = useState('')
++  const [searchKeyword, setSearchKeyword] = useState('')
++  const [selectedStockIds, setSelectedStockIds] = useState<number[]>([])
++  const [isStockSearchOpen, setIsStockSearchOpen] = useState(false)
++
++  const { isValid: hasValidNickname, errorMessage: nicknameError } =
++    useProfileNameValidation(nickname)
++  const { isValid: hasValidCompanyName, errorMessage: companyNameError } =
++    useProfileNameValidation(companyName)
++
++  const hasValidStockCount =
++    selectedStockIds.length >= MIN_STOCK_COUNT && selectedStockIds.length <= MAX_STOCK_COUNT
++
++  const isFormValid = hasValidNickname && hasValidCompanyName && hasValidStockCount
++
++  const handleToggleStock = (stockId: number) => {
++    setSelectedStockIds((previous) => {
++      const isSelected = previous.includes(stockId)
++
++      if (isSelected) {
++        return previous.filter((id) => id !== stockId)
++      }
++
++      if (previous.length >= MAX_STOCK_COUNT) {
++        return previous
++      }
++
++      return [...previous, stockId]
++    })
++  }
++
++  const handleSubmit = () => {
++    if (!isFormValid) return
++
++    const profile = {
++      nickname: nickname.trim(),
++      companyName: companyName.trim(),
++      stockIds: selectedStockIds,
++    }
++
++    // TODO: ?⑤낫???꾨줈??API ?몄텧
++    setProfile(profile)
++
++    navigate(PATH.TUTORIAL_INTRO)
++  }
++  if (isStockSearchOpen) {
++    return (
++      <StockSearchView
++        stocks={ONBOARDING_STOCKS}
++        searchKeyword={searchKeyword}
++        selectedStockIds={selectedStockIds}
++        onSearchKeywordChange={setSearchKeyword}
++        onToggleStock={handleToggleStock}
++        onBack={() => {
++          setSearchKeyword('')
++          setIsStockSearchOpen(false)
++        }}
++        onComplete={() => {
++          setSearchKeyword('')
++          setIsStockSearchOpen(false)
++        }}
++      />
++    )
++  }
++
++  return (
++    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
++      <StatusBar
++        hasStatusArea
++        className="w-full [&>div:last-child]:px-0"
++        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
++      />
++
++      <section className="mt-8 flex flex-1 flex-col">
++        <div>
++          <h1 className="dnf-Title3 text-Gray-10 leading-[1.25]">
++            ?ъ옣?섏쓽 ?꾨줈?꾩쓣
++            <br />
++            <span className="text-[#FFBE00]">?뚮젮二쇱꽭??</span>
++          </h1>
++
++          <p className="pretendard-Caption1 text-Gray-6 mt-3">
++            ?됰꽕??쨌 ?뚯궗紐?쨌 愿??醫낅ぉ 3~5媛쒕? 怨⑤씪二쇱꽭??+          </p>
++        </div>
++
++        <div className="mt-8 flex flex-col gap-5">
++          <TextField
++            id="onboarding-nickname"
++            name="nickname"
++            label="?됰꽕??
++            value={nickname}
++            placeholder="4~5湲???쒗븳, ?뱀닔臾몄옄 湲덉?"
++            errorMessage={nicknameError}
++            className="[&>span:last-child]:ml-3"
++            onChange={(event) => setNickname(event.target.value)}
++          />
++
++          <TextField
++            id="onboarding-company-name"
++            name="companyName"
++            label="?뚯궗紐?
++            value={companyName}
++            placeholder="4~5湲???쒗븳, ?뱀닔臾몄옄 湲덉?"
++            errorMessage={companyNameError}
++            className="[&>span:last-child]:ml-3"
++            onChange={(event) => setCompanyName(event.target.value)}
++          />
++        </div>
++
++        <div className="mt-4 flex flex-wrap gap-1">
++          {PROFILE_KEYWORDS.map((keyword) => (
++            <span
++              key={keyword}
++              className="pretendard-Caption2 bg-Yellow-100 text-Yellow-10 rounded-full px-3 py-1.5"
++            >
++              # {keyword}
++            </span>
++          ))}
++        </div>
++
++        <InterestStockSection
++          stocks={ONBOARDING_STOCKS}
++          searchKeyword={searchKeyword}
++          selectedStockIds={selectedStockIds}
++          onToggleStock={handleToggleStock}
++          onOpenSearch={() => setIsStockSearchOpen(true)}
++        />
++      </section>
++
++      <Button
++        type="button"
++        size="lg"
++        color="primary"
++        isFullWidth
++        disabled={!isFormValid}
++        onClick={handleSubmit}
++        className="mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
++      >
++        ?ㅼ쓬
++      </Button>
++    </main>
++  )
+ }
+diff --git a/src/pages/OnboardingPage/mockStocks.ts b/src/pages/OnboardingPage/mockStocks.ts
+new file mode 100644
+index 0000000..1af416f
+--- /dev/null
++++ b/src/pages/OnboardingPage/mockStocks.ts
+@@ -0,0 +1,35 @@
++import SamsungElectroMechanicsLogo from '@/assets/logo/sk-hynix.png'
++import SkHynixLogo from '@/assets/logo/sk-hynix.png'
++import SkSquareLogo from '@/assets/logo/sk-hynix.png'
++
++export interface OnboardingStock {
++  id: number
++  name: string
++  price: string
++  changeRate: number
++  logoUrl: string
++}
++
++export const ONBOARDING_STOCKS: OnboardingStock[] = [
++  {
++    id: 1,
++    name: 'SK?섏씠?됱뒪',
++    price: '267,900',
++    changeRate: 6.3,
++    logoUrl: SkHynixLogo,
++  },
++  {
++    id: 2,
++    name: 'SK?ㅽ섏뼱',
++    price: '156,400',
++    changeRate: 3.1,
++    logoUrl: SkSquareLogo,
++  },
++  {
++    id: 3,
++    name: '?쇱꽦?꾧린',
++    price: '143,800',
++    changeRate: -6.3,
++    logoUrl: SamsungElectroMechanicsLogo,
++  },
++]
+diff --git a/src/pages/SplashPage/SplashPage.tsx b/src/pages/SplashPage/SplashPage.tsx
+index 4b19c87..966c8f7 100644
+--- a/src/pages/SplashPage/SplashPage.tsx
++++ b/src/pages/SplashPage/SplashPage.tsx
+@@ -1,4 +1,96 @@
+-/** SCR-01: ?ㅽ뵆?섏떆 / 濡쒓렇??*/
++import { useEffect, useState } from 'react'
++import { useNavigate } from 'react-router-dom'
++
++import SplashBackground from '@/assets/images/splash_background.svg?react'
++import Logo from '@/assets/logo/brifo_logo.svg?react'
++import LoginSection from '@/components/feature/onboarding/LoginSection'
++import OnboardingSlide from '@/components/feature/onboarding/OnboardingSlide'
++import { PATH } from '@/routes/paths'
++
++import { SPLASH_SLIDES } from './splash'
++
++const SPLASH_DURATION = 3000
++
+ export function SplashPage() {
+-  return <div>SplashPage</div>
++  const navigate = useNavigate()
++
++  const [isSplashVisible, setIsSplashVisible] = useState(true)
++  const [currentStep, setCurrentStep] = useState(0)
++
++  useEffect(() => {
++    const timer = window.setTimeout(() => {
++      setIsSplashVisible(false)
++    }, SPLASH_DURATION)
++
++    return () => window.clearTimeout(timer)
++  }, [])
++
++  const isLoginStep = currentStep >= SPLASH_SLIDES.length
++  const currentSlide = SPLASH_SLIDES[currentStep]
++
++  const handleNext = () => {
++    setCurrentStep((previousStep) => previousStep + 1)
++  }
++
++  const handleBack = () => {
++    setCurrentStep((previousStep) => Math.max(previousStep - 1, 0))
++  }
++
++  const handleSkip = () => {
++    setCurrentStep(SPLASH_SLIDES.length)
++  }
++
++  const handleKakaoLogin = async () => {
++    // TODO: 移댁뭅??濡쒓렇??API ?몄텧
++    navigate(PATH.AGREEMENT)
++  }
++
++  const handleNaverLogin = async () => {
++    // TODO: ?ㅼ씠踰?濡쒓렇??API ?몄텧
++    navigate(PATH.AGREEMENT)
++  }
++
++  // 理쒖큹 濡쒓퀬 ?ㅽ뵆?섏떆
++  if (isSplashVisible) {
++    return (
++      <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col overflow-hidden bg-white">
++        <div className="flex flex-1 flex-col items-center justify-center">
++          <Logo className="w-50" />
++
++          <p className="pretendard-Body1-Semibold mt-2 text-[#FF9500]">?섎뒗 ?ъ옣, AI???ъ썝</p>
++        </div>
++
++        <div className="w-full overflow-hidden">
++          <SplashBackground className="-mt-0.5 block w-full" />
++        </div>
++      </main>
++    )
++  }
++
++  // ?쒗넗由ъ뼹 ?꾨즺 ??濡쒓렇??+  if (isLoginStep) {
++    return (
++      <div className="mx-auto w-full max-w-90">
++        <LoginSection
++          onKakaoLogin={handleKakaoLogin}
++          onNaverLogin={handleNaverLogin}
++          onBack={handleBack}
++        />
++      </div>
++    )
++  }
++
++  return (
++    <OnboardingSlide
++      image={currentSlide.image}
++      title={currentSlide.title}
++      highlightedText={currentSlide.highlightedText}
++      description={currentSlide.description}
++      currentStep={currentStep + 1}
++      totalSteps={SPLASH_SLIDES.length}
++      onNext={handleNext}
++      onBack={currentStep > 0 ? handleBack : undefined}
++      onSkip={handleSkip}
++    />
++  )
+ }
+diff --git a/src/pages/SplashPage/splash.ts b/src/pages/SplashPage/splash.ts
+new file mode 100644
+index 0000000..7da11c4
+--- /dev/null
++++ b/src/pages/SplashPage/splash.ts
+@@ -0,0 +1,35 @@
++import OnboardingStep1 from '@/assets/images/image-1.svg'
++import OnboardingStep2 from '@/assets/images/image-2.svg'
++import OnboardingStep3 from '@/assets/images/image-3.svg'
++
++export interface SplashSlideData {
++  id: number
++  image: string
++  title: string
++  highlightedText: string
++  description: string
++}
++
++export const SPLASH_SLIDES: SplashSlideData[] = [
++  {
++    id: 1,
++    image: OnboardingStep1,
++    title: '?섎뒗 ?ъ옣\nAI???ъ썝',
++    highlightedText: 'AI???ъ썝',
++    description: '?섎쭔??AI ?ъ썝??怨좎슜?섍퀬\n二쇱떇 ?댁뒪 遺꾩꽍??吏?쒗븯?몄슂',
++  },
++  {
++    id: 2,
++    image: OnboardingStep2,
++    title: '?섎굹???댁뒪\n?멸?吏 ?쒓컖',
++    highlightedText: '?멸?吏 ?쒓컖',
++    description: '猷⑦궎 쨌 ?꾨줈 쨌 ?깊겕 ???ъ썝??媛곸옄\n?ㅻⅨ ?꾨젅?꾩쑝濡?遺꾩꽍?⑸땲??,
++  },
++  {
++    id: 3,
++    image: OnboardingStep3,
++    title: '寃곗젙?섍퀬\n?쇨린???④꺼??,
++    highlightedText: '?쇨린???④꺼??,
++    description: '留ㅼ씪 ??留덇컧 ???먮룞 ?뺤궛,\n寃곗젙 ?쇨린濡??ъ옄 ?ㅻ젰???볦븘媛?몄슂',
++  },
++]
+diff --git a/src/pages/TutorialPage/TutorialIntroPage.tsx b/src/pages/TutorialPage/TutorialIntroPage.tsx
+new file mode 100644
+index 0000000..e9639fd
+--- /dev/null
++++ b/src/pages/TutorialPage/TutorialIntroPage.tsx
+@@ -0,0 +1,87 @@
++import { useNavigate } from 'react-router-dom'
++
++import Step1Image from '@/assets/characters/tutorial_step1.svg?react'
++import Step2Image from '@/assets/characters/tutorial_step2.svg?react'
++import Step3Image from '@/assets/characters/tutorial_step3.svg?react'
++import Button from '@/components/common/Button'
++import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
++import TutorialStepCard from '@/components/feature/tutorial/TutorialStepCard'
++import { PATH } from '@/routes/paths'
++
++const TUTORIAL_STEPS = [
++  {
++    step: 1,
++    title: '泥?移대뱶?댁뒪 ?뺤씤',
++    description: 'AI媛 留뚮뱺 5W1H ?ъ떎 ?붿빟 移대뱶?댁뒪瑜?\n諛쏆븘蹂댁꽭??,
++    image: Step1Image,
++  },
++  {
++    step: 2,
++    title: '猷⑦궎??泥?遺꾩꽍',
++    description: '猷⑦궎 ?ъ썝?먭쾶 遺꾩꽍???섎ː?섍퀬 蹂닿퀬?쒕? \n梨꾪깮?대낫?몄슂',
++    image: Step2Image,
++  },
++  {
++    step: 3,
++    title: '泥??덉륫 ?깅줉',
++    description: `諛⑺뼢(?묅넃~)怨??뺤떊??1~5)瑜??좏깮?? \n ?덉륫?섏꽭??,
++    image: Step3Image,
++  },
++] as const
++
++export function TutorialIntroPage() {
++  const navigate = useNavigate()
++
++  return (
++    <main className="mx-auto flex min-h-dvh w-full max-w-90 flex-col bg-white px-4 pt-6 pb-5">
++      <StatusBar
++        hasStatusArea
++        className="w-full [&>div:last-child]:px-0"
++        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
++      />
++
++      <section className="mt-13 flex flex-1 flex-col">
++        <div>
++          <h1 className="dnf-Title3 text-Gray-10 leading-[1.2]">
++            ?ъ옄 ?쒗넗由ъ뼹
++            <br />
++            <span className="text-[#FFBE00]">3遺꾩씠硫??앸굹??</span>
++          </h1>
++
++          <p className="pretendard-Caption1 mt-3 text-[#8A8499]">
++            ?댁뒪 ???ъ썝 遺꾩꽍 ???덉륫源뚯? ??踰덉뿉 ?듯?蹂댁꽭??+          </p>
++        </div>
++
++        <div className="bg-Yellow-50 mt-5 flex h-12 items-center justify-center rounded-[20px]">
++          <span className="pretendard-Body2-Semibold text-Yellow-5">?쒗넗由ъ뼹 ?꾨즺 ??蹂대꼫??/span>
++
++          <span className="dnf-Caption2 text-Yellow-5 ml-1">+200 AP</span>
++        </div>
++
++        <div className="mt-4 flex flex-col gap-3">
++          {TUTORIAL_STEPS.map((item) => (
++            <TutorialStepCard
++              key={item.step}
++              step={item.step}
++              title={item.title}
++              description={item.description}
++              Image={item.image}
++            />
++          ))}
++        </div>
++      </section>
++
++      <Button
++        type="button"
++        size="lg"
++        color="primary"
++        isFullWidth
++        onClick={() => navigate(PATH.TUTORIAL)}
++        className="mt-6 shadow-[0_4px_8px_0_rgba(168,79,1,0.15)]"
++      >
++        ?쒗넗由ъ뼹 ?쒖옉?섍린
++      </Button>
++    </main>
++  )
++}
+diff --git a/src/routes/Router.tsx b/src/routes/Router.tsx
+index 51b5dcb..972307d 100644
+--- a/src/routes/Router.tsx
++++ b/src/routes/Router.tsx
+@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router-dom'
+ 
+ import { AppLayout } from '@/layouts/AppLayout'
+ import { AuthLayout } from '@/layouts/AuthLayout'
++import AgreementDetailPage from '@/pages/AgreementPage/AgreementDetailPage'
++import AgreementPage from '@/pages/AgreementPage/AgreementPage'
+ import { BriefingAssignPage } from '@/pages/BriefingPage/BriefingAssignPage'
+ import { BriefingCompletePage } from '@/pages/BriefingPage/BriefingCompletePage'
+ import { BriefingDetailPage } from '@/pages/BriefingPage/BriefingDetailPage'
+@@ -22,6 +24,7 @@ import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
+ import { SplashPage } from '@/pages/SplashPage/SplashPage'
+ import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
+ import { TeamPage } from '@/pages/TeamPage/TeamPage'
++import { TutorialIntroPage } from '@/pages/TutorialPage/TutorialIntroPage'
+ import { TutorialPage } from '@/pages/TutorialPage/TutorialPage'
+ import { PATH } from '@/routes/paths'
+ 
+@@ -34,10 +37,22 @@ export const router = createBrowserRouter([
+         path: PATH.SPLASH,
+         element: <SplashPage />,
+       },
++      {
++        path: PATH.AGREEMENT,
++        element: <AgreementPage />,
++      },
++      {
++        path: PATH.AGREEMENT_DETAIL,
++        element: <AgreementDetailPage />,
++      },
+       {
+         path: PATH.ONBOARDING,
+         element: <OnboardingPage />,
+       },
++      {
++        path: PATH.TUTORIAL_INTRO,
++        element: <TutorialIntroPage />,
++      },
+       {
+         path: PATH.TUTORIAL,
+         element: <TutorialPage />,
+diff --git a/src/routes/paths.ts b/src/routes/paths.ts
+index 662cf67..96a0c7e 100644
+--- a/src/routes/paths.ts
++++ b/src/routes/paths.ts
+@@ -8,10 +8,15 @@ export const PATH = {
+   /** SCR-01: ?ㅽ뵆?섏떆 / 濡쒓렇??*/
+   SPLASH: '/splash',
+ 
++  /** SCR-01a,b: ?쎄? ?숈쓽 / ?쎄? ?곸꽭 */
++  AGREEMENT: '/agreement',
++  AGREEMENT_DETAIL: '/agreement/detail',
++
+   /** SCR-02: ?⑤낫??(?됰꽕???뚯궗 ?ㅼ젙 諛?醫낅ぉ ?좏깮) */
+   ONBOARDING: '/onboarding',
+ 
+   /** SCR-03: ?쒗넗由ъ뼹 (3?ㅽ뀦 媛뺤젣 吏꾪뻾) */
++  TUTORIAL_INTRO: '/tutorial/intro',
+   TUTORIAL: '/tutorial',
+ 
+   // ??? AppLayout - ?????????????????????????????????????????????
+diff --git a/src/stores/useProfileStore.ts b/src/stores/useProfileStore.ts
+new file mode 100644
+index 0000000..22143df
+--- /dev/null
++++ b/src/stores/useProfileStore.ts
+@@ -0,0 +1,26 @@
++import { create } from 'zustand'
++import { persist } from 'zustand/middleware'
++
++interface Profile {
++  nickname: string
++  companyName: string
++  stockIds: number[]
++}
++
++interface ProfileStore extends Profile {
++  setProfile: (profile: Profile) => void
++}
++
++export const useProfileStore = create<ProfileStore>()(
++  persist(
++    (set) => ({
++      nickname: '',
++      companyName: '',
++      stockIds: [],
++      setProfile: (profile) => set(profile),
++    }),
++    {
++      name: 'brifo-profile',
++    },
++  ),
++)

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export function useScaleFactor(baseWidth = 360, maxWidth = 768) {
   const [scale, setScale] = useState(1)

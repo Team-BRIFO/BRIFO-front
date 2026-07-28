@@ -15,7 +15,12 @@ interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
 /**
  * 기본적으로 w-full h-auto object-cover가 적용되는 반응형 이미지 컴포넌트
  */
-export function Image({ responsiveSize = 'none', className, ...props }: ImageProps) {
+export function Image({
+  responsiveSize = 'none',
+  className,
+  loading = 'lazy',
+  ...props
+}: ImageProps) {
   let sizeClasses = ''
   if (responsiveSize === 'sm') {
     sizeClasses = 'max-w-[120px] md:max-w-[200px]'
@@ -27,7 +32,7 @@ export function Image({ responsiveSize = 'none', className, ...props }: ImagePro
 
   return (
     <img
-      loading="lazy"
+      loading={loading}
       className={twMerge('h-auto w-full object-cover', sizeClasses, className)}
       {...props}
     />

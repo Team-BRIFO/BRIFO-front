@@ -10,10 +10,9 @@ import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
+import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
 import { PATH } from '@/routes/paths'
 import { useProfileStore } from '@/stores/useProfileStore'
-
-import { HOME_CARD_NEWS_MOCK_DATA } from './mockData'
 
 export function HomePage() {
   const navigate = useNavigate()

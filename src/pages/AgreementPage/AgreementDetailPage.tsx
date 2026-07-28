@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
+import type { AgreementId } from '@/pages/AgreementPage/agreement'
+import { SERVICE_TERMS } from '@/pages/AgreementPage/agreement'
 import { PATH } from '@/routes/paths'
-
-import { type AgreementId, SERVICE_TERMS } from './agreement'
 
 interface AgreementDetailLocationState {
   agreementId?: AgreementId
@@ -20,7 +20,7 @@ export default function AgreementDetailPage() {
 
   const { agreementId = 'service' } = (location.state as AgreementDetailLocationState | null) ?? {}
 
-  const checkScrollBottom = () => {
+  const checkScrollBottom = useCallback(() => {
     const container = scrollContainerRef.current
 
     if (!container) return
@@ -30,11 +30,11 @@ export default function AgreementDetailPage() {
     if (isBottom) {
       setHasReachedBottom(true)
     }
-  }
+  }, [])
 
   useEffect(() => {
     checkScrollBottom()
-  }, [])
+  }, [checkScrollBottom])
 
   const handleConfirm = () => {
     if (!hasReachedBottom) return

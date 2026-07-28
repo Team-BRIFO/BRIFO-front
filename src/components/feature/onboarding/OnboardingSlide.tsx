@@ -40,7 +40,14 @@ export default function OnboardingSlide({
 
       <div className="flex flex-1 flex-col items-center">
         <div className="mt-8 flex h-52 w-full items-center justify-center">
-          <Image src={image} alt="" aria-hidden="true" responsiveSize="none" className="h-full w-full object-contain" />
+          <Image
+            src={image}
+            alt=""
+            aria-hidden="true"
+            responsiveSize="none"
+            className="h-full w-full object-contain"
+            loading={currentStep === 1 ? 'eager' : 'lazy'}
+          />
         </div>
 
         <div className="mt-7 text-center">
@@ -80,7 +87,7 @@ export default function OnboardingSlide({
         color="primary"
         isFullWidth
         onClick={onNext}
-        className="mx-auto h-15 w-full md:max-w-[400px] shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
+        className="mx-auto h-15 w-full shadow-[0_4px_8px_rgba(168,79,1,0.15)] md:max-w-[400px]"
       >
         다음
       </Button>
