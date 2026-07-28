@@ -24,7 +24,7 @@ import {
   type TutorialContent,
 } from '@/pages/TutorialPage/tutorial'
 import { PATH } from '@/routes/paths'
-import type { ConfidenceLevel } from '@/types/api/decision'
+import type { ConfidenceLevel } from '@/types/domain/decision'
 
 function CardNewsListStep() {
   return (
