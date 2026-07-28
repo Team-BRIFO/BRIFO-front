@@ -33,7 +33,7 @@ export function TeamPage() {
         }
       />
 
-      <div className="px-4 pb-4">
+      <div className="px-4 py-4">
         <AgentListSection
           agents={agents}
           onSelectAgent={(agentId) => navigate(PATH.TEAM_DETAIL(agentId))}

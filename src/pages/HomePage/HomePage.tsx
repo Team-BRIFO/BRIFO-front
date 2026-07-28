@@ -26,7 +26,7 @@ export function HomePage() {
 
   return (
     <>
-      <div className="flex flex-1 flex-col pb-24">
+      <main className="min-h-screen bg-white">
         <StatusBar
           hasStatusArea={false}
           left={<Logo className="h-[1.5rem] w-[5.25rem]" />}
@@ -72,7 +72,7 @@ export function HomePage() {
             />
           </div>
         </section>
-      </div>
+      </main>
 
       <AttendanceModal
         isOpen={isAttendanceModalOpen}

@@ -23,7 +23,7 @@ export function DiaryTabScreen({ view, onChangeView, children }: DiaryTabScreenP
   const balanceAp = userResponse?.balanceAp ?? 0
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="bg-Background1 flex flex-1 flex-col">
       <StatusBar
         hasStatusArea={false}
         left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
