@@ -22,6 +22,8 @@ export interface MyApHistoryProps {
   hasNext?: boolean
   onLoadMore?: () => void
   isLoadingMore?: boolean
+  /** 빈 상태 여부는 조회 데이터를 소유한 Page가 결정한다. */
+  isEmpty: boolean
 }
 
 /** AP 내역 화면(SCR-15) 본문 — 요약 카드 · 흐름 필터 · 입출금 리스트 */
@@ -33,6 +35,7 @@ export function MyApHistory({
   hasNext = false,
   onLoadMore,
   isLoadingMore = false,
+  isEmpty,
 }: MyApHistoryProps) {
   return (
     <div className="flex flex-col gap-5">
@@ -47,7 +50,7 @@ export function MyApHistory({
           ariaLabel="AP 내역 필터"
         />
 
-        {transactions.length === 0 ? (
+        {isEmpty ? (
           <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
             해당 내역이 없어요.
           </p>

@@ -7,9 +7,9 @@ import {
 } from '@/components/feature/my/AccountConfirmModal'
 import { MySettings } from '@/components/feature/my/MySettings'
 import type { MyMenuKey } from '@/constants/myMenu'
-import { useDeleteMyAccount } from '@/hooks/queries/useMy'
 import { PATH } from '@/routes/paths'
 
+import { useDeleteMyAccountMutation } from './hooks/useDeleteMyAccountMutation'
 import { MyPageLayout } from './MyPageLayout'
 
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
@@ -25,7 +25,7 @@ function clearTokens() {
 
 export function MySettingsPage() {
   const navigate = useNavigate()
-  const removeAccount = useDeleteMyAccount()
+  const removeAccount = useDeleteMyAccountMutation()
   const [action, setAction] = useState<AccountActionType | null>(null)
   const onSelect = (key: MyMenuKey) => {
     if (key === 'logout' || key === 'withdraw') {

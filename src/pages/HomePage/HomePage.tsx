@@ -10,7 +10,7 @@ import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
-import { useMyUser } from '@/hooks/queries/useMy'
+import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
 import { PATH } from '@/routes/paths'
 import { useProfileStore } from '@/stores/useProfileStore'
@@ -21,8 +21,12 @@ export function HomePage() {
   const nickname = useProfileStore((state) => state.nickname)
   const companyName = useProfileStore((state) => state.companyName)
 
-  const { data: userResponse } = useMyUser()
-  const balanceAp = userResponse?.balanceAp ?? 0
+  const userQuery = useUserProfileQuery()
+  const balanceText = userQuery.data
+    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
+    : userQuery.isError
+      ? 'AP 조회 실패'
+      : 'AP 불러오는 중'
 
   return (
     <>
@@ -33,7 +37,7 @@ export function HomePage() {
           right={
             <div className="flex items-center gap-3">
               <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-                {`${balanceAp.toLocaleString()} AP`}
+                {balanceText}
               </div>
 
               <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />

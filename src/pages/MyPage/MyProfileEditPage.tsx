@@ -2,17 +2,17 @@ import { useNavigate } from 'react-router-dom'
 
 import { Loading } from '@/components/common/Loading'
 import { MyProfileEdit } from '@/components/feature/my/MyProfileEdit'
-import { useMyUser, useUpdateMyProfile } from '@/hooks/queries/useMy'
+import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { PATH } from '@/routes/paths'
-import { mapMyUser, mapProfileFormValues } from '@/utils/myMapper'
 
+import { useUpdateMyProfileMutation } from './hooks/useUpdateMyProfileMutation'
 import { MyPageError, MyPageLayout } from './MyPageLayout'
 
 export function MyProfileEditPage() {
   const navigate = useNavigate()
-  const userQuery = useMyUser()
-  const update = useUpdateMyProfile()
-  if (userQuery.isError)
+  const userQuery = useUserProfileQuery()
+  const update = useUpdateMyProfileMutation()
+  if (userQuery.isError && !userQuery.data)
     return (
       <MyPageLayout title="프로필 편집">
         <MyPageError onRetry={() => userQuery.refetch()} />
@@ -24,23 +24,17 @@ export function MyProfileEditPage() {
         <Loading className="py-10" />
       </MyPageLayout>
     )
-  const { profile } = mapMyUser(userQuery.data)
+  const { profile, profileFormValues } = userQuery.data
   return (
     <MyPageLayout title="프로필 편집">
       <MyProfileEdit
-        initialValues={mapProfileFormValues(userQuery.data)}
+        initialValues={profileFormValues}
         characterType={profile.characterType}
         isSubmitting={update.isPending}
-        onSubmit={(values) =>
-          update.mutate(
-            {
-              nickname: values.nickname,
-              companyName: values.companyName,
-              stockIds: values.interestStocks.map((stock) => stock.id),
-            },
-            { onSuccess: () => navigate(PATH.MY_PAGE) },
-          )
+        submitError={
+          update.isError ? '프로필을 저장하지 못했어요. 잠시 후 다시 시도해주세요.' : undefined
         }
+        onSubmit={(values) => update.mutate(values, { onSuccess: () => navigate(PATH.MY_PAGE) })}
       />
     </MyPageLayout>
   )

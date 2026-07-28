@@ -10,6 +10,8 @@ export interface MyGlossaryListProps {
   hasNext?: boolean
   onLoadMore?: () => void
   isLoadingMore?: boolean
+  /** 빈 상태 여부는 조회 데이터를 소유한 Page가 결정한다. */
+  isEmpty: boolean
 }
 
 /**
@@ -24,6 +26,7 @@ export function MyGlossaryList({
   hasNext = false,
   onLoadMore,
   isLoadingMore = false,
+  isEmpty,
 }: MyGlossaryListProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -37,7 +40,7 @@ export function MyGlossaryList({
         </p>
       </section>
 
-      {entries.length === 0 ? (
+      {isEmpty ? (
         <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
           아직 저장한 용어가 없어요.
           <br />
