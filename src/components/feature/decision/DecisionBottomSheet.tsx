@@ -7,7 +7,7 @@ import { ConfidenceSliderSection } from '@/components/domain/decision/Confidence
 import type { PredictionType } from '@/components/domain/decision/DirectionSelectorGroup'
 import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSelectorGroup'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
-import type { ConfidenceLevel } from '@/types/api/decision'
+import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
 
 export interface DecisionBottomSheetProps {
   isOpen: boolean
@@ -29,7 +29,7 @@ export interface DecisionBottomSheetProps {
     badgeType: 'rise' | 'fall' | 'watch'
     oneLiner: string
   }
-  onConfirm: (direction: 'UP' | 'DOWN' | 'NEUTRAL', confidence: ConfidenceLevel) => void
+  onConfirm: (direction: DecisionDirection, confidence: ConfidenceLevel) => void
   isSubmitting?: boolean
 }
 
