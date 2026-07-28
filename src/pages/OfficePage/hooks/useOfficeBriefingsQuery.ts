@@ -7,6 +7,7 @@ import { mapOfficeBriefings } from '@/mappers/briefingMapper'
 export function useOfficeBriefingsQuery() {
   return useQuery({
     queryKey: briefingQueryKeys.officeList(),
+    staleTime: 0,
     queryFn: async () => mapOfficeBriefings((await getOfficeBriefings()).result),
   })
 }

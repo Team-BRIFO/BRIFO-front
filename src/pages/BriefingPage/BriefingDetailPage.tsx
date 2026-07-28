@@ -114,10 +114,7 @@ export function BriefingDetailPage() {
       <DecisionBottomSheet
         isOpen={isDecisionSheetOpen}
         onClose={() => setIsDecisionSheetOpen(false)}
-        stock={{
-          ...stock,
-          hashtags: ['HBM', '반도체', '외국인 순매수'],
-        }}
+        stock={stock}
         agent={{ name: agent.name }}
         briefing={{
           badgeText: briefing.badgeText,
@@ -144,10 +141,7 @@ export function BriefingDetailPage() {
       <PredictionCompleteModal
         isOpen={isCompleteModalOpen}
         onClose={() => setIsCompleteModalOpen(false)}
-        stock={{
-          ...stock,
-          hashtags: ['HBM', '반도체', '외국인 순매수'],
-        }}
+        stock={stock}
         earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
         onConfirm={() => {
           setIsCompleteModalOpen(false)

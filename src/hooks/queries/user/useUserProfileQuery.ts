@@ -9,6 +9,7 @@ import { userQueryKeys } from './userQueryKeys'
 export function useUserProfileQuery() {
   return useQuery({
     queryKey: userQueryKeys.profile(),
+    staleTime: 0,
     queryFn: async () => mapMyUser(await getMyUser(), MOCK_USER_PROFILE_META),
   })
 }

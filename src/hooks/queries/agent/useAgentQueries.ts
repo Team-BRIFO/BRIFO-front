@@ -8,6 +8,7 @@ import { agentQueryKeys } from './agentQueryKeys'
 export function useAgentListQuery() {
   return useQuery({
     queryKey: agentQueryKeys.list(),
+    staleTime: 0,
     queryFn: () => MOCK_AGENT_LIST_RESPONSE.result.items.map(mapAgentListItem),
     initialData: () => MOCK_AGENT_LIST_RESPONSE.result.items.map(mapAgentListItem),
   })
@@ -16,6 +17,7 @@ export function useAgentListQuery() {
 export function useAgentDetailQuery(agentId: string | null) {
   return useQuery({
     queryKey: agentQueryKeys.detail(agentId ?? ''),
+    staleTime: 0,
     queryFn: () => {
       const response = MOCK_AGENT_DETAIL_RESPONSES[agentId!]
       if (!response) throw new Error('Agent not found')

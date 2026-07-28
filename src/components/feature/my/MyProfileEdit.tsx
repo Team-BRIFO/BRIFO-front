@@ -6,11 +6,7 @@ import { TextField } from '@/components/common/TextField'
 // 대체: domain/agent — AgentCard/AgentChat/UserProfileCard와 동일 아바타
 import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { AgentType } from '@/types/domain/agent'
-import type {
-  UserInterestStock,
-  UserProfileFieldErrors,
-  UserProfileFormValues,
-} from '@/types/domain/user'
+import type { UserInterestStock, UserProfileFormValues } from '@/types/domain/user'
 
 /** 닉네임 정책: 앞뒤 공백을 제외한 1~50자, 문자 종류 제한 없음 */
 const NICKNAME_MIN_LENGTH = 1
@@ -61,8 +57,6 @@ export interface MyProfileEditProps {
   /** 캐릭터 변경 진입 — 미전달 시 텍스트만 표시 */
   onChangeCharacter?: () => void
   isSubmitting?: boolean
-  /** 서버 검증 실패를 각 입력에 연결한다. */
-  fieldErrors?: UserProfileFieldErrors
   /** 특정 필드에 속하지 않는 저장 오류 */
   submitError?: string
 }
@@ -74,7 +68,6 @@ export function MyProfileEdit({
   onSubmit,
   onChangeCharacter,
   isSubmitting = false,
-  fieldErrors,
   submitError,
 }: MyProfileEditProps) {
   const [nickname, setNickname] = useState(initialValues.nickname)
@@ -127,7 +120,7 @@ export function MyProfileEdit({
           value={nickname}
           onChange={(event) => setNickname(event.target.value)}
           placeholder={NICKNAME_HELPER_TEXT}
-          errorMessage={fieldErrors?.nickname ?? (isSubmitAttempted ? nicknameError : undefined)}
+          errorMessage={isSubmitAttempted ? nicknameError : undefined}
           required
         />
 
@@ -136,9 +129,7 @@ export function MyProfileEdit({
           value={companyName}
           onChange={(event) => setCompanyName(event.target.value)}
           placeholder={COMPANY_NAME_HELPER_TEXT}
-          errorMessage={
-            fieldErrors?.companyName ?? (isSubmitAttempted ? companyNameError : undefined)
-          }
+          errorMessage={isSubmitAttempted ? companyNameError : undefined}
           required
         />
 
@@ -179,10 +170,8 @@ export function MyProfileEdit({
             )}
           </div>
 
-          {(fieldErrors?.interestStocks || (isSubmitAttempted && interestStocksError)) && (
-            <span className="pretendard-Caption2 text-Pink-30">
-              {fieldErrors?.interestStocks ?? interestStocksError}
-            </span>
+          {isSubmitAttempted && interestStocksError && (
+            <span className="pretendard-Caption2 text-Pink-30">{interestStocksError}</span>
           )}
         </div>
       </div>

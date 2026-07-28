@@ -8,6 +8,7 @@ import { MOCK_AGENT_DETAIL_RESPONSES } from '@/mocks/agent'
 export function useBriefingDetailQuery(briefingId: string | null) {
   return useQuery({
     queryKey: briefingQueryKeys.detail(briefingId ?? ''),
+    staleTime: 0,
     queryFn: async () => {
       const response = await getBriefingDetail(briefingId!)
       return mapBriefingDetail(
@@ -22,6 +23,7 @@ export function useBriefingDetailQuery(briefingId: string | null) {
 export function useCardNewsBriefingsQuery(cardId: string | null) {
   return useQuery({
     queryKey: briefingQueryKeys.listByCard(cardId ?? ''),
+    staleTime: 0,
     queryFn: async () => mapBriefingList((await getCardNewsBriefings(cardId!)).result),
     enabled: Boolean(cardId),
   })

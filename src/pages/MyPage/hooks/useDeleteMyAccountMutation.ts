@@ -1,7 +1,12 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { deleteMyAccount } from '@/api/user'
 
 export function useDeleteMyAccountMutation() {
-  return useMutation({ mutationFn: deleteMyAccount })
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: deleteMyAccount,
+    onSuccess: () => queryClient.clear(),
+  })
 }
