@@ -7,8 +7,8 @@ import {
 } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
-
-import { useCardNewsBriefingsQuery } from './hooks/useBriefingQueries'
+import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { PATH } from '@/routes/paths'
 
 export function BriefingPage() {
   const [searchParams] = useSearchParams()
@@ -88,7 +88,7 @@ export function BriefingPage() {
                     agentName={item.nickname}
                     badgeType={item.direction}
                     comment={item.oneLiner}
-                    onClick={() => navigate(`/briefing/detail/${item.id}`)}
+                    onClick={() => navigate(PATH.BRIEFING_DETAIL(item.id))}
                   />
                 ))
               )}

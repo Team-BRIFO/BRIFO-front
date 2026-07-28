@@ -9,15 +9,14 @@ import { DiaryTabScreen } from '@/components/feature/diary/DiaryTabScreen'
 import type { DiaryView } from '@/components/feature/diary/DiaryViewTabs'
 import { ErrorView } from '@/components/feature/error/ErrorView'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
-import { PATH } from '@/routes/paths'
-import { shiftMonth } from '@/utils/diaryCalendar'
-
 import {
   useDiaryCalendarQuery,
   useDiaryListQuery,
   useDiaryStatisticsQuery,
-} from './hooks/useDiaryQueries'
-import { MOCK_DIARY_MONTH, MOCK_DIARY_YEAR } from './mockDiary'
+} from '@/pages/DiaryPage/hooks/useDiaryQueries'
+import { MOCK_DIARY_MONTH, MOCK_DIARY_YEAR } from '@/pages/DiaryPage/mockDiary'
+import { PATH } from '@/routes/paths'
+import { shiftMonth } from '@/utils/diaryCalendar'
 
 /** 탭 상태를 담는 쿼리 파라미터 키 (/diary?view=statistics) */
 const VIEW_PARAM = 'view'
@@ -50,7 +49,11 @@ export function DiaryPage() {
   const listQuery = useDiaryListQuery(undefined, view === 'list')
   const statsQuery = useDiaryStatisticsQuery(view === 'statistics')
   const userQuery = useUserProfileQuery()
-  const balanceAp = userQuery.data?.apSummary.balance
+  const balanceText = userQuery.data
+    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
+    : userQuery.isError
+      ? 'AP 조회 실패'
+      : 'AP 불러오는 중'
 
   const handleChangeView = (next: DiaryView) => {
     // 기본 탭(캘린더)은 파라미터 없이 /diary 로 유지
@@ -143,7 +146,7 @@ export function DiaryPage() {
   }
 
   return (
-    <DiaryTabScreen view={view} onChangeView={handleChangeView} balanceAp={balanceAp ?? 0}>
+    <DiaryTabScreen view={view} onChangeView={handleChangeView} balanceText={balanceText}>
       {renderView()}
     </DiaryTabScreen>
   )

@@ -6,8 +6,10 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
 import { ErrorView } from '@/components/feature/error/ErrorView'
-
-import { useDecisionDetailQuery, useDecisionListQuery } from './hooks/useDecisionQueries'
+import {
+  useDecisionDetailQuery,
+  useDecisionListQuery,
+} from '@/pages/DecisionPage/hooks/useDecisionQueries'
 
 export function PredictionListPage() {
   const navigate = useNavigate()
@@ -94,6 +96,10 @@ export function PredictionListPage() {
               ))}
             </div>
           </>
+        )}
+
+        {selectedDecisionId && selectedDecisionQuery.isLoading && !selectedDecisionDetail && (
+          <Loading className="py-10" />
         )}
 
         {selectedDecisionId && selectedDecisionQuery.isError && !selectedDecisionDetail && (

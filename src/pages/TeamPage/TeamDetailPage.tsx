@@ -18,7 +18,7 @@ export function TeamDetailPage() {
   const { data: agent, isError } = useAgentDetailQuery(agentId || null)
 
   // 존재하지 않는 사원이면 목록으로
-  if (isError && !agent) {
+  if (!agentId || (isError && !agent)) {
     return <Navigate to={PATH.TEAM} replace />
   }
 
