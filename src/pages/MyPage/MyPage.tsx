@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 
-
 import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import { MyHome } from '@/components/feature/my/MyHome'

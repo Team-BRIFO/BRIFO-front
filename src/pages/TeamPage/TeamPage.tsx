@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 
-
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import { AgentListSection } from '@/components/feature/myEmployee/AgentListSection'
 import Logo from '@/components/logos/logo-small.svg?react'

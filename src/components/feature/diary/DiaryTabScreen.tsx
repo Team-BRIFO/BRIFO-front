@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 
-
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import Logo from '@/components/logos/logo-small.svg?react'
 import { useMyUser } from '@/hooks/queries/useMy'
