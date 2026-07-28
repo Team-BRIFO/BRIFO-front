@@ -95,7 +95,13 @@ export function mapBadgeDetail(result: BadgeDetailResult): BadgeDetail {
 export function mapMyGlossaryPage(result: MyLearnedTermsResult): MyGlossaryPage {
   return {
     learnedTermCount: result.learnedTermCount,
-    entries: result.page.items.map((item) => ({ ...item })),
+    entries: result.page.items.map((item) => ({
+      termId: item.termId,
+      term: item.term,
+      definition: item.definition,
+      category: item.category,
+      learnedAt: item.learnedAt,
+    })),
     nextCursor: result.page.nextCursor,
     hasNext: result.page.hasNext,
   }
