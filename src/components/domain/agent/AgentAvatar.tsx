@@ -4,9 +4,8 @@ import { twMerge } from 'tailwind-merge'
 import ProCharacter from '@/assets/characters/pro.svg?react'
 import RookieCharacter from '@/assets/characters/rookie.svg?react'
 import TankerCharacter from '@/assets/characters/tanker.svg?react'
+import { AGENT_THEME } from '@/components/domain/agent/agentTheme'
 import type { AgentType } from '@/types/domain/agent'
-
-import { AGENT_THEME } from './agentTheme'
 
 const CHARACTER_BY_TYPE: Record<AgentType, typeof RookieCharacter> = {
   rookie: RookieCharacter,

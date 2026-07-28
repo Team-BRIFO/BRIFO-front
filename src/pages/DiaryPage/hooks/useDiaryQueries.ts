@@ -13,8 +13,7 @@ import {
   mapDiaryEntryPage,
   mapDiaryStatistics,
 } from '@/mappers/diaryMapper'
-
-import { diaryQueryKeys } from './diaryQueryKeys'
+import { diaryQueryKeys } from '@/pages/DiaryPage/hooks/diaryQueryKeys'
 
 export function useDiaryCalendarQuery(year: number, month: number, enabled: boolean = true) {
   return useQuery({

@@ -1,8 +1,7 @@
 import { Loading } from '@/components/common/Loading'
 import { MyGlossaryList } from '@/components/feature/my/MyGlossaryList'
-
-import { useMyLearnedTermsQuery } from './hooks/useMyQueries'
-import { MyPageError, MyPageLayout } from './MyPageLayout'
+import { useMyLearnedTermsQuery } from '@/pages/MyPage/hooks/useMyQueries'
+import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 
 export function MyGlossaryPage() {
   const query = useMyLearnedTermsQuery()

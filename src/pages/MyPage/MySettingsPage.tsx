@@ -7,10 +7,9 @@ import {
 } from '@/components/feature/my/AccountConfirmModal'
 import { MySettings } from '@/components/feature/my/MySettings'
 import type { MyMenuKey } from '@/constants/myMenu'
+import { useDeleteMyAccountMutation } from '@/pages/MyPage/hooks/useDeleteMyAccountMutation'
+import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
-
-import { useDeleteMyAccountMutation } from './hooks/useDeleteMyAccountMutation'
-import { MyPageLayout } from './MyPageLayout'
 
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
   profileEdit: PATH.MY_EDIT,

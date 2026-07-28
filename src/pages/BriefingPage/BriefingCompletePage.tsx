@@ -7,10 +7,9 @@ import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { BriefingCard } from '@/components/domain/briefing/BriefingCard'
 import { ErrorView } from '@/components/feature/error/ErrorView'
+import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { PATH } from '@/routes/paths'
 import type { BriefingRequestResult } from '@/types/domain/briefing'
-
-import { useCardNewsBriefingsQuery } from './hooks/useBriefingQueries'
 
 export function BriefingCompletePage() {
   const { cardId } = useParams<{ cardId: string }>()

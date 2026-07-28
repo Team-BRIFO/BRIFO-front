@@ -8,9 +8,8 @@ import {
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
 import { DiaryDetailShare } from '@/components/feature/diary/DiaryDetailShare'
-
-import { useCreateDiaryShareImageMutation } from './hooks/useCreateDiaryShareImageMutation'
-import { useDiaryDetailQuery } from './hooks/useDiaryQueries'
+import { useCreateDiaryShareImageMutation } from '@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation'
+import { useDiaryDetailQuery } from '@/pages/DiaryPage/hooks/useDiaryQueries'
 
 /** 피드 탭 - SCR-10: 결정 카드 상세 (서버 렌더 공유 이미지 · 공유) */
 export function DiaryDetailPage() {

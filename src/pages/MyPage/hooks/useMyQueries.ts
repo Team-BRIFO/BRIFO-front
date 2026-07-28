@@ -9,8 +9,7 @@ import {
   mapBadgeDetail,
   mapMyGlossaryPage,
 } from '@/mappers/myMapper'
-
-import { myQueryKeys } from './myQueryKeys'
+import { myQueryKeys } from '@/pages/MyPage/hooks/myQueryKeys'
 
 export function useMyApTransactionsQuery(size: number = AP_TRANSACTION_PAGE_SIZE) {
   return useInfiniteQuery({

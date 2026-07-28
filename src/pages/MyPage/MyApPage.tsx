@@ -2,10 +2,9 @@ import { useMemo, useState } from 'react'
 
 import { Loading } from '@/components/common/Loading'
 import { MyApHistory } from '@/components/feature/my/MyApHistory'
+import { useMyApTransactionsQuery } from '@/pages/MyPage/hooks/useMyQueries'
+import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import type { ApPeriod } from '@/types/domain/ap'
-
-import { useMyApTransactionsQuery } from './hooks/useMyQueries'
-import { MyPageError, MyPageLayout } from './MyPageLayout'
 
 /** SCR-15 AP 내역 */
 export function MyApPage() {

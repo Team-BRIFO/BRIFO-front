@@ -4,9 +4,8 @@ import { useSearchParams } from 'react-router-dom'
 import { Loading } from '@/components/common/Loading'
 import { BadgeUnlockModal } from '@/components/feature/my/BadgeUnlockModal'
 import { MyBadgeGallery } from '@/components/feature/my/MyBadgeGallery'
-
-import { useMyBadgeDetailQuery, useMyBadgesQuery } from './hooks/useMyQueries'
-import { MyPageError, MyPageLayout } from './MyPageLayout'
+import { useMyBadgeDetailQuery, useMyBadgesQuery } from '@/pages/MyPage/hooks/useMyQueries'
+import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 
 export function MyBadgePage() {
   const [params, setParams] = useSearchParams()

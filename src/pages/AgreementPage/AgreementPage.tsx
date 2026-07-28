@@ -4,9 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
+import { type AgreementId, AGREEMENTS } from '@/pages/AgreementPage/agreement'
 import { PATH } from '@/routes/paths'
-
-import { type AgreementId, AGREEMENTS } from './agreement'
 
 type AgreementCheckedState = Record<AgreementId, boolean>
 

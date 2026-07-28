@@ -11,12 +11,11 @@ import { BriefingMainContentSheet } from '@/components/feature/briefing/Briefing
 import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
 import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
 import { PredictionCompleteModal } from '@/components/feature/decision/PredictionCompleteModal'
+import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecisionMutation'
 import { PATH } from '@/routes/paths'
 import type { AgentType } from '@/types/domain/agent'
 import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
-
-import { useBriefingDetailQuery } from './hooks/useBriefingQueries'
-import { usePostDecisionMutation } from './hooks/usePostDecisionMutation'
 
 export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()

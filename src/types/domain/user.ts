@@ -4,7 +4,8 @@
  * - AP 관련은 types/domain/ap.ts, 배지는 types/domain/badge.ts 참고
  */
 
-import type { AgentType } from './agent'
+import type { AgentType } from '@/types/domain/agent'
+import type { ApSummary } from '@/types/domain/ap'
 
 /** 프로필 카드 (닉네임 · 회사 · 직함 · 캐릭터) */
 export interface UserProfile {
@@ -54,6 +55,6 @@ export interface UserProfileMeta {
 export interface UserOverview {
   profile: UserProfile
   stats: UserStats
-  apSummary: import('./ap').ApSummary
+  apSummary: ApSummary
   profileFormValues: UserProfileFormValues
 }

@@ -1,9 +1,8 @@
 import type { ButtonHTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+import { DIARY_DIRECTION_DOT, DIARY_LEGEND } from '@/components/domain/diary/diaryTheme'
 import type { DiaryDirection } from '@/types/domain/diary'
-
-import { DIARY_DIRECTION_DOT, DIARY_LEGEND } from './diaryTheme'
 
 const LABEL_BY_DIRECTION = Object.fromEntries(
   DIARY_LEGEND.map(({ direction, label }) => [direction, label]),

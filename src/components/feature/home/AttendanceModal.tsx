@@ -1,8 +1,7 @@
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
-
-import AttendanceReward from './AttendanceReward'
-import AttendanceWeekProgress from './AttendanceWeekProgress'
+import AttendanceReward from '@/components/feature/home/AttendanceReward'
+import AttendanceWeekProgress from '@/components/feature/home/AttendanceWeekProgress'
 
 interface AttendanceModalProps {
   isOpen: boolean

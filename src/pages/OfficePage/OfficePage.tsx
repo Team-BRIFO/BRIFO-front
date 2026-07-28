@@ -6,9 +6,8 @@ import { type AgentStatusMap, Office } from '@/components/feature/office/Office'
 import { OfficeProgressSection } from '@/components/feature/office/OfficeProgressSection'
 import Logo from '@/components/logos/logo-small.svg?react'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
+import { useOfficeBriefingsQuery } from '@/pages/OfficePage/hooks/useOfficeBriefingsQuery'
 import { MOCK_OFFICE_DATA } from '@/pages/OfficePage/mockOffice'
-
-import { useOfficeBriefingsQuery } from './hooks/useOfficeBriefingsQuery'
 
 /** 사무실 탭 - SCR-04: 메인 대시보드 (사원 도트, AP 잔액 등) */
 export function OfficePage() {

@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { Loading } from '@/components/common/Loading'
 import { MyProfileEdit } from '@/components/feature/my/MyProfileEdit'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
+import { useUpdateMyProfileMutation } from '@/pages/MyPage/hooks/useUpdateMyProfileMutation'
+import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
-
-import { useUpdateMyProfileMutation } from './hooks/useUpdateMyProfileMutation'
-import { MyPageError, MyPageLayout } from './MyPageLayout'
 
 export function MyProfileEditPage() {
   const navigate = useNavigate()

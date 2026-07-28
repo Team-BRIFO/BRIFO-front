@@ -1,9 +1,8 @@
 import type { HTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+import { getApAmountColorClass } from '@/components/domain/ap/apTransactionMeta'
 import type { ApSummary } from '@/types/domain/ap'
-
-import { getApAmountColorClass } from './apTransactionMeta'
 
 export interface ApBalanceCardProps extends HTMLAttributes<HTMLDivElement> {
   summary: ApSummary

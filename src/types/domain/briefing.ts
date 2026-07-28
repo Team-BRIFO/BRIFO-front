@@ -1,4 +1,4 @@
-import type { AgentType } from './agent'
+import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
 export type BriefingDirectionType = 'rise' | 'fall' | 'watch'
 export type AgentStatusType = 'PENDING' | 'ANALYZING' | 'COMPLETED' | 'FAILED'
@@ -39,7 +39,7 @@ export interface BriefingListData {
 
 export interface BriefingDetailData {
   stock: BriefingStock
-  agent: import('./agent').AgentSummary
+  agent: AgentSummary
   activeTab: AgentType
   briefing: BriefingSummaryData
 }

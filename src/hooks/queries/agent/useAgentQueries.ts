@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 
+import { agentQueryKeys } from '@/hooks/queries/agent/agentQueryKeys'
 import { mapAgentDetail, mapAgentListItem } from '@/mappers/agentMapper'
 import { MOCK_AGENT_DETAIL_RESPONSES, MOCK_AGENT_LIST_RESPONSE } from '@/mocks/agent'
-
-import { agentQueryKeys } from './agentQueryKeys'
 
 export function useAgentListQuery() {
   return useQuery({

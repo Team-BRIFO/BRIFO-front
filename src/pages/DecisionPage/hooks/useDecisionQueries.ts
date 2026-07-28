@@ -2,8 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { decisionQueryKeys } from '@/hooks/queries/decision/decisionQueryKeys'
 import { mapDecisionDetail, mapDecisionList } from '@/mappers/decisionMapper'
-
-import { MOCK_DECISIONS, MOCK_GET_DECISION_RESPONSES } from '../mockDecision'
+import { MOCK_DECISIONS, MOCK_GET_DECISION_RESPONSES } from '@/pages/DecisionPage/mockDecision'
 
 export function useDecisionListQuery() {
   return useQuery({

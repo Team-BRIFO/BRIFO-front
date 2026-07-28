@@ -6,9 +6,8 @@ import { MyHome } from '@/components/feature/my/MyHome'
 import Logo from '@/components/logos/logo-small.svg?react'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
+import { MyPageError } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
-
-import { MyPageError } from './MyPageLayout'
 
 const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
   profileEdit: PATH.MY_EDIT,

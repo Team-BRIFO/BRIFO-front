@@ -13,10 +13,9 @@ import type { AnalyzeModalType } from '@/components/feature/analyze/AnalyzeReque
 import { AnalyzeRequestModal } from '@/components/feature/analyze/AnalyzeRequestModal'
 import { ErrorView } from '@/components/feature/error/ErrorView'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
+import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
 import { PATH } from '@/routes/paths'
-
-import { useCardNewsBriefingsQuery } from './hooks/useBriefingQueries'
-import { usePostBriefingRequestMutation } from './hooks/usePostBriefingRequestMutation'
 
 export function BriefingAssignPage() {
   const { cardId } = useParams<{ cardId: string }>()

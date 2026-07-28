@@ -1,11 +1,10 @@
 import type { ButtonHTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
+import { AgentLevelBar } from '@/components/domain/agent/AgentLevelBar'
+import { AGENT_THEME } from '@/components/domain/agent/agentTheme'
 import type { AgentSummary } from '@/types/domain/agent'
-
-import { AgentAvatar } from './AgentAvatar'
-import { AgentLevelBar } from './AgentLevelBar'
-import { AGENT_THEME } from './agentTheme'
 
 export interface AgentCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
   agent: AgentSummary
