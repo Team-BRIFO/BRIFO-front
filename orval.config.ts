@@ -1,9 +1,23 @@
 import { defineConfig } from 'orval'
+import { loadEnv } from 'vite'
+
+const environment = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), '')
+const apiBaseUrl = process.env.VITE_API_BASE_URL || environment.VITE_API_BASE_URL
+const openApiUrl =
+  process.env.ORVAL_OPENAPI_URL ||
+  environment.ORVAL_OPENAPI_URL ||
+  (apiBaseUrl ? `${apiBaseUrl.replace(/\/$/, '')}/v3/api-docs` : undefined)
+
+if (!openApiUrl) {
+  throw new Error(
+    'ORVAL_OPENAPI_URL or VITE_API_BASE_URL is required. Copy .env.example to .env and set the API base URL.',
+  )
+}
 
 export default defineConfig({
   brifo: {
     input: {
-      target: 'https://api.example.com/v3/api-docs',
+      target: openApiUrl,
     },
     output: {
       target: './src/api/generated/endpoints',

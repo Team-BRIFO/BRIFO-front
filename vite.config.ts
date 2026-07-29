@@ -8,7 +8,13 @@ import svgr from 'vite-plugin-svgr'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const environment = loadEnv(mode, '.', '')
-  const apiBaseUrl = environment.VITE_API_BASE_URL || 'https://api.example.com'
+  const apiBaseUrl = environment.VITE_API_BASE_URL
+
+  if (!apiBaseUrl) {
+    throw new Error(
+      'VITE_API_BASE_URL is required. Copy .env.example to .env and set the API base URL.',
+    )
+  }
 
   return {
     define: {
