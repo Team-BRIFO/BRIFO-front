@@ -187,6 +187,27 @@ describe('createBrifoAxiosInstance', () => {
     expect(onSessionExpired).toHaveBeenCalledOnce()
   })
 
+  it('handles concurrent 401 responses without a Refresh Token only once', async () => {
+    const tokenStore = createTokenStore('expired-access', null)
+    const onSessionExpired = vi.fn()
+    const adapter = createAxiosAdapter(() => ({
+      data: { success: false },
+      status: 401,
+    }))
+    const client = createBrifoAxiosInstance({
+      baseURL: API_BASE_URL,
+      adapter,
+      tokenStore,
+      onSessionExpired,
+    })
+
+    const results = await Promise.allSettled([client.get('/api/agents'), client.get('/api/badges')])
+
+    expect(results.every((result) => result.status === 'rejected')).toBe(true)
+    expect(tokenStore.clear).toHaveBeenCalledOnce()
+    expect(onSessionExpired).toHaveBeenCalledOnce()
+  })
+
   it('does not retry an original request aborted while refresh is pending', async () => {
     const tokenStore = createTokenStore('expired-access', 'refresh-token')
     const controller = new AbortController()

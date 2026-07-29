@@ -58,7 +58,8 @@ describe('executeApiRequest', () => {
   })
 
   it('normalizes a missing required result as a contract ApiError', () => {
-    expect(() =>
+    let error: unknown
+    try {
       requireApiResult(
         {
           success: true,
@@ -66,14 +67,17 @@ describe('executeApiRequest', () => {
           message: '성공',
         },
         'getUserProfile',
-      ),
-    ).toThrowError(
-      expect.objectContaining({
-        kind: 'contract',
-        code: 'MISSING_API_RESULT',
-        endpoint: 'getUserProfile',
-      }),
-    )
+      )
+    } catch (cause) {
+      error = cause
+    }
+
+    expect(error).toMatchObject({
+      kind: 'contract',
+      code: 'MISSING_API_RESULT',
+      endpoint: 'getUserProfile',
+      issues: [expect.objectContaining({ input: undefined })],
+    })
   })
 
   it('normalizes invalid success JSON from generated Zod validation', async () => {
@@ -103,11 +107,16 @@ describe('executeApiRequest', () => {
       success: false,
       code: 'AUTH_401_03',
       message: '유효하지 않은 토큰입니다.',
+      token: 'must-not-be-retained',
     }
     const adapter = createAxiosAdapter(() => ({
       data: body,
       status: 401,
-      headers: { 'X-Request-Id': 'request-1' },
+      headers: {
+        Authorization: 'Bearer must-not-be-retained',
+        'Set-Cookie': 'refreshToken=must-not-be-retained',
+        'X-Request-Id': 'request-1',
+      },
     }))
 
     const promise = executeApiRequest({
@@ -116,13 +125,21 @@ describe('executeApiRequest', () => {
       request: () => logout({ refreshToken: 'refresh-token' }, { adapter }),
     })
 
-    await expect(promise).rejects.toMatchObject({
+    const error = await promise.catch((cause: unknown) => cause)
+
+    expect(error).toMatchObject({
       kind: 'http',
       code: 'AUTH_401_03',
       status: 401,
-      responseBody: body,
-      headers: expect.objectContaining({ 'x-request-id': 'request-1' }),
+      responseBody: {
+        success: false,
+        code: 'AUTH_401_03',
+        message: '유효하지 않은 토큰입니다.',
+      },
+      headers: { 'x-request-id': 'request-1' },
     })
+    expect((error as ApiError).cause).not.toHaveProperty('config')
+    expect((error as ApiError).cause).not.toHaveProperty('response')
   })
 
   it.each([

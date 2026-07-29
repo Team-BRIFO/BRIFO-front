@@ -11,6 +11,7 @@ function useAgentListHookTypeExample() {
   return useApiQuery({
     queryKey: ['agents', 'list'] as const,
     operation: getAgents,
+    endpoint: 'getAgents',
     args: [],
     responseSchema: ApiResponseGetAgentsResponse,
     response: 'requiredResult',
@@ -21,6 +22,7 @@ function useAgentListHookTypeExample() {
 function useLogoutHookTypeExample() {
   return useApiMutation({
     operation: logout,
+    endpoint: 'logout',
     responseSchema: ApiResponse,
     getArgs: (refreshToken: string): [{ refreshToken: string }] => [{ refreshToken }],
   })
@@ -43,6 +45,7 @@ describe('common API hooks boundary', () => {
 
     const response = await executeGeneratedApiOperation({
       operation: logout,
+      endpoint: 'logout',
       args: [{ refreshToken: 'refresh-token' }],
       responseSchema: ApiResponse,
       requestConfig: { adapter },
@@ -70,6 +73,7 @@ describe('common API hooks boundary', () => {
 
     const result = await executeGeneratedApiOperation({
       operation: getAgents,
+      endpoint: 'getAgents',
       args: [],
       responseSchema: ApiResponseGetAgentsResponse,
       response: 'requiredResult',
@@ -90,6 +94,7 @@ describe('common API hooks boundary', () => {
 
     const promise = executeGeneratedApiOperation({
       operation: getAgents,
+      endpoint: 'getAgents',
       args: [],
       responseSchema: ApiResponseGetAgentsResponse,
       response: 'requiredResult',
@@ -120,6 +125,7 @@ describe('common API hooks boundary', () => {
 
     const promise = executeGeneratedApiOperation({
       operation: getAgents,
+      endpoint: 'getAgents',
       args: [],
       responseSchema: ApiResponseGetAgentsResponse,
       signal: controller.signal,
@@ -134,5 +140,36 @@ describe('common API hooks boundary', () => {
     })
     expect(receivedSignal).toBe(controller.signal)
     expect(receivedSignal?.aborted).toBe(true)
+  })
+
+  it('normalizes mapper exceptions as contract ApiErrors', async () => {
+    const adapter = createAxiosAdapter(() => ({
+      data: {
+        success: true,
+        code: 'COMMON_200',
+        message: '성공',
+        result: {
+          items: [],
+        },
+      },
+    }))
+
+    const promise = executeGeneratedApiOperation({
+      operation: getAgents,
+      endpoint: 'getAgents',
+      args: [],
+      responseSchema: ApiResponseGetAgentsResponse,
+      response: 'requiredResult',
+      requestConfig: { adapter },
+      map: () => {
+        throw new Error('mapper failed')
+      },
+    })
+
+    await expect(promise).rejects.toMatchObject({
+      kind: 'contract',
+      code: 'MAPPING_ERROR',
+      endpoint: 'getAgents',
+    })
   })
 })
