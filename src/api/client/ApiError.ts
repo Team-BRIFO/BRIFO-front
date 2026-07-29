@@ -5,6 +5,35 @@ import { ApiErrorResponse as ApiErrorResponseSchema } from '@/api/generated/sche
 
 export type ApiErrorKind = 'http' | 'network' | 'contract' | 'aborted'
 
+const DIAGNOSTIC_RESPONSE_HEADERS = new Set([
+  'content-type',
+  'retry-after',
+  'traceparent',
+  'x-correlation-id',
+  'x-request-id',
+])
+
+function createSafeCause(cause: unknown) {
+  if (!(cause instanceof Error)) return undefined
+
+  let message = 'Underlying error'
+  if (isAxiosError(cause)) {
+    message = cause.code ? `Axios request failed (${cause.code})` : 'Axios request failed'
+  } else if (cause instanceof ZodError) {
+    message = 'Zod validation failed'
+  } else if (cause.name === 'AbortError') {
+    message = 'Request aborted'
+  }
+
+  const safeCause = new Error(message)
+  safeCause.name = cause.name
+
+  const stackFrames = cause.stack?.split('\n').slice(1).join('\n')
+  if (stackFrames) safeCause.stack = `${safeCause.name}: ${message}\n${stackFrames}`
+
+  return safeCause
+}
+
 interface ApiErrorOptions {
   kind: ApiErrorKind
   endpoint: string
@@ -29,7 +58,7 @@ export class ApiError extends Error {
   readonly headers?: Record<string, string>
 
   constructor(options: ApiErrorOptions) {
-    super(options.message, { cause: options.cause })
+    super(options.message, { cause: createSafeCause(options.cause) })
     this.name = 'ApiError'
     this.kind = options.kind
     this.endpoint = options.endpoint
@@ -81,16 +110,17 @@ function isAbortError(error: unknown, signal?: AbortSignal) {
   )
 }
 
-function responseHeaders(responseHeaders: unknown) {
+function responseHeaders(rawHeaders: unknown) {
   const headers: Record<string, string> = {}
   const normalizedHeaders =
-    responseHeaders instanceof AxiosHeaders
-      ? responseHeaders.toJSON()
-      : AxiosHeaders.from(responseHeaders as RawAxiosHeaders).toJSON()
+    rawHeaders instanceof AxiosHeaders
+      ? rawHeaders.toJSON()
+      : AxiosHeaders.from(rawHeaders as RawAxiosHeaders).toJSON()
 
   Object.entries(normalizedHeaders).forEach(([key, value]) => {
-    if (value !== null && value !== undefined) {
-      headers[key.toLowerCase()] = Array.isArray(value) ? value.join(', ') : String(value)
+    const normalizedKey = key.toLowerCase()
+    if (DIAGNOSTIC_RESPONSE_HEADERS.has(normalizedKey) && value !== null && value !== undefined) {
+      headers[normalizedKey] = Array.isArray(value) ? value.join(', ') : String(value)
     }
   })
 
@@ -133,7 +163,7 @@ export function normalizeApiError({ endpoint, cause, signal }: NormalizeApiError
       message: getHttpMessage(status),
       serviceMessage: parsedBody.success ? parsedBody.data.message : undefined,
       cause,
-      responseBody,
+      responseBody: parsedBody.success ? parsedBody.data : undefined,
       headers: responseHeaders(cause.response.headers),
     })
   }

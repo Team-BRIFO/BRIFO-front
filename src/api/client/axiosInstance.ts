@@ -94,6 +94,15 @@ export function createBrifoAxiosInstance({
   const client = createBaseAxiosInstance(baseURL, adapter)
   const refreshClient = createBaseAxiosInstance(baseURL, adapter)
   let refreshPromise: Promise<boolean> | undefined
+  let sessionExpirationHandled = false
+
+  function expireSessionOnce() {
+    if (sessionExpirationHandled) return
+
+    sessionExpirationHandled = true
+    tokenStore.clear()
+    onSessionExpired()
+  }
 
   async function refreshSession() {
     const refreshToken = tokenStore.getRefreshToken()
@@ -119,15 +128,11 @@ export function createBrifoAxiosInstance({
     if (!refreshPromise) {
       refreshPromise = refreshSession()
         .then((refreshed) => {
-          if (!refreshed) {
-            tokenStore.clear()
-            onSessionExpired()
-          }
+          if (!refreshed) expireSessionOnce()
           return refreshed
         })
         .catch((error: unknown) => {
-          tokenStore.clear()
-          onSessionExpired()
+          expireSessionOnce()
           throw error
         })
         .finally(() => {
@@ -139,6 +144,8 @@ export function createBrifoAxiosInstance({
   }
 
   client.interceptors.request.use((config) => {
+    if (tokenStore.getRefreshToken()) sessionExpirationHandled = false
+
     if (isPublicAuthRequest(config)) {
       config.headers.delete('Authorization')
     } else {
@@ -160,8 +167,7 @@ export function createBrifoAxiosInstance({
     }
 
     if (!tokenStore.getRefreshToken()) {
-      tokenStore.clear()
-      onSessionExpired()
+      expireSessionOnce()
       return Promise.reject(error)
     }
 

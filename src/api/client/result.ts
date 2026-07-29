@@ -22,7 +22,7 @@ export function requireApiResult<T>(
           code: 'custom',
           path: ['result'],
           message: 'Required API result is missing',
-          input: response,
+          input: response.result,
         },
       ],
     })
