@@ -49,7 +49,7 @@ interface ApiOperationOptions<
   args: GeneratedApiArguments<TOperation>
   responseSchema: ZodType<GeneratedApiResponse<TOperation>>
   response?: TMode
-  endpoint?: string
+  endpoint: string
   requestConfig?: ApiRequestConfig
   timeoutMs?: number
 }
@@ -57,30 +57,27 @@ interface ApiOperationOptions<
 interface ExecuteGeneratedApiOperationOptions<
   TOperation extends GeneratedApiOperation,
   TMode extends ApiResponseMode,
+  TData,
 > extends ApiOperationOptions<TOperation, TMode> {
   signal?: AbortSignal
-}
-
-function getEndpoint(operation: GeneratedApiOperation, endpoint: string | undefined) {
-  return endpoint ?? operation.name ?? 'unknown'
+  map?: (value: ApiOperationValue<GeneratedApiResponse<TOperation>, TMode>) => TData
 }
 
 export async function executeGeneratedApiOperation<
   TOperation extends GeneratedApiOperation,
   TMode extends ApiResponseMode = 'body',
+  TData = ApiOperationValue<GeneratedApiResponse<TOperation>, TMode>,
 >({
   operation,
   args,
   responseSchema,
   response,
-  endpoint: endpointOverride,
+  endpoint,
   requestConfig,
   signal,
   timeoutMs,
-}: ExecuteGeneratedApiOperationOptions<TOperation, TMode>): Promise<
-  ApiOperationValue<GeneratedApiResponse<TOperation>, TMode>
-> {
-  const endpoint = getEndpoint(operation, endpointOverride)
+  map,
+}: ExecuteGeneratedApiOperationOptions<TOperation, TMode, TData>): Promise<TData> {
   const body = await executeApiRequest({
     endpoint,
     responseSchema,
@@ -95,14 +92,26 @@ export async function executeGeneratedApiOperation<
     },
   })
 
-  if (response === 'requiredResult') {
-    return requireApiResult(body as ApiSuccessWrapper<unknown>, endpoint) as ApiOperationValue<
-      GeneratedApiResponse<TOperation>,
-      TMode
-    >
-  }
+  const value =
+    response === 'requiredResult'
+      ? requireApiResult(body as ApiSuccessWrapper<unknown>, endpoint)
+      : body
 
-  return body as ApiOperationValue<GeneratedApiResponse<TOperation>, TMode>
+  if (!map) return value as TData
+
+  try {
+    return map(value as ApiOperationValue<GeneratedApiResponse<TOperation>, TMode>)
+  } catch (cause) {
+    if (cause instanceof ApiError) throw cause
+
+    throw new ApiError({
+      kind: 'contract',
+      endpoint,
+      code: 'MAPPING_ERROR',
+      message: '서버 응답을 앱 데이터로 변환하지 못했습니다.',
+      cause,
+    })
+  }
 }
 
 export interface UseApiQueryOptions<
@@ -139,7 +148,7 @@ export function useApiQuery<
     ...queryOptions,
     queryKey,
     queryFn: async ({ signal }) => {
-      const value = await executeGeneratedApiOperation({
+      return executeGeneratedApiOperation({
         operation,
         args,
         responseSchema,
@@ -148,9 +157,8 @@ export function useApiQuery<
         requestConfig,
         timeoutMs,
         signal,
+        map,
       })
-
-      return map ? map(value) : (value as TData)
     },
   })
 }
@@ -209,7 +217,7 @@ export function useApiInfiniteQuery<
     ...queryOptions,
     queryKey,
     queryFn: async (context) => {
-      const value = await executeGeneratedApiOperation({
+      return executeGeneratedApiOperation({
         operation,
         args: getArgs(context),
         responseSchema,
@@ -218,9 +226,8 @@ export function useApiInfiniteQuery<
         requestConfig,
         timeoutMs,
         signal: context.signal,
+        map,
       })
-
-      return map ? map(value) : (value as TPageData)
     },
   })
 }
@@ -264,7 +271,7 @@ export function useApiMutation<
   return useMutation({
     ...mutationOptions,
     mutationFn: async (variables) => {
-      const value = await executeGeneratedApiOperation({
+      return executeGeneratedApiOperation({
         operation,
         args: getArgs(variables),
         responseSchema,
@@ -272,9 +279,8 @@ export function useApiMutation<
         endpoint,
         requestConfig,
         timeoutMs,
+        map,
       })
-
-      return map ? map(value) : (value as TData)
     },
   })
 }
