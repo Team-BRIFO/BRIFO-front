@@ -1,16 +1,10 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 
+import { createAppQueryClient } from '@/api/client/queryPolicy'
 import { router } from '@/routes/Router'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-})
+const queryClient = createAppQueryClient()
 
 function App() {
   return (

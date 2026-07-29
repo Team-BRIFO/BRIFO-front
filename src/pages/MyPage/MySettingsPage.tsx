@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { browserTokenStore } from '@/api/client/tokenStore'
 import {
   type AccountActionType,
   AccountConfirmModal,
@@ -16,10 +17,6 @@ const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
   interestStocks: PATH.MY_EDIT,
   glossary: PATH.MY_GLOSSARY,
   tutorial: PATH.TUTORIAL,
-}
-function clearTokens() {
-  localStorage.removeItem('accessToken')
-  localStorage.removeItem('refreshToken')
 }
 
 export function MySettingsPage() {
@@ -37,13 +34,13 @@ export function MySettingsPage() {
   }
   const onConfirm = () => {
     if (action === 'logout') {
-      clearTokens()
+      browserTokenStore.clear()
       navigate(PATH.SPLASH, { replace: true })
       return
     }
     removeAccount.mutate(undefined, {
       onSuccess: () => {
-        clearTokens()
+        browserTokenStore.clear()
         navigate(PATH.SPLASH, { replace: true })
       },
     })

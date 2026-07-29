@@ -5,7 +5,7 @@ import type { NewsDetailResponse } from '@/types/api/news'
  * @param cardId 조회할 카드뉴스 공개 ID (UUID)
  */
 export const getNewsCardDetail = async (cardId: string): Promise<NewsDetailResponse> => {
-  // TODO: 공통 apiClient(src/api/axios.ts) 연동
+  // TODO: 공통 Axios 인스턴스(src/api/client/axiosInstance.ts) 연동
   return {
     success: true,
     code: 'COMMON_200',
