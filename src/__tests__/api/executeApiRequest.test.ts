@@ -102,6 +102,29 @@ describe('executeApiRequest', () => {
     })
   })
 
+  it('keeps a contract error when the signal is aborted after receiving invalid JSON', async () => {
+    const controller = new AbortController()
+    controller.abort()
+    const adapter = createAxiosAdapter(() => ({
+      data: {
+        success: true,
+        code: 'COMMON_200',
+      },
+    }))
+
+    const promise = executeApiRequest({
+      endpoint: 'logout',
+      responseSchema: ApiResponse,
+      signal: controller.signal,
+      request: () => logout({ refreshToken: 'refresh-token' }, { adapter }),
+    })
+
+    await expect(promise).rejects.toMatchObject({
+      kind: 'contract',
+      code: 'CONTRACT_ERROR',
+    })
+  })
+
   it('preserves service code, status, body, and headers from a normal error response', async () => {
     const body = {
       success: false,
@@ -157,6 +180,32 @@ describe('executeApiRequest', () => {
     await expect(promise).rejects.toMatchObject({
       kind: 'http',
       code: `HTTP_${status}`,
+    })
+  })
+
+  it('keeps an HTTP error when the signal is aborted after receiving a response', async () => {
+    const controller = new AbortController()
+    controller.abort()
+    const adapter = createAxiosAdapter(() => ({
+      data: {
+        success: false,
+        code: 'COMMON_503',
+        message: '일시적인 오류입니다.',
+      },
+      status: 503,
+    }))
+
+    const promise = executeApiRequest({
+      endpoint: 'logout',
+      responseSchema: ApiResponse,
+      signal: controller.signal,
+      request: () => logout({ refreshToken: 'refresh-token' }, { adapter }),
+    })
+
+    await expect(promise).rejects.toMatchObject({
+      kind: 'http',
+      code: 'COMMON_503',
+      status: 503,
     })
   })
 

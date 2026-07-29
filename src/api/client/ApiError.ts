@@ -130,26 +130,6 @@ function responseHeaders(rawHeaders: unknown) {
 export function normalizeApiError({ endpoint, cause, signal }: NormalizeApiErrorOptions): ApiError {
   if (cause instanceof ApiError) return cause
 
-  if (isTimeoutError(cause, signal)) {
-    return new ApiError({
-      kind: 'network',
-      endpoint,
-      code: 'TIMEOUT',
-      message: '요청 시간이 초과되었습니다.',
-      cause,
-    })
-  }
-
-  if (isAbortError(cause, signal)) {
-    return new ApiError({
-      kind: 'aborted',
-      endpoint,
-      code: 'ABORTED',
-      message: '요청이 취소되었습니다.',
-      cause,
-    })
-  }
-
   if (isAxiosError(cause) && cause.response) {
     const responseBody: unknown = cause.response.data
     const parsedBody = ApiErrorResponseSchema.safeParse(responseBody)
@@ -176,6 +156,26 @@ export function normalizeApiError({ endpoint, cause, signal }: NormalizeApiError
       message: '서버 응답 형식이 올바르지 않습니다.',
       cause,
       issues: cause.issues,
+    })
+  }
+
+  if (isTimeoutError(cause, signal)) {
+    return new ApiError({
+      kind: 'network',
+      endpoint,
+      code: 'TIMEOUT',
+      message: '요청 시간이 초과되었습니다.',
+      cause,
+    })
+  }
+
+  if (isAbortError(cause, signal)) {
+    return new ApiError({
+      kind: 'aborted',
+      endpoint,
+      code: 'ABORTED',
+      message: '요청이 취소되었습니다.',
+      cause,
     })
   }
 
