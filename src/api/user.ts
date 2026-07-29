@@ -1,4 +1,5 @@
-import { MOCK_MY_USER_RESPONSE, MY_PROFILE_META } from '@/pages/MyPage/mockMy'
+import { MOCK_USER_PROFILE_META } from '@/mocks/user'
+import { MOCK_MY_USER_RESPONSE } from '@/pages/MyPage/mockMy'
 import type { MyUserResult, UpdateMyProfileRequest } from '@/types/api/user'
 
 /** TODO: 공통 apiClient 연동 후 실제 /api/users/me 요청으로 교체 */
@@ -11,7 +12,7 @@ export async function updateMyProfile(request: UpdateMyProfileRequest): Promise<
   // 실제 종목 선택 UI/API 연결 전에는 신규 종목 추가를 보존하지 못한다.
   MOCK_MY_USER_RESPONSE.result.nickname = request.nickname.trim()
   MOCK_MY_USER_RESPONSE.result.companyName = request.companyName.trim()
-  MY_PROFILE_META.interestStocks = MY_PROFILE_META.interestStocks.filter((stock) =>
+  MOCK_USER_PROFILE_META.interestStocks = MOCK_USER_PROFILE_META.interestStocks.filter((stock) =>
     request.stockIds.includes(stock.id),
   )
 }

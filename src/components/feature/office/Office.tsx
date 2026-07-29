@@ -10,21 +10,21 @@ import TankerComplete from '@/assets/characters/tanker-complete.gif'
 import TankerIng from '@/assets/characters/tanker-ing.gif'
 import TankerNormal from '@/assets/characters/tanker-normal.gif'
 import OfficeBg from '@/assets/images/OfficeBackground.svg?react'
-import type { OfficeAgentStatusDTO } from '@/types/api/briefing'
+import type { AgentStatusType } from '@/types/domain/briefing'
 
 /** 캐릭터 타입별 상태 이미지 맵 */
 const CHARACTER_IMAGES = {
-  ROOKIE: {
+  rookie: {
     normal: RookieNormal,
     ing: RookieIng,
     complete: RookieComplete,
   },
-  TANKER: {
+  tanker: {
     normal: TankerNormal,
     ing: TankerIng,
     complete: TankerComplete,
   },
-  PRO: {
+  pro: {
     normal: ProNormal,
     ing: ProIng,
     complete: ProComplete,
@@ -34,9 +34,7 @@ const CHARACTER_IMAGES = {
 type AgentCharacterType = keyof typeof CHARACTER_IMAGES
 
 /** status → 이미지 상태 변환 */
-function getImageState(
-  status: OfficeAgentStatusDTO['status'] | null,
-): 'normal' | 'ing' | 'complete' {
+function getImageState(status: AgentStatusType | null): 'normal' | 'ing' | 'complete' {
   if (!status || status === 'FAILED') return 'normal'
   if (status === 'COMPLETED') return 'complete'
   return 'ing' // PENDING | ANALYZING
@@ -47,7 +45,7 @@ function getImageState(
  * key는 에이전트 타입(ROOKIE·TANKER·PRO),
  * value는 현재 브리핑 status (없으면 null = 대기중).
  */
-export type AgentStatusMap = Partial<Record<AgentCharacterType, OfficeAgentStatusDTO['status']>>
+export type AgentStatusMap = Partial<Record<AgentCharacterType, AgentStatusType>>
 
 export interface OfficeProps {
   /** 에이전트 타입별 브리핑 상태 맵 */
@@ -56,15 +54,15 @@ export interface OfficeProps {
 
 /** 책상 고정 위치 및 에이전트 배치 순서 (오피스 이미지 좌표 기준) */
 const DESK_SLOTS: { agentType: AgentCharacterType; style: CSSProperties }[] = [
-  { agentType: 'TANKER', style: { bottom: '20%', left: '5%', width: '29%' } }, // 좌하단
-  { agentType: 'ROOKIE', style: { bottom: '38%', left: '36%', width: '29%' } }, // 중앙
-  { agentType: 'PRO', style: { bottom: '20%', right: '5%', width: '29%' } }, // 우하단
+  { agentType: 'tanker', style: { bottom: '20%', left: '5%', width: '29%' } }, // 좌하단
+  { agentType: 'rookie', style: { bottom: '38%', left: '36%', width: '29%' } }, // 중앙
+  { agentType: 'pro', style: { bottom: '20%', right: '5%', width: '29%' } }, // 우하단
 ]
 
 /** 사무실 배경 + 캐릭터 상태를 결합한 오피스 컴포넌트 */
 export function Office({ agentStatusMap = {} }: OfficeProps) {
   return (
-    <div className="bg-White relative aspect-[328/263] w-full overflow-hidden rounded-xl">
+    <div className="bg-White relative aspect-328/263 w-full overflow-hidden rounded-xl">
       {/* 배경 */}
       <OfficeBg className="h-auto w-full rounded-xl" aria-hidden="true" />
 

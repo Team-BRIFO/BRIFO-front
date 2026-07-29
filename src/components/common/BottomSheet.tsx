@@ -173,7 +173,7 @@ function BottomSheet({
         aria-label={title ? undefined : ariaLabel}
         tabIndex={-1}
         className={[
-          'bg-White flex max-h-[85vh] w-full max-w-[768px] flex-col overflow-hidden rounded-t-3xl pt-3 shadow-lg',
+          'bg-White flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl pt-3 shadow-lg',
           'focus-visible:outline-none',
           className,
         ]

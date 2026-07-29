@@ -1,9 +1,8 @@
 import { twMerge } from 'tailwind-merge'
 
 import { ProgressBar } from '@/components/common/ProgressBar'
+import { AGENT_THEME } from '@/components/domain/agent/agentTheme'
 import type { AgentType } from '@/types/domain/agent'
-
-import { AGENT_THEME } from './agentTheme'
 
 export interface AgentLevelBarProps {
   type: AgentType

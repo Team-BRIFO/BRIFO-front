@@ -52,7 +52,7 @@ export function NewsCardPage() {
   }
 
   return (
-    <div className="bg-White flex h-[100dvh] w-full flex-col">
+    <div className="bg-White flex h-dvh w-full flex-col">
       <StatusBar
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title={stockName}

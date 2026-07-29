@@ -1,4 +1,4 @@
-import type { ApiResponse } from './common'
+import type { ApiResponse } from '@/types/api/common'
 
 export interface NewsCardTermDTO {
   termId: string

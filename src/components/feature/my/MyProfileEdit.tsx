@@ -57,6 +57,8 @@ export interface MyProfileEditProps {
   /** 캐릭터 변경 진입 — 미전달 시 텍스트만 표시 */
   onChangeCharacter?: () => void
   isSubmitting?: boolean
+  /** 특정 필드에 속하지 않는 저장 오류 */
+  submitError?: string
 }
 
 /** 프로필 편집 화면(SCR-13) 본문 — 캐릭터 · 닉네임 · 회사명 · 관심종목 */
@@ -66,6 +68,7 @@ export function MyProfileEdit({
   onSubmit,
   onChangeCharacter,
   isSubmitting = false,
+  submitError,
 }: MyProfileEditProps) {
   const [nickname, setNickname] = useState(initialValues.nickname)
   const [companyName, setCompanyName] = useState(initialValues.companyName)
@@ -173,6 +176,12 @@ export function MyProfileEdit({
         </div>
       </div>
 
+      {submitError && (
+        <p role="alert" className="pretendard-Caption1 text-Pink-30 text-center">
+          {submitError}
+        </p>
+      )}
+
       <Button
         size="lg"
         isFullWidth
@@ -180,7 +189,7 @@ export function MyProfileEdit({
         onClick={handleSubmit}
         className="mt-auto"
       >
-        설정완료
+        {isSubmitting ? '저장 중...' : '설정완료'}
       </Button>
     </div>
   )

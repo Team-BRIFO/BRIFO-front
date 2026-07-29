@@ -1,9 +1,11 @@
 import type { HTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+import {
+  formatApTransactionDateTime,
+  getApAmountColorClass,
+} from '@/components/domain/ap/apTransactionMeta'
 import type { ApTransaction } from '@/types/domain/ap'
-
-import { formatApTransactionDateTime, getApAmountColorClass } from './apTransactionMeta'
 
 export interface ApTransactionRowProps extends HTMLAttributes<HTMLLIElement> {
   transaction: ApTransaction

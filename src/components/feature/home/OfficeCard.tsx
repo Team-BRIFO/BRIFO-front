@@ -2,8 +2,7 @@ import Pro from '@/assets/characters/home_pro.svg?react'
 import Rookie from '@/assets/characters/home_rookie.svg?react'
 import Tanker from '@/assets/characters/home_tanker.svg?react'
 import OfficeBackground from '@/assets/images/OfficeBackground.svg?react'
-
-import EmployeeLevelBadge from './EmployeeLevelBadge'
+import EmployeeLevelBadge from '@/components/feature/home/EmployeeLevelBadge'
 
 export default function OfficeCard() {
   const employees = [
@@ -29,7 +28,7 @@ export default function OfficeCard() {
   ]
 
   return (
-    <div className="relative mx-auto aspect-[328/263] w-full max-w-[768px] overflow-hidden">
+    <div className="relative mx-auto aspect-328/263 w-full max-w-3xl overflow-hidden">
       <OfficeBackground className="absolute inset-0 h-full w-full rounded-xl" />
 
       {employees.map(({ name, level, Character, wrapperStyle }) => (

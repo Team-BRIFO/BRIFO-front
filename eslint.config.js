@@ -28,5 +28,22 @@ export default defineConfig([
       'simple-import-sort/exports': 'error',
     },
   },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/api/generated/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['./**', '../**'],
+              message: 'src 내부 import는 @/ alias를 사용하세요.',
+            },
+          ],
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
 ])

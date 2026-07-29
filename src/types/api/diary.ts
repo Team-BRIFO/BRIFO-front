@@ -1,4 +1,4 @@
-import type { ApiResponse } from './common'
+import type { ApiResponse } from '@/types/api/common'
 
 /**
  * 결정일기 API 타입 (백엔드 명세 기준)

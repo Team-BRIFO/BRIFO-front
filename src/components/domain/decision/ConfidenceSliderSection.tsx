@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import { ProgressBar } from '@/components/common/ProgressBar'
-import type { ConfidenceLevel } from '@/types/api/decision'
+import type { ConfidenceLevel } from '@/types/domain/decision'
 
 export interface ConfidenceSliderSectionProps extends Omit<
   HTMLAttributes<HTMLDivElement>,

@@ -4,7 +4,8 @@
  * - AP 관련은 types/domain/ap.ts, 배지는 types/domain/badge.ts 참고
  */
 
-import type { AgentType } from './agent'
+import type { AgentType } from '@/types/domain/agent'
+import type { ApSummary } from '@/types/domain/ap'
 
 /** 프로필 카드 (닉네임 · 회사 · 직함 · 캐릭터) */
 export interface UserProfile {
@@ -40,4 +41,20 @@ export interface UserProfileFormValues {
   nickname: string
   companyName: string
   interestStocks: UserInterestStock[]
+}
+
+/** Swagger 연동 전 mock이 보완하는 프로필 표시 정보 */
+export interface UserProfileMeta {
+  id: string
+  jobTitle: string
+  characterType: AgentType
+  interestStocks: UserInterestStock[]
+}
+
+/** 사용자 Query Cache에 저장되는 화면 모델 */
+export interface UserOverview {
+  profile: UserProfile
+  stats: UserStats
+  apSummary: ApSummary
+  profileFormValues: UserProfileFormValues
 }

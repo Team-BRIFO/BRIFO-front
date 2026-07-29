@@ -1,8 +1,7 @@
 import { twMerge } from 'tailwind-merge'
 
+import { DIARY_LEGEND, DIARY_LEGEND_DOT } from '@/components/domain/diary/diaryTheme'
 import type { DiaryHitRate } from '@/types/domain/diary'
-
-import { DIARY_LEGEND, DIARY_LEGEND_DOT } from './diaryTheme'
 
 export interface DiaryHitRateCardProps {
   hitRate: DiaryHitRate

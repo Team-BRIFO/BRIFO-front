@@ -11,29 +11,29 @@ import { BriefingMainContentSheet } from '@/components/feature/briefing/Briefing
 import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
 import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
 import { PredictionCompleteModal } from '@/components/feature/decision/PredictionCompleteModal'
-import { useGetBriefingDetail } from '@/hooks/queries/useBriefing'
-import { usePostDecision } from '@/hooks/queries/useDecision'
-import { MOCK_AGENT_DETAIL_RESPONSES } from '@/pages/TeamPage/mockAgents'
+import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecisionMutation'
 import { PATH } from '@/routes/paths'
-import type { ConfidenceLevel } from '@/types/api/decision'
-import type { AgentSummary, AgentType } from '@/types/domain/agent'
+import type { AgentType } from '@/types/domain/agent'
+import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
 
 export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()
   const navigate = useNavigate()
 
-  const { data: response, isLoading, isError } = useGetBriefingDetail(briefingId ?? null)
-  const { mutate: submitDecision } = usePostDecision(briefingId ?? '')
+  const { data, isLoading, isError } = useBriefingDetailQuery(briefingId ?? null)
+  const { mutate: submitDecision, isPending: isSubmitting } = usePostDecisionMutation(
+    briefingId ?? '',
+  )
 
-  // 임시로 응답 데이터 중 agent 정보를 이용해 agentType 판단
-  const activeTab = (response?.result?.agent?.agentType.toLowerCase() as AgentType) || 'rookie'
+  const activeTab = data?.activeTab ?? 'rookie'
 
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
   const [errorModalMsg, setErrorModalMsg] = useState<string | null>(null)
 
   const [predictionData, setPredictionData] = useState<{
-    direction: 'UP' | 'DOWN' | 'NEUTRAL'
+    direction: DecisionDirection
     confidence: ConfidenceLevel
   } | null>(null)
 
@@ -50,7 +50,7 @@ export function BriefingDetailPage() {
     navigate(`/briefing/detail/${MOCK_BRIEFING_IDS[type]}`, { replace: true })
   }
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return (
       <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
         <p className="pretendard-Body1 text-Gray-6">브리핑을 불러오는 중...</p>
@@ -58,7 +58,7 @@ export function BriefingDetailPage() {
     )
   }
 
-  if (isError || !response) {
+  if ((isError && !data) || !data) {
     return (
       <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
         <p className="pretendard-Body1 text-Pink-30">브리핑 데이터를 불러오지 못했습니다.</p>
@@ -66,40 +66,7 @@ export function BriefingDetailPage() {
     )
   }
 
-  // 응답 데이터 분해
-  const { stock, agent, newsCard, briefing } = response.result
-
-  // 실제 API 연동 전이므로, Agent 상세 모의 데이터를 가져와서 UI 스펙에 맞게 주입
-  const agentDetail = MOCK_AGENT_DETAIL_RESPONSES[agent.agentId]?.result
-
-  // API 도메인 모델을 UI 컴포넌트 모델로 변환
-  const mappedAgent: AgentSummary = {
-    id: agent.agentId,
-    type: agent.agentType.toLowerCase() as AgentType,
-    name: agent.nickname,
-    modelName: agent.modelName,
-    level: agentDetail?.level ?? 1,
-    levelProgress: agentDetail?.exp ? agentDetail.exp % 100 : 0,
-    hitRate: agentDetail?.accuracyRate ?? 0,
-    dailyAP: agentDetail?.dailySalary ?? 0,
-  }
-
-  const directionMap = {
-    UP: { badgeType: 'rise' as const, badgeText: '상승 예측' },
-    DOWN: { badgeType: 'fall' as const, badgeText: '하락 예측' },
-    NEUTRAL: { badgeType: 'watch' as const, badgeText: '관망' },
-  }
-
-  const mappedBriefing = {
-    badgeType: directionMap[briefing.direction].badgeType,
-    badgeText: directionMap[briefing.direction].badgeText,
-    percentage: briefing.confidenceRate,
-    headline: newsCard.headline ?? `${stock.name} 관련 뉴스`,
-    commentTag: '사장님 맞춤',
-    comment: briefing.oneLiner,
-    noteMessage: briefing.contentText,
-    recommendText: briefing.oneLiner,
-  }
+  const { stock, agent, briefing } = data
 
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col gap-3">
@@ -135,8 +102,8 @@ export function BriefingDetailPage() {
           {/* 메인 브리핑 시트 (가운데 정렬) */}
           <div className="mt-2 flex justify-center">
             <BriefingMainContentSheet
-              agent={mappedAgent}
-              briefing={mappedBriefing}
+              agent={agent}
+              briefing={briefing}
               onConfirm={() => setIsDecisionSheetOpen(true)}
             />
           </div>
@@ -146,16 +113,14 @@ export function BriefingDetailPage() {
       <DecisionBottomSheet
         isOpen={isDecisionSheetOpen}
         onClose={() => setIsDecisionSheetOpen(false)}
-        stock={{
-          ...stock,
-          hashtags: ['HBM', '반도체', '외국인 순매수'],
-        }}
-        agent={{ name: agent.nickname }}
+        stock={stock}
+        agent={{ name: agent.name }}
         briefing={{
-          badgeText: mappedBriefing.badgeText,
-          badgeType: mappedBriefing.badgeType,
-          oneLiner: mappedBriefing.comment,
+          badgeText: briefing.badgeText,
+          badgeType: briefing.badgeType,
+          oneLiner: briefing.comment,
         }}
+        isSubmitting={isSubmitting}
         onConfirm={(direction, confidence) => {
           submitDecision(
             { direction, confidenceLevel: confidence },
@@ -175,10 +140,7 @@ export function BriefingDetailPage() {
       <PredictionCompleteModal
         isOpen={isCompleteModalOpen}
         onClose={() => setIsCompleteModalOpen(false)}
-        stock={{
-          ...stock,
-          hashtags: ['HBM', '반도체', '외국인 순매수'],
-        }}
+        stock={stock}
         earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
         onConfirm={() => {
           setIsCompleteModalOpen(false)

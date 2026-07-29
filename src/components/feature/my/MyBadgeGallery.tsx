@@ -9,10 +9,12 @@ export interface MyBadgeGalleryProps {
   /** 미전달 시 badges 배열에서 계산 */
   progress?: BadgeProgress
   onSelectBadge?: (badgeId: string) => void
+  /** 빈 상태 여부는 조회 데이터를 소유한 Page가 결정한다. */
+  isEmpty: boolean
 }
 
 /** 업적 · 배지 화면(SCR-14) 본문 — 진행률 + 배지 그리드 */
-export function MyBadgeGallery({ badges, progress, onSelectBadge }: MyBadgeGalleryProps) {
+export function MyBadgeGallery({ badges, progress, onSelectBadge, isEmpty }: MyBadgeGalleryProps) {
   const badgeProgress: BadgeProgress = progress ?? {
     unlockedCount: badges.filter((badge) => badge.isUnlocked).length,
     totalCount: badges.length,
@@ -22,7 +24,7 @@ export function MyBadgeGallery({ badges, progress, onSelectBadge }: MyBadgeGalle
     <div className="flex flex-col gap-4">
       <BadgeProgressCard progress={badgeProgress} />
 
-      {badges.length === 0 ? (
+      {isEmpty ? (
         <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
           아직 도전할 수 있는 업적이 없어요.
         </p>

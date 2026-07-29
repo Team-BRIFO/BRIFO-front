@@ -1,4 +1,4 @@
-import type { ApiResponse } from './common'
+import type { ApiResponse } from '@/types/api/common'
 
 export type ConfidenceLevel = 1 | 2 | 3 | 4 | 5
 

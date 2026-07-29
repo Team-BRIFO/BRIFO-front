@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
+import { Loading } from '@/components/common/Loading'
 import {
   StatusBar,
   StatusBarBackButton,
@@ -10,29 +11,66 @@ import {
 import { AgentCard } from '@/components/domain/agent/AgentCard'
 import type { AnalyzeModalType } from '@/components/feature/analyze/AnalyzeRequestModal'
 import { AnalyzeRequestModal } from '@/components/feature/analyze/AnalyzeRequestModal'
-import { useGetCardNewsBriefings, usePostBriefingRequest } from '@/hooks/queries/useBriefing'
-import { MOCK_AGENT_LIST_RESPONSE } from '@/pages/TeamPage/mockAgents'
+import { ErrorView } from '@/components/feature/error/ErrorView'
+import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
+import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
 import { PATH } from '@/routes/paths'
-import type { AgentSummary, AgentType } from '@/types/domain/agent'
 
 export function BriefingAssignPage() {
   const { cardId } = useParams<{ cardId: string }>()
   const navigate = useNavigate()
-  const { mutate: postBriefingRequest, isPending } = usePostBriefingRequest()
+  const { mutate: postBriefingRequest, isPending } = usePostBriefingRequestMutation()
 
   // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
-  const { data: cardNewsData } = useGetCardNewsBriefings(cardId ?? null)
-  const stockName = cardNewsData?.result?.stock?.name ?? '삼성전자'
-
-  const agentsList = MOCK_AGENT_LIST_RESPONSE.result.items
+  const cardNewsQuery = useCardNewsBriefingsQuery(cardId ?? null)
+  const agentsQuery = useAgentListQuery()
+  const agentsList = agentsQuery.data ?? []
 
   // 테스트 목적으로 기본적으로 루키, 탱커를 선택된 상태로 둠 (피그마 명세 기반)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
-    new Set([agentsList[0].agentId, agentsList[2].agentId]),
+    new Set([agentsList[0]?.id, agentsList[2]?.id].filter((id): id is string => Boolean(id))),
   )
 
   // 테스트용 모달 상태
   const [modalType, setModalType] = useState<AnalyzeModalType | null>(null)
+
+  if (cardNewsQuery.isError && !cardNewsQuery.data) {
+    return (
+      <div className="bg-Background1 flex min-h-screen flex-col">
+        <StatusBar left={<StatusBarBackButton />} title="사원배치" />
+        <div className="px-4 py-6">
+          <ErrorView
+            title="분석 정보를 불러오지 못했어요"
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => cardNewsQuery.refetch()}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  if (!cardNewsQuery.data) {
+    return <Loading className="py-10" />
+  }
+
+  if (agentsQuery.isError && !agentsQuery.data) {
+    return (
+      <ErrorView
+        title="사원 목록을 불러오지 못했어요"
+        description="잠시 후 다시 시도해주세요."
+        buttonText="다시 시도"
+        onButtonClick={() => agentsQuery.refetch()}
+      />
+    )
+  }
+
+  if (agentsList.length === 0) {
+    return <ErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />
+  }
+
+  const stockName = cardNewsQuery.data.stock.name
 
   const toggleAgent = (id: string) => {
     setSelectedIds((prev) => {
@@ -47,10 +85,13 @@ export function BriefingAssignPage() {
     if (!cardId) return
 
     postBriefingRequest(
-      { cardId, req: { agentIds: Array.from(selectedIds) } },
+      { cardId, agentIds: Array.from(selectedIds) },
       {
         onSuccess: (result) => {
-          navigate(PATH.BRIEFING_COMPLETE(cardId), { state: { result }, replace: true })
+          navigate(PATH.BRIEFING_COMPLETE(cardId), {
+            state: { briefingRequest: result },
+            replace: true,
+          })
         },
         onError: () => {
           setModalType('LLM_FAIL') // Error handling fallback
@@ -78,8 +119,8 @@ export function BriefingAssignPage() {
 
   // 선택된 사원의 일급 합산
   const totalAP = agentsList
-    .filter((a) => selectedIds.has(a.agentId))
-    .reduce((sum, a) => sum + a.dailySalary, 0)
+    .filter((agent) => selectedIds.has(agent.id))
+    .reduce((sum, agent) => sum + agent.dailyAP, 0)
 
   return (
     <div className="bg-White flex h-screen w-full flex-col">
@@ -101,27 +142,14 @@ export function BriefingAssignPage() {
 
           {/* 사원 카드리스트 */}
           <div className="flex w-full flex-col gap-2">
-            {agentsList.map((agent) => {
-              const mappedAgent: AgentSummary = {
-                id: agent.agentId,
-                type: agent.agentType.toLowerCase() as AgentType,
-                name: agent.nickname,
-                modelName: agent.modelName,
-                level: agent.level,
-                levelProgress: agent.exp % 100,
-                hitRate: agent.accuracyRate,
-                dailyAP: agent.dailySalary,
-              }
-
-              return (
-                <AgentCard
-                  key={agent.agentId}
-                  agent={mappedAgent}
-                  active={selectedIds.has(agent.agentId)}
-                  onClick={() => toggleAgent(agent.agentId)}
-                />
-              )
-            })}
+            {agentsList.map((agent) => (
+              <AgentCard
+                key={agent.id}
+                agent={agent}
+                active={selectedIds.has(agent.id)}
+                onClick={() => toggleAgent(agent.id)}
+              />
+            ))}
             {/* 합계 AP 문구 */}
             <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
               <span className="pretendard-Caption1 text-Gray-9">선택한 사원 일급 합계</span>

@@ -143,14 +143,11 @@ function getContainerClass(
     if (segmentedType === 2) {
       base.push(
         isFullWidth ? 'w-full' : 'w-[87.77%]',
-        'h-[1.5rem] justify-between rounded-[40px] bg-Background1',
+        'h-6 justify-between rounded-[40px] bg-Background1',
       )
     } else {
       // Type 1 (리스트/통계 등, 213px)
-      base.push(
-        isFullWidth ? 'w-full' : 'w-[59.16%]',
-        'h-[1.5rem] gap-[4px] rounded-[30px] bg-Gray-2',
-      )
+      base.push(isFullWidth ? 'w-full' : 'w-[59.16%]', 'h-6 gap-[4px] rounded-[30px] bg-Gray-2')
     }
   } else if (variant === 'underline') {
     base.push('border-b border-Gray-2 gap-4')

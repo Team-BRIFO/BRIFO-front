@@ -38,7 +38,7 @@ export function AppLayout() {
     navigate(NAVIGATION_PATHS[value])
   }
   return (
-    <div className="bg-White relative mx-auto flex h-[100dvh] w-full max-w-[768px] flex-col overflow-hidden shadow-xl">
+    <div className="bg-White relative mx-auto flex h-dvh w-full max-w-3xl flex-col overflow-hidden shadow-xl">
       <main
         className={`flex min-h-0 flex-1 flex-col overflow-y-auto ${
           selectedNavigation === 'home' ? 'bg-White' : 'bg-Background1'
@@ -51,7 +51,7 @@ export function AppLayout() {
           value={selectedNavigation}
           onChange={handleNavigationChange}
           isFullWidth
-          className="max-md:w-full md:max-w-[768px]"
+          className="max-md:w-full md:max-w-3xl"
         />
       </div>
     </div>

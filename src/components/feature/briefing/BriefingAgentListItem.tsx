@@ -7,7 +7,6 @@ export interface BriefingAgentListItemProps extends HTMLAttributes<HTMLDivElemen
   agentType: AgentType
   agentName: string
   badgeType: 'rise' | 'fall' | 'watch'
-  badgeText: string // AgentChat ignores this because it uses predefined labels, but keeping for compatibility if needed
   comment: string
 }
 

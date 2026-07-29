@@ -1,11 +1,10 @@
 import { twMerge } from 'tailwind-merge'
 
 import { Badge } from '@/components/common/Badge'
+import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
+import { AgentLevelBar } from '@/components/domain/agent/AgentLevelBar'
+import { AGENT_THEME } from '@/components/domain/agent/agentTheme'
 import type { AgentDetail } from '@/types/domain/agent'
-
-import { AgentAvatar } from './AgentAvatar'
-import { AgentLevelBar } from './AgentLevelBar'
-import { AGENT_THEME } from './agentTheme'
 
 export interface AgentProfileCardProps {
   agent: AgentDetail

@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-export FILTER_BRANCH_SQUELCH_WARNING=1; git filter-branch -f --msg-filter 'sed "s/^design:/style:/g"' 40facf6..HEAD

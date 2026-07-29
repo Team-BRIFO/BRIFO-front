@@ -5,11 +5,9 @@ import { StatusBar, StatusBarNotificationButton } from '@/components/common/Stat
 import { MyHome } from '@/components/feature/my/MyHome'
 import Logo from '@/components/logos/logo-small.svg?react'
 import type { MyMenuKey } from '@/constants/myMenu'
-import { useMyUser } from '@/hooks/queries/useMy'
+import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
+import { MyPageError } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
-import { mapMyUser } from '@/utils/myMapper'
-
-import { MyPageError } from './MyPageLayout'
 
 const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
   profileEdit: PATH.MY_EDIT,
@@ -21,10 +19,11 @@ const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
 /** SCR-13 마이 메인 */
 export function MyPage() {
   const navigate = useNavigate()
-  const userQuery = useMyUser()
-  if (userQuery.isError) return <MyPageError onRetry={() => userQuery.refetch()} />
+  const userQuery = useUserProfileQuery()
+  if (userQuery.isError && !userQuery.data)
+    return <MyPageError onRetry={() => userQuery.refetch()} />
   if (!userQuery.data) return <Loading className="py-10" />
-  const { profile, stats, apSummary } = mapMyUser(userQuery.data)
+  const { profile, stats, apSummary } = userQuery.data
   const handleMenu = (key: MyMenuKey) => {
     const path = MENU_PATHS[key]
     if (path) navigate(path)
@@ -34,7 +33,7 @@ export function MyPage() {
     <div className="bg-Background1 flex flex-1 flex-col">
       <StatusBar
         hasStatusArea={false}
-        left={<Logo className="h-[1.5rem] w-[5.25rem]" aria-label="BRIFO" />}
+        left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
         right={
           <div className="flex items-center gap-3">
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">

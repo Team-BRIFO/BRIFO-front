@@ -4,16 +4,17 @@ import type {
   DiaryDetailResult,
   DiaryListItemResponse,
   DiaryListResult,
+  DiaryShareImageResult,
   DiaryStatsResult,
   DirectionCode,
 } from '@/types/api/diary'
 import type {
-  DiaryDayMark,
+  DiaryCalendarData,
   DiaryDetail,
   DiaryDirection,
   DiaryEntry,
   DiaryEntryPage,
-  DiaryHitRate,
+  DiaryShareImage,
   DiaryStatistics,
 } from '@/types/domain/diary'
 
@@ -48,10 +49,7 @@ export const CONFIDENCE_LEVEL_LABEL: Record<ConfidenceLevelCode, string> = {
  * ⚠️ 시안 범례는 적중/오답/관망이지만 응답에 날짜별 적중 여부가 없어(월 합계만 존재)
  * 방향(상승/하락/관망) 기준으로 그린다. 백엔드에 날짜별 outcome 추가 요청 상태.
  */
-export function mapDiaryCalendar(result: DiaryCalendarResult): {
-  marks: DiaryDayMark[]
-  hitRate: DiaryHitRate
-} {
+export function mapDiaryCalendar(result: DiaryCalendarResult): DiaryCalendarData {
   const marks = result.days.map((day) => {
     const directions: DiaryDirection[] = []
     if (day.direction.up) directions.push('up')
@@ -119,6 +117,13 @@ export function mapDiaryDetail(result: DiaryDetailResult): DiaryDetail {
     id: result.diaryId,
     shareImageUrl: result.shareImageUrl,
     stockName: result.stock.name,
+  }
+}
+
+export function mapDiaryShareImage(result: DiaryShareImageResult): DiaryShareImage {
+  return {
+    diaryId: result.diaryId,
+    shareImageUrl: result.shareImageUrl,
   }
 }
 

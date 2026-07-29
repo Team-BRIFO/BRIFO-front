@@ -7,8 +7,8 @@ import {
 } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
-import { useGetCardNewsBriefings } from '@/hooks/queries/useBriefing'
-import type { AgentType } from '@/types/domain/agent'
+import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { PATH } from '@/routes/paths'
 
 export function BriefingPage() {
   const [searchParams] = useSearchParams()
@@ -16,9 +16,9 @@ export function BriefingPage() {
   const cardId = searchParams.get('cardId') ?? 'mock-card-id'
   const navigate = useNavigate()
 
-  const { data: response, isLoading, isError } = useGetCardNewsBriefings(cardId ?? null)
+  const { data, isLoading, isError, refetch } = useCardNewsBriefingsQuery(cardId)
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return (
       <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
         <p className="pretendard-Body1 text-Gray-6">브리핑을 불러오는 중...</p>
@@ -26,21 +26,22 @@ export function BriefingPage() {
     )
   }
 
-  if (isError || !response) {
+  if ((isError && !data) || !data) {
     return (
       <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
         <p className="pretendard-Body1 text-Pink-30">브리핑 데이터를 불러오지 못했습니다.</p>
+        <button
+          type="button"
+          className="pretendard-Button2 text-Gray-6 mt-4 underline"
+          onClick={() => refetch()}
+        >
+          다시 시도
+        </button>
       </div>
     )
   }
 
-  const { stock, items } = response.result
-
-  const directionMap = {
-    UP: { badgeType: 'rise' as const, badgeText: '상승 예측' },
-    DOWN: { badgeType: 'fall' as const, badgeText: '하락 예측' },
-    NEUTRAL: { badgeType: 'watch' as const, badgeText: '관망 예측' },
-  }
+  const { stock, items } = data
 
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col">
@@ -75,20 +76,22 @@ export function BriefingPage() {
             </div>
 
             <div className="flex flex-col gap-3">
-              {items.map((item) => {
-                const mappedType = item.agentType.toLowerCase() as AgentType
-                return (
+              {items.length === 0 ? (
+                <p className="pretendard-Body2-Regular text-Gray-6 py-10 text-center">
+                  아직 도착한 브리핑이 없어요.
+                </p>
+              ) : (
+                items.map((item) => (
                   <BriefingAgentListItem
-                    key={item.briefingId}
-                    agentType={mappedType}
+                    key={item.id}
+                    agentType={item.agentType}
                     agentName={item.nickname}
-                    badgeType={directionMap[item.direction].badgeType}
-                    badgeText={directionMap[item.direction].badgeText}
+                    badgeType={item.direction}
                     comment={item.oneLiner}
-                    onClick={() => navigate(`/briefing/detail/${item.briefingId}`)}
+                    onClick={() => navigate(PATH.BRIEFING_DETAIL(item.id))}
                   />
-                )
-              })}
+                ))
+              )}
             </div>
           </div>
         </div>
