@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postDecision } from '@/api/decision'
 import { decisionQueryKeys } from '@/hooks/queries/decision/decisionQueryKeys'
-import { diaryQueryKeys } from '@/pages/DiaryPage/hooks/diaryQueryKeys'
+import { diaryQueryKeys } from '@/hooks/queries/diary/diaryQueryKeys'
 import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
 
 interface PostDecisionInput {
