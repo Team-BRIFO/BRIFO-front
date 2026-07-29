@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -21,6 +22,7 @@ const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
 
 export function MySettingsPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const removeAccount = useDeleteMyAccountMutation()
   const [action, setAction] = useState<AccountActionType | null>(null)
   const onSelect = (key: MyMenuKey) => {
@@ -35,6 +37,7 @@ export function MySettingsPage() {
   const onConfirm = () => {
     if (action === 'logout') {
       browserTokenStore.clear()
+      queryClient.clear()
       navigate(PATH.SPLASH, { replace: true })
       return
     }
