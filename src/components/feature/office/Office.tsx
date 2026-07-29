@@ -1,14 +1,14 @@
 import type { CSSProperties } from 'react'
 
-import ProComplete from '@/assets/characters/pro-complete.svg?react'
-import ProIng from '@/assets/characters/pro-ing.svg?react'
-import ProNormal from '@/assets/characters/pro-normal.svg?react'
-import RookieComplete from '@/assets/characters/rookie-complete.svg?react'
-import RookieIng from '@/assets/characters/rookie-ing.svg?react'
-import RookieNormal from '@/assets/characters/rookie-normal.svg?react'
-import TankerComplete from '@/assets/characters/tanker-complete.svg?react'
-import TankerIng from '@/assets/characters/tanker-ing.svg?react'
-import TankerNormal from '@/assets/characters/tanker-normal.svg?react'
+import ProComplete from '@/assets/characters/pro-complete.gif'
+import ProIng from '@/assets/characters/pro-ing.gif'
+import ProNormal from '@/assets/characters/pro-normal.gif'
+import RookieComplete from '@/assets/characters/rookie-complete.gif'
+import RookieIng from '@/assets/characters/rookie-ing.gif'
+import RookieNormal from '@/assets/characters/rookie-normal.gif'
+import TankerComplete from '@/assets/characters/tanker-complete.gif'
+import TankerIng from '@/assets/characters/tanker-ing.gif'
+import TankerNormal from '@/assets/characters/tanker-normal.gif'
 import OfficeBg from '@/assets/images/OfficeBackground.svg?react'
 import type { OfficeAgentStatusDTO } from '@/types/api/briefing'
 
@@ -81,7 +81,7 @@ export function Office({ agentStatusMap = {} }: OfficeProps) {
             style={style}
             aria-label={`${agentType} 사원 (${imgState})`}
           >
-            <CharImg className="h-auto w-full" />
+            <img src={CharImg} alt={`${agentType} 사원`} className="h-auto w-full" />
           </div>
         )
       })}
