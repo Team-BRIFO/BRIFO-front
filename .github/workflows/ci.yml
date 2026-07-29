@@ -27,13 +27,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.18.0
+          node-version-file: .nvmrc
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Check generated API against live OpenAPI
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         env:
           ORVAL_OPENAPI_URL: ${{ secrets.ORVAL_OPENAPI_URL }}
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
@@ -41,7 +42,7 @@ jobs:
 
       - name: Test
         env:
-          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://api.example.com' }}
         run: pnpm test
 
       - name: Check formatting
@@ -55,5 +56,5 @@ jobs:
 
       - name: Build
         env:
-          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://api.example.com' }}
         run: pnpm build

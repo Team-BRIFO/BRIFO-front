@@ -6,6 +6,7 @@ import { join, relative } from 'node:path'
 const generatedDirectory = 'src/api/generated'
 const temporaryDirectory = mkdtempSync(join(tmpdir(), 'brifo-api-generated-'))
 const snapshotDirectory = join(temporaryDirectory, 'generated')
+const pnpmExecutable = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 
 function listFiles(directory) {
   if (!existsSync(directory)) return []
@@ -34,15 +35,12 @@ try {
     cpSync(generatedDirectory, snapshotDirectory, { recursive: true })
   }
 
-  const generation = spawnSync(
-    process.execPath,
-    ['node_modules/orval/dist/bin/orval.mjs', '--config', './orval.config.ts'],
-    {
-      stdio: 'inherit',
-    },
-  )
+  const generation = spawnSync(pnpmExecutable, ['exec', 'orval', '--config', './orval.config.ts'], {
+    stdio: 'inherit',
+  })
 
   if (generation.status !== 0) {
+    if (generation.error) console.error(generation.error)
     console.error(
       'API generation failed before the synchronization check. Check the live OpenAPI network response and Orval diagnostics above.',
     )
