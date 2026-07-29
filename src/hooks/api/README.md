@@ -109,7 +109,9 @@ Swagger/OpenAPI의 `operationId`와 동일한 값입니다.
 | `queryKey`                    | Query only. 도메인 query key factory 사용                                 |
 | `requestConfig` / `timeoutMs` | 필요 시만. 기본 timeout은 Axios instance(15s)                             |
 
-`map`에서 발생한 예외는 `MAPPING_ERROR` contract `ApiError`로 감싸집니다.  
+`map`이 던진 기존 `ApiError`는 code/kind를 보존하고, 그 밖의 예외만
+`MAPPING_ERROR` contract `ApiError`로 감쌉니다.
+
 그러니 Mapper는 부수효과 없이, 같은 입력이면 같은 결과가 나오도록 작성하세요.
 
 ---

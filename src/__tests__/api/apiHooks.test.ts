@@ -2,6 +2,7 @@ import { CanceledError } from 'axios'
 import { describe, expect, expectTypeOf, it } from 'vitest'
 
 import { createAxiosAdapter } from '@/__tests__/api/testAxiosAdapter'
+import { ApiError } from '@/api/client/ApiError'
 import { getAgents } from '@/api/generated/endpoints/agent-controller/agent-controller'
 import { logout } from '@/api/generated/endpoints/auth-controller/auth-controller'
 import { ApiResponse, ApiResponseGetAgentsResponse } from '@/api/generated/schemas'
@@ -171,5 +172,38 @@ describe('common API hooks boundary', () => {
       code: 'MAPPING_ERROR',
       endpoint: 'getAgents',
     })
+  })
+
+  it('preserves an ApiError intentionally thrown by a mapper', async () => {
+    const adapter = createAxiosAdapter(() => ({
+      data: {
+        success: true,
+        code: 'COMMON_200',
+        message: '성공',
+        result: {
+          items: [],
+        },
+      },
+    }))
+    const mapperError = new ApiError({
+      kind: 'contract',
+      endpoint: 'getAgents',
+      code: 'INVALID_DOMAIN_VALUE',
+      message: '도메인 값이 올바르지 않습니다.',
+    })
+
+    const promise = executeGeneratedApiOperation({
+      operation: getAgents,
+      endpoint: 'getAgents',
+      args: [],
+      responseSchema: ApiResponseGetAgentsResponse,
+      response: 'requiredResult',
+      requestConfig: { adapter },
+      map: () => {
+        throw mapperError
+      },
+    })
+
+    await expect(promise).rejects.toBe(mapperError)
   })
 })

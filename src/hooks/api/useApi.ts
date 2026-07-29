@@ -85,7 +85,8 @@ interface ExecuteGeneratedApiOperationOptions<
 > extends ApiOperationOptions<TOperation, TMode> {
   signal?: AbortSignal
   /**
-   * 응답을 Domain/UI 모델로 변환한다. 여기서 난 예외는 `MAPPING_ERROR` contract `ApiError`로 정규화된다.
+   * 응답을 Domain/UI 모델로 변환한다.
+   * 기존 `ApiError`는 보존하고, 그 밖의 예외는 `MAPPING_ERROR` contract `ApiError`로 정규화한다.
    * Mapper는 부수효과 없이 작성한다.
    */
   map?: (value: ApiOperationValue<GeneratedApiResponse<TOperation>, TMode>) => TData
