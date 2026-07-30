@@ -1,11 +1,11 @@
 import type { ComponentType, SVGProps } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+import LoaderIcon from '@/assets/icons/loader-1.svg?react'
 import DownloadIcon from '@/assets/icons/share/download.svg?react'
 import InstagramIcon from '@/assets/icons/share/instagram.svg?react'
 import KakaoIcon from '@/assets/icons/share/kakao.svg?react'
 import { Image } from '@/components/common/Image'
-import { Loading } from '@/components/common/Loading'
 
 export type DiaryShareTarget = 'kakao' | 'instagram' | 'download'
 
@@ -108,7 +108,10 @@ export function DiaryDetailShare({
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <Loading />
+              <LoaderIcon
+                className="text-Gray-5 h-5 w-5 animate-spin"
+                style={{ animationDuration: '3s' }}
+              />
               <p className="pretendard-Caption2 text-Gray-5">
                 {isGenerating ? '공유 카드를 만드는 중이에요' : '불러오는 중이에요'}
               </p>

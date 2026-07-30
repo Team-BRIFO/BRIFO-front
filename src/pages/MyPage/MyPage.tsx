@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 
-import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { ErrorView } from '@/components/feature/error/ErrorView'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyHome } from '@/components/feature/my/MyHome'
 import Logo from '@/components/logos/logo-small.svg?react'
 import type { MyMenuKey } from '@/constants/myMenu'
@@ -42,14 +42,9 @@ export function MyPage() {
         }
       />
       {userQuery.isError && !data ? (
-        <ErrorView
-          title="정보를 불러오지 못했어요."
-          description="잠시 후 다시 시도해주세요."
-          buttonText="다시 시도"
-          onButtonClick={() => userQuery.refetch()}
-        />
+        <PageErrorView onRetry={() => userQuery.refetch()} />
       ) : !data ? (
-        <Loading className="py-10" />
+        <PageLoadingView />
       ) : (
         <div className="px-4 pt-3 pb-24">
           <MyHome
