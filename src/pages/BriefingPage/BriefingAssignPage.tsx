@@ -13,6 +13,7 @@ import { AnalyzeRequestModal } from '@/components/feature/analyze/AnalyzeRequest
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
+import { useCreateCreditLoanMutation } from '@/hooks/queries/ap/useApQueries'
 import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
 import { PATH } from '@/routes/paths'
@@ -21,6 +22,7 @@ export function BriefingAssignPage() {
   const { cardId } = useParams<{ cardId: string }>()
   const navigate = useNavigate()
   const { mutate: postBriefingRequest, isPending } = usePostBriefingRequestMutation()
+  const { mutate: createCreditLoan } = useCreateCreditLoanMutation()
 
   // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
   const cardNewsQuery = useCardNewsBriefingsQuery(cardId ?? null)
@@ -83,6 +85,24 @@ export function BriefingAssignPage() {
     } else {
       setModalType(null) // 테스트 끝
     }
+  }
+
+  const handleCreditLoan = () => {
+    const agentId = Array.from(selectedIds)[0]
+    if (!agentId) return
+
+    createCreditLoan(
+      { agentId },
+      {
+        onSuccess: () => {
+          setModalType(null) // 대출 성공 시 모달 닫기
+        },
+        onError: () => {
+          // 대출 실패 시 (예: 이미 한도 초과 등)
+          setModalType('EXHAUSTED')
+        },
+      },
+    )
   }
 
   // 선택된 사원의 일급 합산
@@ -169,7 +189,7 @@ export function BriefingAssignPage() {
         retryCount={2}
         maxRetryCount={3}
         onPrimaryClick={handleNextModal}
-        onSecondaryClick={handleNextModal}
+        onSecondaryClick={modalType === 'SHORTAGE' ? handleCreditLoan : handleNextModal}
       />
     </div>
   )
