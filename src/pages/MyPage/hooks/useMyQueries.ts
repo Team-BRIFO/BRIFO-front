@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
 import { AP_TRANSACTION_PAGE_SIZE, getApTransactions } from '@/api/ap'
 import { getBadges, getMyBadgeDetail } from '@/api/badge'
+import { browserTokenStore } from '@/api/client/tokenStore'
 import { getMyTerms } from '@/api/generated/endpoints/term-controller/term-controller'
 import { ApiResponseGetMyTermsResponse } from '@/api/generated/schemas/term-controller'
 import { MY_TERMS_PAGE_SIZE } from '@/api/myTerms'
@@ -13,6 +14,7 @@ import {
   mapMyGlossaryPage,
 } from '@/mappers/myMapper'
 import { myQueryKeys } from '@/pages/MyPage/hooks/myQueryKeys'
+import { MOCK_MY_TERMS_RESPONSE } from '@/pages/MyPage/mockMy'
 import type { MyGlossaryPage } from '@/types/domain/glossary'
 
 export function useMyApTransactionsQuery(size: number = AP_TRANSACTION_PAGE_SIZE) {
@@ -44,10 +46,31 @@ export function useMyBadgeDetailQuery(id: string | null) {
   })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockGetMyTerms = async (params?: any, options?: any) => {
+  const MOCK_DATA: ApiResponseGetMyTermsResponse = {
+    success: true,
+    code: 'COMMON_200',
+    message: 'Success',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    result: MOCK_MY_TERMS_RESPONSE.result as any,
+  }
+
+  if (!browserTokenStore.getAccessToken()) {
+    return MOCK_DATA
+  }
+
+  try {
+    return await getMyTerms(params, options)
+  } catch {
+    return MOCK_DATA
+  }
+}
+
 export function useMyLearnedTermsQuery(size: number = MY_TERMS_PAGE_SIZE) {
   return useApiInfiniteQuery<typeof getMyTerms, string | null, 'requiredResult', MyGlossaryPage>({
     queryKey: myQueryKeys.terms(size),
-    operation: getMyTerms,
+    operation: mockGetMyTerms as typeof getMyTerms,
     endpoint: 'getMyTerms',
     responseSchema: ApiResponseGetMyTermsResponse,
     response: 'requiredResult',
