@@ -11,7 +11,7 @@ export interface ErrorViewProps {
 
 export function ErrorView({ title, description, buttonText, onButtonClick }: ErrorViewProps) {
   return (
-    <div className="bg-White flex flex-col items-center justify-center gap-8 rounded-xl px-4 py-7">
+    <div className="bg-White flex flex-col items-center justify-center gap-6 rounded-xl px-4 py-7">
       <div className="flex flex-col items-center gap-2 text-center">
         <h2 className="dnf-Subtitle2 text-Gray-10">{title}</h2>
         <p className="pretendard-Caption1 text-Gray-6 leading-[132%]">{description}</p>

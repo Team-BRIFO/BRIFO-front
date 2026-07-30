@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 
-import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyHome } from '@/components/feature/my/MyHome'
 import Logo from '@/components/logos/logo-small.svg?react'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
-import { MyPageError } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
 const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
@@ -20,10 +20,8 @@ const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
 export function MyPage() {
   const navigate = useNavigate()
   const userQuery = useUserProfileQuery()
-  if (userQuery.isError && !userQuery.data)
-    return <MyPageError onRetry={() => userQuery.refetch()} />
-  if (!userQuery.data) return <Loading className="py-10" />
-  const { profile, stats, apSummary } = userQuery.data
+  const { data } = userQuery
+
   const handleMenu = (key: MyMenuKey) => {
     const path = MENU_PATHS[key]
     if (path) navigate(path)
@@ -37,15 +35,26 @@ export function MyPage() {
         right={
           <div className="flex items-center gap-3">
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-              {`${apSummary.balance.toLocaleString()} AP`}
+              {userQuery.data ? `${userQuery.data.apSummary.balance.toLocaleString()} AP` : '0 AP'}
             </div>
             <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
           </div>
         }
       />
-      <div className="px-4 pt-3 pb-24">
-        <MyHome profile={profile} stats={stats} apSummary={apSummary} onSelectMenu={handleMenu} />
-      </div>
+      {userQuery.isError && !data ? (
+        <PageErrorView error={userQuery.error} onRetry={() => userQuery.refetch()} />
+      ) : !data ? (
+        <PageLoadingView />
+      ) : (
+        <div className="px-4 pt-3 pb-24">
+          <MyHome
+            profile={data.profile}
+            stats={data.stats}
+            apSummary={data.apSummary}
+            onSelectMenu={handleMenu}
+          />
+        </div>
+      )}
     </div>
   )
 }

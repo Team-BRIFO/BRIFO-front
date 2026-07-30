@@ -24,9 +24,7 @@ export function HomePage() {
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
     ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
-    : userQuery.isError
-      ? 'AP 조회 실패'
-      : 'AP 불러오는 중'
+    : '0 AP'
 
   return (
     <>

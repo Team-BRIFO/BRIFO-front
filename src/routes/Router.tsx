@@ -11,10 +11,7 @@ import { BriefingPage } from '@/pages/BriefingPage/BriefingPage'
 import { PredictionListPage } from '@/pages/DecisionPage/PredictionListPage'
 import { DiaryDetailPage } from '@/pages/DiaryPage/DiaryDetailPage'
 import { DiaryPage } from '@/pages/DiaryPage/DiaryPage'
-import { LoadingPage } from '@/pages/error/LoadingPage'
-import { NetworkErrorPage } from '@/pages/error/NetworkErrorPage'
 import { NotFoundPage } from '@/pages/error/NotFoundPage'
-import { ServerErrorPage } from '@/pages/error/ServerErrorPage'
 import { HomePage } from '@/pages/HomePage/HomePage'
 import { MyApPage } from '@/pages/MyPage/MyApPage'
 import { MyBadgePage } from '@/pages/MyPage/MyBadgePage'
@@ -155,22 +152,10 @@ export const router = createBrowserRouter([
         element: <MySettingsPage />,
       },
 
-      // ─── 에러 및 로딩 ──────────────────────────────────────────────
+      // ─── Catch-all (404) ───────────────────────────────────────────
       {
-        path: PATH.ERROR_404,
+        path: '*',
         element: <NotFoundPage />,
-      },
-      {
-        path: PATH.ERROR_500,
-        element: <ServerErrorPage />,
-      },
-      {
-        path: PATH.ERROR_NETWORK,
-        element: <NetworkErrorPage />,
-      },
-      {
-        path: PATH.LOADING,
-        element: <LoadingPage />,
       },
     ],
   },

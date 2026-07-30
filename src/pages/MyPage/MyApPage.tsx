@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
 
-import { Loading } from '@/components/common/Loading'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyApHistory } from '@/components/feature/my/MyApHistory'
 import { useMyApTransactionsQuery } from '@/pages/MyPage/hooks/useMyQueries'
-import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
+import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import type { ApPeriod } from '@/types/domain/ap'
 
 /** SCR-15 AP 내역 */
@@ -21,14 +22,18 @@ export function MyApPage() {
   if (query.isError && !query.data) {
     return (
       <MyPageLayout title="AP 내역">
-        <MyPageError onRetry={() => query.refetch()} />
+        <PageErrorView
+          title="정보를 불러오지 못했어요."
+          error={query.error}
+          onRetry={() => query.refetch()}
+        />
       </MyPageLayout>
     )
   }
   if (!query.data) {
     return (
       <MyPageLayout title="AP 내역">
-        <Loading className="py-10" />
+        <PageLoadingView />
       </MyPageLayout>
     )
   }

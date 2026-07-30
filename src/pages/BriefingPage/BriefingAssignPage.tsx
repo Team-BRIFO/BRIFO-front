@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
-import { Loading } from '@/components/common/Loading'
 import {
   StatusBar,
   StatusBarBackButton,
@@ -11,7 +10,8 @@ import {
 import { AgentCard } from '@/components/domain/agent/AgentCard'
 import type { AnalyzeModalType } from '@/components/feature/analyze/AnalyzeRequestModal'
 import { AnalyzeRequestModal } from '@/components/feature/analyze/AnalyzeRequestModal'
-import { ErrorView } from '@/components/feature/error/ErrorView'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
 import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
@@ -35,42 +35,7 @@ export function BriefingAssignPage() {
   // 테스트용 모달 상태
   const [modalType, setModalType] = useState<AnalyzeModalType | null>(null)
 
-  if (cardNewsQuery.isError && !cardNewsQuery.data) {
-    return (
-      <div className="bg-Background1 flex min-h-screen flex-col">
-        <StatusBar left={<StatusBarBackButton />} title="사원배치" />
-        <div className="px-4 py-6">
-          <ErrorView
-            title="분석 정보를 불러오지 못했어요"
-            description="잠시 후 다시 시도해주세요."
-            buttonText="다시 시도"
-            onButtonClick={() => cardNewsQuery.refetch()}
-          />
-        </div>
-      </div>
-    )
-  }
-
-  if (!cardNewsQuery.data) {
-    return <Loading className="py-10" />
-  }
-
-  if (agentsQuery.isError && !agentsQuery.data) {
-    return (
-      <ErrorView
-        title="사원 목록을 불러오지 못했어요"
-        description="잠시 후 다시 시도해주세요."
-        buttonText="다시 시도"
-        onButtonClick={() => agentsQuery.refetch()}
-      />
-    )
-  }
-
-  if (agentsList.length === 0) {
-    return <ErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />
-  }
-
-  const stockName = cardNewsQuery.data.stock.name
+  const stockName = cardNewsQuery.data?.stock.name ?? ''
 
   const toggleAgent = (id: string) => {
     setSelectedIds((prev) => {
@@ -130,48 +95,66 @@ export function BriefingAssignPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      <div className="flex flex-1 flex-col overflow-y-auto px-4 pt-6 pb-8">
-        <div className="flex w-full flex-col gap-5.5">
-          {/* 타이틀 영역 */}
-          <div className="flex flex-col gap-1 text-left">
-            <p className="dnf-Subtitle2 text-Gray-10">누구에게 맡길까요?</p>
-            <p className="pretendard-Button3 text-Gray-6">
-              {stockName} 분석을 맡길 사원을 골라주세요.
-            </p>
-          </div>
+      {(cardNewsQuery.isError && !cardNewsQuery.data) ||
+      (agentsQuery.isError && !agentsList.length) ? (
+        <PageErrorView
+          title="사원 배치 정보를 불러오지 못했어요"
+          error={cardNewsQuery.error || agentsQuery.error}
+          onRetry={() => {
+            cardNewsQuery.refetch()
+            agentsQuery.refetch()
+          }}
+        />
+      ) : !cardNewsQuery.data || agentsQuery.isLoading ? (
+        <PageLoadingView />
+      ) : agentsList.length === 0 ? (
+        <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />
+      ) : (
+        <>
+          <div className="flex flex-1 flex-col overflow-y-auto px-4 pt-6 pb-8">
+            <div className="flex w-full flex-col gap-5.5">
+              {/* 타이틀 영역 */}
+              <div className="flex flex-col gap-1 text-left">
+                <p className="dnf-Subtitle2 text-Gray-10">누구에게 맡길까요?</p>
+                <p className="pretendard-Button3 text-Gray-6">
+                  {stockName} 분석을 맡길 사원을 골라주세요.
+                </p>
+              </div>
 
-          {/* 사원 카드리스트 */}
-          <div className="flex w-full flex-col gap-2">
-            {agentsList.map((agent) => (
-              <AgentCard
-                key={agent.id}
-                agent={agent}
-                active={selectedIds.has(agent.id)}
-                onClick={() => toggleAgent(agent.id)}
-              />
-            ))}
-            {/* 합계 AP 문구 */}
-            <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
-              <span className="pretendard-Caption1 text-Gray-9">선택한 사원 일급 합계</span>
-              <span className="dnf-Caption1 text-Pink-30">{totalAP} AP</span>
+              {/* 사원 카드리스트 */}
+              <div className="flex w-full flex-col gap-2">
+                {agentsList.map((agent) => (
+                  <AgentCard
+                    key={agent.id}
+                    agent={agent}
+                    active={selectedIds.has(agent.id)}
+                    onClick={() => toggleAgent(agent.id)}
+                  />
+                ))}
+                {/* 합계 AP 문구 */}
+                <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
+                  <span className="pretendard-Caption1 text-Gray-9">선택한 사원 일급 합계</span>
+                  <span className="dnf-Caption1 text-Pink-30">{totalAP} AP</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* 액션 버튼 */}
-      <div className="px-4 pt-4 pb-8">
-        <Button
-          isFullWidth
-          size="lg"
-          color="primary"
-          onClick={handleStartAnalysis}
-          className="rounded-full!"
-          disabled={isPending || selectedIds.size === 0}
-        >
-          {isPending ? '분석 요청 중...' : '분석 시작하기'}
-        </Button>
-      </div>
+          {/* 액션 버튼 */}
+          <div className="px-4 pt-4 pb-8">
+            <Button
+              isFullWidth
+              size="lg"
+              color="primary"
+              onClick={handleStartAnalysis}
+              className="rounded-full!"
+              disabled={isPending || selectedIds.size === 0}
+            >
+              {isPending ? '분석 요청 중...' : '분석 시작하기'}
+            </Button>
+          </div>
+        </>
+      )}
 
       {/* 테스트용 모달 */}
       <AnalyzeRequestModal
