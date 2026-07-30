@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { ErrorView } from '@/components/feature/error/ErrorView'
 import { MyHome } from '@/components/feature/my/MyHome'
 import Logo from '@/components/logos/logo-small.svg?react'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
-import { MyPageError } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
 const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
@@ -42,7 +42,12 @@ export function MyPage() {
         }
       />
       {userQuery.isError && !data ? (
-        <MyPageError onRetry={() => userQuery.refetch()} />
+        <ErrorView
+          title="정보를 불러오지 못했어요."
+          description="잠시 후 다시 시도해주세요."
+          buttonText="다시 시도"
+          onButtonClick={() => userQuery.refetch()}
+        />
       ) : !data ? (
         <Loading className="py-10" />
       ) : (
