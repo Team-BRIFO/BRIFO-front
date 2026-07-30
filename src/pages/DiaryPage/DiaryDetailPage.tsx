@@ -17,7 +17,7 @@ export function DiaryDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { data: detail, isPending, isError } = useDiaryDetailQuery(id ?? null)
+  const { data: detail, isPending, isError, error, refetch } = useDiaryDetailQuery(id ?? null)
   const {
     mutate: createShareImage,
     reset: resetShareImage,
@@ -50,7 +50,11 @@ export function DiaryDetailPage() {
       />
 
       {isError && !detail ? (
-        <PageErrorView title="결정 카드를 찾을 수 없어요." />
+        <PageErrorView
+          title="결정 카드를 찾을 수 없어요."
+          error={error}
+          onRetry={() => refetch()}
+        />
       ) : isPending ? (
         <PageLoadingView />
       ) : detail ? (

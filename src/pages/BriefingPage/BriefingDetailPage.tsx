@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import Modal from '@/components/common/Modal'
 import {
   StatusBar,
   StatusBarBackButton,
@@ -9,7 +10,7 @@ import {
 import { Tabs } from '@/components/common/Tabs'
 import { BriefingMainContentSheet } from '@/components/feature/briefing/BriefingMainContentSheet'
 import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
-import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
+import { DecisionResultModalContent } from '@/components/feature/decision/DecisionResultModal'
 import { PredictionCompleteModal } from '@/components/feature/decision/PredictionCompleteModal'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
@@ -23,7 +24,7 @@ export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()
   const navigate = useNavigate()
 
-  const { data, isLoading, isError } = useBriefingDetailQuery(briefingId ?? null)
+  const { data, isLoading, isError, error, refetch } = useBriefingDetailQuery(briefingId ?? null)
   const { mutate: submitDecision, isPending: isSubmitting } = usePostDecisionMutation(
     briefingId ?? '',
   )
@@ -65,7 +66,11 @@ export function BriefingDetailPage() {
       {isLoading && !data ? (
         <PageLoadingView />
       ) : (isError && !data) || !data ? (
-        <PageErrorView title="브리핑 데이터를 불러오지 못했습니다." />
+        <PageErrorView
+          title="브리핑 데이터를 불러오지 못했습니다."
+          error={error}
+          onRetry={() => refetch()}
+        />
       ) : (
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="flex flex-col gap-3 px-4">
@@ -141,16 +146,17 @@ export function BriefingDetailPage() {
         />
       )}
       {errorModalMsg && (
-        <DecisionResultModal
-          isOpen={!!errorModalMsg}
-          isSuccess={false}
-          points={0}
-          stockInfo={{ name: data?.stock.name ?? '', changeRate: data?.stock.changeRate ?? 0 }}
-          comment={errorModalMsg}
-          resultText="등록 실패"
-          onAction={() => setErrorModalMsg(null)}
-          onClose={() => setErrorModalMsg(null)}
-        />
+        <Modal isOpen={!!errorModalMsg} onClose={() => setErrorModalMsg(null)}>
+          <DecisionResultModalContent
+            isSuccess={false}
+            points={0}
+            stockInfo={{ name: data?.stock.name ?? '', changeRate: data?.stock.changeRate ?? 0 }}
+            comment={errorModalMsg}
+            resultText="등록 실패"
+            onAction={() => setErrorModalMsg(null)}
+            onClose={() => setErrorModalMsg(null)}
+          />
+        </Modal>
       )}
     </div>
   )

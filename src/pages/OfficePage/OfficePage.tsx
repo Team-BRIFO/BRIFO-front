@@ -36,7 +36,7 @@ export function OfficePage() {
       />
 
       {briefingsQuery.isError && !items ? (
-        <PageErrorView onRetry={() => briefingsQuery.refetch()} />
+        <PageErrorView error={briefingsQuery.error} onRetry={() => briefingsQuery.refetch()} />
       ) : !items ? (
         <PageLoadingView />
       ) : (

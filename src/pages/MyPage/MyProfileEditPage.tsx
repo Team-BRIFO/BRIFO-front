@@ -15,7 +15,11 @@ export function MyProfileEditPage() {
   if (userQuery.isError && !userQuery.data)
     return (
       <MyPageLayout title="프로필 편집">
-        <PageErrorView title="정보를 불러오지 못했어요." onRetry={() => userQuery.refetch()} />
+        <PageErrorView
+          title="정보를 불러오지 못했어요."
+          error={userQuery.error}
+          onRetry={() => userQuery.refetch()}
+        />
       </MyPageLayout>
     )
   if (!userQuery.data)

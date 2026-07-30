@@ -23,7 +23,11 @@ export function MyBadgePage() {
   if (badgesQuery.isError && !badgesQuery.data)
     return (
       <MyPageLayout title="업적 · 배지">
-        <PageErrorView title="정보를 불러오지 못했어요." onRetry={() => badgesQuery.refetch()} />
+        <PageErrorView
+          title="정보를 불러오지 못했어요."
+          error={badgesQuery.error}
+          onRetry={() => badgesQuery.refetch()}
+        />
       </MyPageLayout>
     )
   if (!badgesQuery.data)

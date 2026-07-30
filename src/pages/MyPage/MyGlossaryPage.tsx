@@ -9,7 +9,11 @@ export function MyGlossaryPage() {
   if (query.isError && !query.data)
     return (
       <MyPageLayout title="내 용어장">
-        <PageErrorView title="정보를 불러오지 못했어요." onRetry={() => query.refetch()} />
+        <PageErrorView
+          title="정보를 불러오지 못했어요."
+          error={query.error}
+          onRetry={() => query.refetch()}
+        />
       </MyPageLayout>
     )
   if (!query.data)

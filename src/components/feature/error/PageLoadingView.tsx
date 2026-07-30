@@ -1,6 +1,7 @@
-import LoaderIcon from '@/assets/icons/loader-1.svg?react'
 import { ErrorView } from '@/components/feature/error/ErrorView'
-import { type AgentStatusMap, Office } from '@/components/feature/office/Office'
+import { PageStatusShell } from '@/components/feature/error/PageStatusShell'
+import type { AgentStatusMap } from '@/components/feature/office/Office'
+import { Office } from '@/components/feature/office/Office'
 
 interface PageLoadingViewProps {
   headerText?: string
@@ -20,21 +21,12 @@ export function PageLoadingView({
   },
 }: PageLoadingViewProps) {
   return (
-    <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto px-4 pt-3 pb-10">
-      {headerText && (
-        <div className="flex items-center justify-center gap-2.5">
-          <LoaderIcon
-            className="text-Gray-5 h-4 w-4 animate-spin"
-            style={{ animationDuration: '3s' }}
-          />
-          <span className="pretendard-Caption1 text-Gray-5">{headerText}</span>
-        </div>
-      )}
+    <PageStatusShell headerText={headerText}>
       <Office agentStatusMap={agentStatusMap} />
       <ErrorView
         title={title}
         description={<span className="block text-center whitespace-pre-line">{description}</span>}
       />
-    </div>
+    </PageStatusShell>
   )
 }

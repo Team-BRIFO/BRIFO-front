@@ -1,9 +1,11 @@
 import { isAxiosError } from 'axios'
 
 import { ApiError } from '@/api/client/ApiError'
-import LoaderIcon from '@/assets/icons/loader-1.svg?react'
-import { ErrorView, type ErrorViewProps } from '@/components/feature/error/ErrorView'
-import { type AgentStatusMap, Office } from '@/components/feature/office/Office'
+import type { ErrorViewProps } from '@/components/feature/error/ErrorView'
+import { ErrorView } from '@/components/feature/error/ErrorView'
+import { PageStatusShell } from '@/components/feature/error/PageStatusShell'
+import type { AgentStatusMap } from '@/components/feature/office/Office'
+import { Office } from '@/components/feature/office/Office'
 
 interface PageErrorViewProps extends Partial<ErrorViewProps> {
   onRetry?: () => void
@@ -54,24 +56,15 @@ export function PageErrorView({
   }
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto px-4 pt-3 pb-10">
-      {headerText && (
-        <div className="flex items-center justify-center gap-2.5">
-          <LoaderIcon
-            className="text-Gray-5 h-4 w-4 animate-spin"
-            style={{ animationDuration: '3s' }}
-          />
-          <span className="pretendard-Caption1 text-Gray-5">{headerText}</span>
-        </div>
-      )}
+    <PageStatusShell headerText={headerText}>
       <Office agentStatusMap={agentStatusMap} isOffline={isNetworkError} />
       <ErrorView
+        {...props}
         title={title}
         description={<span className="block text-center whitespace-pre-line">{description}</span>}
         buttonText={onRetry ? '다시 시도' : props.buttonText}
         onButtonClick={onRetry ? onRetry : props.onButtonClick}
-        {...props}
       />
-    </div>
+    </PageStatusShell>
   )
 }

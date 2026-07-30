@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
-import Modal from '@/components/common/Modal'
 import { PATH } from '@/routes/paths'
 
-export interface DecisionResultModalProps {
-  isOpen: boolean
+export interface DecisionResultModalContentProps {
   isSuccess?: boolean
   points?: number
   stockInfo?: {
@@ -20,8 +18,7 @@ export interface DecisionResultModalProps {
   onClose: () => void
 }
 
-export function DecisionResultModal({
-  isOpen,
+export function DecisionResultModalContent({
   isSuccess = true,
   points = 100,
   stockInfo = { name: '삼성전자', changeRate: 8.1 },
@@ -31,7 +28,7 @@ export function DecisionResultModal({
   decisionId,
   onAction,
   onClose,
-}: DecisionResultModalProps) {
+}: DecisionResultModalContentProps) {
   const defaultResultText = isSuccess ? '상승 적중' : '상승 예측 빗나감'
   const displayResultText = resultText || defaultResultText
   const navigate = useNavigate()
@@ -48,57 +45,55 @@ export function DecisionResultModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex w-full flex-col items-center gap-5">
-        <div className="flex h-full w-full flex-col gap-4">
-          {/* 1. 헤더 */}
-          <div className="flex flex-col items-center gap-5">
-            <h2 className="dnf-Title4 text-Gray-10">
-              {isSuccess ? '예측 적중!' : '아쉽게도 빗나갔어요'}
-            </h2>
-            <span className={`dnf-Title3 ${isSuccess ? 'text-Yellow-40' : 'text-Green-40'}`}>
-              {isSuccess ? `+ ${points} AP` : `- ${points} AP`}
-            </span>
-          </div>
-
-          {/* 2. 상세 정보 */}
-          <div className="flex flex-col items-center gap-1 text-center">
-            <p className="pretendard-Button2 text-Gray-6 m-0">
-              {stockInfo.name}{' '}
-              <span className={isSuccess ? 'text-Pink-30' : 'text-Green-40'}>
-                {stockInfo.changeRate}%
-              </span>{' '}
-              ·{' '}
-              <span className={isSuccess ? 'text-Pink-30' : 'text-Green-40'}>
-                {displayResultText}
-              </span>
-            </p>
-            <p className="pretendard-Caption2 text-Gray-6 m-0">
-              확신도 {confidenceLevel} × 적중 보너스
-            </p>
-          </div>
-
-          {/* 3. 코멘트 박스 */}
-          <div className="bg-Yellow-100 border-Yellow-80 pretendard-Button1 text-Gray-9 box-border w-full rounded-lg border p-3 text-center">
-            {comment}
-          </div>
+    <div className="flex w-full flex-col items-center gap-5">
+      <div className="flex h-full w-full flex-col gap-4">
+        {/* 1. 헤더 */}
+        <div className="flex flex-col items-center gap-5">
+          <h2 className="dnf-Title4 text-Gray-10">
+            {isSuccess ? '예측 적중!' : '아쉽게도 빗나갔어요'}
+          </h2>
+          <span className={`dnf-Title3 ${isSuccess ? 'text-Yellow-40' : 'text-Green-40'}`}>
+            {isSuccess ? `+ ${points} AP` : `- ${points} AP`}
+          </span>
         </div>
-        {/* 4. 하단 버튼 영역 */}
-        <div className="flex w-full flex-col items-center gap-3.5">
-          <Button isFullWidth size="lg" color="primary" onClick={handleActionClick}>
-            결정일기에서 보기
-          </Button>
-          {isSuccess && (
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-Gray-6 p-1 text-xs underline underline-offset-2"
-            >
-              확인
-            </button>
-          )}
+
+        {/* 2. 상세 정보 */}
+        <div className="flex flex-col items-center gap-1 text-center">
+          <p className="pretendard-Button2 text-Gray-6 m-0">
+            {stockInfo.name}{' '}
+            <span className={isSuccess ? 'text-Pink-30' : 'text-Green-40'}>
+              {stockInfo.changeRate}%
+            </span>{' '}
+            ·{' '}
+            <span className={isSuccess ? 'text-Pink-30' : 'text-Green-40'}>
+              {displayResultText}
+            </span>
+          </p>
+          <p className="pretendard-Caption2 text-Gray-6 m-0">
+            확신도 {confidenceLevel} × 적중 보너스
+          </p>
+        </div>
+
+        {/* 3. 코멘트 박스 */}
+        <div className="bg-Yellow-100 border-Yellow-80 pretendard-Button1 text-Gray-9 box-border w-full rounded-lg border p-3 text-center">
+          {comment}
         </div>
       </div>
-    </Modal>
+      {/* 4. 하단 버튼 영역 */}
+      <div className="flex w-full flex-col items-center gap-3.5">
+        <Button isFullWidth size="lg" color="primary" onClick={handleActionClick}>
+          결정일기에서 보기
+        </Button>
+        {isSuccess && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-Gray-6 p-1 text-xs underline underline-offset-2"
+          >
+            확인
+          </button>
+        )}
+      </div>
+    </div>
   )
 }

@@ -37,6 +37,7 @@ export function TeamPage() {
         />
         <PageErrorView
           title="사원 목록을 불러오지 못했어요"
+          error={agentsQuery.error}
           onRetry={() => agentsQuery.refetch()}
         />
       </div>

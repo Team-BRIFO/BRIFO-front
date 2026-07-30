@@ -53,6 +53,7 @@ export function BriefingCompletePage() {
       {cardNewsQuery.isError && !cardNewsQuery.data ? (
         <PageErrorView
           title="브리핑 정보를 불러오지 못했어요"
+          error={cardNewsQuery.error}
           onRetry={() => cardNewsQuery.refetch()}
         />
       ) : !cardNewsQuery.data ? (

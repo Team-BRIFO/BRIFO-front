@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import Modal from '@/components/common/Modal'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
-import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
+import { DecisionResultModalContent } from '@/components/feature/decision/DecisionResultModal'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import {
@@ -28,7 +29,7 @@ export function PredictionListPage() {
           hasStatusArea={false}
           left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         />
-        <PageErrorView onRetry={() => decisionsQuery.refetch()} />
+        <PageErrorView error={decisionsQuery.error} onRetry={() => decisionsQuery.refetch()} />
       </div>
     )
   }
@@ -113,33 +114,33 @@ export function PredictionListPage() {
           </>
         )}
 
-        {selectedDecisionId && selectedDecisionQuery.isLoading && !selectedDecisionDetail && (
-          <PageLoadingView />
-        )}
-
-        {selectedDecisionId && selectedDecisionQuery.isError && !selectedDecisionDetail && (
-          <PageErrorView
-            title="예측 결과를 불러오지 못했어요"
-            onRetry={() => selectedDecisionQuery.refetch()}
-          />
+        {selectedDecisionId && (
+          <Modal isOpen={!!selectedDecisionId} onClose={() => setSelectedDecisionId(null)}>
+            {selectedDecisionQuery.isLoading && !selectedDecisionDetail ? (
+              <PageLoadingView />
+            ) : selectedDecisionQuery.isError && !selectedDecisionDetail ? (
+              <PageErrorView
+                title="예측 결과를 불러오지 못했어요"
+                error={selectedDecisionQuery.error}
+                onRetry={() => selectedDecisionQuery.refetch()}
+              />
+            ) : selectedDecision && selectedDecisionDetail ? (
+              <DecisionResultModalContent
+                decisionId={selectedDecisionId}
+                isSuccess={selectedDecisionDetail.isCorrect ?? false}
+                points={Math.abs(selectedDecisionDetail.apDelta ?? 0)}
+                confidenceLevel={selectedDecision.confidenceLevel}
+                stockInfo={{
+                  name: selectedDecision.stock.name,
+                  changeRate: selectedDecisionDetail.stock.changeRate ?? 0,
+                }}
+                onAction={() => setSelectedDecisionId(null)}
+                onClose={() => setSelectedDecisionId(null)}
+              />
+            ) : null}
+          </Modal>
         )}
       </div>
-
-      {selectedDecision && selectedDecisionDetail && (
-        <DecisionResultModal
-          isOpen={!!selectedDecisionId}
-          decisionId={selectedDecisionId ?? undefined}
-          isSuccess={selectedDecisionDetail.isCorrect ?? false}
-          points={Math.abs(selectedDecisionDetail.apDelta ?? 0)}
-          confidenceLevel={selectedDecision.confidenceLevel}
-          stockInfo={{
-            name: selectedDecision.stock.name,
-            changeRate: selectedDecisionDetail.stock.changeRate ?? 0,
-          }}
-          onAction={() => setSelectedDecisionId(null)}
-          onClose={() => setSelectedDecisionId(null)}
-        />
-      )}
     </div>
   )
 }

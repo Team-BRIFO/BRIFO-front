@@ -99,6 +99,7 @@ export function BriefingAssignPage() {
       (agentsQuery.isError && !agentsList.length) ? (
         <PageErrorView
           title="사원 배치 정보를 불러오지 못했어요"
+          error={cardNewsQuery.error || agentsQuery.error}
           onRetry={() => {
             cardNewsQuery.refetch()
             agentsQuery.refetch()
