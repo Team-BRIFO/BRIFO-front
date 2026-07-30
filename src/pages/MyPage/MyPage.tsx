@@ -42,7 +42,7 @@ export function MyPage() {
         }
       />
       {userQuery.isError && !data ? (
-        <PageErrorView onRetry={() => userQuery.refetch()} />
+        <PageErrorView error={userQuery.error} onRetry={() => userQuery.refetch()} />
       ) : !data ? (
         <PageLoadingView />
       ) : (
