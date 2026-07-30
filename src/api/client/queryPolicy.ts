@@ -24,10 +24,12 @@ export function createAppQueryClient() {
         retryDelay: getQueryRetryDelay,
         throwOnError: false,
         refetchOnWindowFocus: false,
+        networkMode: 'always',
       },
       mutations: {
         retry: false,
         throwOnError: false,
+        networkMode: 'always',
       },
     },
   })
