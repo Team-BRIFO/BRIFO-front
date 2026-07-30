@@ -85,6 +85,13 @@ export function DiaryPage() {
           ? '결정 기록을 불러오지 못했어요'
           : '결정 통계를 불러오지 못했어요'
 
+    const currentError =
+      view === 'calendar'
+        ? calendarQuery.error
+        : view === 'list'
+          ? listQuery.error
+          : statsQuery.error
+
     return (
       <div className="bg-Background1 flex flex-1 flex-col">
         <StatusBar
@@ -99,7 +106,7 @@ export function DiaryPage() {
             </div>
           }
         />
-        <PageErrorView title={title} onRetry={handleRetry} />
+        <PageErrorView title={title} error={currentError} onRetry={handleRetry} />
       </div>
     )
   }
