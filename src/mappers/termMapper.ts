@@ -1,4 +1,4 @@
-﻿import type { GetTermResponse } from '@/api/generated/schemas/term-controller'
+import type { GetTermResponse } from '@/api/generated/schemas/term-controller'
 import type { TermDetailResponse } from '@/api/terms'
 
 export function mapTermDetail(response: GetTermResponse): TermDetailResponse {
