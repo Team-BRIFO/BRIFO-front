@@ -20,8 +20,15 @@ export function NewsCardPage() {
   const navigate = useNavigate()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const { data: newsData } = useGetNewsCardDetail(id ?? null)
-  const MOCK_CARDS = newsData ?? MOCK_NEWS_CARDS
+  const { data: newsData, isLoading } = useGetNewsCardDetail(id ?? null)
+
+  // dev 환경에서만 데이터 없을 때 mock 사용, 실 서비스에선 빈 배열
+  const MOCK_CARDS = (() => {
+    if (isLoading) return []
+    if (newsData) return newsData
+    if (import.meta.env.DEV) return MOCK_NEWS_CARDS
+    return []
+  })()
   const stockName = MOCK_CARDS[0]?.relatedStocks?.[0]?.name || '삼성전자'
 
   const [currentIndex, setCurrentIndex] = useState(0)
