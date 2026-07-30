@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { createDiaryShareImage } from '@/api/diary'
+import { diaryQueryKeys } from '@/hooks/queries/diary/diaryQueryKeys'
 import { mapDiaryShareImage } from '@/mappers/diaryMapper'
-import { diaryQueryKeys } from '@/pages/DiaryPage/hooks/diaryQueryKeys'
 import type { DiaryDetail } from '@/types/domain/diary'
 
 export function useCreateDiaryShareImageMutation() {

@@ -1,6 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { browserTokenStore } from '@/api/client/tokenStore'
 import {
   type AccountActionType,
   AccountConfirmModal,
@@ -17,13 +19,10 @@ const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
   glossary: PATH.MY_GLOSSARY,
   tutorial: PATH.TUTORIAL,
 }
-function clearTokens() {
-  localStorage.removeItem('accessToken')
-  localStorage.removeItem('refreshToken')
-}
 
 export function MySettingsPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const removeAccount = useDeleteMyAccountMutation()
   const [action, setAction] = useState<AccountActionType | null>(null)
   const onSelect = (key: MyMenuKey) => {
@@ -37,13 +36,14 @@ export function MySettingsPage() {
   }
   const onConfirm = () => {
     if (action === 'logout') {
-      clearTokens()
+      browserTokenStore.clear()
+      queryClient.clear()
       navigate(PATH.SPLASH, { replace: true })
       return
     }
     removeAccount.mutate(undefined, {
       onSuccess: () => {
-        clearTokens()
+        browserTokenStore.clear()
         navigate(PATH.SPLASH, { replace: true })
       },
     })

@@ -18,7 +18,7 @@ export interface ApiResponse<T> {
  * @param termId 조회할 용어 공개 ID (UUID)
  */
 export const getTermDetail = async (termId: string): Promise<TermDetailResponse> => {
-  // TODO: 공통 apiClient(src/api/axios.ts)가 origin/dev 등에 머지되면 아래 주석을 해제하고 연동하세요.
+  // TODO: 공통 Axios 인스턴스(src/api/client/axiosInstance.ts)로 실제 API를 연동하세요.
   // const { data } = await apiClient.get<ApiResponse<TermDetailResponse>>(`/api/terms/${termId}`)
   // return data.result
 
