@@ -15,7 +15,7 @@ export interface NewsCardData {
   terms?: GlossaryTerm[]
   relatedStocks?: Array<{
     name: string
-    changeRate: number
+    changeRate?: number
   }>
 }
 
@@ -49,8 +49,8 @@ export function NewsCard({ data, onTermClick, className = '' }: NewsCardProps) {
             <h3 className="text-Yellow-30 dnf-Caption2">주요 관련 종목</h3>
             <div className="flex flex-wrap gap-3">
               {data.relatedStocks.map((stock, idx) => {
-                const isPositive = stock.changeRate > 0
-                const isNegative = stock.changeRate < 0
+                const isPositive = (stock.changeRate ?? 0) > 0
+                const isNegative = (stock.changeRate ?? 0) < 0
                 const badgeType: BadgeType = isPositive
                   ? 'stock-rise'
                   : isNegative
@@ -59,7 +59,9 @@ export function NewsCard({ data, onTermClick, className = '' }: NewsCardProps) {
                 const sign = isPositive ? '+' : ''
                 return (
                   <Badge key={idx} type={badgeType}>
-                    {`${stock.name} ${sign}${stock.changeRate}%`}
+                    {stock.changeRate != null
+                      ? `${stock.name} ${sign}${stock.changeRate}%`
+                      : stock.name}
                   </Badge>
                 )
               })}

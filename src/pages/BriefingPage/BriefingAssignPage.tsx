@@ -22,7 +22,7 @@ export function BriefingAssignPage() {
   const { cardId } = useParams<{ cardId: string }>()
   const navigate = useNavigate()
   const { mutate: postBriefingRequest, isPending } = usePostBriefingRequestMutation()
-  const { mutate: createCreditLoan } = useCreateCreditLoanMutation()
+  const { mutate: createCreditLoan, isPending: isCreditLoanPending } = useCreateCreditLoanMutation()
 
   // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
   const cardNewsQuery = useCardNewsBriefingsQuery(cardId ?? null)
@@ -86,7 +86,7 @@ export function BriefingAssignPage() {
 
   const handleCreditLoan = () => {
     const agentId = Array.from(selectedIds)[0]
-    if (!agentId) return
+    if (!agentId || isCreditLoanPending) return
 
     createCreditLoan(
       { agentId },
@@ -94,9 +94,10 @@ export function BriefingAssignPage() {
         onSuccess: () => {
           setModalType(null) // 대출 성공 시 모달 닫기
         },
-        onError: () => {
-          // 대출 실패 시 (예: 이미 한도 초과 등)
-          setModalType('EXHAUSTED')
+        onError: (error) => {
+          // AP 한도 에러(AP_409_03: 이미 사용, AP_409_04: 조건 미충족)만 EXHAUSTED
+          const isQuotaError = error.code === 'AP_409_03' || error.code === 'AP_409_04'
+          setModalType(isQuotaError ? 'EXHAUSTED' : 'LLM_FAIL')
         },
       },
     )
@@ -188,6 +189,7 @@ export function BriefingAssignPage() {
         maxRetryCount={3}
         onPrimaryClick={handleNextModal}
         onSecondaryClick={modalType === 'SHORTAGE' ? handleCreditLoan : handleNextModal}
+        secondaryDisabled={modalType === 'SHORTAGE' && isCreditLoanPending}
       />
     </div>
   )

@@ -30,14 +30,13 @@ export function usePutMyTerm() {
     responseSchema: ApiResponse,
     response: 'body',
     getArgs: (termId: string) => [termId] as const,
-    onSuccess: (_, termId) => {
-      // Invalidate the specific term detail and the learned terms list
-      void queryClient.invalidateQueries({
-        queryKey: termQueryKeys.detail(termId),
-      })
-      void queryClient.invalidateQueries({
-        queryKey: termQueryKeys.all, // or myTerms specific key if needed
-      })
+    onSuccess: async (_, termId) => {
+      // Both invalidations must complete before mutation settles,
+      // so duplicate saves while refetch is in-flight are prevented.
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: termQueryKeys.detail(termId) }),
+        queryClient.invalidateQueries({ queryKey: termQueryKeys.all }),
+      ])
     },
   })
 }

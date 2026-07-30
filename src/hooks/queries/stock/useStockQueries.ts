@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-controller'
-import { GetStocksParams } from '@/api/generated/schemas'
+import type { GetStocksParams } from '@/api/generated/schemas'
 import { useApiQuery } from '@/hooks/api'
 
 export const stockQueryKeys = {

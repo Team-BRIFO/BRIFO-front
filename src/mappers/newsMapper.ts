@@ -14,7 +14,7 @@ export function mapNewsCards(response: GetNewsCardsResponse): NewsCardData[] {
     points: card.points,
     terms: card.terms,
     relatedStocks: [
-      { name: response.stock.name, changeRate: 0 }, // Using 0 as changeRate is not returned in API
+      { name: response.stock.name }, // changeRate is not provided by the API
     ],
   }))
 }
