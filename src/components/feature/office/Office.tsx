@@ -3,12 +3,15 @@ import type { CSSProperties } from 'react'
 import ProComplete from '@/assets/characters/pro-complete.gif'
 import ProIng from '@/assets/characters/pro-ing.gif'
 import ProNormal from '@/assets/characters/pro-normal.gif'
+import ProNormalSvg from '@/assets/characters/pro-normal.svg?react'
 import RookieComplete from '@/assets/characters/rookie-complete.gif'
 import RookieIng from '@/assets/characters/rookie-ing.gif'
 import RookieNormal from '@/assets/characters/rookie-normal.gif'
+import RookieNormalSvg from '@/assets/characters/rookie-normal.svg?react'
 import TankerComplete from '@/assets/characters/tanker-complete.gif'
 import TankerIng from '@/assets/characters/tanker-ing.gif'
 import TankerNormal from '@/assets/characters/tanker-normal.gif'
+import TankerNormalSvg from '@/assets/characters/tanker-normal.svg?react'
 import OfficeBg from '@/assets/images/OfficeBackground.svg?react'
 import type { AgentStatusType } from '@/types/domain/briefing'
 
@@ -50,6 +53,8 @@ export type AgentStatusMap = Partial<Record<AgentCharacterType, AgentStatusType>
 export interface OfficeProps {
   /** 에이전트 타입별 브리핑 상태 맵 */
   agentStatusMap?: AgentStatusMap
+  /** 네트워크 오류 등 오프라인 상태 여부 (SVG 렌더링) */
+  isOffline?: boolean
 }
 
 /** 책상 고정 위치 및 에이전트 배치 순서 (오피스 이미지 좌표 기준) */
@@ -60,7 +65,7 @@ const DESK_SLOTS: { agentType: AgentCharacterType; style: CSSProperties }[] = [
 ]
 
 /** 사무실 배경 + 캐릭터 상태를 결합한 오피스 컴포넌트 */
-export function Office({ agentStatusMap = {} }: OfficeProps) {
+export function Office({ agentStatusMap = {}, isOffline = false }: OfficeProps) {
   return (
     <div className="bg-White relative aspect-328/263 w-full overflow-hidden rounded-xl">
       {/* 배경 */}
@@ -68,6 +73,25 @@ export function Office({ agentStatusMap = {} }: OfficeProps) {
 
       {/* 캐릭터 레이어 */}
       {DESK_SLOTS.map(({ agentType, style }) => {
+        if (isOffline) {
+          const SvgComponent = {
+            pro: ProNormalSvg,
+            rookie: RookieNormalSvg,
+            tanker: TankerNormalSvg,
+          }[agentType]
+
+          return (
+            <div
+              key={agentType}
+              className="absolute"
+              style={style}
+              aria-label={`${agentType} 사원 (네트워크 오류)`}
+            >
+              <SvgComponent className="h-auto w-full" />
+            </div>
+          )
+        }
+
         const status = agentStatusMap[agentType] ?? null
         const imgState = getImageState(status)
         const CharImg = CHARACTER_IMAGES[agentType][imgState]

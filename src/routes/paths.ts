@@ -83,11 +83,4 @@ export const PATH = {
   MY_EDIT: '/my/edit',
   /** 마이 탭 - SCR-13: 설정 */
   MY_SETTINGS: '/my/settings',
-
-  // ─── 에러 ──────────────────────────────────────────────────────
-  /** 404 */
-  ERROR_404: '/error/404',
-  ERROR_500: '/error/500',
-  ERROR_NETWORK: '/error/network',
-  LOADING: '/loading',
 } as const

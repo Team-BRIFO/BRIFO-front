@@ -3,10 +3,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import CelebrationImage from '@/assets/characters/celebration.svg?react'
 import Button from '@/components/common/Button'
-import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { BriefingCard } from '@/components/domain/briefing/BriefingCard'
-import { ErrorView } from '@/components/feature/error/ErrorView'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { PATH } from '@/routes/paths'
 import type { BriefingRequestResult } from '@/types/domain/briefing'
@@ -41,27 +41,7 @@ export function BriefingCompletePage() {
   const isAllComplete =
     mockAgents.includes('rookie') && mockAgents.includes('pro') && mockAgents.includes('tanker')
 
-  if (cardNewsQuery.isError && !cardNewsQuery.data) {
-    return (
-      <div className="bg-Background1 flex min-h-screen flex-col">
-        <StatusBar left={<StatusBarBackButton />} />
-        <div className="px-4 py-6">
-          <ErrorView
-            title="브리핑 정보를 불러오지 못했어요"
-            description="잠시 후 다시 시도해주세요."
-            buttonText="다시 시도"
-            onButtonClick={() => cardNewsQuery.refetch()}
-          />
-        </div>
-      </div>
-    )
-  }
-
-  if (!cardNewsQuery.data) {
-    return <Loading className="py-10" />
-  }
-
-  const stockName = cardNewsQuery.data.stock.name
+  const stockName = cardNewsQuery.data?.stock.name ?? ''
 
   return (
     <div className="bg-White box-border flex h-screen w-full flex-col px-4">
@@ -70,48 +50,57 @@ export function BriefingCompletePage() {
         // title 없음
       />
 
-      <div className="mt-20 flex flex-1 flex-col items-center gap-15.5">
-        {/* 상단: 캐릭터 & 타이틀 영역 */}
-        <div className="flex flex-col items-center gap-7">
-          {/* 아바타 그룹 연출 (픽셀 이미지 대체) */}
-          <CelebrationImage width={208} height={120} />
+      {cardNewsQuery.isError && !cardNewsQuery.data ? (
+        <PageErrorView
+          title="브리핑 정보를 불러오지 못했어요"
+          onRetry={() => cardNewsQuery.refetch()}
+        />
+      ) : !cardNewsQuery.data ? (
+        <PageLoadingView />
+      ) : (
+        <div className="mt-20 flex flex-1 flex-col items-center gap-15.5">
+          {/* 상단: 캐릭터 & 타이틀 영역 */}
+          <div className="flex flex-col items-center gap-7">
+            {/* 아바타 그룹 연출 (픽셀 이미지 대체) */}
+            <CelebrationImage width={208} height={120} />
 
-          <div className="flex flex-col items-center gap-4 text-center">
-            <h1 className="dnf-Title3 text-Gray-10 m-0">브리핑 도착!</h1>
-            <p className="pretendard-Caption1 text-Gray-6 whitespace-pre-wrap">
-              {`사원 ${agentCount}명이 ${stockName} 분석을 끝냈어요.\n지금 바로 확인해 보세요.`}
-            </p>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <h1 className="dnf-Title3 text-Gray-10 m-0">브리핑 도착!</h1>
+              <p className="pretendard-Caption1 text-Gray-6 whitespace-pre-wrap">
+                {`사원 ${agentCount}명이 ${stockName} 분석을 끝냈어요.\n지금 바로 확인해 보세요.`}
+              </p>
+            </div>
+          </div>
+
+          {/* 중단: 주식 분석 카드 영역 */}
+          <div className="flex w-full flex-col">
+            <BriefingCard
+              type={isAllComplete ? '완료' : '진행중'}
+              active={false}
+              stock={{ name: stockName }}
+              agentStatuses={{
+                rookie: mockAgents.includes('rookie') ? '완료' : '진행중',
+                pro: mockAgents.includes('pro') ? '완료' : '진행중',
+                tanker: mockAgents.includes('tanker') ? '완료' : '진행중',
+              }}
+            />
+          </div>
+
+          {/* 하단: 액션 버튼 영역 */}
+          <div className="flex w-full flex-col items-center gap-4">
+            <Button isFullWidth size="lg" color="primary" onClick={() => navigate(PATH.BRIEFING)}>
+              지금 확인하기
+            </Button>
+            <button
+              type="button"
+              className="pretendard-Caption1 text-Gray-6 cursor-pointer border-none bg-transparent underline underline-offset-2"
+              onClick={() => navigate(PATH.OFFICE)}
+            >
+              나중에 보고싶어요
+            </button>
           </div>
         </div>
-
-        {/* 중단: 주식 분석 카드 영역 */}
-        <div className="flex w-full flex-col">
-          <BriefingCard
-            type={isAllComplete ? '완료' : '진행중'}
-            active={false}
-            stock={{ name: stockName }}
-            agentStatuses={{
-              rookie: mockAgents.includes('rookie') ? '완료' : '진행중',
-              pro: mockAgents.includes('pro') ? '완료' : '진행중',
-              tanker: mockAgents.includes('tanker') ? '완료' : '진행중',
-            }}
-          />
-        </div>
-
-        {/* 하단: 액션 버튼 영역 */}
-        <div className="flex w-full flex-col items-center gap-4">
-          <Button isFullWidth size="lg" color="primary" onClick={() => navigate(PATH.BRIEFING)}>
-            지금 확인하기
-          </Button>
-          <button
-            type="button"
-            className="pretendard-Caption1 text-Gray-6 cursor-pointer border-none bg-transparent underline underline-offset-2"
-            onClick={() => navigate(PATH.OFFICE)}
-          >
-            나중에 보고싶어요
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }

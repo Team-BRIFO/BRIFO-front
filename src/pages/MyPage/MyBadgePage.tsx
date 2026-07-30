@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { Loading } from '@/components/common/Loading'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { BadgeUnlockModal } from '@/components/feature/my/BadgeUnlockModal'
 import { MyBadgeGallery } from '@/components/feature/my/MyBadgeGallery'
 import { useMyBadgeDetailQuery, useMyBadgesQuery } from '@/pages/MyPage/hooks/useMyQueries'
-import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
+import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 
 export function MyBadgePage() {
   const [params, setParams] = useSearchParams()
@@ -22,13 +23,13 @@ export function MyBadgePage() {
   if (badgesQuery.isError && !badgesQuery.data)
     return (
       <MyPageLayout title="업적 · 배지">
-        <MyPageError onRetry={() => badgesQuery.refetch()} />
+        <PageErrorView title="정보를 불러오지 못했어요." onRetry={() => badgesQuery.refetch()} />
       </MyPageLayout>
     )
   if (!badgesQuery.data)
     return (
       <MyPageLayout title="업적 · 배지">
-        <Loading className="py-10" />
+        <PageLoadingView />
       </MyPageLayout>
     )
   const badges = badgesQuery.data

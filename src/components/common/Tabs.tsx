@@ -174,7 +174,7 @@ function getItemClass(
 
   if (variant === 'segmented') {
     // 폰트 스타일
-    base.push(isActive ? 'pretendard-Button2 text-White' : 'pretendard-Button2 text-Gray-6')
+    base.push(isActive ? 'pretendard-Caption1 text-White' : 'pretendard-Caption1 text-Gray-6')
 
     // 구조 및 배경 스타일
     if (segmentedType === 2) {
@@ -185,17 +185,17 @@ function getItemClass(
       if (isActive) base.push('bg-Yellow-40')
     }
   } else if (variant === 'underline') {
-    base.push('h-[2.5rem] pretendard-Button2')
+    base.push('h-[2.5rem] pretendard-Caption1')
     base.push(
       isActive
         ? 'border-b-2 border-Gray-9 text-Gray-9'
         : 'border-b-2 border-transparent text-Gray-5',
     )
   } else if (variant === 'pill') {
-    base.push('h-[2rem] px-4 rounded-full pretendard-Button2')
+    base.push('h-[2rem] px-4 rounded-full pretendard-Caption1')
     base.push(isActive ? 'bg-Gray-9 text-White' : 'bg-Background1 text-Gray-6')
   } else if (variant === 'plain') {
-    base.push('pretendard-Button2')
+    base.push('pretendard-Caption1')
     base.push(isActive ? 'text-Gray-9 font-bold' : 'text-Gray-5')
   }
 

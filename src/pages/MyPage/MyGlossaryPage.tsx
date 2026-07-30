@@ -1,20 +1,21 @@
-import { Loading } from '@/components/common/Loading'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyGlossaryList } from '@/components/feature/my/MyGlossaryList'
 import { useMyLearnedTermsQuery } from '@/pages/MyPage/hooks/useMyQueries'
-import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
+import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 
 export function MyGlossaryPage() {
   const query = useMyLearnedTermsQuery()
   if (query.isError && !query.data)
     return (
       <MyPageLayout title="내 용어장">
-        <MyPageError onRetry={() => query.refetch()} />
+        <PageErrorView title="정보를 불러오지 못했어요." onRetry={() => query.refetch()} />
       </MyPageLayout>
     )
   if (!query.data)
     return (
       <MyPageLayout title="내 용어장">
-        <Loading className="py-10" />
+        <PageLoadingView />
       </MyPageLayout>
     )
   const entries = query.data.pages.flatMap((page) => page.entries)

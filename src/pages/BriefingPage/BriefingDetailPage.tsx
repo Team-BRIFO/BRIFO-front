@@ -11,6 +11,8 @@ import { BriefingMainContentSheet } from '@/components/feature/briefing/Briefing
 import { DecisionBottomSheet } from '@/components/feature/decision/DecisionBottomSheet'
 import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
 import { PredictionCompleteModal } from '@/components/feature/decision/PredictionCompleteModal'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecisionMutation'
 import { PATH } from '@/routes/paths'
@@ -50,24 +52,6 @@ export function BriefingDetailPage() {
     navigate(`/briefing/detail/${MOCK_BRIEFING_IDS[type]}`, { replace: true })
   }
 
-  if (isLoading && !data) {
-    return (
-      <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
-        <p className="pretendard-Body1 text-Gray-6">브리핑을 불러오는 중...</p>
-      </div>
-    )
-  }
-
-  if ((isError && !data) || !data) {
-    return (
-      <div className="bg-Background1 flex h-screen w-full flex-col items-center justify-center">
-        <p className="pretendard-Body1 text-Pink-30">브리핑 데이터를 불러오지 못했습니다.</p>
-      </div>
-    )
-  }
-
-  const { stock, agent, briefing } = data
-
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col gap-3">
       {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
@@ -78,81 +62,90 @@ export function BriefingDetailPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {/* 2. 스크롤 가능한 본문 영역 */}
-      <div className="flex flex-1 flex-col overflow-y-auto">
-        <div className="flex flex-col gap-3 px-4">
-          {/* 타이틀 */}
-          <div className="flex items-center justify-between">
-            <h1 className="dnf-Subtitle1 text-Gray-10">브리핑</h1>
-          </div>
+      {isLoading && !data ? (
+        <PageLoadingView />
+      ) : (isError && !data) || !data ? (
+        <PageErrorView title="브리핑 데이터를 불러오지 못했습니다." />
+      ) : (
+        <div className="flex flex-1 flex-col overflow-y-auto">
+          <div className="flex flex-col gap-3 px-4">
+            {/* 타이틀 */}
+            <div className="flex items-center justify-between">
+              <h1 className="dnf-Subtitle1 text-Gray-10">브리핑</h1>
+            </div>
 
-          {/* 에이전트 선택 탭 (피그마 스펙 Type 1) */}
-          <Tabs
-            variant="segmented"
-            segmentedType={1}
-            value={activeTab}
-            onChange={handleTabChange}
-            items={[
-              { label: '루키', value: 'rookie' },
-              { label: '프로', value: 'pro' },
-              { label: '탱커', value: 'tanker' },
-            ]}
-          />
-
-          {/* 메인 브리핑 시트 (가운데 정렬) */}
-          <div className="mt-2 flex justify-center">
-            <BriefingMainContentSheet
-              agent={agent}
-              briefing={briefing}
-              onConfirm={() => setIsDecisionSheetOpen(true)}
+            {/* 에이전트 선택 탭 (피그마 스펙 Type 1) */}
+            <Tabs
+              variant="segmented"
+              segmentedType={1}
+              value={activeTab}
+              onChange={handleTabChange}
+              items={[
+                { label: '루키', value: 'rookie' },
+                { label: '프로', value: 'pro' },
+                { label: '탱커', value: 'tanker' },
+              ]}
             />
+
+            {/* 메인 브리핑 시트 (가운데 정렬) */}
+            <div className="mt-2 flex justify-center">
+              <BriefingMainContentSheet
+                agent={data.agent}
+                briefing={data.briefing}
+                onConfirm={() => setIsDecisionSheetOpen(true)}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <DecisionBottomSheet
-        isOpen={isDecisionSheetOpen}
-        onClose={() => setIsDecisionSheetOpen(false)}
-        stock={stock}
-        agent={{ name: agent.name }}
-        briefing={{
-          badgeText: briefing.badgeText,
-          badgeType: briefing.badgeType,
-          oneLiner: briefing.comment,
-        }}
-        isSubmitting={isSubmitting}
-        onConfirm={(direction, confidence) => {
-          submitDecision(
-            { direction, confidenceLevel: confidence },
-            {
-              onSuccess: () => {
-                setPredictionData({ direction, confidence })
-                setIsDecisionSheetOpen(false)
-                setIsCompleteModalOpen(true)
+      {data && (
+        <DecisionBottomSheet
+          isOpen={isDecisionSheetOpen}
+          onClose={() => setIsDecisionSheetOpen(false)}
+          stock={data.stock}
+          agent={{ name: data.agent.name }}
+          briefing={{
+            badgeText: data.briefing.badgeText,
+            badgeType: data.briefing.badgeType,
+            oneLiner: data.briefing.comment,
+          }}
+          isSubmitting={isSubmitting}
+          onConfirm={(direction, confidence) => {
+            submitDecision(
+              { direction, confidenceLevel: confidence },
+              {
+                onSuccess: () => {
+                  setPredictionData({ direction, confidence })
+                  setIsDecisionSheetOpen(false)
+                  setIsCompleteModalOpen(true)
+                },
+                onError: () => {
+                  setErrorModalMsg('예측 등록에 실패했습니다. 잠시 후 다시 시도해주세요.')
+                },
               },
-              onError: () => {
-                setErrorModalMsg('예측 등록에 실패했습니다. 잠시 후 다시 시도해주세요.')
-              },
-            },
-          )
-        }}
-      />
-      <PredictionCompleteModal
-        isOpen={isCompleteModalOpen}
-        onClose={() => setIsCompleteModalOpen(false)}
-        stock={stock}
-        earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
-        onConfirm={() => {
-          setIsCompleteModalOpen(false)
-          navigate(PATH.DIARY)
-        }}
-      />
+            )
+          }}
+        />
+      )}
+      {data && (
+        <PredictionCompleteModal
+          isOpen={isCompleteModalOpen}
+          onClose={() => setIsCompleteModalOpen(false)}
+          stock={data.stock}
+          earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
+          onConfirm={() => {
+            setIsCompleteModalOpen(false)
+            navigate(PATH.DIARY)
+          }}
+        />
+      )}
       {errorModalMsg && (
         <DecisionResultModal
           isOpen={!!errorModalMsg}
           isSuccess={false}
           points={0}
-          stockInfo={{ name: stock.name, changeRate: stock.changeRate }}
+          stockInfo={{ name: data?.stock.name ?? '', changeRate: data?.stock.changeRate ?? 0 }}
           comment={errorModalMsg}
           resultText="등록 실패"
           onAction={() => setErrorModalMsg(null)}

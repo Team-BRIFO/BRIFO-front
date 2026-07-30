@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Loading } from '@/components/common/Loading'
 import {
   StatusBar,
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
 import { DiaryDetailShare } from '@/components/feature/diary/DiaryDetailShare'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { useCreateDiaryShareImageMutation } from '@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation'
 import { useDiaryDetailQuery } from '@/pages/DiaryPage/hooks/useDiaryQueries'
 
@@ -48,17 +49,12 @@ export function DiaryDetailPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {/* StatusBar → 카드 ~25px (피그마 #564:3004), 하단 NavigationBar 여백 */}
-      <div className="flex flex-1 flex-col items-center px-5 pt-6 pb-20">
-        {isPending && <Loading className="py-10" />}
-
-        {isError && !detail && (
-          <p className="pretendard-Body2-Regular text-Gray-6 py-10 text-center">
-            결정 카드를 찾을 수 없어요.
-          </p>
-        )}
-
-        {detail && (
+      {isError && !detail ? (
+        <PageErrorView title="결정 카드를 찾을 수 없어요." />
+      ) : isPending ? (
+        <PageLoadingView />
+      ) : detail ? (
+        <div className="flex flex-1 flex-col items-center px-5 pt-6 pb-20">
           <DiaryDetailShare
             shareImageUrl={detail.shareImageUrl}
             stockName={detail.stockName}
@@ -66,8 +62,8 @@ export function DiaryDetailPage() {
             isFailed={isShareImageFailed}
             onRetry={() => id && createShareImage(id)}
           />
-        )}
-      </div>
+        </div>
+      ) : null}
     </div>
   )
 }

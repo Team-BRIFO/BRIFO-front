@@ -46,7 +46,8 @@ export function MyApHistory({
           value={period}
           onChange={(value) => onChangePeriod(value as ApPeriod)}
           items={AP_PERIOD_ITEMS}
-          variant="pill"
+          variant="segmented"
+          isFullWidth={false}
           ariaLabel="AP 내역 필터"
         />
 

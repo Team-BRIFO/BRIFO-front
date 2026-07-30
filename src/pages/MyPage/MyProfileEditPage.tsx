@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 
-import { Loading } from '@/components/common/Loading'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyProfileEdit } from '@/components/feature/my/MyProfileEdit'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { useUpdateMyProfileMutation } from '@/pages/MyPage/hooks/useUpdateMyProfileMutation'
-import { MyPageError, MyPageLayout } from '@/pages/MyPage/MyPageLayout'
+import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
 export function MyProfileEditPage() {
@@ -14,13 +15,13 @@ export function MyProfileEditPage() {
   if (userQuery.isError && !userQuery.data)
     return (
       <MyPageLayout title="프로필 편집">
-        <MyPageError onRetry={() => userQuery.refetch()} />
+        <PageErrorView title="정보를 불러오지 못했어요." onRetry={() => userQuery.refetch()} />
       </MyPageLayout>
     )
   if (!userQuery.data)
     return (
       <MyPageLayout title="프로필 편집">
-        <Loading className="py-10" />
+        <PageLoadingView />
       </MyPageLayout>
     )
   const { profile, profileFormValues } = userQuery.data

@@ -1,11 +1,12 @@
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 
-import { Loading } from '@/components/common/Loading'
 import {
   StatusBar,
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { AgentDetailSection } from '@/components/feature/myEmployee/AgentDetailSection'
 import { useAgentDetailQuery } from '@/hooks/queries/agent/useAgentQueries'
 import { PATH } from '@/routes/paths'
@@ -17,25 +18,30 @@ export function TeamDetailPage() {
 
   const { data: agent, isError } = useAgentDetailQuery(agentId || null)
 
-  // 존재하지 않는 사원이면 목록으로
-  if (!agentId || (isError && !agent)) {
+  // 비정상적인 접근(ID 없음)이면 목록으로
+  if (!agentId) {
     return <Navigate to={PATH.TEAM} replace />
   }
 
-  if (!agent) return <Loading className="py-10" />
-
   return (
-    <div className="flex flex-col">
+    <div className="bg-Background1 flex min-h-dvh flex-col">
       <StatusBar
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(PATH.TEAM)} />}
         title="사원 상세"
         right={<StatusBarNotificationButton />}
+        className="bg-White"
       />
 
-      <div className="px-4 py-4">
-        <AgentDetailSection agent={agent} />
-      </div>
+      {isError && !agent ? (
+        <PageErrorView title="사원 정보를 불러오지 못했어요" />
+      ) : !agent ? (
+        <PageLoadingView />
+      ) : (
+        <div className="px-4 py-4">
+          <AgentDetailSection agent={agent} />
+        </div>
+      )}
     </div>
   )
 }

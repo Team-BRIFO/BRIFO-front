@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 
-import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { ErrorView } from '@/components/feature/error/ErrorView'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { AgentListSection } from '@/components/feature/myEmployee/AgentListSection'
 import Logo from '@/components/logos/logo-small.svg?react'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
@@ -17,9 +17,7 @@ export function TeamPage() {
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
     ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
-    : userQuery.isError
-      ? 'AP 조회 실패'
-      : 'AP 불러오는 중'
+    : '0 AP'
   const agents = agentsQuery.data
 
   return (
@@ -39,16 +37,14 @@ export function TeamPage() {
 
       <div className="px-4 py-4">
         {agentsQuery.isError && !agents ? (
-          <ErrorView
+          <PageErrorView
             title="사원 목록을 불러오지 못했어요"
-            description="잠시 후 다시 시도해주세요."
-            buttonText="다시 시도"
-            onButtonClick={() => agentsQuery.refetch()}
+            onRetry={() => agentsQuery.refetch()}
           />
         ) : !agents ? (
-          <Loading className="py-10" />
+          <PageLoadingView />
         ) : agents.length === 0 ? (
-          <ErrorView title="아직 등록된 사원이 없어요" description="새 사원을 배치해보세요." />
+          <PageErrorView title="아직 등록된 사원이 없어요" description="새 사원을 배치해보세요." />
         ) : (
           <AgentListSection
             agents={agents}
