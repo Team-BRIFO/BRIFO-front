@@ -60,15 +60,14 @@ export function OfficePage() {
 
           {/* 오피스 일러스트 + 캐릭터 */}
           <Office
-            agentStatusMap={items.reduce<AgentStatusMap>((acc, item) => {
-              item.agents.forEach((agent) => {
-                const current = acc[agent.type]
-                if (current !== 'ANALYZING' && current !== 'PENDING') {
-                  acc[agent.type] = agent.status
-                }
-              })
-              return acc
-            }, {})}
+            agentStatusMap={
+              items.length > 0
+                ? items[0].agents.reduce<AgentStatusMap>((acc, agent) => {
+                    acc[agent.type] = agent.status
+                    return acc
+                  }, {})
+                : {}
+            }
           />
 
           {/* 진행사항 섹션 */}
