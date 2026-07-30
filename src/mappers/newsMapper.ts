@@ -1,4 +1,4 @@
-﻿import type { GetNewsCardsResponse } from '@/api/generated/schemas/news-controller'
+import type { GetNewsCardsResponse } from '@/api/generated/schemas/news-controller'
 import type { NewsCardData } from '@/components/feature/newsCard/NewsCard'
 
 export function mapNewsCards(response: GetNewsCardsResponse): NewsCardData[] {

@@ -21,18 +21,19 @@ export function GlossaryBottomSheet({
   isOpen,
   onClose,
   term,
-  definition,
+  definition = '산 금액이 판 금액보다 많은 상태예요. 외국인·기관의 순매수는 매수세가 우세하다는 뜻으로 읽혀요.',
   isLearned = false,
 }: GlossaryBottomSheetProps) {
-  const { data: termDetailResponse, isLoading } = useGetTermDetail(
-    isOpen && term ? term.termId : null,
-  )
-  const { mutate: putMyTerm, isPending } = usePutMyTerm()
+  const shouldFetch = isOpen && !!term
 
-  if (!term) return null
+  const { data: termDetailResponse, isLoading } = useGetTermDetail(
+    shouldFetch && term ? term.termId : null,
+  )
+  const { mutate: markAsLearned, isPending } = usePutMyTerm()
 
   const displayDefinition = termDetailResponse?.definition ?? definition
   const displayIsLearned = termDetailResponse?.isLearned ?? isLearned
+  if (!term) return null
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} className="items-center gap-4.5">
@@ -45,29 +46,29 @@ export function GlossaryBottomSheet({
         </div>
         <div className="flex flex-col gap-2">
           <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
-          <GlossaryDefinition>
-            {isLoading ? '불러오는 중...' : displayDefinition}
-          </GlossaryDefinition>
+          <GlossaryDefinition>{isLoading ? '불러오는 중..' : displayDefinition}</GlossaryDefinition>
         </div>
         <div className="flex w-full justify-center">
           <GlossaryStatusBadge isLearned={displayIsLearned} />
         </div>
       </BottomSheet.Body>
 
-      <BottomSheet.Footer className="flex w-full flex-col">
+      <BottomSheet.Footer>
         <Button
           size="lg"
           isFullWidth
-          className="w-full"
+          disabled={displayIsLearned || isPending}
           onClick={() => {
-            if (term && !displayIsLearned) {
-              putMyTerm(term.termId)
+            if (term?.termId && !displayIsLearned) {
+              markAsLearned(term.termId, {
+                onSuccess: () => {
+                  // After success, it will invalidate and refetch, showing "learned"
+                },
+              })
             }
-            onClose()
           }}
-          disabled={isPending}
         >
-          이해했어요
+          {displayIsLearned ? '이미 학습한 단어예요' : '이해했어요'}
         </Button>
       </BottomSheet.Footer>
     </BottomSheet>
