@@ -1,28 +1,40 @@
-import { useQuery } from '@tanstack/react-query'
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  getDecisionResult,
+  getDecisions,
+} from '@/api/generated/endpoints/decision-controller/decision-controller'
+import {
+  ApiResponseGetDecisionResultResponse,
+  ApiResponseGetDecisionsResponse,
+} from '@/api/generated/schemas'
+import { useApiQuery } from '@/hooks/api'
 import { decisionQueryKeys } from '@/hooks/queries/decision/decisionQueryKeys'
 import { mapDecisionDetail, mapDecisionList } from '@/mappers/decisionMapper'
-import { MOCK_DECISIONS, MOCK_GET_DECISION_RESPONSES } from '@/pages/DecisionPage/mockDecision'
 
 export function useDecisionListQuery() {
-  return useQuery({
+  return useApiQuery({
     queryKey: decisionQueryKeys.list(),
+    operation: getDecisions,
+    endpoint: 'getDecisions',
+    args: [],
+    responseSchema: ApiResponseGetDecisionsResponse,
+    response: 'requiredResult',
+    map: (result) => mapDecisionList(result as any),
     staleTime: 0,
-    queryFn: () => mapDecisionList(MOCK_DECISIONS),
-    initialData: () => mapDecisionList(MOCK_DECISIONS),
   })
 }
 
 export function useDecisionDetailQuery(decisionId: string | null) {
-  return useQuery({
+  return useApiQuery({
     queryKey: decisionQueryKeys.detail(decisionId ?? ''),
-    staleTime: 0,
-    queryFn: () => {
-      const response = MOCK_GET_DECISION_RESPONSES[decisionId!]
-      if (!response) throw new Error('Decision not found')
-      return mapDecisionDetail(response.result)
-    },
+    operation: getDecisionResult,
+    endpoint: 'getDecisionResult',
+    args: [decisionId!],
+    responseSchema: ApiResponseGetDecisionResultResponse,
+    response: 'requiredResult',
+    map: (result) => mapDecisionDetail(result as any),
     enabled: Boolean(decisionId),
     retry: false,
+    staleTime: 0,
   })
 }

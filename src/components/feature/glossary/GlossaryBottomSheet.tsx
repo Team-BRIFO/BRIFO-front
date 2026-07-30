@@ -4,6 +4,7 @@ import Button from '@/components/common/Button'
 import { AgentChat } from '@/components/domain/agent/AgentChat'
 import { GlossaryDefinition } from '@/components/domain/glossary/GlossaryDefinition'
 import { GlossaryStatusBadge } from '@/components/feature/glossary/GlossaryStatusBadge'
+import { useGetTermDetail, usePutMyTerm } from '@/hooks/queries/term/useTermQueries'
 import type { GlossaryTerm } from '@/types/domain/glossary'
 
 export interface GlossaryBottomSheetProps {
@@ -20,10 +21,18 @@ export function GlossaryBottomSheet({
   isOpen,
   onClose,
   term,
-  definition = '산 금액이 판 금액보다 많은 상태예요. 외국인·기관의 순매수는 매수세가 우세하다는 뜻으로 읽혀요.',
+  definition,
   isLearned = false,
 }: GlossaryBottomSheetProps) {
+  const { data: termDetailResponse, isLoading } = useGetTermDetail(
+    isOpen && term ? term.termId : null,
+  )
+  const { mutate: putMyTerm, isPending } = usePutMyTerm()
+
   if (!term) return null
+
+  const displayDefinition = termDetailResponse?.definition ?? definition
+  const displayIsLearned = termDetailResponse?.isLearned ?? isLearned
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} className="items-center gap-4.5">
@@ -36,15 +45,28 @@ export function GlossaryBottomSheet({
         </div>
         <div className="flex flex-col gap-2">
           <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
-          <GlossaryDefinition>{definition}</GlossaryDefinition>
+          <GlossaryDefinition>
+            {isLoading ? '불러오는 중...' : displayDefinition}
+          </GlossaryDefinition>
         </div>
         <div className="flex w-full justify-center">
-          <GlossaryStatusBadge isLearned={isLearned} />
+          <GlossaryStatusBadge isLearned={displayIsLearned} />
         </div>
       </BottomSheet.Body>
 
       <BottomSheet.Footer className="flex w-full flex-col">
-        <Button size="lg" isFullWidth className="w-full" onClick={onClose}>
+        <Button
+          size="lg"
+          isFullWidth
+          className="w-full"
+          onClick={() => {
+            if (term && !displayIsLearned) {
+              putMyTerm(term.termId)
+            }
+            onClose()
+          }}
+          disabled={isPending}
+        >
           이해했어요
         </Button>
       </BottomSheet.Footer>
