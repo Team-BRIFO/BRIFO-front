@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+import { Loading } from '@/components/common/Loading'
 import { DiaryCalendar } from '@/components/feature/diary/DiaryCalendar'
 import { DiaryList } from '@/components/feature/diary/DiaryList'
 import { DiaryStatistics } from '@/components/feature/diary/DiaryStatistics'
 import { DiaryTabScreen } from '@/components/feature/diary/DiaryTabScreen'
 import type { DiaryView } from '@/components/feature/diary/DiaryViewTabs'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
+import { ErrorView } from '@/components/feature/error/ErrorView'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import {
   useDiaryCalendarQuery,
@@ -62,14 +62,15 @@ export function DiaryPage() {
     if (view === 'calendar') {
       if (calendarQuery.isError && !calendarQuery.data) {
         return (
-          <PageErrorView
-            error={calendarQuery.error}
+          <ErrorView
             title="결정 일기를 불러오지 못했어요"
-            onRetry={() => calendarQuery.refetch()}
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => calendarQuery.refetch()}
           />
         )
       }
-      if (!calendarQuery.data) return <PageLoadingView />
+      if (!calendarQuery.data) return <Loading className="py-10" />
 
       const { marks, hitRate } = calendarQuery.data
 
@@ -89,22 +90,20 @@ export function DiaryPage() {
     if (view === 'list') {
       if (listQuery.isError && !listQuery.data) {
         return (
-          <PageErrorView
-            error={listQuery.error}
+          <ErrorView
             title="결정 기록을 불러오지 못했어요"
-            onRetry={() => listQuery.refetch()}
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => listQuery.refetch()}
           />
         )
       }
-      if (!listQuery.data) return <PageLoadingView />
+      if (!listQuery.data) return <Loading className="py-10" />
 
       const entries = listQuery.data.pages.flatMap((page) => page.entries)
       if (entries.length === 0) {
         return (
-          <PageErrorView
-            title="아직 결정 기록이 없어요"
-            description="첫 번째 결정을 기록해보세요."
-          />
+          <ErrorView title="아직 결정 기록이 없어요" description="첫 번째 결정을 기록해보세요." />
         )
       }
 
@@ -121,14 +120,15 @@ export function DiaryPage() {
 
     if (statsQuery.isError && !statsQuery.data) {
       return (
-        <PageErrorView
-          error={statsQuery.error}
+        <ErrorView
           title="결정 통계를 불러오지 못했어요"
-          onRetry={() => statsQuery.refetch()}
+          description="잠시 후 다시 시도해주세요."
+          buttonText="다시 시도"
+          onButtonClick={() => statsQuery.refetch()}
         />
       )
     }
-    if (!statsQuery.data) return <PageLoadingView />
+    if (!statsQuery.data) return <Loading className="py-10" />
 
     if (
       statsQuery.data.hitRate.totalCount === 0 &&
@@ -136,10 +136,7 @@ export function DiaryPage() {
       statsQuery.data.groups.length === 0
     ) {
       return (
-        <PageErrorView
-          title="아직 집계된 통계가 없어요"
-          description="결정을 기록하면 통계가 쌓여요."
-        />
+        <ErrorView title="아직 집계된 통계가 없어요" description="결정을 기록하면 통계가 쌓여요." />
       )
     }
 

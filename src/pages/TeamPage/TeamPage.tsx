@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 
+import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
+import { ErrorView } from '@/components/feature/error/ErrorView'
 import { AgentListSection } from '@/components/feature/myEmployee/AgentListSection'
 import Logo from '@/components/logos/logo-small.svg?react'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
@@ -37,14 +37,16 @@ export function TeamPage() {
 
       <div className="px-4 py-4">
         {agentsQuery.isError && !agents ? (
-          <PageErrorView
+          <ErrorView
             title="사원 목록을 불러오지 못했어요"
-            onRetry={() => agentsQuery.refetch()}
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => agentsQuery.refetch()}
           />
         ) : !agents ? (
-          <PageLoadingView />
+          <Loading className="py-10" />
         ) : agents.length === 0 ? (
-          <PageErrorView title="아직 등록된 사원이 없어요" description="새 사원을 배치해보세요." />
+          <ErrorView title="아직 등록된 사원이 없어요" description="새 사원을 배치해보세요." />
         ) : (
           <AgentListSection
             agents={agents}

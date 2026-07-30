@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 
+import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyHome } from '@/components/feature/my/MyHome'
 import Logo from '@/components/logos/logo-small.svg?react'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
+import { MyPageError } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
 const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
@@ -20,7 +20,6 @@ const MENU_PATHS: Partial<Record<MyMenuKey, string>> = {
 export function MyPage() {
   const navigate = useNavigate()
   const userQuery = useUserProfileQuery()
-
   const { data } = userQuery
 
   const handleMenu = (key: MyMenuKey) => {
@@ -36,20 +35,16 @@ export function MyPage() {
         right={
           <div className="flex items-center gap-3">
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-              {data ? `${data.apSummary.balance.toLocaleString()} AP` : '0 AP'}
+              {userQuery.data ? `${userQuery.data.apSummary.balance.toLocaleString()} AP` : '0 AP'}
             </div>
             <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
           </div>
         }
       />
       {userQuery.isError && !data ? (
-        <PageErrorView
-          error={userQuery.error}
-          title="정보를 불러오지 못했어요."
-          onRetry={() => userQuery.refetch()}
-        />
+        <MyPageError onRetry={() => userQuery.refetch()} />
       ) : !data ? (
-        <PageLoadingView />
+        <Loading className="py-10" />
       ) : (
         <div className="px-4 pt-3 pb-24">
           <MyHome

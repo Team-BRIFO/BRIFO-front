@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Loading } from '@/components/common/Loading'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { DecisionResultModal } from '@/components/feature/decision/DecisionResultModal'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
+import { ErrorView } from '@/components/feature/error/ErrorView'
 import {
   useDecisionDetailQuery,
   useDecisionListQuery,
@@ -38,11 +38,16 @@ export function PredictionListPage() {
         </header>
 
         {decisionsQuery.isError && !decisions ? (
-          <PageErrorView onRetry={() => decisionsQuery.refetch()} />
+          <ErrorView
+            title="예측 목록을 불러오지 못했어요"
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => decisionsQuery.refetch()}
+          />
         ) : !decisions ? (
-          <PageLoadingView />
+          <Loading className="py-10" />
         ) : decisions.length === 0 ? (
-          <PageErrorView title="오늘 등록한 예측이 없어요" description="새 예측을 등록해보세요." />
+          <ErrorView title="오늘 등록한 예측이 없어요" description="새 예측을 등록해보세요." />
         ) : (
           <>
             {/* 요약 배너 */}
@@ -94,13 +99,15 @@ export function PredictionListPage() {
         )}
 
         {selectedDecisionId && selectedDecisionQuery.isLoading && !selectedDecisionDetail && (
-          <PageLoadingView />
+          <Loading className="py-10" />
         )}
 
         {selectedDecisionId && selectedDecisionQuery.isError && !selectedDecisionDetail && (
-          <PageErrorView
+          <ErrorView
             title="예측 결과를 불러오지 못했어요"
-            onRetry={() => selectedDecisionQuery.refetch()}
+            description="잠시 후 다시 시도해주세요."
+            buttonText="다시 시도"
+            onButtonClick={() => selectedDecisionQuery.refetch()}
           />
         )}
       </div>
