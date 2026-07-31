@@ -23,6 +23,7 @@ import { NewsCardPage } from '@/pages/NewsCardPage/NewsCardPage'
 import { NotificationPage } from '@/pages/NotificationPage/NotificationPage'
 import { OfficePage } from '@/pages/OfficePage/OfficePage'
 import { OnboardingPage } from '@/pages/OnboardingPage/OnboardingPage'
+import { OAuthCallbackPage } from '@/pages/SplashPage/OAuthCallbackPage'
 import { SplashPage } from '@/pages/SplashPage/SplashPage'
 import { TeamDetailPage } from '@/pages/TeamPage/TeamDetailPage'
 import { TeamPage } from '@/pages/TeamPage/TeamPage'
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: PATH.SPLASH,
         element: <SplashPage />,
+      },
+      {
+        path: PATH.AUTH_CALLBACK,
+        element: <OAuthCallbackPage />,
       },
       {
         path: PATH.AGREEMENT,

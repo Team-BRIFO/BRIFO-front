@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import SplashBackground from '@/assets/images/splash_background.svg?react'
 import Logo from '@/assets/logo/brifo_logo.svg?react'
+import { startSocialLogin } from '@/auth/oauth'
+import { Toast } from '@/components/common/Toast'
 import LoginSection from '@/components/feature/onboarding/LoginSection'
 import OnboardingSlide from '@/components/feature/onboarding/OnboardingSlide'
 import { SPLASH_SLIDES } from '@/pages/SplashPage/splash'
@@ -10,19 +12,32 @@ import { PATH } from '@/routes/paths'
 
 const SPLASH_DURATION = 3000
 
-export function SplashPage() {
-  const navigate = useNavigate()
+interface SplashLocationState {
+  loginError?: string
+}
 
-  const [isSplashVisible, setIsSplashVisible] = useState(true)
-  const [currentStep, setCurrentStep] = useState(0)
+export function SplashPage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const locationState = location.state as SplashLocationState | null
+  const initialLoginError = locationState?.loginError
+  const [isSplashVisible, setIsSplashVisible] = useState(!initialLoginError)
+  const [currentStep, setCurrentStep] = useState(initialLoginError ? SPLASH_SLIDES.length : 0)
+  const [loginError, setLoginError] = useState(initialLoginError)
 
   useEffect(() => {
+    if (initialLoginError) {
+      navigate(PATH.SPLASH, { replace: true, state: null })
+      const errorTimer = window.setTimeout(() => setLoginError(undefined), 3000)
+      return () => window.clearTimeout(errorTimer)
+    }
+
     const timer = window.setTimeout(() => {
       setIsSplashVisible(false)
     }, SPLASH_DURATION)
 
     return () => window.clearTimeout(timer)
-  }, [])
+  }, [initialLoginError, navigate])
 
   const isLoginStep = currentStep >= SPLASH_SLIDES.length
   const currentSlide = SPLASH_SLIDES[currentStep]
@@ -39,14 +54,12 @@ export function SplashPage() {
     setCurrentStep(SPLASH_SLIDES.length)
   }
 
-  const handleKakaoLogin = async () => {
-    // TODO: 카카오 로그인 API 호출
-    navigate(PATH.AGREEMENT)
+  const handleKakaoLogin = () => {
+    startSocialLogin('kakao')
   }
 
-  const handleNaverLogin = async () => {
-    // TODO: 네이버 로그인 API 호출
-    navigate(PATH.AGREEMENT)
+  const handleNaverLogin = () => {
+    startSocialLogin('naver')
   }
 
   // 최초 로고 스플래시
@@ -75,6 +88,7 @@ export function SplashPage() {
           onNaverLogin={handleNaverLogin}
           onBack={handleBack}
         />
+        {loginError && <Toast message={loginError} />}
       </div>
     )
   }

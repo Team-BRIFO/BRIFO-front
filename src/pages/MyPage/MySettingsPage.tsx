@@ -11,6 +11,7 @@ import { MySettings } from '@/components/feature/my/MySettings'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useDeleteMyAccountMutation } from '@/pages/MyPage/hooks/useDeleteMyAccountMutation'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
+import { useLogoutMutation } from '@/pages/SplashPage/hooks/useLogoutMutation'
 import { PATH } from '@/routes/paths'
 
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
@@ -24,6 +25,7 @@ export function MySettingsPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const removeAccount = useDeleteMyAccountMutation()
+  const logout = useLogoutMutation()
   const [action, setAction] = useState<AccountActionType | null>(null)
   const onSelect = (key: MyMenuKey) => {
     if (key === 'logout' || key === 'withdraw') {
@@ -36,9 +38,16 @@ export function MySettingsPage() {
   }
   const onConfirm = () => {
     if (action === 'logout') {
-      browserTokenStore.clear()
-      queryClient.clear()
-      navigate(PATH.SPLASH, { replace: true })
+      logout.mutate(
+        { refreshToken: browserTokenStore.getRefreshToken() ?? undefined },
+        {
+          onSuccess: () => {
+            browserTokenStore.clear()
+            queryClient.clear()
+            navigate(PATH.SPLASH, { replace: true })
+          },
+        },
+      )
       return
     }
     removeAccount.mutate(undefined, {
@@ -59,11 +68,13 @@ export function MySettingsPage() {
           setAction(null)
         }}
         onConfirm={onConfirm}
-        isConfirming={removeAccount.isPending}
+        isConfirming={action === 'logout' ? logout.isPending : removeAccount.isPending}
         errorMessage={
-          action === 'withdraw' && removeAccount.isError
-            ? '탈퇴 처리에 실패했어요. 다시 시도해주세요.'
-            : undefined
+          action === 'logout' && logout.isError
+            ? '로그아웃에 실패했어요. 다시 시도해주세요.'
+            : action === 'withdraw' && removeAccount.isError
+              ? '탈퇴 처리에 실패했어요. 다시 시도해주세요.'
+              : undefined
         }
       />
     </MyPageLayout>
