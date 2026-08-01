@@ -6,7 +6,7 @@ import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 
 export function MyGlossaryPage() {
   const query = useMyLearnedTermsQuery()
-  if (!!query.error && query.fetchStatus === 'idle')
+  if (!!query.error && query.fetchStatus === 'idle' && !query.data)
     return (
       <MyPageLayout title="내 용어장">
         <PageErrorView
@@ -16,7 +16,7 @@ export function MyGlossaryPage() {
         />
       </MyPageLayout>
     )
-  if (query.fetchStatus === 'fetching' || !query.data)
+  if (!query.data)
     return (
       <MyPageLayout title="내 용어장">
         <PageLoadingView />

@@ -29,6 +29,7 @@ export function BriefingDetailPage() {
     briefingId ?? '',
   )
 
+  const isReady = !!data && fetchStatus !== 'fetching' && !error
   const activeTab = data?.activeTab ?? 'rookie'
 
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
@@ -104,7 +105,7 @@ export function BriefingDetailPage() {
         </div>
       )}
 
-      {data && (
+      {isReady && (
         <DecisionBottomSheet
           isOpen={isDecisionSheetOpen}
           onClose={() => setIsDecisionSheetOpen(false)}
@@ -133,7 +134,7 @@ export function BriefingDetailPage() {
           }}
         />
       )}
-      {data && (
+      {isReady && (
         <PredictionCompleteModal
           isOpen={isCompleteModalOpen}
           onClose={() => setIsCompleteModalOpen(false)}

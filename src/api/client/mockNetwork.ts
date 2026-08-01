@@ -30,6 +30,17 @@ export function mockFetch<T>(
     }
 
     setTimeout(() => {
+      if (!navigator.onLine) {
+        reject(
+          new ApiError({
+            kind: 'network',
+            endpoint,
+            code: 'NETWORK_ERROR',
+            message: '네트워크 연결을 확인해 주세요.',
+          }),
+        )
+        return
+      }
       try {
         resolve(getData())
       } catch (e) {

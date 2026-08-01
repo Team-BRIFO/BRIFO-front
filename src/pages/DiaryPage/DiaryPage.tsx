@@ -71,12 +71,11 @@ export function DiaryPage() {
 
   const isError =
     currentFetchStatus === 'idle' &&
-    ((view === 'calendar' && !!calendarQuery.error) ||
-      (view === 'list' && !!listQuery.error) ||
-      (view === 'statistics' && !!statsQuery.error))
+    ((view === 'calendar' && !!calendarQuery.error && !calendarQuery.data) ||
+      (view === 'list' && !!listQuery.error && !listQuery.data) ||
+      (view === 'statistics' && !!statsQuery.error && !statsQuery.data))
 
   const isLoading =
-    currentFetchStatus === 'fetching' ||
     (view === 'calendar' && !calendarQuery.data) ||
     (view === 'list' && !listQuery.data) ||
     (view === 'statistics' && !statsQuery.data)

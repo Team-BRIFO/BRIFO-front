@@ -12,7 +12,7 @@ export function MyProfileEditPage() {
   const navigate = useNavigate()
   const userQuery = useUserProfileQuery()
   const update = useUpdateMyProfileMutation()
-  if (!!userQuery.error && userQuery.fetchStatus === 'idle')
+  if (!!userQuery.error && userQuery.fetchStatus === 'idle' && !userQuery.data)
     return (
       <MyPageLayout title="프로필 편집">
         <PageErrorView
@@ -22,7 +22,7 @@ export function MyProfileEditPage() {
         />
       </MyPageLayout>
     )
-  if (userQuery.fetchStatus === 'fetching' || !userQuery.data)
+  if (!userQuery.data)
     return (
       <MyPageLayout title="프로필 편집">
         <PageLoadingView />

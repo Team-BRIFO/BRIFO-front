@@ -17,7 +17,7 @@ export function DiaryDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { data: detail, isPending, fetchStatus, error, refetch } = useDiaryDetailQuery(id ?? null)
+  const { data: detail, fetchStatus, error, refetch } = useDiaryDetailQuery(id ?? null)
   const {
     mutate: createShareImage,
     reset: resetShareImage,
@@ -49,13 +49,13 @@ export function DiaryDetailPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {!!error && fetchStatus === 'idle' ? (
+      {!!error && fetchStatus === 'idle' && !detail ? (
         <PageErrorView
           title="결정 카드를 찾을 수 없어요."
           error={error}
           onRetry={() => refetch()}
         />
-      ) : isPending || fetchStatus === 'fetching' ? (
+      ) : !detail ? (
         <PageLoadingView />
       ) : detail ? (
         <div className="flex flex-1 flex-col items-center px-5 pt-6 pb-20">

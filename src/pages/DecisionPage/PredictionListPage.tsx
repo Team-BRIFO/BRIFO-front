@@ -22,7 +22,7 @@ export function PredictionListPage() {
   const selectedDecisionDetail = selectedDecisionQuery.data
   const selectedDecision = decisions?.find((decision) => decision.id === selectedDecisionId)
 
-  if (!!decisionsQuery.error && decisionsQuery.fetchStatus === 'idle') {
+  if (!!decisionsQuery.error && decisionsQuery.fetchStatus === 'idle' && !decisions) {
     return (
       <div className="bg-White flex min-h-dvh w-full flex-col pb-10">
         <StatusBar
@@ -34,7 +34,7 @@ export function PredictionListPage() {
     )
   }
 
-  if (decisionsQuery.fetchStatus === 'fetching' || !decisions) {
+  if (!decisions) {
     return (
       <div className="bg-White flex min-h-dvh w-full flex-col pb-10">
         <StatusBar
@@ -116,13 +116,15 @@ export function PredictionListPage() {
 
         {selectedDecisionId && (
           <Modal isOpen={!!selectedDecisionId} onClose={() => setSelectedDecisionId(null)}>
-            {!!selectedDecisionQuery.error && selectedDecisionQuery.fetchStatus === 'idle' ? (
+            {!!selectedDecisionQuery.error &&
+            selectedDecisionQuery.fetchStatus === 'idle' &&
+            !selectedDecisionDetail ? (
               <PageErrorView
                 title="예측 결과를 불러오지 못했어요"
                 error={selectedDecisionQuery.error}
                 onRetry={() => selectedDecisionQuery.refetch()}
               />
-            ) : selectedDecisionQuery.fetchStatus === 'fetching' || !selectedDecisionDetail ? (
+            ) : !selectedDecisionDetail ? (
               <PageLoadingView />
             ) : selectedDecision && selectedDecisionDetail ? (
               <DecisionResultModalContent
