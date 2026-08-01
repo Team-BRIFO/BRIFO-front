@@ -7,7 +7,7 @@
  */
 import { z as zod } from 'zod'
 
-export const NewsCard = zod.object({
+export const StockNewsCard = zod.object({
   cardId: zod.uuid(),
   source: zod.enum(['NAVER', 'DART', 'KRX']),
   headline: zod.string(),
@@ -24,5 +24,5 @@ export const NewsCard = zod.object({
   ),
 })
 
-export type NewsCard = zod.input<typeof NewsCard>
-export type NewsCardOutput = zod.output<typeof NewsCard>
+export type StockNewsCard = zod.input<typeof StockNewsCard>
+export type StockNewsCardOutput = zod.output<typeof StockNewsCard>

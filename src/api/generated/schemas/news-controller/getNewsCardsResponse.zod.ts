@@ -11,6 +11,10 @@ export const GetNewsCardsResponse = zod.object({
   stock: zod.object({
     stockId: zod.uuid(),
     name: zod.string(),
+    sector: zod.string(),
+    price: zod.number(),
+    changeRate: zod.number(),
+    tradeDate: zod.iso.date(),
   }),
   newsCards: zod.array(
     zod.object({

@@ -27,11 +27,18 @@ export const GetUserHomeResponse = zod.object({
     batchTime: zod.iso.datetime({ offset: true }).optional(),
     items: zod.array(
       zod.object({
-        termId: zod.uuid(),
-        term: zod.string(),
-        definition: zod.string(),
-        category: zod.string(),
-        learnedAt: zod.iso.datetime({ offset: true }),
+        cardId: zod.uuid(),
+        headline: zod.string(),
+        news: zod.object({
+          newsId: zod.uuid(),
+          publishedAt: zod.iso.datetime({ offset: true }),
+          source: zod.enum(['NAVER', 'DART', 'KRX']),
+        }),
+        stock: zod.object({
+          stockId: zod.uuid(),
+          name: zod.string(),
+          changeRate: zod.number().optional(),
+        }),
       }),
     ),
   }),

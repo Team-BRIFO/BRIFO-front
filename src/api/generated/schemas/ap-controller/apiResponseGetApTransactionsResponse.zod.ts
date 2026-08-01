@@ -14,22 +14,28 @@ export const ApiResponseGetApTransactionsResponse = zod.object({
   result: zod
     .object({
       summary: zod.object({
-        recent30DaysSettledDecisionCount: zod.int(),
-        recent30DaysCorrectDecisionCount: zod.int(),
-        recent30DaysAccuracyRate: zod.int(),
-        settledDecisionCount: zod.int(),
-        correctDecisionCount: zod.int(),
-        averageConfidenceLevel: zod.number(),
-        bestCorrectStreak: zod.int(),
+        balanceAp: zod.int(),
+        monthlyEarnedAp: zod.int(),
+        monthlyLostAp: zod.int(),
       }),
       page: zod.object({
         items: zod.array(
           zod.object({
-            termId: zod.uuid(),
-            term: zod.string(),
-            definition: zod.string(),
-            category: zod.string(),
-            learnedAt: zod.iso.datetime({ offset: true }),
+            apTransactionId: zod.uuid(),
+            reason: zod.enum([
+              'INITIAL_GRANT',
+              'ATTENDANCE',
+              'TUTORIAL',
+              'BADGE',
+              'DECISION_WIN',
+              'DECISION_LOSE',
+              'NEUTRAL_HIT',
+              'SALARY',
+              'SALARY_REFUND',
+              'CREDIT_LOAN',
+            ]),
+            amount: zod.int(),
+            createdAt: zod.iso.datetime({ offset: true }),
           }),
         ),
         nextCursor: zod.uuid().optional(),

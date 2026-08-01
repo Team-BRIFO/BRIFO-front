@@ -23,30 +23,23 @@ export const ApiResponseGetBriefingDetailResponse = zod.object({
       agent: zod.object({
         agentId: zod.uuid(),
         agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
-        level: zod.int(),
+        nickname: zod.string(),
+        modelName: zod.string(),
       }),
       newsCards: zod.array(
         zod.object({
           cardId: zod.uuid(),
-          source: zod.enum(['NAVER', 'DART', 'KRX']),
-          headline: zod.string(),
-          importanceBadge: zod.enum(['HOT', 'MID', 'LOW']),
-          publishedDate: zod.iso.date(),
-          points: zod.array(zod.string()),
-          keywords: zod.array(zod.string()),
-          terms: zod.array(
-            zod.object({
-              termId: zod.uuid(),
-              surface: zod.string(),
-              displayOrder: zod.int(),
-            }),
-          ),
+          headline: zod.string().optional(),
         }),
       ),
       briefing: zod.object({
         briefingId: zod.uuid(),
         direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
         confidenceRate: zod.int(),
+        summary: zod.string(),
+        personalComment: zod.string().optional(),
+        contentText: zod.string(),
+        oneLiner: zod.string(),
       }),
     })
     .optional(),

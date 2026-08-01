@@ -7,7 +7,7 @@
  */
 import { z as zod } from 'zod'
 
-export const Item = zod.object({
+export const LearnedTermItem = zod.object({
   termId: zod.uuid(),
   term: zod.string(),
   definition: zod.string(),
@@ -15,5 +15,5 @@ export const Item = zod.object({
   learnedAt: zod.iso.datetime({ offset: true }),
 })
 
-export type Item = zod.input<typeof Item>
-export type ItemOutput = zod.output<typeof Item>
+export type LearnedTermItem = zod.input<typeof LearnedTermItem>
+export type LearnedTermItemOutput = zod.output<typeof LearnedTermItem>

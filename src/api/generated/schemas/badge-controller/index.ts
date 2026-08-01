@@ -8,5 +8,6 @@
 
 export * from './apiResponseGetBadgesResponse.zod'
 export * from './apiResponseGetOwnedBadgeResponse.zod'
+export * from './badgeItem.zod'
 export * from './getBadgesResponse.zod'
 export * from './getOwnedBadgeResponse.zod'

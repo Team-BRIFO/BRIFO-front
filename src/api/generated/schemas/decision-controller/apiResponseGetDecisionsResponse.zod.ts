@@ -15,11 +15,20 @@ export const ApiResponseGetDecisionsResponse = zod.object({
     .object({
       items: zod.array(
         zod.object({
-          termId: zod.uuid(),
-          term: zod.string(),
-          definition: zod.string(),
-          category: zod.string(),
-          learnedAt: zod.iso.datetime({ offset: true }),
+          decisionId: zod.uuid(),
+          direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
+          confidenceLevel: zod.int(),
+          agent: zod.object({
+            agentId: zod.uuid(),
+            agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
+          }),
+          stock: zod.object({
+            stockId: zod.uuid(),
+            name: zod.string(),
+            price: zod.int().optional(),
+            changeRate: zod.number().optional(),
+            tradeDate: zod.iso.date().optional(),
+          }),
         }),
       ),
     })

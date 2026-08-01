@@ -7,7 +7,7 @@
  */
 import { z as zod } from 'zod'
 
-export const Summary = zod.object({
+export const DiaryStatsSummary = zod.object({
   recent30DaysSettledDecisionCount: zod.int(),
   recent30DaysCorrectDecisionCount: zod.int(),
   recent30DaysAccuracyRate: zod.int(),
@@ -17,5 +17,5 @@ export const Summary = zod.object({
   bestCorrectStreak: zod.int(),
 })
 
-export type Summary = zod.input<typeof Summary>
-export type SummaryOutput = zod.output<typeof Summary>
+export type DiaryStatsSummary = zod.input<typeof DiaryStatsSummary>
+export type DiaryStatsSummaryOutput = zod.output<typeof DiaryStatsSummary>
