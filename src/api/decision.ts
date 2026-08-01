@@ -1,3 +1,4 @@
+import { mockFetch } from '@/api/client/mockNetwork'
 import {
   MOCK_GET_DECISION_RESPONSES,
   MOCK_POST_DECISION_RESPONSE,
@@ -19,18 +20,16 @@ export const postDecision = async (
 ): Promise<PostDecisionResponse> => {
   void briefingId // TS 에러 방지
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const mock = MOCK_POST_DECISION_RESPONSE.default
-      resolve({
-        ...mock,
-        result: {
-          ...mock.result,
-          direction: req.direction,
-          confidenceLevel: req.confidenceLevel,
-        },
-      })
-    }, 500)
+  return mockFetch('POST /api/decisions', () => {
+    const mock = MOCK_POST_DECISION_RESPONSE.default
+    return {
+      ...mock,
+      result: {
+        ...mock.result,
+        direction: req.direction,
+        confidenceLevel: req.confidenceLevel,
+      },
+    }
   })
 }
 
@@ -39,14 +38,9 @@ export const postDecision = async (
  * @param decisionId 결정 공개 ID (UUID)
  */
 export const getDecision = async (decisionId: string): Promise<GetDecisionResponse> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const mockResult = MOCK_GET_DECISION_RESPONSES[decisionId]
-      if (mockResult) {
-        resolve(mockResult)
-      } else {
-        reject(new Error('Decision not found'))
-      }
-    }, 500)
+  return mockFetch(`GET /api/decisions/${decisionId}`, () => {
+    const mockResult = MOCK_GET_DECISION_RESPONSES[decisionId]
+    if (!mockResult) throw new Error('Decision not found')
+    return mockResult
   })
 }

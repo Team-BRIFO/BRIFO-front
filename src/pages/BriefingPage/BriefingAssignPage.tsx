@@ -26,6 +26,9 @@ export function BriefingAssignPage() {
   const cardNewsQuery = useCardNewsBriefingsQuery(cardId ?? null)
   const agentsQuery = useAgentListQuery()
   const agentsList = agentsQuery.data ?? []
+  const isFetching =
+    cardNewsQuery.fetchStatus === 'fetching' || agentsQuery.fetchStatus === 'fetching'
+  const hasError = !!cardNewsQuery.error || !!agentsQuery.error
 
   // 테스트 목적으로 기본적으로 루키, 탱커를 선택된 상태로 둠 (피그마 명세 기반)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -95,8 +98,7 @@ export function BriefingAssignPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {(cardNewsQuery.isError && !cardNewsQuery.data) ||
-      (agentsQuery.isError && !agentsList.length) ? (
+      {hasError && !isFetching ? (
         <PageErrorView
           title="사원 배치 정보를 불러오지 못했어요"
           error={cardNewsQuery.error || agentsQuery.error}
@@ -105,7 +107,7 @@ export function BriefingAssignPage() {
             agentsQuery.refetch()
           }}
         />
-      ) : !cardNewsQuery.data || agentsQuery.isLoading ? (
+      ) : isFetching || !cardNewsQuery.data ? (
         <PageLoadingView />
       ) : agentsList.length === 0 ? (
         <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />

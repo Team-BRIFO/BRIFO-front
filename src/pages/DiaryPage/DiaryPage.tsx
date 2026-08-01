@@ -53,7 +53,7 @@ export function DiaryPage() {
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
     ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
-    : userQuery.isError
+    : userQuery.error
       ? 'AP 조회 실패'
       : 'AP 불러오는 중'
 
@@ -62,12 +62,21 @@ export function DiaryPage() {
     setSearchParams(next === 'calendar' ? {} : { [VIEW_PARAM]: next })
   }
 
+  const currentFetchStatus =
+    view === 'calendar'
+      ? calendarQuery.fetchStatus
+      : view === 'list'
+        ? listQuery.fetchStatus
+        : statsQuery.fetchStatus
+
   const isError =
-    (view === 'calendar' && calendarQuery.isError && !calendarQuery.data) ||
-    (view === 'list' && listQuery.isError && !listQuery.data) ||
-    (view === 'statistics' && statsQuery.isError && !statsQuery.data)
+    currentFetchStatus === 'idle' &&
+    ((view === 'calendar' && !!calendarQuery.error) ||
+      (view === 'list' && !!listQuery.error) ||
+      (view === 'statistics' && !!statsQuery.error))
 
   const isLoading =
+    currentFetchStatus === 'fetching' ||
     (view === 'calendar' && !calendarQuery.data) ||
     (view === 'list' && !listQuery.data) ||
     (view === 'statistics' && !statsQuery.data)
