@@ -16,7 +16,7 @@ function useAgentListHookTypeExample() {
     args: [],
     responseSchema: ApiResponseGetAgentsResponse,
     response: 'requiredResult',
-    map: (result) => result.items.map((item) => item.termId),
+    map: (result) => result.items.map((item) => item.agentId),
   })
 }
 
