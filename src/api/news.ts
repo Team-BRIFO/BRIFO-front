@@ -1,3 +1,4 @@
+import { mockFetch } from '@/api/client/mockNetwork'
 import type { NewsDetailResponse } from '@/types/api/news'
 
 /**
@@ -6,7 +7,7 @@ import type { NewsDetailResponse } from '@/types/api/news'
  */
 export const getNewsCardDetail = async (cardId: string): Promise<NewsDetailResponse> => {
   // TODO: 공통 Axios 인스턴스(src/api/client/axiosInstance.ts) 연동
-  return {
+  return mockFetch(`GET /api/news/${cardId}`, () => ({
     success: true,
     code: 'COMMON_200',
     message: '요청에 성공했습니다.',
@@ -47,5 +48,5 @@ export const getNewsCardDetail = async (cardId: string): Promise<NewsDetailRespo
         },
       ],
     },
-  }
+  }))
 }

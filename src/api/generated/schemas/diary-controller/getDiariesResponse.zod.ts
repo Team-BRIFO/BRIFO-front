@@ -11,11 +11,20 @@ export const GetDiariesResponse = zod.object({
   page: zod.object({
     items: zod.array(
       zod.object({
-        termId: zod.uuid(),
-        term: zod.string(),
-        definition: zod.string(),
-        category: zod.string(),
-        learnedAt: zod.iso.datetime({ offset: true }),
+        diaryId: zod.uuid(),
+        stock: zod.object({
+          stockId: zod.uuid(),
+          name: zod.string(),
+          price: zod.int(),
+          changeRate: zod.number(),
+          tradeDate: zod.iso.date(),
+          logoUrl: zod.string().optional(),
+        }),
+        decision: zod.object({
+          direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
+          apDelta: zod.int(),
+          isCorrect: zod.boolean(),
+        }),
       }),
     ),
     nextCursor: zod.uuid().optional(),

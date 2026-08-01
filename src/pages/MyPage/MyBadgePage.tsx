@@ -20,7 +20,7 @@ export function MyBadgePage() {
       setParams(next, { replace: true })
     }
   }, [params, setParams])
-  if (badgesQuery.isError && !badgesQuery.data)
+  if (!!badgesQuery.error && badgesQuery.fetchStatus === 'idle')
     return (
       <MyPageLayout title="업적 · 배지">
         <PageErrorView
@@ -30,7 +30,7 @@ export function MyBadgePage() {
         />
       </MyPageLayout>
     )
-  if (!badgesQuery.data)
+  if (badgesQuery.fetchStatus === 'fetching' || !badgesQuery.data)
     return (
       <MyPageLayout title="업적 · 배지">
         <PageLoadingView />

@@ -16,11 +16,23 @@ export const ApiResponseGetNotificationsResponse = zod.object({
       page: zod.object({
         items: zod.array(
           zod.object({
-            termId: zod.uuid(),
-            term: zod.string(),
-            definition: zod.string(),
-            category: zod.string(),
-            learnedAt: zod.iso.datetime({ offset: true }),
+            notificationId: zod.uuid(),
+            code: zod.string(),
+            title: zod.string(),
+            body: zod.string().optional(),
+            createdAt: zod.iso.datetime({ offset: true }),
+            target: zod.object({
+              type: zod.enum([
+                'DECISION',
+                'BRIEFING',
+                'BADGE',
+                'AGENT',
+                'STOCK_BRIEFINGS',
+                'NEWS_CARD_LIST',
+                'NONE',
+              ]),
+              targetId: zod.uuid().optional(),
+            }),
           }),
         ),
         nextCursor: zod.uuid().optional(),

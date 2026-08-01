@@ -15,11 +15,16 @@ export const ApiResponseGetOfficeBriefingsResponse = zod.object({
     .object({
       items: zod.array(
         zod.object({
-          termId: zod.uuid(),
-          term: zod.string(),
-          definition: zod.string(),
-          category: zod.string(),
-          learnedAt: zod.iso.datetime({ offset: true }),
+          stockName: zod.string(),
+          agents: zod.array(
+            zod.object({
+              briefingId: zod.uuid(),
+              agentId: zod.uuid(),
+              nickname: zod.string(),
+              agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
+              status: zod.enum(['PENDING', 'ANALYZING', 'COMPLETED', 'FAILED']),
+            }),
+          ),
         }),
       ),
     })

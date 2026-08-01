@@ -35,9 +35,9 @@ export function OfficePage() {
         }
       />
 
-      {briefingsQuery.isError && !items ? (
+      {!!briefingsQuery.error && briefingsQuery.fetchStatus === 'idle' ? (
         <PageErrorView error={briefingsQuery.error} onRetry={() => briefingsQuery.refetch()} />
-      ) : !items ? (
+      ) : briefingsQuery.fetchStatus === 'fetching' || !items ? (
         <PageLoadingView />
       ) : (
         <div className="flex flex-col gap-5.5 px-4">

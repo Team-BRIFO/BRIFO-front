@@ -7,11 +7,11 @@
  */
 import { z as zod } from 'zod'
 
-export const Decision = zod.object({
+export const DiaryListDecision = zod.object({
   direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
   apDelta: zod.int(),
   isCorrect: zod.boolean(),
 })
 
-export type Decision = zod.input<typeof Decision>
-export type DecisionOutput = zod.output<typeof Decision>
+export type DiaryListDecision = zod.input<typeof DiaryListDecision>
+export type DiaryListDecisionOutput = zod.output<typeof DiaryListDecision>

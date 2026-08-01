@@ -16,7 +16,7 @@ export function TeamDetailPage() {
   const navigate = useNavigate()
   const { agentId = '' } = useParams()
 
-  const { data: agent, isError, error, refetch } = useAgentDetailQuery(agentId || null)
+  const { data: agent, fetchStatus, error, refetch } = useAgentDetailQuery(agentId || null)
 
   // 비정상적인 접근(ID 없음)이면 목록으로
   if (!agentId) {
@@ -33,13 +33,13 @@ export function TeamDetailPage() {
         className="bg-White"
       />
 
-      {isError && !agent ? (
+      {!!error && fetchStatus === 'idle' ? (
         <PageErrorView
           title="사원 정보를 불러오지 못했어요"
           error={error}
           onRetry={() => refetch()}
         />
-      ) : !agent ? (
+      ) : fetchStatus === 'fetching' || !agent ? (
         <PageLoadingView />
       ) : (
         <div className="px-4 py-4">

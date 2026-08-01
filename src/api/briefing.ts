@@ -1,3 +1,4 @@
+import { mockFetch } from '@/api/client/mockNetwork'
 import {
   MOCK_BRIEFING_DETAILS,
   MOCK_BRIEFING_LIST_BY_CARD,
@@ -20,15 +21,10 @@ export const getBriefingDetail = async (briefingId: string): Promise<BriefingDet
   // const { data } = await apiClient.get<ApiResponse<BriefingDetailResponse>>(`/api/briefings/${briefingId}`)
   // return data.result
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const result = MOCK_BRIEFING_DETAILS[briefingId]
-      if (result) {
-        resolve(result)
-      } else {
-        reject(new Error('Briefing not found'))
-      }
-    }, 500)
+  return mockFetch(`GET /api/briefings/${briefingId}`, () => {
+    const result = MOCK_BRIEFING_DETAILS[briefingId]
+    if (!result) throw new Error('Briefing not found')
+    return result
   })
 }
 
@@ -43,11 +39,7 @@ export const getCardNewsBriefings = async (cardId: string): Promise<BriefingList
 
   void cardId // TS 미사용 변수 에러 방지
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_BRIEFING_LIST_BY_CARD)
-    }, 500)
-  })
+  return mockFetch('GET /api/news/:cardId/briefing', () => MOCK_BRIEFING_LIST_BY_CARD)
 }
 
 /**
@@ -58,11 +50,7 @@ export const getOfficeBriefings = async (): Promise<OfficeBriefingListResponse> 
   // const { data } = await apiClient.get<ApiResponse<OfficeBriefingListResponse>>(`/api/briefings/office`)
   // return data.result
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_OFFICE_BRIEFING_LIST)
-    }, 500)
-  })
+  return mockFetch('GET /api/briefings/office', () => MOCK_OFFICE_BRIEFING_LIST)
 }
 
 /**
@@ -76,23 +64,19 @@ export const postBriefingRequest = async (
 ): Promise<PostBriefingResponse> => {
   void cardId
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        code: 'COMMON_200',
-        message: '요청에 성공했습니다.',
-        result: {
-          requestedCount: req.agentIds.length,
-          totalSalaryCost: req.agentIds.length * 100, // mock salary cost
-          requestedAgents: req.agentIds.map((agentId) => ({
-            agentId,
-            briefingId: `mock-briefing-${agentId}`,
-            agentType: 'ROOKIE', // mock type
-            salaryCost: 100,
-          })),
-        },
-      })
-    }, 500)
-  })
+  return mockFetch('POST /api/news/:cardId/briefing-requests', () => ({
+    success: true,
+    code: 'COMMON_200',
+    message: '요청에 성공했습니다.',
+    result: {
+      requestedCount: req.agentIds.length,
+      totalSalaryCost: req.agentIds.length * 100, // mock salary cost
+      requestedAgents: req.agentIds.map((agentId) => ({
+        agentId,
+        briefingId: `mock-briefing-${agentId}`,
+        agentType: 'ROOKIE', // mock type
+        salaryCost: 100,
+      })),
+    },
+  }))
 }

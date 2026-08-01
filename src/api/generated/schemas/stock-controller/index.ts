@@ -7,6 +7,8 @@
  */
 
 export * from './apiResponseGetStocksResponse.zod'
+export * from './cursorPageStockItem.zod'
 export * from './getStocksParams.zod'
 export * from './getStocksRequest.zod'
 export * from './getStocksResponse.zod'
+export * from './stockItem.zod'

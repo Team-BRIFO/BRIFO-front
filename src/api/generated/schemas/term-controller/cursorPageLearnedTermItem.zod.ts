@@ -7,7 +7,7 @@
  */
 import { z as zod } from 'zod'
 
-export const CursorPageItem = zod.object({
+export const CursorPageLearnedTermItem = zod.object({
   items: zod.array(
     zod.object({
       termId: zod.uuid(),
@@ -21,5 +21,5 @@ export const CursorPageItem = zod.object({
   hasNext: zod.boolean(),
 })
 
-export type CursorPageItem = zod.input<typeof CursorPageItem>
-export type CursorPageItemOutput = zod.output<typeof CursorPageItem>
+export type CursorPageLearnedTermItem = zod.input<typeof CursorPageLearnedTermItem>
+export type CursorPageLearnedTermItemOutput = zod.output<typeof CursorPageLearnedTermItem>

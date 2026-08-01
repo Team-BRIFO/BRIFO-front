@@ -6,6 +6,7 @@
  * OpenAPI spec version: v1
  */
 
+export * from './agentItem.zod'
 export * from './apiResponseGetAgentDetailResponse.zod'
 export * from './apiResponseGetAgentsResponse.zod'
 export * from './getAgentDetailResponse.zod'

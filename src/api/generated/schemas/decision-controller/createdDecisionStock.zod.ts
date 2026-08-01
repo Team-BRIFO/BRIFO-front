@@ -7,10 +7,10 @@
  */
 import { z as zod } from 'zod'
 
-export const Stock = zod.object({
+export const CreatedDecisionStock = zod.object({
   stockId: zod.uuid(),
   name: zod.string(),
 })
 
-export type Stock = zod.input<typeof Stock>
-export type StockOutput = zod.output<typeof Stock>
+export type CreatedDecisionStock = zod.input<typeof CreatedDecisionStock>
+export type CreatedDecisionStockOutput = zod.output<typeof CreatedDecisionStock>

@@ -13,11 +13,12 @@ export const GetDiaryDetailResponse = zod.object({
   stock: zod.object({
     stockId: zod.uuid(),
     name: zod.string(),
+    changeRate: zod.number(),
   }),
   agent: zod.object({
     agentId: zod.uuid(),
     agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
-    level: zod.int(),
+    nickname: zod.string(),
   }),
   briefing: zod.object({
     briefingId: zod.uuid(),
@@ -25,9 +26,8 @@ export const GetDiaryDetailResponse = zod.object({
     confidenceRate: zod.int(),
   }),
   decision: zod.object({
-    direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
-    apDelta: zod.int(),
     isCorrect: zod.boolean(),
+    confidenceLevel: zod.int(),
   }),
 })
 

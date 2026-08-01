@@ -15,11 +15,10 @@ export const ApiResponseGetBadgesResponse = zod.object({
     .object({
       items: zod.array(
         zod.object({
-          termId: zod.uuid(),
-          term: zod.string(),
-          definition: zod.string(),
-          category: zod.string(),
-          learnedAt: zod.iso.datetime({ offset: true }),
+          badgeId: zod.uuid(),
+          code: zod.string(),
+          name: zod.string(),
+          isOwned: zod.boolean(),
         }),
       ),
     })
