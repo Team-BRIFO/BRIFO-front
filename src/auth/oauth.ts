@@ -10,7 +10,10 @@ interface NaverCallbackRequest extends KakaoCallbackRequest {
   state: string
 }
 
-const NAVER_STATE_STORAGE_KEY = 'naverOAuthState'
+const OAUTH_STATE_STORAGE_KEYS: Record<SocialProvider, string> = {
+  kakao: 'kakaoOAuthState',
+  naver: 'naverOAuthState',
+}
 export const SIGNUP_TOKEN_STORAGE_KEY = 'signupToken'
 
 function getSessionStorage() {
@@ -49,6 +52,8 @@ function requireClientId(provider: SocialProvider) {
 export function startSocialLogin(provider: SocialProvider) {
   const redirectUri = getRedirectUri(provider)
   const clientId = requireClientId(provider)
+  const state = crypto.randomUUID()
+  sessionStorage.setItem(OAUTH_STATE_STORAGE_KEYS[provider], state)
 
   if (provider === 'kakao') {
     const authorizationUrl = new URL('https://kauth.kakao.com/oauth/authorize')
@@ -56,13 +61,11 @@ export function startSocialLogin(provider: SocialProvider) {
       client_id: clientId,
       redirect_uri: redirectUri,
       response_type: 'code',
+      state,
     }).toString()
     window.location.assign(authorizationUrl)
     return
   }
-
-  const state = crypto.randomUUID()
-  sessionStorage.setItem(NAVER_STATE_STORAGE_KEY, state)
 
   const authorizationUrl = new URL('https://nid.naver.com/oauth2.0/authorize')
   authorizationUrl.search = new URLSearchParams({
@@ -89,16 +92,19 @@ export function getOAuthCallbackRequest(
   const authorizationCode = searchParameters.get('code')
   if (!authorizationCode) throw new Error('OAuth 인가 코드가 없습니다.')
 
-  const redirectUri = getRedirectUri(provider)
-  if (provider === 'kakao') return { authorizationCode, redirectUri }
-
   const state = searchParameters.get('state')
-  const savedState = sessionStorage.getItem(NAVER_STATE_STORAGE_KEY)
-  sessionStorage.removeItem(NAVER_STATE_STORAGE_KEY)
+  const stateStorageKey = OAUTH_STATE_STORAGE_KEYS[provider]
+  const savedState = sessionStorage.getItem(stateStorageKey)
+  sessionStorage.removeItem(stateStorageKey)
 
   if (!state || !savedState || state !== savedState) {
-    throw new Error('네이버 로그인 요청을 확인할 수 없습니다. 다시 로그인해 주세요.')
+    throw new Error(
+      `${provider === 'kakao' ? '카카오' : '네이버'} 로그인 요청을 확인할 수 없습니다. 다시 로그인해 주세요.`,
+    )
   }
+
+  const redirectUri = getRedirectUri(provider)
+  if (provider === 'kakao') return { authorizationCode, redirectUri }
 
   return { authorizationCode, redirectUri, state }
 }
