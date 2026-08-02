@@ -22,11 +22,13 @@ export const ApiResponseGetStockBriefingsResponse = zod.object({
       }),
       items: zod.array(
         zod.object({
-          termId: zod.uuid(),
-          term: zod.string(),
-          definition: zod.string(),
-          category: zod.string(),
-          learnedAt: zod.iso.datetime({ offset: true }),
+          briefingId: zod.uuid(),
+          status: zod.enum(['PENDING', 'ANALYZING', 'COMPLETED', 'FAILED']),
+          oneLiner: zod.string().optional(),
+          direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']).optional(),
+          agentId: zod.uuid(),
+          nickname: zod.string(),
+          agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
         }),
       ),
     })

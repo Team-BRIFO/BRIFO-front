@@ -10,11 +10,10 @@ import { z as zod } from 'zod'
 export const GetPoliciesResponse = zod.object({
   items: zod.array(
     zod.object({
-      termId: zod.uuid(),
-      term: zod.string(),
-      definition: zod.string(),
-      category: zod.string(),
-      learnedAt: zod.iso.datetime({ offset: true }),
+      policyId: zod.uuid(),
+      title: zod.string(),
+      isRequired: zod.boolean(),
+      isAgreed: zod.boolean(),
     }),
   ),
 })

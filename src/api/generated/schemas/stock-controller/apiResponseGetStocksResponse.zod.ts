@@ -18,11 +18,12 @@ export const ApiResponseGetStocksResponse = zod.object({
       page: zod.object({
         items: zod.array(
           zod.object({
-            termId: zod.uuid(),
-            term: zod.string(),
-            definition: zod.string(),
-            category: zod.string(),
-            learnedAt: zod.iso.datetime({ offset: true }),
+            rank: zod.int().optional(),
+            stockId: zod.uuid(),
+            code: zod.string(),
+            name: zod.string(),
+            price: zod.number().optional(),
+            changeRate: zod.number().optional(),
           }),
         ),
         nextCursor: zod.uuid().optional(),

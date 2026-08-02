@@ -7,11 +7,12 @@
  */
 import { z as zod } from 'zod'
 
-export const Agent = zod.object({
+export const BriefingDetailAgent = zod.object({
   agentId: zod.uuid(),
   agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
-  level: zod.int(),
+  nickname: zod.string(),
+  modelName: zod.string(),
 })
 
-export type Agent = zod.input<typeof Agent>
-export type AgentOutput = zod.output<typeof Agent>
+export type BriefingDetailAgent = zod.input<typeof BriefingDetailAgent>
+export type BriefingDetailAgentOutput = zod.output<typeof BriefingDetailAgent>

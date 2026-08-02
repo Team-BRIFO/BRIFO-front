@@ -8,3 +8,6 @@
 
 export * from './apiResponseGetNewsCardsResponse.zod'
 export * from './getNewsCardsResponse.zod'
+export * from './newsStock.zod'
+export * from './stockNewsCard.zod'
+export * from './term.zod'

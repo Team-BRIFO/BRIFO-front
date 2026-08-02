@@ -15,11 +15,12 @@ export const GetDecisionResultResponse = zod.object({
   agent: zod.object({
     agentId: zod.uuid(),
     agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
-    level: zod.int(),
   }),
   stock: zod.object({
-    stockId: zod.uuid(),
     name: zod.string(),
+    price: zod.int(),
+    changeRate: zod.number(),
+    tradeDate: zod.iso.date(),
   }),
 })
 

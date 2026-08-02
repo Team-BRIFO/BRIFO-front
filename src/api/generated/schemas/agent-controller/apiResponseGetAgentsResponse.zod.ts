@@ -15,11 +15,14 @@ export const ApiResponseGetAgentsResponse = zod.object({
     .object({
       items: zod.array(
         zod.object({
-          termId: zod.uuid(),
-          term: zod.string(),
-          definition: zod.string(),
-          category: zod.string(),
-          learnedAt: zod.iso.datetime({ offset: true }),
+          agentId: zod.uuid(),
+          nickname: zod.string(),
+          agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
+          modelName: zod.string(),
+          level: zod.int(),
+          exp: zod.int(),
+          dailySalary: zod.int(),
+          accuracyRate: zod.int(),
         }),
       ),
     })

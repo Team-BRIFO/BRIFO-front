@@ -16,11 +16,15 @@ export const ApiResponseGetNewsCardsResponse = zod.object({
       stock: zod.object({
         stockId: zod.uuid(),
         name: zod.string(),
+        sector: zod.string(),
+        price: zod.number(),
+        changeRate: zod.number(),
+        tradeDate: zod.iso.date(),
       }),
       newsCards: zod.array(
         zod.object({
           cardId: zod.uuid(),
-          source: zod.enum(['NAVER', 'DART', 'KRX']),
+          source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
           headline: zod.string(),
           importanceBadge: zod.enum(['HOT', 'MID', 'LOW']),
           publishedDate: zod.iso.date(),

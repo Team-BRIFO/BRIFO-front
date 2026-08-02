@@ -8,7 +8,9 @@
 
 export * from './apiResponseGetMyTermsResponse.zod'
 export * from './apiResponseGetTermResponse.zod'
+export * from './cursorPageLearnedTermItem.zod'
 export * from './getMyTermsParams.zod'
 export * from './getMyTermsRequest.zod'
 export * from './getMyTermsResponse.zod'
 export * from './getTermResponse.zod'
+export * from './learnedTermItem.zod'
