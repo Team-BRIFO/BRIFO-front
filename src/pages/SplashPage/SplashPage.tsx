@@ -26,18 +26,27 @@ export function SplashPage() {
   const [loginError, setLoginError] = useState(initialLoginError)
 
   useEffect(() => {
-    if (initialLoginError) {
-      navigate(PATH.SPLASH, { replace: true, state: null })
-      const errorTimer = window.setTimeout(() => setLoginError(undefined), 3000)
-      return () => window.clearTimeout(errorTimer)
-    }
+    if (!initialLoginError) return
+
+    navigate(PATH.SPLASH, { replace: true, state: null })
+  }, [initialLoginError, navigate])
+
+  useEffect(() => {
+    if (!loginError) return
+
+    const errorTimer = window.setTimeout(() => setLoginError(undefined), 3000)
+    return () => window.clearTimeout(errorTimer)
+  }, [loginError])
+
+  useEffect(() => {
+    if (!isSplashVisible) return
 
     const timer = window.setTimeout(() => {
       setIsSplashVisible(false)
     }, SPLASH_DURATION)
 
     return () => window.clearTimeout(timer)
-  }, [initialLoginError, navigate])
+  }, [isSplashVisible])
 
   const isLoginStep = currentStep >= SPLASH_SLIDES.length
   const currentSlide = SPLASH_SLIDES[currentStep]
