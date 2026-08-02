@@ -31,7 +31,7 @@ export interface AgentDetailResponse {
   level: number
   exp: number
   modelName: string
-  description: string
+  description?: string
   accuracyRate: number
   totalAnalyses: number
   contributedAp: number

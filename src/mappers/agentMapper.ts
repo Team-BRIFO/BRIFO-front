@@ -35,7 +35,7 @@ export function mapAgentDetail(res: AgentDetailResponse): AgentDetail {
     type: AGENT_TYPE_BY_CODE[res.agentType],
     name: res.nickname,
     modelName: res.modelName,
-    description: res.description,
+    description: res.description ?? '',
     level: res.level,
     levelProgress,
     exp: { current: levelProgress, max: AGENT_EXP_PER_LEVEL },
