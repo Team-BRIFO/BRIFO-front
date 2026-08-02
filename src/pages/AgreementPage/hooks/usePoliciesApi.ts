@@ -3,8 +3,8 @@ import {
   getPolicies,
   getPolicyDetail,
 } from '@/api/generated/endpoints/policy-controller/policy-controller'
+import type { AgreePoliciesRequest } from '@/api/generated/schemas'
 import {
-  type AgreePoliciesRequest,
   ApiResponse,
   ApiResponseGetPoliciesResponse,
   ApiResponseGetPolicyDetailResponse,

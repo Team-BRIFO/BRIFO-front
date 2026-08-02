@@ -5,7 +5,8 @@ import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { Toast } from '@/components/common/Toast'
 import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
-import { type AgreementId, AGREEMENTS } from '@/pages/AgreementPage/agreement'
+import type { AgreementId } from '@/pages/AgreementPage/agreement'
+import { AGREEMENTS } from '@/pages/AgreementPage/agreement'
 import {
   useAgreePoliciesMutation,
   usePoliciesQuery,
