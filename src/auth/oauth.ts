@@ -13,6 +13,22 @@ interface NaverCallbackRequest extends KakaoCallbackRequest {
 const NAVER_STATE_STORAGE_KEY = 'naverOAuthState'
 export const SIGNUP_TOKEN_STORAGE_KEY = 'signupToken'
 
+function getSessionStorage() {
+  return typeof sessionStorage === 'undefined' ? undefined : sessionStorage
+}
+
+export function getSignupToken() {
+  return getSessionStorage()?.getItem(SIGNUP_TOKEN_STORAGE_KEY) ?? null
+}
+
+export function setSignupToken(token: string) {
+  getSessionStorage()?.setItem(SIGNUP_TOKEN_STORAGE_KEY, token)
+}
+
+export function clearSignupToken() {
+  getSessionStorage()?.removeItem(SIGNUP_TOKEN_STORAGE_KEY)
+}
+
 function getRedirectUri(provider: SocialProvider) {
   return new URL(PATH.AUTH_CALLBACK_FOR(provider), window.location.origin).toString()
 }

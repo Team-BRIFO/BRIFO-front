@@ -4,26 +4,31 @@ import { useNavigate } from 'react-router-dom'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
+import { Toast } from '@/components/common/Toast'
 import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
 import StockSearchView from '@/components/feature/onboarding/StockSearchView'
 import { useProfileNameValidation } from '@/hooks/useProfileNameValidation'
-import { ONBOARDING_STOCKS } from '@/pages/OnboardingPage/mockStocks'
+import { useOnboardingStocksQuery } from '@/pages/OnboardingPage/hooks/useOnboardingStocksQuery'
+import { useUpdateOnboardingProfileMutation } from '@/pages/OnboardingPage/hooks/useUpdateOnboardingProfileMutation'
 import { PATH } from '@/routes/paths'
 import { useProfileStore } from '@/stores/useProfileStore'
 
 const MIN_STOCK_COUNT = 3
-const MAX_STOCK_COUNT = 5
+const MAX_STOCK_COUNT = 3
 
 const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사', 'zI존']
 
 export function OnboardingPage() {
   const navigate = useNavigate()
   const setProfile = useProfileStore((state) => state.setProfile)
+  const stocksQuery = useOnboardingStocksQuery()
+  const updateProfile = useUpdateOnboardingProfileMutation()
+  const stocks = stocksQuery.data ?? []
 
   const [nickname, setNickname] = useState('')
   const [companyName, setCompanyName] = useState('')
   const [searchKeyword, setSearchKeyword] = useState('')
-  const [selectedStockIds, setSelectedStockIds] = useState<number[]>([])
+  const [selectedStockIds, setSelectedStockIds] = useState<string[]>([])
   const [isStockSearchOpen, setIsStockSearchOpen] = useState(false)
 
   const { isValid: hasValidNickname, errorMessage: nicknameError } =
@@ -36,7 +41,7 @@ export function OnboardingPage() {
 
   const isFormValid = hasValidNickname && hasValidCompanyName && hasValidStockCount
 
-  const handleToggleStock = (stockId: number) => {
+  const handleToggleStock = (stockId: string) => {
     setSelectedStockIds((previous) => {
       const isSelected = previous.includes(stockId)
 
@@ -61,15 +66,17 @@ export function OnboardingPage() {
       stockIds: selectedStockIds,
     }
 
-    // TODO: 온보딩 프로필 API 호출
-    setProfile(profile)
-
-    navigate(PATH.TUTORIAL_INTRO)
+    updateProfile.mutate(profile, {
+      onSuccess: () => {
+        setProfile(profile)
+        navigate(PATH.TUTORIAL_INTRO)
+      },
+    })
   }
   if (isStockSearchOpen) {
     return (
       <StockSearchView
-        stocks={ONBOARDING_STOCKS}
+        stocks={stocks}
         searchKeyword={searchKeyword}
         selectedStockIds={selectedStockIds}
         onSearchKeywordChange={setSearchKeyword}
@@ -103,7 +110,7 @@ export function OnboardingPage() {
           </h1>
 
           <p className="pretendard-Caption1 text-Gray-6 mt-3">
-            닉네임 · 회사명 · 관심 종목 3~5개를 골라주세요
+            닉네임 · 회사명 · 관심 종목 3개를 골라주세요
           </p>
         </div>
 
@@ -143,7 +150,7 @@ export function OnboardingPage() {
         </div>
 
         <InterestStockSection
-          stocks={ONBOARDING_STOCKS}
+          stocks={stocks}
           searchKeyword={searchKeyword}
           selectedStockIds={selectedStockIds}
           onToggleStock={handleToggleStock}
@@ -156,12 +163,22 @@ export function OnboardingPage() {
         size="lg"
         color="primary"
         isFullWidth
-        disabled={!isFormValid}
+        disabled={!isFormValid || updateProfile.isPending || stocksQuery.isLoading}
         onClick={handleSubmit}
         className="mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
       >
-        다음
+        {updateProfile.isPending ? '저장 중...' : '다음'}
       </Button>
+
+      {(stocksQuery.isError || updateProfile.isError) && (
+        <Toast
+          message={
+            updateProfile.error?.serviceMessage ??
+            stocksQuery.error?.serviceMessage ??
+            '프로필을 저장하지 못했어요'
+          }
+        />
+      )}
     </main>
   )
 }

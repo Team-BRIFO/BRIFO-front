@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { browserTokenStore } from '@/api/client/tokenStore'
 import SkHynixLogo from '@/assets/logo/sk-hynix.png'
+import { clearSignupToken } from '@/auth/oauth'
+import { Toast } from '@/components/common/Toast'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
 import { BriefingComment } from '@/components/domain/briefing/BriefingComment'
 import { BriefingNote } from '@/components/domain/briefing/BriefingNote'
@@ -18,6 +21,7 @@ import TutorialComplete from '@/components/feature/tutorial/TutorialComplete'
 import TutorialStepLayout from '@/components/feature/tutorial/TutorialStepLayout'
 import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
 import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
+import { useCompleteOnboardingMutation } from '@/pages/TutorialPage/hooks/useCompleteOnboardingMutation'
 import {
   TUTORIAL_AGENTS,
   TUTORIAL_STEPS,
@@ -217,6 +221,7 @@ function renderStepContent({
 
 export function TutorialPage() {
   const navigate = useNavigate()
+  const completeOnboarding = useCompleteOnboardingMutation()
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [selectedAgentId, setSelectedAgentId] = useState(TUTORIAL_AGENTS[0].id)
@@ -234,8 +239,31 @@ export function TutorialPage() {
     setCurrentStepIndex((previous) => previous + 1)
   }
 
+  const handleComplete = () => {
+    completeOnboarding.mutate(undefined, {
+      onSuccess: ({ token }) => {
+        browserTokenStore.setTokens(token)
+        clearSignupToken()
+        navigate(PATH.HOME, { replace: true })
+      },
+    })
+  }
+
   if (isComplete) {
-    return <TutorialComplete reward={200} onComplete={() => navigate(PATH.HOME)} />
+    return (
+      <>
+        <TutorialComplete
+          reward={200}
+          onComplete={handleComplete}
+          isPending={completeOnboarding.isPending}
+        />
+        {completeOnboarding.isError && (
+          <Toast
+            message={completeOnboarding.error.serviceMessage ?? '온보딩을 완료하지 못했어요'}
+          />
+        )}
+      </>
+    )
   }
 
   return (

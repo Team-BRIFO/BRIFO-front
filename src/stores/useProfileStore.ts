@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware'
 interface Profile {
   nickname: string
   companyName: string
-  stockIds: number[]
+  stockIds: string[]
 }
 
 interface ProfileStore extends Profile {

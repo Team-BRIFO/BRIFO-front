@@ -5,9 +5,14 @@ import { StatusBar } from '@/components/common/StatusBar'
 interface TutorialCompleteProps {
   reward: number
   onComplete: () => void
+  isPending?: boolean
 }
 
-export default function TutorialComplete({ reward, onComplete }: TutorialCompleteProps) {
+export default function TutorialComplete({
+  reward,
+  onComplete,
+  isPending = false,
+}: TutorialCompleteProps) {
   return (
     <main className="mx-auto flex min-h-dvh w-full flex-col bg-white px-4 pt-6 pb-5">
       <StatusBar hasStatusArea className="w-full [&>div:last-child]:px-0" />
@@ -38,10 +43,11 @@ export default function TutorialComplete({ reward, onComplete }: TutorialComplet
         size="lg"
         color="primary"
         isFullWidth
+        disabled={isPending}
         onClick={onComplete}
         className="mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
       >
-        튜토리얼 종료
+        {isPending ? '완료 처리 중...' : '튜토리얼 종료'}
       </Button>
     </main>
   )

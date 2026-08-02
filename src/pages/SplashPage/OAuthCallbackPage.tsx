@@ -2,11 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { browserTokenStore } from '@/api/client/tokenStore'
-import {
-  getOAuthCallbackRequest,
-  SIGNUP_TOKEN_STORAGE_KEY,
-  type SocialProvider,
-} from '@/auth/oauth'
+import { getOAuthCallbackRequest, setSignupToken, type SocialProvider } from '@/auth/oauth'
 import {
   useKakaoLoginMutation,
   useNaverLoginMutation,
@@ -51,7 +47,7 @@ export function OAuthCallbackPage() {
         return
       }
 
-      sessionStorage.setItem(SIGNUP_TOKEN_STORAGE_KEY, result.signupToken)
+      setSignupToken(result.signupToken)
       navigate(PATH.AGREEMENT, { replace: true })
     }
 

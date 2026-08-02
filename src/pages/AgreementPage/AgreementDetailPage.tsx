@@ -5,10 +5,12 @@ import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import type { AgreementId } from '@/pages/AgreementPage/agreement'
 import { SERVICE_TERMS } from '@/pages/AgreementPage/agreement'
+import { usePolicyDetailQuery } from '@/pages/AgreementPage/hooks/usePoliciesApi'
 import { PATH } from '@/routes/paths'
 
 interface AgreementDetailLocationState {
   agreementId?: AgreementId
+  policyId?: string
 }
 
 export default function AgreementDetailPage() {
@@ -18,7 +20,10 @@ export default function AgreementDetailPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [hasReachedBottom, setHasReachedBottom] = useState(false)
 
-  const { agreementId = 'service' } = (location.state as AgreementDetailLocationState | null) ?? {}
+  const { agreementId = 'service', policyId } =
+    (location.state as AgreementDetailLocationState | null) ?? {}
+  const policyDetailQuery = usePolicyDetailQuery(policyId)
+  const policyDetail = policyDetailQuery.data
 
   const checkScrollBottom = useCallback(() => {
     const container = scrollContainerRef.current
@@ -61,24 +66,35 @@ export default function AgreementDetailPage() {
         onScroll={checkScrollBottom}
         className="min-h-0 flex-1 overflow-y-auto px-2 py-6"
       >
-        <h1 className="pretendard-Subtitle2 text-Gray-10">{SERVICE_TERMS.title}</h1>
+        <h1 className="pretendard-Subtitle2 text-Gray-10">
+          {policyDetail?.title ?? SERVICE_TERMS.title}
+        </h1>
 
         <p className="pretendard-Caption2 text-Gray-5 mt-2">
-          시행일 {SERVICE_TERMS.effectiveDate}
+          시행일{' '}
+          {policyDetail
+            ? new Date(policyDetail.createdAt).toLocaleDateString('ko-KR')
+            : SERVICE_TERMS.effectiveDate}
           <span className="mx-2">·</span>
-          버전 {SERVICE_TERMS.version}
+          버전 {policyDetail ? `v${policyDetail.version}` : SERVICE_TERMS.version}
         </p>
 
         <div className="mt-8 flex flex-col gap-6">
-          {SERVICE_TERMS.sections.map((section) => (
-            <section key={section.title}>
-              <h2 className="pretendard-Subtitle6 text-Gray-6">{section.title}</h2>
+          {policyDetail ? (
+            <p className="pretendard-Button2 font-regular text-Gray-6 leading-6 whitespace-pre-line">
+              {policyDetail.content}
+            </p>
+          ) : (
+            SERVICE_TERMS.sections.map((section) => (
+              <section key={section.title}>
+                <h2 className="pretendard-Subtitle6 text-Gray-6">{section.title}</h2>
 
-              <p className="pretendard-Button2 font-regular text-Gray-6 mt-1.5 leading-6 whitespace-pre-line">
-                {section.content}
-              </p>
-            </section>
-          ))}
+                <p className="pretendard-Button2 font-regular text-Gray-6 mt-1.5 leading-6 whitespace-pre-line">
+                  {section.content}
+                </p>
+              </section>
+            ))
+          )}
         </div>
       </div>
 
