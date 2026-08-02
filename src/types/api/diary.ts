@@ -16,17 +16,17 @@ export type ConfidenceLevelCode = 'LOW' | 'MEDIUM' | 'HIGH'
 
 // ─── 캘린더 ────────────────────────────────────────────────────────────────
 
-/** 날짜별 결정 방향 존재 여부 (같은 방향 결정이 1건 이상이면 true) */
-export interface DiaryCalendarDirectionResponse {
-  up: boolean
-  down: boolean
-  neutral: boolean
+/** 날짜별 정산 결과 존재 여부 (같은 결과가 1건 이상이면 true) */
+export interface DiaryCalendarOutcomeResponse {
+  decisionWin: boolean
+  decisionLoss: boolean
+  neutralHit: boolean
 }
 
 export interface DiaryCalendarDayResponse {
   /** YYYY-MM-DD */
   date: string
-  direction: DiaryCalendarDirectionResponse
+  outcome: DiaryCalendarOutcomeResponse
 }
 
 export interface DiaryCalendarResult {
@@ -51,6 +51,14 @@ export interface DiaryStockSummaryResponse {
   name: string
 }
 
+export interface DiaryListStockResponse extends DiaryStockSummaryResponse {
+  price: number
+  changeRate: number
+  /** YYYY-MM-DD */
+  tradeDate: string
+  logoUrl?: string
+}
+
 export interface DiaryListDecisionResponse {
   direction: DirectionCode
   /** 획득이면 양수, 차감이면 음수, 변동 없으면 0 */
@@ -60,27 +68,15 @@ export interface DiaryListDecisionResponse {
 
 export interface DiaryListItemResponse {
   diaryId: string
-  stock: DiaryStockSummaryResponse
+  stock: DiaryListStockResponse
   decision: DiaryListDecisionResponse
-
-  /**
-   * 🔴 아래 3개는 **현재 API 명세에 없다.** 시안 카드가 주가·등락률·거래일을 표시해서
-   * 백엔드에 추가 요청을 넣어둔 상태이며, 그때까지 mock 이 채운다.
-   * 응답에 실제로 추가되면 optional 표시만 떼면 된다.
-   */
-  price?: number
-  changeRate?: number
-  /** YYYY-MM-DD */
-  tradeDate?: string
-  /** 🔴 종목 로고 URL. 명세에 없어 mock 이미지를 쓴다 */
-  logoUrl?: string
 }
 
 export interface DiaryListResult {
   page: {
     items: DiaryListItemResponse[]
-    /** 마지막 항목의 diaryId. 다음 데이터가 없으면 null */
-    nextCursor: string | null
+    /** 마지막 항목의 diaryId. 다음 데이터가 없으면 생략 */
+    nextCursor?: string
     hasNext: boolean
   }
 }
@@ -116,8 +112,8 @@ export interface DiaryDetailDecisionResponse {
 
 export interface DiaryDetailResult {
   diaryId: string
-  /** 공유 이미지 URL. 생성 전이면 null */
-  shareImageUrl: string | null
+  /** 공유 이미지 URL. 생성 전이면 생략 */
+  shareImageUrl?: string
   stock: DiaryDetailStockResponse
   agent: DiaryDetailAgentResponse
   briefing: DiaryDetailBriefingResponse

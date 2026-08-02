@@ -73,7 +73,7 @@ export function DiaryCalendar({
           <div className="flex flex-col gap-2.5">
             {weeks.map((week, weekIndex) => (
               <div key={weekIndex} className="grid grid-cols-7">
-                {week.map(({ day, directions }, cellIndex) =>
+                {week.map(({ day, outcomes }, cellIndex) =>
                   day === null ? (
                     <div key={`empty-${cellIndex}`} className="flex items-center justify-center">
                       <span className="h-10 w-10 shrink-0" />
@@ -82,7 +82,7 @@ export function DiaryCalendar({
                     <div key={day} className="flex items-center justify-center">
                       <DiaryCalendarDay
                         day={day}
-                        directions={directions}
+                        outcomes={outcomes}
                         onClick={() => onSelectDate?.(toDateKey(year, month, day))}
                       />
                     </div>

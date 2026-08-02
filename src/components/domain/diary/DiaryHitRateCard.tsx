@@ -50,12 +50,12 @@ export function DiaryHitRateCard({
       {isStatistics ? (
         rateText
       ) : (
-        // 범례는 화면 요구사항인 결과 유형을 표시한다 — diaryTheme 주석 참고
+        // API의 날짜별 결과 유형과 같은 범례를 표시한다.
         <ul className="flex flex-col gap-2">
-          {DIARY_LEGEND.map(({ direction, label }) => (
-            <li key={direction} className="flex items-center gap-1">
+          {DIARY_LEGEND.map(({ outcome, label }) => (
+            <li key={outcome} className="flex items-center gap-1">
               <span
-                className={twMerge('h-3 w-3 rounded-full', DIARY_LEGEND_DOT[direction])}
+                className={twMerge('h-3 w-3 rounded-full', DIARY_LEGEND_DOT[outcome])}
                 aria-hidden="true"
               />
               <span className="pretendard-Caption1 text-Gray-10">{label}</span>

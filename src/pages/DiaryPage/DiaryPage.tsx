@@ -16,7 +16,6 @@ import {
   useDiaryListQuery,
   useDiaryStatisticsQuery,
 } from '@/pages/DiaryPage/hooks/useDiaryQueries'
-import { MOCK_DIARY_MONTH, MOCK_DIARY_YEAR } from '@/pages/DiaryPage/mockDiary'
 import { PATH } from '@/routes/paths'
 import { shiftMonth } from '@/utils/diaryCalendar'
 
@@ -41,10 +40,10 @@ export function DiaryPage() {
   const viewParam = searchParams.get(VIEW_PARAM)
   const view: DiaryView = isDiaryView(viewParam) ? viewParam : 'calendar'
 
-  // TODO: mock 의 기준 월 대신 오늘 날짜로 초기화 (실 API 연동 시)
-  const [{ year, month }, setViewMonth] = useState({
-    year: MOCK_DIARY_YEAR,
-    month: MOCK_DIARY_MONTH,
+  const [{ year, month }, setViewMonth] = useState(() => {
+    const today = new Date()
+
+    return { year: today.getFullYear(), month: today.getMonth() + 1 }
   })
 
   const calendarQuery = useDiaryCalendarQuery(year, month, view === 'calendar')
@@ -178,11 +177,7 @@ export function DiaryPage() {
       )
     }
 
-    if (
-      statsQuery.data!.hitRate.totalCount === 0 &&
-      statsQuery.data!.items.length === 0 &&
-      statsQuery.data!.groups.length === 0
-    ) {
+    if (statsQuery.data!.isEmpty) {
       return (
         <PageErrorView
           title="아직 집계된 통계가 없어요"
