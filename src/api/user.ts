@@ -1,10 +1,11 @@
+import { mockFetch } from '@/api/client/mockNetwork'
 import { MOCK_USER_PROFILE_META } from '@/mocks/user'
 import { MOCK_MY_USER_RESPONSE } from '@/pages/MyPage/mockMy'
 import type { MyUserResult, UpdateMyProfileRequest } from '@/types/api/user'
 
 /** TODO: 공통 apiClient 연동 후 실제 /api/users/me 요청으로 교체 */
 export async function getMyUser(): Promise<MyUserResult> {
-  return MOCK_MY_USER_RESPONSE.result
+  return mockFetch('GET /api/users/me', () => MOCK_MY_USER_RESPONSE.result)
 }
 
 export async function updateMyProfile(request: UpdateMyProfileRequest): Promise<void> {

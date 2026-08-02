@@ -41,9 +41,9 @@ export function MyPage() {
           </div>
         }
       />
-      {userQuery.isError && !data ? (
+      {!!userQuery.error && userQuery.fetchStatus === 'idle' ? (
         <PageErrorView error={userQuery.error} onRetry={() => userQuery.refetch()} />
-      ) : !data ? (
+      ) : userQuery.fetchStatus === 'fetching' || !data ? (
         <PageLoadingView />
       ) : (
         <div className="px-4 pt-3 pb-24">

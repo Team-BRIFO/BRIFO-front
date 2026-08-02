@@ -1,3 +1,5 @@
+import { mockFetch } from '@/api/client/mockNetwork'
+
 export interface TermDetailResponse {
   termId: string
   term: string
@@ -22,11 +24,11 @@ export const getTermDetail = async (termId: string): Promise<TermDetailResponse>
   // const { data } = await apiClient.get<ApiResponse<TermDetailResponse>>(`/api/terms/${termId}`)
   // return data.result
 
-  return {
+  return mockFetch(`GET /api/terms/${termId}`, () => ({
     termId,
     term: '임시 용어',
     definition: '공통 axios 인스턴스 연동 전 표시되는 임시 데이터입니다.',
     category: '임시 카테고리',
     isLearned: false,
-  }
+  }))
 }

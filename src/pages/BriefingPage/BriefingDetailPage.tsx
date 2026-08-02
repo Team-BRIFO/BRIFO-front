@@ -24,11 +24,12 @@ export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()
   const navigate = useNavigate()
 
-  const { data, isLoading, isError, error, refetch } = useBriefingDetailQuery(briefingId ?? null)
+  const { data, fetchStatus, error, refetch } = useBriefingDetailQuery(briefingId ?? null)
   const { mutate: submitDecision, isPending: isSubmitting } = usePostDecisionMutation(
     briefingId ?? '',
   )
 
+  const isReady = !!data && fetchStatus !== 'fetching' && !error
   const activeTab = data?.activeTab ?? 'rookie'
 
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
@@ -63,14 +64,14 @@ export function BriefingDetailPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {isLoading && !data ? (
-        <PageLoadingView />
-      ) : (isError && !data) || !data ? (
+      {!!error && fetchStatus === 'idle' ? (
         <PageErrorView
           title="브리핑 데이터를 불러오지 못했습니다."
           error={error}
           onRetry={() => refetch()}
         />
+      ) : fetchStatus === 'fetching' || !data ? (
+        <PageLoadingView />
       ) : (
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="flex flex-col gap-3 px-4">
@@ -104,7 +105,7 @@ export function BriefingDetailPage() {
         </div>
       )}
 
-      {data && (
+      {isReady && (
         <DecisionBottomSheet
           isOpen={isDecisionSheetOpen}
           onClose={() => setIsDecisionSheetOpen(false)}
@@ -133,7 +134,7 @@ export function BriefingDetailPage() {
           }}
         />
       )}
-      {data && (
+      {isReady && (
         <PredictionCompleteModal
           isOpen={isCompleteModalOpen}
           onClose={() => setIsCompleteModalOpen(false)}

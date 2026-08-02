@@ -1,3 +1,4 @@
+import { mockFetch } from '@/api/client/mockNetwork'
 import { MOCK_MY_TERMS_RESPONSE } from '@/pages/MyPage/mockMy'
 import type { MyLearnedTermsResult } from '@/types/api/terms'
 
@@ -10,5 +11,5 @@ export async function getMyLearnedTerms(
 ): Promise<MyLearnedTermsResult> {
   void cursor
   void size
-  return MOCK_MY_TERMS_RESPONSE.result
+  return mockFetch('GET /api/users/me/terms', () => MOCK_MY_TERMS_RESPONSE.result)
 }

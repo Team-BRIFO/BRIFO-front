@@ -20,7 +20,7 @@ export function TeamPage() {
     : '0 AP'
   const agents = agentsQuery.data
 
-  if (agentsQuery.isError && !agents) {
+  if (!!agentsQuery.error && agentsQuery.fetchStatus === 'idle') {
     return (
       <div className="bg-Background1 flex flex-1 flex-col">
         <StatusBar
@@ -44,7 +44,7 @@ export function TeamPage() {
     )
   }
 
-  if (!agents) {
+  if (agentsQuery.fetchStatus === 'fetching' || !agents) {
     return (
       <div className="bg-Background1 flex flex-1 flex-col">
         <StatusBar

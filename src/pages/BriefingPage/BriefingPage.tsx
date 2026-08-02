@@ -18,7 +18,7 @@ export function BriefingPage() {
   const cardId = searchParams.get('cardId') ?? 'mock-card-id'
   const navigate = useNavigate()
 
-  const { data, isLoading, isError, error, refetch } = useCardNewsBriefingsQuery(cardId)
+  const { data, fetchStatus, error, refetch } = useCardNewsBriefingsQuery(cardId)
 
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col">
@@ -30,14 +30,14 @@ export function BriefingPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {isLoading && !data ? (
-        <PageLoadingView />
-      ) : (isError && !data) || !data ? (
+      {!!error && fetchStatus === 'idle' ? (
         <PageErrorView
           title="브리핑 데이터를 불러오지 못했습니다."
           error={error}
           onRetry={() => refetch()}
         />
+      ) : fetchStatus === 'fetching' || !data ? (
+        <PageLoadingView />
       ) : (
         <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
           <div className="flex flex-col gap-8">

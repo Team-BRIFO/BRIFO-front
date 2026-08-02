@@ -19,7 +19,7 @@ export function MyApPage() {
     return all
   }, [period, query.data])
 
-  if (query.isError && !query.data) {
+  if (!!query.error && query.fetchStatus === 'idle' && !query.data) {
     return (
       <MyPageLayout title="AP 내역">
         <PageErrorView

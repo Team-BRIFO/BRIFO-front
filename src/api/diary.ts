@@ -1,3 +1,4 @@
+import { mockFetch } from '@/api/client/mockNetwork'
 import {
   MOCK_DIARY_CALENDAR_RESPONSE,
   MOCK_DIARY_DETAIL_RESPONSES,
@@ -34,19 +35,10 @@ export const getDiaryCalendar = async (
   month: number,
 ): Promise<DiaryCalendarResult> => {
   // TODO: API 연결
-  // const { data } = await apiClient.get<DiaryCalendarApiResponse>('/api/diaries/calendar', {
-  //   params: { year, month },
-  // })
-  // return data.result
-
   void year
   void month
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_DIARY_CALENDAR_RESPONSE.result)
-    }, 500)
-  })
+  return mockFetch('GET /api/diaries/calendar', () => MOCK_DIARY_CALENDAR_RESPONSE.result)
 }
 
 /**
@@ -59,19 +51,10 @@ export const getDiaries = async (
   size: number = DIARY_PAGE_SIZE,
 ): Promise<DiaryListResult> => {
   // TODO: API 연결
-  // const { data } = await apiClient.get<DiaryListApiResponse>('/api/diaries', {
-  //   params: { cursor: cursor ?? undefined, size },
-  // })
-  // return data.result
-
   void cursor
   void size
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_DIARY_LIST_RESPONSE.result)
-    }, 500)
-  })
+  return mockFetch('GET /api/diaries', () => MOCK_DIARY_LIST_RESPONSE.result)
 }
 
 /**
@@ -80,21 +63,13 @@ export const getDiaries = async (
  */
 export const getDiaryDetail = async (diaryId: string): Promise<DiaryDetailResult> => {
   // TODO: API 연결
-  // const { data } = await apiClient.get<DiaryDetailApiResponse>(`/api/diaries/${diaryId}`)
-  // return data.result
-
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const response = MOCK_DIARY_DETAIL_RESPONSES[diaryId]
-      if (response) {
-        resolve({
-          ...response.result,
-          shareImageUrl: mockShareImageUrls.get(diaryId) ?? response.result.shareImageUrl,
-        })
-      } else {
-        reject(new Error('Diary not found'))
-      }
-    }, 500)
+  return mockFetch(`GET /api/diaries/${diaryId}`, () => {
+    const response = MOCK_DIARY_DETAIL_RESPONSES[diaryId]
+    if (!response) throw new Error('Diary not found')
+    return {
+      ...response.result,
+      shareImageUrl: mockShareImageUrls.get(diaryId) ?? response.result.shareImageUrl,
+    }
   })
 }
 
@@ -105,35 +80,21 @@ export const getDiaryDetail = async (diaryId: string): Promise<DiaryDetailResult
  */
 export const createDiaryShareImage = async (diaryId: string): Promise<DiaryShareImageResult> => {
   // TODO: API 연결
-  // const { data } = await apiClient.post<DiaryShareImageApiResponse>(
-  //   `/api/diaries/${diaryId}/share-images`,
-  // )
-  // return data.result
+  return mockFetch(`POST /api/diaries/${diaryId}/share-images`, () => {
+    const reused = mockShareImageUrls.has(diaryId)
+    const isCorrect = MOCK_DIARY_DETAIL_RESPONSES[diaryId]?.result.decision.isCorrect
+    const shareImageUrl =
+      mockShareImageUrls.get(diaryId) ??
+      (isCorrect ? MOCK_DIARY_SHARE_IMAGES.hit : MOCK_DIARY_SHARE_IMAGES.miss)
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const reused = mockShareImageUrls.has(diaryId)
-      const isCorrect = MOCK_DIARY_DETAIL_RESPONSES[diaryId]?.result.decision.isCorrect
-      const shareImageUrl =
-        mockShareImageUrls.get(diaryId) ??
-        (isCorrect ? MOCK_DIARY_SHARE_IMAGES.hit : MOCK_DIARY_SHARE_IMAGES.miss)
+    mockShareImageUrls.set(diaryId, shareImageUrl)
 
-      mockShareImageUrls.set(diaryId, shareImageUrl)
-
-      resolve({ ...MOCK_DIARY_SHARE_IMAGE_RESPONSE.result, diaryId, shareImageUrl, reused })
-    }, 500)
+    return { ...MOCK_DIARY_SHARE_IMAGE_RESPONSE.result, diaryId, shareImageUrl, reused }
   })
 }
 
 /** [다건] 결정일기 통계를 조회합니다. */
 export const getDiaryStats = async (): Promise<DiaryStatsResult> => {
   // TODO: API 연결
-  // const { data } = await apiClient.get<DiaryStatsApiResponse>('/api/diaries/stats')
-  // return data.result
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_DIARY_STATS_RESPONSE.result)
-    }, 500)
-  })
+  return mockFetch('GET /api/diaries/stats', () => MOCK_DIARY_STATS_RESPONSE.result)
 }

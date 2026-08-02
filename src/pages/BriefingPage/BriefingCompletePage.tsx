@@ -50,13 +50,13 @@ export function BriefingCompletePage() {
         // title 없음
       />
 
-      {cardNewsQuery.isError && !cardNewsQuery.data ? (
+      {!!cardNewsQuery.error && cardNewsQuery.fetchStatus === 'idle' ? (
         <PageErrorView
           title="브리핑 정보를 불러오지 못했어요"
           error={cardNewsQuery.error}
           onRetry={() => cardNewsQuery.refetch()}
         />
-      ) : !cardNewsQuery.data ? (
+      ) : cardNewsQuery.fetchStatus === 'fetching' || !cardNewsQuery.data ? (
         <PageLoadingView />
       ) : (
         <div className="mt-20 flex flex-1 flex-col items-center gap-15.5">
