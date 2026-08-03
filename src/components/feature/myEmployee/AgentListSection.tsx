@@ -23,10 +23,9 @@ export function AgentListSection({ agents, onSelectAgent }: AgentListSectionProp
         ))}
       </div>
 
-      <Banner variant="info">
-        사원은 예측이 적중할 때마다 EXP를 얻고 레벨업해요.
-        <br />
-        레벨이 오르면 보고서가 더 깊어집니다.
+      <Banner variant="guide">
+        <span className="block">사원은 예측이 적중할 때마다 EXP를 얻고 레벨업해요.</span>
+        <span className="block">레벨이 오르면 보고서가 더 깊어집니다.</span>
       </Banner>
     </div>
   )

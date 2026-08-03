@@ -8,7 +8,7 @@ import {
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { AgentDetailSection } from '@/components/feature/myEmployee/AgentDetailSection'
-import { useAgentDetailQuery } from '@/hooks/queries/agent/useAgentQueries'
+import { useAgentDetailQuery } from '@/pages/TeamPage/hooks/useAgentDetailQuery'
 import { PATH } from '@/routes/paths'
 
 /** 팀 탭 - SCR-12: 사원 상세 (루키/프로/탱커 공용) */
