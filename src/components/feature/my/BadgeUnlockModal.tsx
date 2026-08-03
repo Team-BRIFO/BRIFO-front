@@ -11,35 +11,68 @@ export interface BadgeUnlockModalProps {
   badge: Badge | null
   rewardAp?: number
   onClose: () => void
+  isLoading?: boolean
+  errorMessage?: string
+  onRetry?: () => void
 }
 
 /** 새 배지 획득 모달 — 피그마 새뱃지 획득 */
-export function BadgeUnlockModal({ isOpen, badge, rewardAp, onClose }: BadgeUnlockModalProps) {
-  if (!badge) return null
+export function BadgeUnlockModal({
+  isOpen,
+  badge,
+  rewardAp,
+  onClose,
+  isLoading = false,
+  errorMessage,
+  onRetry,
+}: BadgeUnlockModalProps) {
+  if (!badge && !isLoading && !errorMessage) return null
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} ariaLabel="새 배지 획득" className="w-70 rounded-xl">
-      <Modal.Header className="flex flex-col items-center gap-4">
-        <h2 className="dnf-Title4 text-Gray-10 mt-6">{badge.name} 획득!</h2>
-        <BadgeItem badge={{ ...badge, isUnlocked: true }} size={60} disabled />
-        <p className="font-pretendard text-Gray-6 text-center text-[0.875rem] leading-5 font-normal tracking-[-0.56px]">
-          {badge.description}
-        </p>
-        {rewardAp !== undefined && (
-          <ApBadge
-            type="ap"
-            className="dnf-Caption1 bg-Pink-60 text-Pink-30 h-auto gap-0.5 rounded-[20px] px-3 py-1.5"
-          >
-            {`+ ${rewardAp} AP`}
-          </ApBadge>
-        )}
-      </Modal.Header>
+      {badge ? (
+        <>
+          <Modal.Header className="flex flex-col items-center gap-4">
+            <h2 className="dnf-Title4 text-Gray-10 mt-6">{badge.name} 획득!</h2>
+            <BadgeItem badge={{ ...badge, isUnlocked: true }} size={60} disabled />
+            <p className="font-pretendard text-Gray-6 text-center text-[0.875rem] leading-5 font-normal tracking-[-0.56px]">
+              {badge.description}
+            </p>
+            {rewardAp !== undefined && (
+              <ApBadge
+                type="ap"
+                className="dnf-Caption1 bg-Pink-60 text-Pink-30 h-auto gap-0.5 rounded-[20px] px-3 py-1.5"
+              >
+                {`+ ${rewardAp} AP`}
+              </ApBadge>
+            )}
+          </Modal.Header>
 
-      <Modal.Footer className="mt-5">
-        <Button size="lg" isFullWidth onClick={onClose}>
-          확인
-        </Button>
-      </Modal.Footer>
+          <Modal.Footer className="mt-5">
+            <Button size="lg" isFullWidth onClick={onClose}>
+              확인
+            </Button>
+          </Modal.Footer>
+        </>
+      ) : (
+        <>
+          <Modal.Header className="flex flex-col items-center gap-3 py-4">
+            <h2 className="dnf-Title4 text-Gray-10">
+              {isLoading ? '배지 정보를 불러오는 중이에요.' : errorMessage}
+            </h2>
+          </Modal.Header>
+          <Modal.Footer className="mt-5">
+            {errorMessage && onRetry && (
+              <Button size="lg" isFullWidth onClick={onRetry}>
+                다시 시도
+              </Button>
+            )}
+            <Button color="assistive" size="lg" isFullWidth onClick={onClose}>
+              닫기
+            </Button>
+          </Modal.Footer>
+        </>
+      )}
     </Modal>
   )
 }

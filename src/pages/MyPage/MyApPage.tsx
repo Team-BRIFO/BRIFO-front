@@ -50,6 +50,7 @@ export function MyApPage() {
         hasNext={query.hasNextPage}
         onLoadMore={() => query.fetchNextPage()}
         isLoadingMore={query.isFetchingNextPage}
+        loadMoreError={query.isFetchNextPageError}
         isEmpty={transactions.length === 0}
       />
     </MyPageLayout>

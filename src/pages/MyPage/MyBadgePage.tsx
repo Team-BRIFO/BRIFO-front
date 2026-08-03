@@ -20,7 +20,7 @@ export function MyBadgePage() {
       setParams(next, { replace: true })
     }
   }, [params, setParams])
-  if (!!badgesQuery.error && badgesQuery.fetchStatus === 'idle')
+  if (!!badgesQuery.error && badgesQuery.fetchStatus === 'idle' && !badgesQuery.data)
     return (
       <MyPageLayout title="업적 · 배지">
         <PageErrorView
@@ -30,7 +30,7 @@ export function MyBadgePage() {
         />
       </MyPageLayout>
     )
-  if (badgesQuery.fetchStatus === 'fetching' || !badgesQuery.data)
+  if (!badgesQuery.data)
     return (
       <MyPageLayout title="업적 · 배지">
         <PageLoadingView />
@@ -47,9 +47,16 @@ export function MyBadgePage() {
         isEmpty={badges.length === 0}
       />
       <BadgeUnlockModal
-        isOpen={Boolean(selectedId && detailQuery.data)}
+        isOpen={Boolean(selectedId)}
         badge={detailQuery.data?.badge ?? null}
         rewardAp={detailQuery.data?.rewardAp}
+        isLoading={Boolean(selectedId && !detailQuery.data && detailQuery.isPending)}
+        errorMessage={
+          selectedId && !detailQuery.data && detailQuery.isError
+            ? '배지 정보를 불러오지 못했어요.'
+            : undefined
+        }
+        onRetry={() => detailQuery.refetch()}
         onClose={() => setSelectedId(null)}
       />
     </MyPageLayout>

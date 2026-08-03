@@ -22,6 +22,7 @@ export interface MyApHistoryProps {
   hasNext?: boolean
   onLoadMore?: () => void
   isLoadingMore?: boolean
+  loadMoreError?: boolean
   /** 빈 상태 여부는 조회 데이터를 소유한 Page가 결정한다. */
   isEmpty: boolean
 }
@@ -35,6 +36,7 @@ export function MyApHistory({
   hasNext = false,
   onLoadMore,
   isLoadingMore = false,
+  loadMoreError = false,
   isEmpty,
 }: MyApHistoryProps) {
   return (
@@ -65,16 +67,23 @@ export function MyApHistory({
       </div>
 
       {hasNext && (
-        <Button
-          variant="outline"
-          color="assistive"
-          size="md"
-          isFullWidth
-          disabled={isLoadingMore}
-          onClick={onLoadMore}
-        >
-          {isLoadingMore ? '불러오는 중...' : '더 보기'}
-        </Button>
+        <div className="flex flex-col gap-2">
+          {loadMoreError && (
+            <p role="alert" className="pretendard-Caption2 text-Pink-30 text-center">
+              추가 내역을 불러오지 못했어요.
+            </p>
+          )}
+          <Button
+            variant="outline"
+            color="assistive"
+            size="md"
+            isFullWidth
+            disabled={isLoadingMore}
+            onClick={onLoadMore}
+          >
+            {isLoadingMore ? '불러오는 중...' : loadMoreError ? '다시 시도' : '더 보기'}
+          </Button>
+        </div>
       )}
     </div>
   )
