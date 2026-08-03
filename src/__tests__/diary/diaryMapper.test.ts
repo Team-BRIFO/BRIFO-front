@@ -100,4 +100,24 @@ describe('diaryMapper', () => {
 
     expect(statistics.isEmpty).toBe(false)
   })
+
+  it('marks statistics empty when there are no settled decisions', () => {
+    const statistics = mapDiaryStatistics({
+      summary: {
+        recent30DaysSettledDecisionCount: 0,
+        recent30DaysCorrectDecisionCount: 0,
+        recent30DaysAccuracyRate: 0,
+        settledDecisionCount: 0,
+        correctDecisionCount: 0,
+        averageConfidenceLevel: 0,
+        bestCorrectStreak: 0,
+      },
+      directionStats: [],
+      agentStats: [],
+      confidenceLevelStats: [],
+      stockStats: [],
+    })
+
+    expect(statistics.isEmpty).toBe(true)
+  })
 })
