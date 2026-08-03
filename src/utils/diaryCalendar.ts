@@ -1,11 +1,11 @@
-import type { DiaryDayMark, DiaryDirection } from '@/types/domain/diary'
+import type { DiaryCalendarOutcome, DiaryDayMark } from '@/types/domain/diary'
 
 /** 캘린더 그리드 한 칸 */
 export interface DiaryCalendarCell {
   /** 일(1~31). 앞 여백 칸은 null */
   day: number | null
-  /** 그날 존재한 결정 방향 */
-  directions: DiaryDirection[]
+  /** 그날 존재한 정산 결과 */
+  outcomes: DiaryCalendarOutcome[]
 }
 
 /** YYYY-MM-DD 로 포맷 */
@@ -26,19 +26,19 @@ export function buildCalendarWeeks(
   month: number,
   marks: DiaryDayMark[],
 ): DiaryCalendarCell[][] {
-  const directionsByDate = new Map(marks.map((mark) => [mark.date, mark.directions]))
+  const outcomesByDate = new Map(marks.map((mark) => [mark.date, mark.outcomes]))
 
   const firstWeekday = new Date(year, month - 1, 1).getDay()
   const lastDay = new Date(year, month, 0).getDate()
 
   const cells: DiaryCalendarCell[] = [
-    ...Array.from({ length: firstWeekday }, () => ({ day: null, directions: [] })),
+    ...Array.from({ length: firstWeekday }, () => ({ day: null, outcomes: [] })),
     ...Array.from({ length: lastDay }, (_, index) => {
       const day = index + 1
 
       return {
         day,
-        directions: directionsByDate.get(toDateKey(year, month, day)) ?? [],
+        outcomes: outcomesByDate.get(toDateKey(year, month, day)) ?? [],
       }
     }),
   ]

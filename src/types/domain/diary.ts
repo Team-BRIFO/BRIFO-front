@@ -7,15 +7,15 @@
 /** 결정 방향 (상승 / 하락 / 관망) */
 export type DiaryDirection = 'up' | 'down' | 'neutral'
 
-/**
- * 캘린더 한 칸 — 날짜 + 그날 존재한 결정 방향.
- * ⚠️ 캘린더 점은 적중 여부가 아니라 **방향**을 나타낸다 (API가 direction 만 내려준다).
- */
+/** 캘린더 날짜별 정산 결과 */
+export type DiaryCalendarOutcome = 'win' | 'loss' | 'neutral'
+
+/** 캘린더 한 칸 — 날짜 + 그날 존재한 정산 결과 */
 export interface DiaryDayMark {
   /** YYYY-MM-DD */
   date: string
-  /** 그날 1건 이상 존재한 방향 (없으면 빈 배열) */
-  directions: DiaryDirection[]
+  /** 그날 1건 이상 존재한 결과 (없으면 빈 배열) */
+  outcomes: DiaryCalendarOutcome[]
 }
 
 /** 적중률 요약 (캘린더 하단 · 통계 상단) */
@@ -41,14 +41,10 @@ export interface DiaryEntry {
   /** AP 증감 (획득 양수 / 차감 음수 / 변동 없으면 0) */
   apDelta: number
 
-  /**
-   * 🔴 아래 4개는 목록 API 명세에 없어 현재 mock 이 채운다 (백엔드 추가 요청 중).
-   * 값이 없으면 해당 줄을 렌더하지 않으므로 실제 응답이 와도 화면이 깨지지 않는다.
-   */
-  price?: number
-  changeRate?: number
+  price: number
+  changeRate: number
   /** YYYY-MM-DD */
-  date?: string
+  date: string
   logoUrl?: string
 }
 
@@ -120,6 +116,7 @@ export interface DiaryRateGroup {
 
 /** 통계 화면 전체 */
 export interface DiaryStatistics {
+  isEmpty: boolean
   hitRate: DiaryHitRate
   items: DiaryStatItem[]
   groups: DiaryRateGroup[]

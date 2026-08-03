@@ -10,6 +10,7 @@ import type {
 } from '@/types/api/diary'
 import type {
   DiaryCalendarData,
+  DiaryCalendarOutcome,
   DiaryDetail,
   DiaryDirection,
   DiaryEntry,
@@ -41,22 +42,20 @@ export const CONFIDENCE_LEVEL_LABEL: Record<ConfidenceLevelCode, string> = {
 // ─── 캘린더 ────────────────────────────────────────────────────────────────
 
 /**
- * 캘린더 응답 → 도메인 (점은 방향 기준: 상승 → 하락 → 관망 순서)
+ * 캘린더 응답 → 도메인 (점은 결과 기준: 적중 → 오답 → 관망 순서)
  *
- * 사용:   year · month · accuracyRate · settledDecisionCount · days[].date · days[].direction
+ * 사용:   year · month · accuracyRate · settledDecisionCount · days[].date · days[].outcome
  * 미사용: correctDecisionCount — 시안이 적중률(%)과 건수만 표시한다
  *
- * ⚠️ 시안 범례는 적중/오답/관망이지만 응답에 날짜별 적중 여부가 없어(월 합계만 존재)
- * 방향(상승/하락/관망) 기준으로 그린다. 백엔드에 날짜별 outcome 추가 요청 상태.
  */
 export function mapDiaryCalendar(result: DiaryCalendarResult): DiaryCalendarData {
   const marks = result.days.map((day) => {
-    const directions: DiaryDirection[] = []
-    if (day.direction.up) directions.push('up')
-    if (day.direction.down) directions.push('down')
-    if (day.direction.neutral) directions.push('neutral')
+    const outcomes: DiaryCalendarOutcome[] = []
+    if (day.outcome.decisionWin) outcomes.push('win')
+    if (day.outcome.decisionLoss) outcomes.push('loss')
+    if (day.outcome.neutralHit) outcomes.push('neutral')
 
-    return { date: day.date, directions }
+    return { date: day.date, outcomes }
   })
 
   return {
@@ -85,11 +84,10 @@ export function mapDiaryEntry(item: DiaryListItemResponse): DiaryEntry {
     direction: DIRECTION_BY_CODE[item.decision.direction],
     isCorrect: item.decision.isCorrect,
     apDelta: item.decision.apDelta,
-    // 🔴 명세 외 필드 — 현재 mock 이 채운다
-    price: item.price,
-    changeRate: item.changeRate,
-    date: item.tradeDate,
-    logoUrl: item.logoUrl,
+    price: item.stock.price,
+    changeRate: item.stock.changeRate,
+    date: item.stock.tradeDate,
+    logoUrl: item.stock.logoUrl,
   }
 }
 
@@ -97,7 +95,7 @@ export function mapDiaryEntry(item: DiaryListItemResponse): DiaryEntry {
 export function mapDiaryEntryPage(result: DiaryListResult): DiaryEntryPage {
   return {
     entries: result.page.items.map(mapDiaryEntry),
-    nextCursor: result.page.nextCursor,
+    nextCursor: result.page.nextCursor ?? null,
     hasNext: result.page.hasNext,
   }
 }
@@ -115,7 +113,7 @@ export function mapDiaryEntryPage(result: DiaryListResult): DiaryEntryPage {
 export function mapDiaryDetail(result: DiaryDetailResult): DiaryDetail {
   return {
     id: result.diaryId,
-    shareImageUrl: result.shareImageUrl,
+    shareImageUrl: result.shareImageUrl ?? null,
     stockName: result.stock.name,
   }
 }
@@ -145,6 +143,7 @@ export function mapDiaryStatistics(result: DiaryStatsResult): DiaryStatistics {
   const subtitle = `최근 30일 · 결정 ${summary.recent30DaysSettledDecisionCount}건`
 
   return {
+    isEmpty: summary.settledDecisionCount === 0,
     hitRate: {
       rate: summary.recent30DaysAccuracyRate,
       totalCount: summary.recent30DaysSettledDecisionCount,
