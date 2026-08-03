@@ -1,11 +1,16 @@
-import type { ApTransactionResult } from '@/types/api/ap'
-import type { BadgeDetailResult, BadgeListItemResponse } from '@/types/api/badge'
-import type { MyLearnedTermsResult } from '@/types/api/terms'
-import type { MyUserResult } from '@/types/api/user'
+import type { GetApTransactionsResponse } from '@/api/generated/schemas/ap-controller'
+import type { BadgeItem, GetOwnedBadgeResponse } from '@/api/generated/schemas/badge-controller'
+import type { GetMyTermsResponse } from '@/api/generated/schemas/term-controller'
+import type { GetMyPageResponse } from '@/api/generated/schemas/user-controller'
 import type { ApSummary, ApTransactionPage, ApTransactionReason } from '@/types/domain/ap'
 import type { Badge, BadgeDetail } from '@/types/domain/badge'
 import type { MyGlossaryPage } from '@/types/domain/glossary'
-import type { UserOverview, UserProfileMeta } from '@/types/domain/user'
+import type { UserOverview } from '@/types/domain/user'
+
+const MY_PROFILE_PRESENTATION_FALLBACK = {
+  jobTitle: '사장',
+  characterType: 'rookie' as const,
+}
 
 const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   INITIAL_GRANT: '가입 축하 지급',
@@ -21,14 +26,13 @@ const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   CREDIT_LOAN: 'AP 대출',
 }
 
-export function mapMyUser(result: MyUserResult, meta: UserProfileMeta): UserOverview {
+export function mapMyUser(result: GetMyPageResponse): UserOverview {
   return {
     profile: {
-      id: meta.id,
       nickname: result.nickname,
       companyName: result.companyName,
-      jobTitle: meta.jobTitle,
-      characterType: meta.characterType,
+      jobTitle: MY_PROFILE_PRESENTATION_FALLBACK.jobTitle,
+      characterType: MY_PROFILE_PRESENTATION_FALLBACK.characterType,
     },
     stats: {
       hitRate: result.decisionAccuracyRate,
@@ -39,12 +43,12 @@ export function mapMyUser(result: MyUserResult, meta: UserProfileMeta): UserOver
     profileFormValues: {
       nickname: result.nickname,
       companyName: result.companyName,
-      interestStocks: meta.interestStocks,
+      interestStocks: result.stocks.map((stock) => ({ id: stock.stockId, name: stock.name })),
     },
   }
 }
 
-function mapApSummary(result: ApTransactionResult): ApSummary {
+function mapApSummary(result: GetApTransactionsResponse): ApSummary {
   return {
     balance: result.summary.balanceAp,
     earned: result.summary.monthlyEarnedAp,
@@ -52,7 +56,7 @@ function mapApSummary(result: ApTransactionResult): ApSummary {
   }
 }
 
-export function mapApTransactionPage(result: ApTransactionResult): ApTransactionPage {
+export function mapApTransactionPage(result: GetApTransactionsResponse): ApTransactionPage {
   return {
     summary: mapApSummary(result),
     items: result.page.items.map((item) => ({
@@ -62,12 +66,12 @@ export function mapApTransactionPage(result: ApTransactionResult): ApTransaction
       amount: item.amount,
       createdAt: item.createdAt,
     })),
-    nextCursor: result.page.nextCursor,
+    nextCursor: result.page.nextCursor ?? null,
     hasNext: result.page.hasNext,
   }
 }
 
-export function mapBadge(item: BadgeListItemResponse): Badge {
+export function mapBadge(item: BadgeItem): Badge {
   return {
     id: item.badgeId,
     name: item.name,
@@ -78,7 +82,7 @@ export function mapBadge(item: BadgeListItemResponse): Badge {
   }
 }
 
-export function mapBadgeDetail(result: BadgeDetailResult): BadgeDetail {
+export function mapBadgeDetail(result: GetOwnedBadgeResponse): BadgeDetail {
   return {
     badge: {
       id: result.badgeId,
@@ -92,7 +96,7 @@ export function mapBadgeDetail(result: BadgeDetailResult): BadgeDetail {
   }
 }
 
-export function mapMyGlossaryPage(result: MyLearnedTermsResult): MyGlossaryPage {
+export function mapMyGlossaryPage(result: GetMyTermsResponse): MyGlossaryPage {
   return {
     learnedTermCount: result.learnedTermCount,
     entries: result.page.items.map((item) => ({
@@ -102,7 +106,7 @@ export function mapMyGlossaryPage(result: MyLearnedTermsResult): MyGlossaryPage 
       category: item.category,
       learnedAt: item.learnedAt,
     })),
-    nextCursor: result.page.nextCursor,
+    nextCursor: result.page.nextCursor ?? null,
     hasNext: result.page.hasNext,
   }
 }
