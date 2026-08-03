@@ -8,6 +8,10 @@ export const PATH = {
   /** SCR-01: 스플래시 / 로그인 */
   SPLASH: '/splash',
 
+  /** 소셜 로그인 OAuth callback */
+  AUTH_CALLBACK: '/auth/callback/:provider',
+  AUTH_CALLBACK_FOR: (provider: 'kakao' | 'naver') => `/auth/callback/${provider}`,
+
   /** SCR-01a,b: 약관 동의 / 약관 상세 */
   AGREEMENT: '/agreement',
   AGREEMENT_DETAIL: '/agreement/detail',

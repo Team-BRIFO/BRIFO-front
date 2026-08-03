@@ -6,11 +6,9 @@
  * OpenAPI spec version: v1
  */
 
-export * from './apiResponseCompleteOnboardingResponse.zod'
 export * from './apiResponseGetMyPageResponse.zod'
 export * from './apiResponseGetUserHomeResponse.zod'
 export * from './apiResponseGetUserProfileResponse.zod'
-export * from './completeOnboardingResponse.zod'
 export * from './getMyPageResponse.zod'
 export * from './getUserHomeResponse.zod'
 export * from './getUserProfileResponse.zod'
@@ -21,7 +19,6 @@ export * from './news.zod'
 export * from './newsCardItem.zod'
 export * from './todayDecisions.zod'
 export * from './todayNewsCards.zod'
-export * from './token.zod'
 export * from './updateOnboardingProfileBody.zod'
 export * from './updateOnboardingProfileRequest.zod'
 export * from './updateUserProfileBody.zod'

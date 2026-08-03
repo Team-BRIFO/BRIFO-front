@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { browserTokenStore, signupTokenStore } from '@/api/client/tokenStore'
 import SkHynixLogo from '@/assets/logo/sk-hynix.png'
+import { Toast } from '@/components/common/Toast'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
 import { BriefingComment } from '@/components/domain/briefing/BriefingComment'
 import { BriefingNote } from '@/components/domain/briefing/BriefingNote'
@@ -18,6 +20,8 @@ import TutorialComplete from '@/components/feature/tutorial/TutorialComplete'
 import TutorialStepLayout from '@/components/feature/tutorial/TutorialStepLayout'
 import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
 import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
+import { useCompleteOnboardingMutation } from '@/pages/TutorialPage/hooks/useCompleteOnboardingMutation'
+import { useCreateTutorialRewardMutation } from '@/pages/TutorialPage/hooks/useCreateTutorialRewardMutation'
 import {
   TUTORIAL_AGENTS,
   TUTORIAL_STEPS,
@@ -217,6 +221,9 @@ function renderStepContent({
 
 export function TutorialPage() {
   const navigate = useNavigate()
+  const completeOnboarding = useCompleteOnboardingMutation()
+  const createTutorialReward = useCreateTutorialRewardMutation()
+  const hasCompletedOnboarding = useRef(false)
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [selectedAgentId, setSelectedAgentId] = useState(TUTORIAL_AGENTS[0].id)
@@ -234,29 +241,73 @@ export function TutorialPage() {
     setCurrentStepIndex((previous) => previous + 1)
   }
 
+  const navigateHome = () => navigate(PATH.HOME, { replace: true })
+
+  const requestTutorialReward = () => {
+    createTutorialReward.mutate(undefined, { onSuccess: navigateHome })
+  }
+
+  const finishOnboarding = (shouldReward: boolean) => {
+    if (hasCompletedOnboarding.current) {
+      if (shouldReward) requestTutorialReward()
+      else navigateHome()
+      return
+    }
+
+    completeOnboarding.mutate(undefined, {
+      onSuccess: ({ token }) => {
+        browserTokenStore.setTokens(token)
+        signupTokenStore.clear()
+        hasCompletedOnboarding.current = true
+
+        if (shouldReward) requestTutorialReward()
+        else navigateHome()
+      },
+    })
+  }
+
+  const handleComplete = () => finishOnboarding(true)
+  const handleSkip = () => finishOnboarding(false)
+
+  const isSubmitting = completeOnboarding.isPending || createTutorialReward.isPending
+  const submitError = completeOnboarding.error ?? createTutorialReward.error
+
   if (isComplete) {
-    return <TutorialComplete reward={200} onComplete={() => navigate(PATH.HOME)} />
+    return (
+      <>
+        <TutorialComplete reward={200} onComplete={handleComplete} isPending={isSubmitting} />
+        {submitError && (
+          <Toast message={submitError.serviceMessage ?? '온보딩을 완료하지 못했어요'} />
+        )}
+      </>
+    )
   }
 
   return (
-    <TutorialStepLayout
-      key={currentStep.id}
-      step={currentStep.step}
-      title={currentStep.title}
-      message={currentStep.message}
-      buttonLabel={currentStep.buttonLabel}
-      onNext={handleNext}
-      onSkip={() => navigate(PATH.HOME)}
-    >
-      {renderStepContent({
-        content: currentStep.content,
-        selectedAgentId,
-        direction,
-        confidence,
-        setSelectedAgentId,
-        setDirection,
-        setConfidence,
-      })}
-    </TutorialStepLayout>
+    <>
+      <TutorialStepLayout
+        key={currentStep.id}
+        step={currentStep.step}
+        title={currentStep.title}
+        message={currentStep.message}
+        buttonLabel={currentStep.buttonLabel}
+        skipDisabled={isSubmitting}
+        onNext={handleNext}
+        onSkip={handleSkip}
+      >
+        {renderStepContent({
+          content: currentStep.content,
+          selectedAgentId,
+          direction,
+          confidence,
+          setSelectedAgentId,
+          setDirection,
+          setConfidence,
+        })}
+      </TutorialStepLayout>
+      {submitError && (
+        <Toast message={submitError.serviceMessage ?? '온보딩을 완료하지 못했어요'} />
+      )}
+    </>
   )
 }

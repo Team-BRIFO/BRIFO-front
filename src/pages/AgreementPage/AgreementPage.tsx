@@ -3,8 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
+import { Toast } from '@/components/common/Toast'
 import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
-import { type AgreementId, AGREEMENTS } from '@/pages/AgreementPage/agreement'
+import type { AgreementId } from '@/pages/AgreementPage/agreement'
+import { AGREEMENTS } from '@/pages/AgreementPage/agreement'
+import {
+  useAgreePoliciesMutation,
+  usePoliciesQuery,
+} from '@/pages/AgreementPage/hooks/usePoliciesApi'
+import { findPolicyByAgreementId } from '@/pages/AgreementPage/policyMapping'
 import { PATH } from '@/routes/paths'
 
 type AgreementCheckedState = Record<AgreementId, boolean>
@@ -26,6 +33,8 @@ const REQUIRED_AGREEMENT_IDS: AgreementId[] = ['age', 'service', 'privacy', 'inv
 export default function AgreementPage() {
   const navigate = useNavigate()
   const location = useLocation()
+  const policiesQuery = usePoliciesQuery()
+  const agreePolicies = useAgreePoliciesMutation()
   const [checked, setChecked] = useState<AgreementCheckedState>(INITIAL_CHECKED_STATE)
   const isAllChecked = Object.values(checked).every(Boolean)
   const isRequiredChecked = REQUIRED_AGREEMENT_IDS.every((id) => checked[id])
@@ -66,6 +75,28 @@ export default function AgreementPage() {
     })
   }
 
+  const handleNext = () => {
+    if (!isRequiredChecked || !policiesQuery.data) return
+
+    const policyIds = policiesQuery.data.items
+      .filter((policy) => {
+        if (policy.isRequired) return true
+
+        const agreement = AGREEMENTS.find(
+          ({ id }) => findPolicyByAgreementId([policy], id) !== undefined,
+        )
+        return agreement ? checked[agreement.id] : false
+      })
+      .map((policy) => policy.policyId)
+
+    agreePolicies.mutate(
+      { policyIds },
+      {
+        onSuccess: () => navigate(PATH.ONBOARDING),
+      },
+    )
+  }
+
   return (
     <main className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
       <StatusBar
@@ -104,6 +135,8 @@ export default function AgreementPage() {
                 navigate(PATH.AGREEMENT_DETAIL, {
                   state: {
                     agreementId: agreement.id,
+                    policyId: findPolicyByAgreementId(policiesQuery.data?.items ?? [], agreement.id)
+                      ?.policyId,
                   },
                 })
               }
@@ -113,10 +146,24 @@ export default function AgreementPage() {
       </div>
 
       <div className="mt-auto">
-        <Button isFullWidth disabled={!isRequiredChecked} onClick={() => navigate(PATH.ONBOARDING)}>
-          다음
+        <Button
+          isFullWidth
+          disabled={!isRequiredChecked || !policiesQuery.data || agreePolicies.isPending}
+          onClick={handleNext}
+        >
+          {agreePolicies.isPending ? '동의 처리 중...' : '다음'}
         </Button>
       </div>
+
+      {(policiesQuery.isError || agreePolicies.isError) && (
+        <Toast
+          message={
+            agreePolicies.error?.serviceMessage ??
+            policiesQuery.error?.serviceMessage ??
+            '약관 정보를 불러오지 못했어요'
+          }
+        />
+      )}
     </main>
   )
 }

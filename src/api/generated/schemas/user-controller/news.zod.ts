@@ -10,7 +10,7 @@ import { z as zod } from 'zod'
 export const News = zod.object({
   newsId: zod.uuid(),
   publishedAt: zod.iso.datetime({ offset: true }),
-  source: zod.enum(['NAVER', 'DART', 'KRX']),
+  source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
 })
 
 export type News = zod.input<typeof News>

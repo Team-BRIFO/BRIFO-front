@@ -16,7 +16,7 @@ export const TodayNewsCards = zod.object({
       news: zod.object({
         newsId: zod.uuid(),
         publishedAt: zod.iso.datetime({ offset: true }),
-        source: zod.enum(['NAVER', 'DART', 'KRX']),
+        source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
       }),
       stock: zod.object({
         stockId: zod.uuid(),

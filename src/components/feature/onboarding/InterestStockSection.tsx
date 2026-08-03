@@ -7,8 +7,8 @@ import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
 interface InterestStockSectionProps {
   stocks: OnboardingStock[]
   searchKeyword: string
-  selectedStockIds: number[]
-  onToggleStock: (stockId: number) => void
+  selectedStockIds: string[]
+  onToggleStock: (stockId: string) => void
   onOpenSearch: () => void
 }
 

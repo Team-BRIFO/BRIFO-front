@@ -11,6 +11,7 @@ interface TutorialStepLayoutProps {
   children: ReactNode
   buttonLabel?: string
   nextDisabled?: boolean
+  skipDisabled?: boolean
   onNext: () => void
   onSkip: () => void
 }
@@ -22,6 +23,7 @@ export default function TutorialStepLayout({
   children,
   buttonLabel = '다음',
   nextDisabled = false,
+  skipDisabled = false,
   onNext,
   onSkip,
 }: TutorialStepLayoutProps) {
@@ -30,7 +32,7 @@ export default function TutorialStepLayout({
       <StatusBar
         hasStatusArea
         className="w-full [&>div:last-child]:px-0"
-        right={<StatusBarSkipButton onClick={onSkip} />}
+        right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
       />
 
       <section className="mt-8 flex min-h-0 flex-1 flex-col">

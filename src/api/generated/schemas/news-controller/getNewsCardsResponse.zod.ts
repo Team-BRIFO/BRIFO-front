@@ -19,7 +19,7 @@ export const GetNewsCardsResponse = zod.object({
   newsCards: zod.array(
     zod.object({
       cardId: zod.uuid(),
-      source: zod.enum(['NAVER', 'DART', 'KRX']),
+      source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
       headline: zod.string(),
       importanceBadge: zod.enum(['HOT', 'MID', 'LOW']),
       publishedDate: zod.iso.date(),

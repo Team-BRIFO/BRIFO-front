@@ -11,9 +11,9 @@ import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
 interface StockSearchViewProps {
   stocks: OnboardingStock[]
   searchKeyword: string
-  selectedStockIds: number[]
+  selectedStockIds: string[]
   onSearchKeywordChange: (value: string) => void
-  onToggleStock: (stockId: number) => void
+  onToggleStock: (stockId: string) => void
   onBack: () => void
   onComplete: () => void
 }
