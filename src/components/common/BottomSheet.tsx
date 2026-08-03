@@ -51,10 +51,14 @@ function BottomSheet({
 
   useEffect(() => {
     if (isOpen) {
+      let innerFrame: number
       const frame = requestAnimationFrame(() => {
-        requestAnimationFrame(() => setIsAnimating(true))
+        innerFrame = requestAnimationFrame(() => setIsAnimating(true))
       })
-      return () => cancelAnimationFrame(frame)
+      return () => {
+        cancelAnimationFrame(frame)
+        if (innerFrame) cancelAnimationFrame(innerFrame)
+      }
     } else {
       const timer = setTimeout(() => setIsRendered(false), 300)
       return () => clearTimeout(timer)

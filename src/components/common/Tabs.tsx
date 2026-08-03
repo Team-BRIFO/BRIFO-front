@@ -89,20 +89,36 @@ export function Tabs({
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (variant === 'segmented' && activeIndex !== -1) {
-      const activeTab = tabsRef.current[activeIndex]
-      const container = containerRef.current
-      if (activeTab && container) {
-        const containerRect = container.getBoundingClientRect()
-        const tabRect = activeTab.getBoundingClientRect()
-        setIndicatorStyle({
-          left: tabRect.left - containerRect.left,
-          width: tabRect.width,
-          opacity: 1,
-        })
+    const updateIndicator = () => {
+      if (variant === 'segmented' && activeIndex !== -1) {
+        const activeTab = tabsRef.current[activeIndex]
+        const container = containerRef.current
+        if (activeTab && container) {
+          const containerRect = container.getBoundingClientRect()
+          const tabRect = activeTab.getBoundingClientRect()
+          setIndicatorStyle({
+            left: tabRect.left - containerRect.left,
+            width: tabRect.width,
+            opacity: 1,
+          })
+        }
+      } else {
+        setIndicatorStyle({ left: 0, width: 0, opacity: 0 })
       }
-    } else {
-      setIndicatorStyle({ left: 0, width: 0, opacity: 0 })
+    }
+
+    updateIndicator()
+
+    const container = containerRef.current
+    if (!container || variant !== 'segmented') return
+
+    const observer = new ResizeObserver(() => {
+      updateIndicator()
+    })
+    observer.observe(container)
+
+    return () => {
+      observer.disconnect()
     }
   }, [activeIndex, variant, items.length])
 

@@ -40,9 +40,9 @@ export function GlossaryBottomSheet({
     error,
     refetch,
   } = useGetTermDetail(shouldFetch && currentTerm ? currentTerm.termId : null)
-  const { mutate: markAsLearned, isPending } = usePutMyTerm()
+  const { mutate: markAsLearned, isPending, error: putError } = usePutMyTerm()
 
-  const displayDefinition = termDetailResponse?.definition ?? '용어 설명을 불러올 수 없습니다.'
+  const displayDefinition = termDetailResponse?.definition ?? '용어 설명을 불러오고 있습니다.'
   const displayIsLearned = termDetailResponse?.isLearned ?? isLearned
   if (!currentTerm) return null
 
@@ -50,9 +50,9 @@ export function GlossaryBottomSheet({
     <BottomSheet isOpen={isOpen} onClose={onClose} className="items-center gap-4.5">
       {isLoading ? (
         <PageLoadingView
-          headerText="용어를 불러오는 중..."
-          title="사원들이 용어를 찾고 있어요"
-          description="잠시만 기다려 주세요."
+          headerText="용어를 불러오는 중.."
+          title="로원이가 용어를 찾고 있어요!"
+          description="잠시만 기다려 주세요!"
         />
       ) : error ? (
         <PageErrorView error={error} onRetry={() => refetch()} />
@@ -66,7 +66,7 @@ export function GlossaryBottomSheet({
               <p className="dnf-Title4">{currentTerm.surface}</p>
             </div>
             <div className="flex flex-col gap-2">
-              <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
+              <AgentChat type="rookie" message="이 용어, 제가 쉽게 알려드릴게요!" />
               <GlossaryDefinition>{displayDefinition}</GlossaryDefinition>
             </div>
             <div className="flex w-full justify-center">
@@ -75,6 +75,11 @@ export function GlossaryBottomSheet({
           </BottomSheet.Body>
 
           <BottomSheet.Footer>
+            {putError && (
+              <p role="alert" className="text-Red-50 pretendard-Body2 mb-2 text-center">
+                학습 상태 저장에 실패했습니다. 다시 시도해 주세요.
+              </p>
+            )}
             <Button
               size="lg"
               isFullWidth
@@ -89,7 +94,7 @@ export function GlossaryBottomSheet({
                 }
               }}
             >
-              {displayIsLearned ? '이미 학습한 단어예요' : '이해했어요'}
+              {displayIsLearned ? '이미 학습한 용어예요' : '이해했어요'}
             </Button>
           </BottomSheet.Footer>
         </>
