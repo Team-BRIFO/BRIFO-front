@@ -2,7 +2,7 @@ import { mapAgentType } from '@/mappers/agentMapper'
 import type { AgentDetailResponse } from '@/types/api/agent'
 import type {
   BriefingDetailResult,
-  BriefingListByCardResult,
+  BriefingListByStockResult,
   OfficeBriefingListResult,
   PostBriefingResult,
 } from '@/types/api/briefing'
@@ -36,7 +36,7 @@ function mapBriefingStock(stock: BriefingDetailResult['stock']): BriefingStock {
   }
 }
 
-export function mapBriefingList(result: BriefingListByCardResult): BriefingListData {
+export function mapBriefingList(result: BriefingListByStockResult): BriefingListData {
   return {
     stock: mapBriefingStock(result.stock),
     items: result.items.map((item) => ({
@@ -44,7 +44,8 @@ export function mapBriefingList(result: BriefingListByCardResult): BriefingListD
       agentId: item.agentId,
       agentType: mapAgentType(item.agentType),
       nickname: item.nickname,
-      direction: DIRECTION_META[item.direction].type,
+      status: item.status,
+      direction: item.direction ? DIRECTION_META[item.direction].type : null,
       oneLiner: item.oneLiner,
     })),
   }
@@ -74,9 +75,9 @@ export function mapBriefingDetail(
       badgeType: direction.type,
       badgeText: direction.label,
       percentage: result.briefing.confidenceRate,
-      headline: result.newsCard.headline ?? `${result.stock.name} 관련 뉴스`,
+      headline: result.briefing.summary,
       commentTag: '사장님 맞춤',
-      comment: result.briefing.oneLiner,
+      comment: result.briefing.personalComment ?? '',
       noteMessage: result.briefing.contentText,
       recommendText: result.briefing.oneLiner,
     },

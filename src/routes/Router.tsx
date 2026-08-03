@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: '/card-news/:id',
+        path: '/card-news/:stockId',
         element: <NewsCardPage />,
       },
       {

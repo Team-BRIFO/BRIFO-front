@@ -1,4 +1,4 @@
-import { type KeyboardEvent, type ReactNode, useRef } from 'react'
+import { type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from 'react'
 
 export type TabsVariant = 'underline' | 'segmented' | 'pill' | 'plain'
 
@@ -84,13 +84,62 @@ export function Tabs({
   const firstEnabledIndex = items.findIndex((item) => !item.disabled && !disabled)
   const focusableIndex = activeIndex !== -1 ? activeIndex : firstEnabledIndex
 
+  // ─── Animation Logic ───
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const updateIndicator = () => {
+      if (variant === 'segmented' && activeIndex !== -1) {
+        const activeTab = tabsRef.current[activeIndex]
+        const container = containerRef.current
+        if (activeTab && container) {
+          const containerRect = container.getBoundingClientRect()
+          const tabRect = activeTab.getBoundingClientRect()
+          setIndicatorStyle({
+            left: tabRect.left - containerRect.left,
+            width: tabRect.width,
+            opacity: 1,
+          })
+        }
+      } else {
+        setIndicatorStyle({ left: 0, width: 0, opacity: 0 })
+      }
+    }
+
+    updateIndicator()
+
+    const container = containerRef.current
+    if (!container || variant !== 'segmented') return
+
+    const observer = new ResizeObserver(() => {
+      updateIndicator()
+    })
+    observer.observe(container)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [activeIndex, variant, items.length])
+
   // ─── Render Logic ───
   return (
     <div
+      ref={containerRef}
       role="tablist"
       aria-label={ariaLabel}
-      className={getContainerClass(variant, isFullWidth, segmentedType, className)}
+      className={`${getContainerClass(variant, isFullWidth, segmentedType, className)} relative z-0`}
     >
+      {variant === 'segmented' && activeIndex !== -1 && (
+        <div
+          className="bg-Yellow-40 absolute top-0 bottom-0 -z-10 rounded-full transition-all duration-300 ease-out"
+          style={{
+            left: indicatorStyle.left,
+            width: indicatorStyle.width,
+            opacity: indicatorStyle.opacity,
+          }}
+        />
+      )}
       {items.map((item, index) => {
         const isActive = item.value === value
         const isDisabled = Boolean(disabled || item.disabled)
@@ -179,10 +228,9 @@ function getItemClass(
     // 구조 및 배경 스타일
     if (segmentedType === 2) {
       base.push('h-full flex-1 rounded-[40px]')
-      if (isActive) base.push('bg-Yellow-40')
+      // 배경색은 애니메이션용 absolute div가 담당하므로 제거
     } else {
       base.push('h-full flex-1 rounded-[30px]')
-      if (isActive) base.push('bg-Yellow-40')
     }
   } else if (variant === 'underline') {
     base.push('h-[2.5rem] pretendard-Caption1')

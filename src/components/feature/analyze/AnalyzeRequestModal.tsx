@@ -14,6 +14,7 @@ export interface AnalyzeRequestModalProps {
   maxRetryCount?: number
   onPrimaryClick?: () => void
   onSecondaryClick?: () => void
+  secondaryDisabled?: boolean
 }
 
 function ApShortageBadge({ label, value }: { label: string; value: string }) {
@@ -36,6 +37,7 @@ export function AnalyzeRequestModal({
   maxRetryCount = 3,
   onPrimaryClick,
   onSecondaryClick,
+  secondaryDisabled = false,
 }: AnalyzeRequestModalProps) {
   // 모달 내용 렌더링 헬퍼
   const renderContent = () => {
@@ -78,7 +80,13 @@ export function AnalyzeRequestModal({
                 <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
                   복기 리포트 보기
                 </Button>
-                <Button isFullWidth size="lg" color="secondary" onClick={onSecondaryClick}>
+                <Button
+                  isFullWidth
+                  size="lg"
+                  color="secondary"
+                  onClick={onSecondaryClick}
+                  disabled={secondaryDisabled}
+                >
                   신용대출 +200AP (1회한정)
                 </Button>
               </div>

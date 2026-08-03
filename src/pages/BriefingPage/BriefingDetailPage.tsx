@@ -59,7 +59,11 @@ export function BriefingDetailPage() {
       {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
       <StatusBar
         className="bg-White"
-        left={<StatusBarBackButton onClick={() => navigate(PATH.BRIEFING)} />}
+        left={
+          <StatusBarBackButton
+            onClick={() => navigate(`${PATH.BRIEFING}${data ? `?stockId=${data.stock.id}` : ''}`)}
+          />
+        }
         title="브리핑"
         right={<StatusBarNotificationButton />}
       />

@@ -1,28 +1,43 @@
-import { useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
 
+import {
+  getDecisionResult,
+  getDecisions,
+} from '@/api/generated/endpoints/decision-controller/decision-controller'
+import { useApiQuery } from '@/hooks/api'
 import { decisionQueryKeys } from '@/hooks/queries/decision/decisionQueryKeys'
 import { mapDecisionDetail, mapDecisionList } from '@/mappers/decisionMapper'
-import { MOCK_DECISIONS, MOCK_GET_DECISION_RESPONSES } from '@/pages/DecisionPage/mockDecision'
 
 export function useDecisionListQuery() {
-  return useQuery({
+  return useApiQuery({
     queryKey: decisionQueryKeys.list(),
+    operation: getDecisions,
+    endpoint: 'getDecisions',
+    args: [],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    responseSchema: z.any() as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    response: 'requiredResult' as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map: (result: any) => mapDecisionList(result.items),
     staleTime: 0,
-    queryFn: () => mapDecisionList(MOCK_DECISIONS),
-    initialData: () => mapDecisionList(MOCK_DECISIONS),
   })
 }
 
 export function useDecisionDetailQuery(decisionId: string | null) {
-  return useQuery({
+  return useApiQuery({
     queryKey: decisionQueryKeys.detail(decisionId ?? ''),
-    staleTime: 0,
-    queryFn: () => {
-      const response = MOCK_GET_DECISION_RESPONSES[decisionId!]
-      if (!response) throw new Error('Decision not found')
-      return mapDecisionDetail(response.result)
-    },
+    operation: getDecisionResult,
+    endpoint: 'getDecisionResult',
+    args: [decisionId!],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    responseSchema: z.any() as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    response: 'requiredResult' as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map: (result: any) => mapDecisionDetail(result),
     enabled: Boolean(decisionId),
     retry: false,
+    staleTime: 0,
   })
 }

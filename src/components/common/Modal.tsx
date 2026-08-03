@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 const FOCUSABLE_SELECTOR =
@@ -25,6 +25,32 @@ function Modal({
   className = '',
 }: ModalProps) {
   const dialogRef = useRef<HTMLElement>(null)
+
+  const [isRendered, setIsRendered] = useState(isOpen)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  if (isOpen && !isRendered) {
+    setIsRendered(true)
+  }
+  if (!isOpen && isAnimating) {
+    setIsAnimating(false)
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      let innerFrame: number
+      const frame = requestAnimationFrame(() => {
+        innerFrame = requestAnimationFrame(() => setIsAnimating(true))
+      })
+      return () => {
+        cancelAnimationFrame(frame)
+        if (innerFrame) cancelAnimationFrame(innerFrame)
+      }
+    } else {
+      const timer = setTimeout(() => setIsRendered(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) return
@@ -124,11 +150,13 @@ function Modal({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose, shouldCloseOnEscape])
 
-  if (!isOpen) return null
+  if (!isRendered) return null
 
   return createPortal(
     <div
-      className="bg-Black/50 fixed inset-0 z-50 flex items-center justify-center"
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-colors duration-300 ease-out ${
+        isAnimating ? 'bg-Black/50' : 'pointer-events-none bg-transparent'
+      }`}
       onClick={shouldCloseOnOverlayClick ? onClose : undefined}
     >
       <div className="flex w-full max-w-3xl items-center justify-center">
@@ -138,7 +166,9 @@ function Modal({
           aria-modal="true"
           aria-label={ariaLabel}
           tabIndex={-1}
-          className={`bg-White w-[calc(100%-2rem)] max-w-82.5 rounded-3xl px-5 py-6 shadow-lg ${className || ''} `}
+          className={`bg-White w-[calc(100%-2rem)] max-w-82.5 rounded-3xl px-5 py-6 shadow-lg transition-opacity duration-300 ease-out ${
+            isAnimating ? 'opacity-100' : 'opacity-0'
+          } ${className || ''} `}
           onClick={(event) => event.stopPropagation()}
         >
           {children}

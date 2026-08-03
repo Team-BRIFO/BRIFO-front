@@ -9,23 +9,23 @@ import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
-import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { PATH } from '@/routes/paths'
 
 export function BriefingPage() {
   const [searchParams] = useSearchParams()
-  // URL에서 cardId 추출 (없으면 기본 mock UUID 사용)
-  const cardId = searchParams.get('cardId') ?? 'mock-card-id'
+  // URL에서 stockId 추출 (없으면 기본 mock UUID 사용)
+  const stockId = searchParams.get('stockId') ?? 'mock-stock-id'
   const navigate = useNavigate()
 
-  const { data, fetchStatus, error, refetch } = useCardNewsBriefingsQuery(cardId)
+  const { data, fetchStatus, error, refetch } = useStockBriefingsQuery(stockId)
 
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col">
       {/* 글로벌 상태바 헤더 */}
       <StatusBar
         className="bg-White"
-        left={<StatusBarBackButton />}
+        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="브리핑"
         right={<StatusBarNotificationButton />}
       />
@@ -73,7 +73,14 @@ export function BriefingPage() {
                       agentName={item.nickname}
                       badgeType={item.direction}
                       comment={item.oneLiner}
-                      onClick={() => navigate(PATH.BRIEFING_DETAIL(item.id))}
+                      onClick={() =>
+                        item.status === 'COMPLETED' ? navigate(PATH.BRIEFING_DETAIL(item.id)) : null
+                      }
+                      className={
+                        item.status !== 'COMPLETED'
+                          ? 'cursor-not-allowed opacity-50'
+                          : 'cursor-pointer'
+                      }
                     />
                   ))
                 )}
