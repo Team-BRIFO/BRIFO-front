@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { browserTokenStore } from '@/api/client/tokenStore'
-import { getOAuthCallbackRequest, setSignupToken, type SocialProvider } from '@/auth/oauth'
+import { browserTokenStore, signupTokenStore } from '@/api/client/tokenStore'
 import {
   useKakaoLoginMutation,
   useNaverLoginMutation,
 } from '@/pages/SplashPage/hooks/useSocialLoginMutation'
 import { PATH } from '@/routes/paths'
+import { getOAuthCallbackRequest, type SocialProvider } from '@/services/auth/oauth'
 
 function isSocialProvider(provider: string | undefined): provider is SocialProvider {
   return provider === 'kakao' || provider === 'naver'
@@ -47,7 +47,7 @@ export function OAuthCallbackPage() {
         return
       }
 
-      setSignupToken(result.signupToken)
+      signupTokenStore.set(result.signupToken)
       navigate(PATH.AGREEMENT, { replace: true })
     }
 

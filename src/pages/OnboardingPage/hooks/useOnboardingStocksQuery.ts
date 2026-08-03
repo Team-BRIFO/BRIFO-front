@@ -1,14 +1,14 @@
+import { signupTokenStore } from '@/api/client/tokenStore'
 import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-controller'
 import { ApiResponseGetStocksResponse } from '@/api/generated/schemas'
 import SkHynixLogo from '@/assets/logo/sk-hynix.png'
-import { getSignupToken } from '@/auth/oauth'
 import { useApiQuery } from '@/hooks/api'
 import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
 
 const STOCK_PAGE_SIZE = 20
 
 export function useOnboardingStocksQuery() {
-  const signupToken = getSignupToken()
+  const signupToken = signupTokenStore.get()
 
   return useApiQuery({
     queryKey: ['onboarding', 'stocks'],

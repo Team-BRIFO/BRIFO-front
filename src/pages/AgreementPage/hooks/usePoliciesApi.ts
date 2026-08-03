@@ -1,3 +1,4 @@
+import { signupTokenStore } from '@/api/client/tokenStore'
 import {
   agreePolicies,
   getPolicies,
@@ -9,11 +10,10 @@ import {
   ApiResponseGetPoliciesResponse,
   ApiResponseGetPolicyDetailResponse,
 } from '@/api/generated/schemas'
-import { getSignupToken } from '@/auth/oauth'
 import { useApiMutation, useApiQuery } from '@/hooks/api'
 
 function useSignupTokenRequestConfig() {
-  const signupToken = getSignupToken()
+  const signupToken = signupTokenStore.get()
 
   return signupToken ? { headers: { Authorization: `Bearer ${signupToken}` } } : undefined
 }

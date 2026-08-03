@@ -1,6 +1,7 @@
 import { PATH } from '@/routes/paths'
 
 export type SocialProvider = 'kakao' | 'naver'
+
 interface KakaoCallbackRequest {
   authorizationCode: string
   redirectUri: string
@@ -13,23 +14,6 @@ interface NaverCallbackRequest extends KakaoCallbackRequest {
 const OAUTH_STATE_STORAGE_KEYS: Record<SocialProvider, string> = {
   kakao: 'kakaoOAuthState',
   naver: 'naverOAuthState',
-}
-export const SIGNUP_TOKEN_STORAGE_KEY = 'signupToken'
-
-function getSessionStorage() {
-  return typeof sessionStorage === 'undefined' ? undefined : sessionStorage
-}
-
-export function getSignupToken() {
-  return getSessionStorage()?.getItem(SIGNUP_TOKEN_STORAGE_KEY) ?? null
-}
-
-export function setSignupToken(token: string) {
-  getSessionStorage()?.setItem(SIGNUP_TOKEN_STORAGE_KEY, token)
-}
-
-export function clearSignupToken() {
-  getSessionStorage()?.removeItem(SIGNUP_TOKEN_STORAGE_KEY)
 }
 
 function getRedirectUri(provider: SocialProvider) {

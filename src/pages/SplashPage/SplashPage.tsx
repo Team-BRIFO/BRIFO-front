@@ -3,12 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import SplashBackground from '@/assets/images/splash_background.svg?react'
 import Logo from '@/assets/logo/brifo_logo.svg?react'
-import { startSocialLogin } from '@/auth/oauth'
 import { Toast } from '@/components/common/Toast'
 import LoginSection from '@/components/feature/onboarding/LoginSection'
 import OnboardingSlide from '@/components/feature/onboarding/OnboardingSlide'
 import { SPLASH_SLIDES } from '@/pages/SplashPage/splash'
 import { PATH } from '@/routes/paths'
+import { startSocialLogin } from '@/services/auth/oauth'
 
 const SPLASH_DURATION = 3000
 
