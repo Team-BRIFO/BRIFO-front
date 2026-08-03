@@ -29,7 +29,7 @@ export function ErrorPageTemplate({
   const navigate = useNavigate()
 
   return (
-    <div className="bg-Background1 flex min-h-dvh w-full flex-col">
+    <div className="bg-Background1 mx-auto flex h-dvh w-full max-w-[480px] flex-col overflow-hidden sm:max-h-[915px]">
       <StatusBar
         hasStatusArea
         className="bg-White w-full"

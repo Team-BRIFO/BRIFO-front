@@ -7,6 +7,8 @@ import {
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
+import { PageErrorView } from '@/components/feature/error/PageErrorView'
+import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { GlossaryBottomSheet } from '@/components/feature/glossary/GlossaryBottomSheet'
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicator'
@@ -20,19 +22,14 @@ export function NewsCardPage() {
   const navigate = useNavigate()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const { data: newsData, isLoading } = useGetNewsCardDetail(id ?? null)
-
-  // dev 환경에서만 데이터 없을 때 mock 사용, 실 서비스에선 빈 배열
-  const MOCK_CARDS = (() => {
-    if (isLoading) return []
-    if (newsData) return newsData
-    if (import.meta.env.DEV) return MOCK_NEWS_CARDS
-    return []
-  })()
-  const stockName = MOCK_CARDS[0]?.relatedStocks?.[0]?.name || '삼성전자'
-
+  const { data: newsData, isLoading, error, refetch } = useGetNewsCardDetail(id ?? null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedTermId, setSelectedTermId] = useState<string | null>(null)
+
+  const isDev = import.meta.env.DEV
+  const shouldUseMock = isDev && (error || (!newsData && !isLoading))
+  const cards = shouldUseMock ? MOCK_NEWS_CARDS : newsData || []
+  const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
 
   const handleTermClick = (termId: string) => {
     setSelectedTermId(termId)
@@ -43,7 +40,7 @@ export function NewsCardPage() {
   }
 
   const selectedTerm =
-    MOCK_CARDS.flatMap((c) => c.terms || []).find((t) => t.termId === selectedTermId) || null
+    cards.flatMap((c) => c.terms || []).find((t) => t.termId === selectedTermId) || null
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return
@@ -54,51 +51,52 @@ export function NewsCardPage() {
     }
   }
 
-  const TERM_DEFINITIONS: Record<string, string> = {
-    '1': '증권사에서 발표하는 특정 주식의 적정 주가를 의미해요. 보통 향후 6개월~1년 내 도달 가능성을 바탕으로 산정돼요.',
-    '2': '산 금액이 판 금액보다 많은 상태예요. 외국인·기관의 순매수는 매수세가 우세하다는 뜻으로 읽혀요.',
-  }
-
   return (
     <div className="bg-White flex h-dvh w-full flex-col">
       <StatusBar
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title={stockName}
         right={<StatusBarNotificationButton />}
+        hasStatusArea={false}
       />
 
-      <main className="mx-5 mt-5 flex flex-1 flex-col gap-8">
-        <div className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto">
-          <div
-            ref={scrollContainerRef}
-            className="flex w-full snap-x snap-mandatory overflow-x-auto [&::-webkit-scrollbar]:hidden"
-            onScroll={handleScroll}
-          >
-            {MOCK_CARDS.map((card) => (
-              <div key={card.cardId} className="w-full shrink-0 snap-center">
-                <NewsCard data={card} onTermClick={handleTermClick} />
-              </div>
-            ))}
+      {!shouldUseMock && isLoading ? (
+        <PageLoadingView />
+      ) : !shouldUseMock && error ? (
+        <PageErrorView error={error} onRetry={() => refetch()} />
+      ) : (
+        <main className="mx-5 mt-5 flex flex-1 flex-col gap-8">
+          <div className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto">
+            <div
+              ref={scrollContainerRef}
+              className="flex w-full snap-x snap-mandatory overflow-x-auto [&::-webkit-scrollbar]:hidden"
+              onScroll={handleScroll}
+            >
+              {cards.map((card) => (
+                <div key={card.cardId} className="w-full shrink-0 snap-center">
+                  <NewsCard data={card} onTermClick={handleTermClick} />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="flex justify-center">
-          <NewsCardIndicator total={MOCK_CARDS.length} currentIndex={currentIndex} />
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-Gray-6 pretendard-Caption2 text-center">
-            카드뉴스 {MOCK_CARDS.length}건을 사원이 모두 읽고 분석해요 · 종목당 1회
-          </p>
-          <Button size="lg" isFullWidth onClick={() => navigate(PATH.BRIEFING_ASSIGN(id || ''))}>
-            사원에게 분석 의뢰하기
-          </Button>
-        </div>
-      </main>
+          <div className="flex justify-center">
+            <NewsCardIndicator total={cards.length} currentIndex={currentIndex} />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-Gray-6 pretendard-Caption2 text-center">
+              카드뉴스 {cards.length}건을 사원이 모두 읽고 분석해요 · 종목당 1회
+            </p>
+            <Button size="lg" isFullWidth onClick={() => navigate(PATH.BRIEFING_ASSIGN(id || ''))}>
+              사원에게 분석 의뢰하기
+            </Button>
+          </div>
+        </main>
+      )}
 
       <GlossaryBottomSheet
         isOpen={selectedTermId !== null}
         onClose={handleCloseBottomSheet}
         term={selectedTerm}
-        definition={selectedTerm ? TERM_DEFINITIONS[selectedTerm.termId] : undefined}
       />
     </div>
   )
