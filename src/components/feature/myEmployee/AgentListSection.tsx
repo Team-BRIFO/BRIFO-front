@@ -23,14 +23,9 @@ export function AgentListSection({ agents, onSelectAgent }: AgentListSectionProp
         ))}
       </div>
 
-      <Banner
-        variant="info"
-        className="!border-Yellow-80 !text-Gray-6 !rounded-lg !py-3.5 [&>div>div]:!mt-0"
-      >
-        <p className="pretendard-Caption1 leading-[1.32] break-words">
-          <span className="block">사원은 예측이 적중할 때마다 EXP를 얻고 레벨업해요.</span>
-          <span className="block">레벨이 오르면 보고서가 더 깊어집니다.</span>
-        </p>
+      <Banner variant="guide">
+        <span className="block">사원은 예측이 적중할 때마다 EXP를 얻고 레벨업해요.</span>
+        <span className="block">레벨이 오르면 보고서가 더 깊어집니다.</span>
       </Banner>
     </div>
   )
