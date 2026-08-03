@@ -14,23 +14,23 @@ import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
 import { useCreateCreditLoanMutation } from '@/hooks/queries/ap/useApQueries'
-import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
 import { PATH } from '@/routes/paths'
 
 export function BriefingAssignPage() {
-  const { cardId } = useParams<{ cardId: string }>()
+  const { stockId } = useParams<{ stockId: string }>()
   const navigate = useNavigate()
   const { mutate: postBriefingRequest, isPending } = usePostBriefingRequestMutation()
   const { mutate: createCreditLoan, isPending: isCreditLoanPending } = useCreateCreditLoanMutation()
 
   // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
-  const cardNewsQuery = useCardNewsBriefingsQuery(cardId ?? null)
+  const stockBriefingsQuery = useStockBriefingsQuery(stockId ?? null)
   const agentsQuery = useAgentListQuery()
   const agentsList = agentsQuery.data ?? []
   const isFetching =
-    cardNewsQuery.fetchStatus === 'fetching' || agentsQuery.fetchStatus === 'fetching'
-  const hasError = !!cardNewsQuery.error || !!agentsQuery.error
+    stockBriefingsQuery.fetchStatus === 'fetching' || agentsQuery.fetchStatus === 'fetching'
+  const hasError = !!stockBriefingsQuery.error || !!agentsQuery.error
 
   // 테스트 목적으로 기본적으로 루키, 탱커를 선택된 상태로 둠 (피그마 명세 기반)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -40,7 +40,7 @@ export function BriefingAssignPage() {
   // 테스트용 모달 상태
   const [modalType, setModalType] = useState<AnalyzeModalType | null>(null)
 
-  const stockName = cardNewsQuery.data?.stock.name ?? ''
+  const stockName = stockBriefingsQuery.data?.stock.name ?? ''
 
   const toggleAgent = (id: string) => {
     setSelectedIds((prev) => {
@@ -52,13 +52,13 @@ export function BriefingAssignPage() {
   }
 
   const handleStartAnalysis = async () => {
-    if (!cardId) return
+    if (!stockId) return
 
     postBriefingRequest(
-      { cardId, agentIds: Array.from(selectedIds) },
+      { stockId, agentIds: Array.from(selectedIds) },
       {
         onSuccess: (result) => {
-          navigate(PATH.BRIEFING_COMPLETE(cardId), {
+          navigate(PATH.BRIEFING_COMPLETE(stockId), {
             state: { briefingRequest: result },
             replace: true,
           })
@@ -114,7 +114,7 @@ export function BriefingAssignPage() {
   return (
     <div className="bg-White flex h-screen w-full flex-col">
       <StatusBar
-        left={<StatusBarBackButton />}
+        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="사원배치"
         right={<StatusBarNotificationButton />}
       />
@@ -122,13 +122,13 @@ export function BriefingAssignPage() {
       {hasError && !isFetching ? (
         <PageErrorView
           title="사원 배치 정보를 불러오지 못했어요"
-          error={cardNewsQuery.error || agentsQuery.error}
+          error={stockBriefingsQuery.error || agentsQuery.error}
           onRetry={() => {
-            cardNewsQuery.refetch()
+            stockBriefingsQuery.refetch()
             agentsQuery.refetch()
           }}
         />
-      ) : isFetching || !cardNewsQuery.data ? (
+      ) : isFetching || !stockBriefingsQuery.data ? (
         <PageLoadingView />
       ) : agentsList.length === 0 ? (
         <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />

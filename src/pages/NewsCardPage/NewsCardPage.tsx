@@ -13,22 +13,19 @@ import { GlossaryBottomSheet } from '@/components/feature/glossary/GlossaryBotto
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicator'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
-import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
 import { PATH } from '@/routes/paths'
 
 /** 홈 탭 - SCR-05: 카드뉴스 상세 */
 export function NewsCardPage() {
-  const { id } = useParams<{ id: string }>()
+  const { stockId } = useParams<{ stockId: string }>()
   const navigate = useNavigate()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const { data: newsData, isLoading, error, refetch } = useGetNewsCardDetail(id ?? null)
+  const { data: newsData, isLoading, error, refetch } = useGetNewsCardDetail(stockId ?? null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedTermId, setSelectedTermId] = useState<string | null>(null)
 
-  const isDev = import.meta.env.DEV
-  const shouldUseMock = isDev && (error || (!newsData && !isLoading))
-  const cards = shouldUseMock ? MOCK_NEWS_CARDS : newsData || []
+  const cards = newsData || []
   const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
 
   const handleTermClick = (termId: string) => {
@@ -60,9 +57,9 @@ export function NewsCardPage() {
         hasStatusArea={false}
       />
 
-      {!shouldUseMock && isLoading ? (
+      {isLoading ? (
         <PageLoadingView />
-      ) : !shouldUseMock && error ? (
+      ) : error ? (
         <PageErrorView error={error} onRetry={() => refetch()} />
       ) : (
         <main className="mx-5 mt-5 flex flex-1 flex-col gap-8">
@@ -86,7 +83,11 @@ export function NewsCardPage() {
             <p className="text-Gray-6 pretendard-Caption2 text-center">
               카드뉴스 {cards.length}건을 사원이 모두 읽고 분석해요 · 종목당 1회
             </p>
-            <Button size="lg" isFullWidth onClick={() => navigate(PATH.BRIEFING_ASSIGN(id || ''))}>
+            <Button
+              size="lg"
+              isFullWidth
+              onClick={() => navigate(PATH.BRIEFING_ASSIGN(stockId || ''))}
+            >
               사원에게 분석 의뢰하기
             </Button>
           </div>

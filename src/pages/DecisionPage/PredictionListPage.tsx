@@ -47,13 +47,13 @@ export function PredictionListPage() {
   }
 
   return (
-    <div className="bg-White flex min-h-dvh w-full flex-col pb-10">
+    <div className="bg-Background1 flex min-h-dvh w-full flex-col pb-10">
       <StatusBar
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
       />
 
-      <div className="flex flex-col gap-5.5 px-4">
+      <div className="flex flex-col gap-5.5 px-4 pt-4">
         {/* 헤더 부분 */}
         <header className="flex flex-col gap-2">
           <h1 className="dnf-Subtitle1 text-Gray-10">오늘의 예측</h1>
@@ -63,7 +63,11 @@ export function PredictionListPage() {
         </header>
 
         {decisions.length === 0 ? (
-          <PageErrorView title="오늘 등록한 예측이 없어요" description="새 예측을 등록해보세요." />
+          <div className="border-Yellow-80 bg-Yellow-100 flex items-center rounded-lg border px-4 py-3.5">
+            <span className="pretendard-Button1 text-Yellow-20">
+              오늘 {decisions.length}건 · 15:30 정산대기
+            </span>
+          </div>
         ) : (
           <>
             {/* 요약 배너 */}

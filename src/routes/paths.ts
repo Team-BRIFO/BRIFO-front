@@ -30,8 +30,8 @@ export const PATH = {
   /** 홈 탭 - SCR-17: 알림 */
   NOTIFICATION: '/notification',
 
-  /** 홈 탭 - SCR-05: 카드뉴스 상세 (동적 라우트) */
-  CARD_NEWS_DETAIL: (id: string) => `/card-news/${id}`,
+  /** 홈 - SCR-05: 카드뉴스 상세 (동적 라우팅) */
+  CARD_NEWS_DETAIL: (stockId: string) => `/card-news/${stockId}`,
 
   // ─── AppLayout - 사무실 탭 ─────────────────────────────────────
   /** 사무실 탭 - SCR-04: 메인 대시보드 */
@@ -43,13 +43,13 @@ export const PATH = {
   /** 사무실 탭 - SCR-07: AI 사원 보고서 리스트 (메인) */
   BRIEFING: '/briefing',
 
-  /** 사무실 탭 - SCR-07-1: 브리핑 사원 배치 (분석 요청) */
-  BRIEFING_ASSIGN: (cardId: string) => `/briefing/assign/${cardId}`,
-  BRIEFING_ASSIGN_ROUTE: '/briefing/assign/:cardId',
+  /** 사무실 - SCR-07-1: 브리핑 사원 배치 (분석 요청) */
+  BRIEFING_ASSIGN: (stockId: string) => `/briefing/assign/${stockId}`,
+  BRIEFING_ASSIGN_ROUTE: '/briefing/assign/:stockId',
 
-  /** 사무실 탭 - SCR-07-2: 브리핑 도착 (완료/진행중) */
-  BRIEFING_COMPLETE: (cardId: string) => `/briefing/complete/${cardId}`,
-  BRIEFING_COMPLETE_ROUTE: '/briefing/complete/:cardId',
+  /** 사무실 - SCR-07-2: 브리핑 도착 (완료/진행중) */
+  BRIEFING_COMPLETE: (stockId: string) => `/briefing/complete/${stockId}`,
+  BRIEFING_COMPLETE_ROUTE: '/briefing/complete/:stockId',
 
   /** 사무실 탭 - SCR-06: AI 사원 보고서 상세 */
   BRIEFING_DETAIL: (briefingId: string) => `/briefing/detail/${briefingId}`,

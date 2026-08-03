@@ -7,7 +7,6 @@ import { OfficeProgressSection } from '@/components/feature/office/OfficeProgres
 import Logo from '@/components/logos/logo-small.svg?react'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { useOfficeBriefingsQuery } from '@/pages/OfficePage/hooks/useOfficeBriefingsQuery'
-import { MOCK_OFFICE_DATA } from '@/pages/OfficePage/mockOffice'
 
 /** 사무실 탭 - SCR-04: 메인 대시보드 (사원 도트, AP 잔액 등) */
 export function OfficePage() {
@@ -73,7 +72,7 @@ export function OfficePage() {
           {/* 진행사항 섹션 */}
           <OfficeProgressSection
             items={items}
-            availableCount={MOCK_OFFICE_DATA.maxRequestCount - items.length}
+            availableCount={3 - items.length}
             isEmpty={items.length === 0}
           />
         </div>

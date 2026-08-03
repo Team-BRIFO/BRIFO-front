@@ -49,7 +49,6 @@ export interface DecisionItemDTO {
   decisionId: string
   direction: 'UP' | 'DOWN' | 'NEUTRAL'
   confidenceLevel: number
-  isSettled: boolean
   stock: DecisionListItemStockDTO
 }
 

@@ -25,6 +25,8 @@ export interface BriefingDataDTO {
   briefingId: string
   direction: 'UP' | 'DOWN' | 'NEUTRAL'
   confidenceRate: number
+  summary: string
+  personalComment: string | null
   contentText: string
   oneLiner: string
 }
@@ -33,26 +35,27 @@ export interface BriefingDataDTO {
 export interface BriefingDetailResult {
   stock: BriefingStockDTO
   agent: BriefingAgentDTO
-  newsCard: BriefingNewsCardDTO
+  newsCards: BriefingNewsCardDTO[]
   briefing: BriefingDataDTO
 }
 export type BriefingDetailResponse = ApiResponse<BriefingDetailResult>
 
-// 2. GET /api/news/{cardId}/briefing (카드뉴스 기준 다건 조회)
+// 2. GET /api/stocks/{stockId}/briefing (종목 기준 브리핑 조회)
 export interface BriefingListItemDTO {
   briefingId: string
-  oneLiner: string
-  direction: 'UP' | 'DOWN' | 'NEUTRAL'
+  status: 'PENDING' | 'ANALYZING' | 'COMPLETED' | 'FAILED'
+  oneLiner: string | null
+  direction: 'UP' | 'DOWN' | 'NEUTRAL' | null
   agentId: string
   nickname: string
   agentType: string
 }
 
-export interface BriefingListByCardResult {
+export interface BriefingListByStockResult {
   stock: BriefingStockDTO
   items: BriefingListItemDTO[]
 }
-export type BriefingListByCardResponse = ApiResponse<BriefingListByCardResult>
+export type BriefingListByStockResponse = ApiResponse<BriefingListByStockResult>
 
 // 3. GET /api/briefings/office (오피스 전체 브리핑 조회)
 export interface OfficeAgentStatusDTO {
@@ -73,7 +76,7 @@ export interface OfficeBriefingListResult {
 }
 export type OfficeBriefingListResponse = ApiResponse<OfficeBriefingListResult>
 
-// 4. POST /api/news/{cardId}/briefings (브리핑 요청 생성)
+// 4. POST /api/stocks/{stockId}/briefings (브리핑 분석 요청 생성)
 export interface PostBriefingRequest {
   agentIds: string[]
 }

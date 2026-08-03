@@ -14,13 +14,13 @@ export function usePostBriefingRequestMutation() {
     endpoint: 'createBriefing',
     responseSchema: ApiResponseCreateBriefingResponse,
     response: 'requiredResult',
-    getArgs: ({ cardId, agentIds }: { cardId: string; agentIds: string[] }) =>
-      [cardId, { agentIds }] as const,
+    getArgs: ({ stockId, agentIds }: { stockId: string; agentIds: string[] }) =>
+      [stockId, { agentIds }] as const,
     map: (result) => mapBriefingRequestResult(result),
     onSuccess: async (_, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: briefingQueryKeys.listByCard(variables.cardId),
+          queryKey: briefingQueryKeys.listByStock(variables.stockId),
         }),
         queryClient.invalidateQueries({ queryKey: briefingQueryKeys.officeList() }),
       ])

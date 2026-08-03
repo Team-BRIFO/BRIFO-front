@@ -6,8 +6,8 @@ import type { AgentType } from '@/types/domain/agent'
 export interface BriefingAgentListItemProps extends HTMLAttributes<HTMLDivElement> {
   agentType: AgentType
   agentName: string
-  badgeType: 'rise' | 'fall' | 'watch'
-  comment: string
+  badgeType: 'rise' | 'fall' | 'watch' | null
+  comment: string | null
 }
 
 export function BriefingAgentListItem({
@@ -23,8 +23,8 @@ export function BriefingAgentListItem({
       className={className}
       type={agentType}
       name={agentName}
-      prediction={badgeType}
-      message={comment}
+      prediction={badgeType ?? 'watch'}
+      message={comment ?? '분석 중입니다...'}
       {...props}
     />
   )

@@ -7,18 +7,18 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { BriefingCard } from '@/components/domain/briefing/BriefingCard'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
-import { useCardNewsBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { PATH } from '@/routes/paths'
 import type { BriefingRequestResult } from '@/types/domain/briefing'
 
 export function BriefingCompletePage() {
-  const { cardId } = useParams<{ cardId: string }>()
+  const { stockId } = useParams<{ stockId: string }>()
   const navigate = useNavigate()
   const location = useLocation()
   const briefingRequest = location.state?.briefingRequest as BriefingRequestResult | undefined
 
   // 해당 카드뉴스 종목명 확보를 위해 브리핑 목록 조회 재사용 (이미 캐싱되어 빠름)
-  const cardNewsQuery = useCardNewsBriefingsQuery(cardId ?? null)
+  const stockBriefingsQuery = useStockBriefingsQuery(stockId ?? null)
 
   const agentCount = briefingRequest?.requestedAgents.length ?? 3
 
@@ -41,22 +41,22 @@ export function BriefingCompletePage() {
   const isAllComplete =
     mockAgents.includes('rookie') && mockAgents.includes('pro') && mockAgents.includes('tanker')
 
-  const stockName = cardNewsQuery.data?.stock.name ?? ''
+  const stockName = stockBriefingsQuery.data?.stock.name ?? ''
 
   return (
     <div className="bg-White box-border flex h-screen w-full flex-col px-4">
       <StatusBar
-        left={<StatusBarBackButton />}
+        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         // title 없음
       />
 
-      {!!cardNewsQuery.error && cardNewsQuery.fetchStatus === 'idle' ? (
+      {!!stockBriefingsQuery.error && stockBriefingsQuery.fetchStatus === 'idle' ? (
         <PageErrorView
           title="브리핑 정보를 불러오지 못했어요"
-          error={cardNewsQuery.error}
-          onRetry={() => cardNewsQuery.refetch()}
+          error={stockBriefingsQuery.error}
+          onRetry={() => stockBriefingsQuery.refetch()}
         />
-      ) : cardNewsQuery.fetchStatus === 'fetching' || !cardNewsQuery.data ? (
+      ) : stockBriefingsQuery.fetchStatus === 'fetching' || !stockBriefingsQuery.data ? (
         <PageLoadingView />
       ) : (
         <div className="mt-20 flex flex-1 flex-col items-center gap-15.5">
@@ -89,7 +89,12 @@ export function BriefingCompletePage() {
 
           {/* 하단: 액션 버튼 영역 */}
           <div className="flex w-full flex-col items-center gap-4">
-            <Button isFullWidth size="lg" color="primary" onClick={() => navigate(PATH.BRIEFING)}>
+            <Button
+              isFullWidth
+              size="lg"
+              color="primary"
+              onClick={() => navigate(`${PATH.BRIEFING}?stockId=${stockId ?? ''}`)}
+            >
               지금 확인하기
             </Button>
             <button

@@ -19,8 +19,9 @@ export interface BriefingListItemData {
   agentId: string
   agentType: AgentType
   nickname: string
-  direction: BriefingDirectionType
-  oneLiner: string
+  status: AgentStatusType
+  direction: BriefingDirectionType | null
+  oneLiner: string | null
 }
 
 export interface BriefingStock {

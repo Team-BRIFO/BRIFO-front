@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import NavigationBar from '@/components/common/NavigationBar'
@@ -33,6 +34,14 @@ function getNavigationValue(pathname: string): NavigationValue {
 export function AppLayout() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const mainRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo(0, 0)
+    }
+  }, [pathname])
+
   const selectedNavigation = getNavigationValue(pathname)
   const handleNavigationChange = (value: NavigationValue) => {
     navigate(NAVIGATION_PATHS[value])
@@ -40,6 +49,7 @@ export function AppLayout() {
   return (
     <div className="bg-White relative mx-auto flex h-dvh w-full max-w-3xl flex-col overflow-hidden shadow-xl">
       <main
+        ref={mainRef}
         className={`flex min-h-0 flex-1 flex-col overflow-y-auto ${
           selectedNavigation === 'home' ? 'bg-White' : 'bg-Background1'
         }`}

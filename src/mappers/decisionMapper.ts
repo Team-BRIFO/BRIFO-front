@@ -7,10 +7,16 @@ function mapConfidenceLevel(value: number): ConfidenceLevel {
 }
 
 export function mapDecisionList(items: DecisionItemDTO[]): DecisionListItem[] {
+  const now = new Date()
+  const kstOffset = 9 * 60 * 60 * 1000
+  const kstTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + kstOffset)
+  const isAfterMarketClose =
+    kstTime.getHours() > 15 || (kstTime.getHours() === 15 && kstTime.getMinutes() >= 30)
+
   return items.map((item) => ({
     id: item.decisionId,
     confidenceLevel: mapConfidenceLevel(item.confidenceLevel),
-    isSettled: item.isSettled,
+    isSettled: isAfterMarketClose,
     stock: {
       name: item.stock.name,
       changeRate: item.stock.changeRate,

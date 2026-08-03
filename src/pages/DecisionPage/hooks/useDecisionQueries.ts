@@ -19,7 +19,7 @@ export function useDecisionListQuery() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: 'requiredResult' as any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map: (result: any) => mapDecisionList(result),
+    map: (result: any) => mapDecisionList(result.items),
     staleTime: 0,
   })
 }
