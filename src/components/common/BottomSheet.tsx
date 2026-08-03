@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Children, isValidElement, useEffect, useId, useRef } from 'react'
+import { Children, isValidElement, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 const FOCUSABLE_SELECTOR =
@@ -38,6 +38,28 @@ function BottomSheet({
 }: BottomSheetProps) {
   const dialogRef = useRef<HTMLElement>(null)
   const titleId = useId()
+
+  const [isRendered, setIsRendered] = useState(isOpen)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  if (isOpen && !isRendered) {
+    setIsRendered(true)
+  }
+  if (!isOpen && isAnimating) {
+    setIsAnimating(false)
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      const frame = requestAnimationFrame(() => {
+        requestAnimationFrame(() => setIsAnimating(true))
+      })
+      return () => cancelAnimationFrame(frame)
+    } else {
+      const timer = setTimeout(() => setIsRendered(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) return
@@ -158,11 +180,13 @@ function BottomSheet({
   const hasHeader = Boolean(title) || Boolean(header) || headerChildren.length > 0
   const hasFooter = Boolean(footer) || footerChildren.length > 0
 
-  if (!isOpen) return null
+  if (!isRendered) return null
 
   return createPortal(
     <div
-      className="bg-Black/50 fixed inset-0 z-50 flex items-end justify-center"
+      className={`fixed inset-0 z-50 flex items-end justify-center transition-colors duration-300 ease-out ${
+        isAnimating ? 'bg-Black/50' : 'pointer-events-none bg-transparent'
+      }`}
       onClick={shouldCloseOnOverlayClick ? onClose : undefined}
     >
       <section
@@ -174,7 +198,8 @@ function BottomSheet({
         tabIndex={-1}
         className={[
           'bg-White flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl pt-3 shadow-lg',
-          'focus-visible:outline-none',
+          'transition-transform duration-300 ease-out focus-visible:outline-none',
+          isAnimating ? 'translate-y-0' : 'translate-y-full',
           className,
         ]
           .filter(Boolean)
