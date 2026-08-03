@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { Badge } from '@/components/common/Badge'
 import BottomSheet from '@/components/common/BottomSheet'
 import Button from '@/components/common/Button'
@@ -23,19 +25,26 @@ export function GlossaryBottomSheet({
   term,
   isLearned = false,
 }: GlossaryBottomSheetProps) {
-  const shouldFetch = isOpen && !!term
+  // 바텀시트가 닫힐 때(term이 null이 될 때) 애니메이션이 끝날 때까지 이전 데이터를 유지하기 위한 캐시
+  const [cachedTerm, setCachedTerm] = useState(term)
+  if (term && term !== cachedTerm) {
+    setCachedTerm(term)
+  }
+
+  const currentTerm = term || cachedTerm
+  const shouldFetch = isOpen && !!currentTerm
 
   const {
     data: termDetailResponse,
     isLoading,
     error,
     refetch,
-  } = useGetTermDetail(shouldFetch && term ? term.termId : null)
+  } = useGetTermDetail(shouldFetch && currentTerm ? currentTerm.termId : null)
   const { mutate: markAsLearned, isPending } = usePutMyTerm()
 
   const displayDefinition = termDetailResponse?.definition ?? '용어 설명을 불러올 수 없습니다.'
   const displayIsLearned = termDetailResponse?.isLearned ?? isLearned
-  if (!term) return null
+  if (!currentTerm) return null
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} className="items-center gap-4.5">
@@ -54,7 +63,7 @@ export function GlossaryBottomSheet({
               <Badge size="md" type="normal">
                 주식 용어
               </Badge>
-              <p className="dnf-Title4">{term.surface}</p>
+              <p className="dnf-Title4">{currentTerm.surface}</p>
             </div>
             <div className="flex flex-col gap-2">
               <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
@@ -71,8 +80,8 @@ export function GlossaryBottomSheet({
               isFullWidth
               disabled={displayIsLearned || isPending}
               onClick={() => {
-                if (term?.termId && !displayIsLearned) {
-                  markAsLearned(term.termId, {
+                if (currentTerm?.termId && !displayIsLearned) {
+                  markAsLearned(currentTerm.termId, {
                     onSuccess: () => {
                       // After success, it will invalidate and refetch, showing "learned"
                     },
