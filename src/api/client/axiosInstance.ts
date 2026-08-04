@@ -21,6 +21,7 @@ const PUBLIC_AUTH_PATHS = new Set([
   '/api/auth/login/naver',
   '/api/auth/reissue',
 ])
+const REISSUE_EXCLUDED_PATHS = new Set(['/api/auth/logout'])
 const REISSUE_PATH = '/api/auth/reissue'
 
 type RetriableAxiosConfig = InternalAxiosRequestConfig & {
@@ -40,6 +41,10 @@ function getPathname(config: AxiosRequestConfig) {
 
 function isPublicAuthRequest(config: AxiosRequestConfig) {
   return PUBLIC_AUTH_PATHS.has(getPathname(config))
+}
+
+function isReissueExcludedRequest(config: AxiosRequestConfig) {
+  return REISSUE_EXCLUDED_PATHS.has(getPathname(config))
 }
 
 function defaultSessionExpiredHandler() {
@@ -162,7 +167,11 @@ export function createBrifoAxiosInstance({
     }
 
     const originalConfig = error.config as RetriableAxiosConfig
-    if (originalConfig._retryAfterRefresh || isPublicAuthRequest(originalConfig)) {
+    if (
+      originalConfig._retryAfterRefresh ||
+      isPublicAuthRequest(originalConfig) ||
+      isReissueExcludedRequest(originalConfig)
+    ) {
       return Promise.reject(error)
     }
 

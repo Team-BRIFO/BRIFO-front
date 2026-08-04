@@ -54,6 +54,37 @@ describe('createBrifoAxiosInstance', () => {
     await client.get('/api/agents')
   })
 
+  it('keeps the Access Token on logout but does not reissue after a 401 response', async () => {
+    const tokenStore = createTokenStore('expired-access', 'refresh-token')
+    const onSessionExpired = vi.fn()
+    let reissueCalls = 0
+    const adapter = createAxiosAdapter((config) => {
+      if (config.url === '/api/auth/reissue') {
+        reissueCalls += 1
+        return { data: { success: true } }
+      }
+
+      expect(config.url).toBe('/api/auth/logout')
+      expect(config.headers.get('Authorization')).toBe('Bearer expired-access')
+      return { data: { success: false }, status: 401 }
+    })
+    const client = createBrifoAxiosInstance({
+      baseURL: API_BASE_URL,
+      adapter,
+      tokenStore,
+      onSessionExpired,
+    })
+
+    await expect(
+      client.post('/api/auth/logout', { refreshToken: 'refresh-token' }),
+    ).rejects.toMatchObject({
+      response: { status: 401 },
+    })
+    expect(reissueCalls).toBe(0)
+    expect(tokenStore.clear).not.toHaveBeenCalled()
+    expect(onSessionExpired).not.toHaveBeenCalled()
+  })
+
   it('deduplicates concurrent refresh and retries each original request once', async () => {
     const tokenStore = createTokenStore('expired-access', 'refresh-token')
     let releaseRefresh: (() => void) | undefined
