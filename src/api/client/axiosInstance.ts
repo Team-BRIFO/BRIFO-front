@@ -26,6 +26,7 @@ const REISSUE_PATH = '/api/auth/reissue'
 
 type RetriableAxiosConfig = InternalAxiosRequestConfig & {
   _retryAfterRefresh?: boolean
+  _authorizationFromTokenStore?: boolean
 }
 
 interface CreateBrifoAxiosInstanceOptions {
@@ -149,13 +150,19 @@ export function createBrifoAxiosInstance({
   }
 
   client.interceptors.request.use((config) => {
+    const authConfig = config as RetriableAxiosConfig
+
     if (tokenStore.getRefreshToken()) sessionExpirationHandled = false
 
     if (isPublicAuthRequest(config)) {
       config.headers.delete('Authorization')
-    } else {
+      authConfig._authorizationFromTokenStore = false
+    } else if (!config.headers.has('Authorization') || authConfig._authorizationFromTokenStore) {
       const accessToken = tokenStore.getAccessToken()
-      if (accessToken) config.headers.set('Authorization', `Bearer ${accessToken}`)
+      if (accessToken) {
+        config.headers.set('Authorization', `Bearer ${accessToken}`)
+        authConfig._authorizationFromTokenStore = true
+      }
     }
 
     return config
