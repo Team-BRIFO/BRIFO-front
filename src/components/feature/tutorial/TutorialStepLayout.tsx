@@ -28,9 +28,9 @@ export default function TutorialStepLayout({
   onSkip,
 }: TutorialStepLayoutProps) {
   return (
-    <main className="mx-auto flex h-dvh w-full flex-col overflow-hidden bg-white px-4 pt-6 pb-5">
+    <main className="mx-auto flex h-dvh w-full flex-col overflow-hidden bg-white px-4 pb-5">
       <StatusBar
-        hasStatusArea
+        hasStatusArea={false}
         className="w-full [&>div:last-child]:px-0"
         right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
       />
