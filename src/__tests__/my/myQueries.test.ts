@@ -37,6 +37,7 @@ describe('My query hook options', () => {
 
   it('passes the generated AP cursor request wrapper and stops without a cursor', () => {
     const options = useMyApTransactionsQuery(15) as unknown as InfiniteOptions<ApTransactionPage>
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
     expect(options.endpoint).toBe('getApTransactions')
     expect(options.response).toBe('requiredResult')
@@ -59,6 +60,10 @@ describe('My query hook options', () => {
         hasNext: true,
       }),
     ).toBeUndefined()
+    expect(warn).toHaveBeenCalledWith(
+      '[getApTransactions] hasNext is true but nextCursor is missing; stopping pagination.',
+    )
+    warn.mockRestore()
   })
 
   it('passes the generated learned-term cursor wrapper and uses a present cursor', () => {
@@ -78,6 +83,24 @@ describe('My query hook options', () => {
         hasNext: true,
       }),
     ).toBe(nextCursor)
+  })
+
+  it('warns and stops learned-term pagination when the next cursor is missing', () => {
+    const options = useMyLearnedTermsQuery(10) as unknown as InfiniteOptions<MyGlossaryPage>
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    expect(
+      options.getNextPageParam({
+        learnedTermCount: 0,
+        entries: [],
+        nextCursor: null,
+        hasNext: true,
+      }),
+    ).toBeUndefined()
+    expect(warn).toHaveBeenCalledWith(
+      '[getMyTerms] hasNext is true but nextCursor is missing; stopping pagination.',
+    )
+    warn.mockRestore()
   })
 
   it('disables the owned-badge query when badgeId is missing', () => {

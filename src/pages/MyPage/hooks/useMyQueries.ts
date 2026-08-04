@@ -1,13 +1,11 @@
+import { ApTransactionsResponseSchema } from '@/api/contracts/ap'
 import { getApTransactions } from '@/api/generated/endpoints/ap-controller/ap-controller'
 import {
   getBadges,
   getOwnedBadge,
 } from '@/api/generated/endpoints/badge-controller/badge-controller'
 import { getMyTerms } from '@/api/generated/endpoints/term-controller/term-controller'
-import {
-  ApiResponseGetApTransactionsResponse,
-  type GetApTransactionsParams,
-} from '@/api/generated/schemas/ap-controller'
+import { type GetApTransactionsParams } from '@/api/generated/schemas/ap-controller'
 import {
   ApiResponseGetBadgesResponse,
   ApiResponseGetOwnedBadgeResponse,
@@ -28,12 +26,23 @@ import { myQueryKeys } from '@/pages/MyPage/hooks/myQueryKeys'
 const AP_TRANSACTION_PAGE_SIZE = 20
 const MY_TERMS_PAGE_SIZE = 20
 
+function getNextPageCursor(
+  lastPage: { hasNext: boolean; nextCursor: string | null },
+  endpoint: string,
+) {
+  if (!lastPage.hasNext) return undefined
+  if (lastPage.nextCursor) return lastPage.nextCursor
+
+  console.warn(`[${endpoint}] hasNext is true but nextCursor is missing; stopping pagination.`)
+  return undefined
+}
+
 export function useMyApTransactionsQuery(size: number = AP_TRANSACTION_PAGE_SIZE) {
   return useApiInfiniteQuery({
     queryKey: myQueryKeys.ap(size),
     operation: getApTransactions,
     endpoint: 'getApTransactions',
-    responseSchema: ApiResponseGetApTransactionsResponse,
+    responseSchema: ApTransactionsResponseSchema,
     response: 'requiredResult',
     getArgs: ({ pageParam }): [GetApTransactionsParams] => [
       { request: { cursor: pageParam ?? undefined, size } },
@@ -41,8 +50,7 @@ export function useMyApTransactionsQuery(size: number = AP_TRANSACTION_PAGE_SIZE
     map: mapApTransactionPage,
     staleTime: 0,
     initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNext && lastPage.nextCursor ? lastPage.nextCursor : undefined,
+    getNextPageParam: (lastPage) => getNextPageCursor(lastPage, 'getApTransactions'),
   })
 }
 
@@ -86,7 +94,6 @@ export function useMyLearnedTermsQuery(size: number = MY_TERMS_PAGE_SIZE) {
     map: mapMyGlossaryPage,
     staleTime: 0,
     initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNext && lastPage.nextCursor ? lastPage.nextCursor : undefined,
+    getNextPageParam: (lastPage) => getNextPageCursor(lastPage, 'getMyTerms'),
   })
 }
