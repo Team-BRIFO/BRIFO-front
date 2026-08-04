@@ -50,7 +50,7 @@ export function MyBadgePage() {
         isOpen={Boolean(selectedId)}
         badge={detailQuery.data?.badge ?? null}
         rewardAp={detailQuery.data?.rewardAp}
-        isLoading={Boolean(selectedId && !detailQuery.data && detailQuery.isPending)}
+        isLoading={Boolean(selectedId && !detailQuery.data && detailQuery.isFetching)}
         errorMessage={
           selectedId && !detailQuery.data && detailQuery.isError
             ? '배지 정보를 불러오지 못했어요.'

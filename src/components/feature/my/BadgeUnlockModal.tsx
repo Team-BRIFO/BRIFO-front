@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+
 import { Badge as ApBadge } from '@/components/common/Badge'
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
@@ -7,7 +9,7 @@ import type { Badge } from '@/types/domain/badge'
 
 export interface BadgeUnlockModalProps {
   isOpen: boolean
-  /** 새로 획득한 배지 — null이면 모달을 열지 않는다 */
+  /** 성공 상태에서 표시할 배지. 로딩·오류 상태에서는 null이어도 모달을 렌더링한다. */
   badge: Badge | null
   rewardAp?: number
   onClose: () => void
@@ -26,10 +28,24 @@ export function BadgeUnlockModal({
   errorMessage,
   onRetry,
 }: BadgeUnlockModalProps) {
+  const successActionRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isOpen || !badge) return
+
+    successActionRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
+  }, [badge, isOpen])
+
   if (!badge && !isLoading && !errorMessage) return null
 
+  const ariaLabel = badge
+    ? '새 배지 획득'
+    : isLoading
+      ? '배지 정보를 불러오는 중'
+      : '배지 정보 불러오기 오류'
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} ariaLabel="새 배지 획득" className="w-70 rounded-xl">
+    <Modal isOpen={isOpen} onClose={onClose} ariaLabel={ariaLabel} className="w-70 rounded-xl">
       {badge ? (
         <>
           <Modal.Header className="flex flex-col items-center gap-4">
@@ -49,21 +65,28 @@ export function BadgeUnlockModal({
           </Modal.Header>
 
           <Modal.Footer className="mt-5">
-            <Button size="lg" isFullWidth onClick={onClose}>
-              확인
-            </Button>
+            <div ref={successActionRef} className="w-full">
+              <Button size="lg" isFullWidth onClick={onClose}>
+                확인
+              </Button>
+            </div>
           </Modal.Footer>
         </>
       ) : (
         <>
           <Modal.Header className="flex flex-col items-center gap-3 py-4">
-            <h2 className="dnf-Title4 text-Gray-10">
-              {isLoading ? '배지 정보를 불러오는 중이에요.' : errorMessage}
-            </h2>
+            <div
+              role={isLoading ? 'status' : 'alert'}
+              aria-live={isLoading ? 'polite' : 'assertive'}
+            >
+              <h2 className="dnf-Title4 text-Gray-10">
+                {isLoading ? '배지 정보를 불러오는 중이에요.' : errorMessage}
+              </h2>
+            </div>
           </Modal.Header>
           <Modal.Footer className="mt-5">
             {errorMessage && onRetry && (
-              <Button size="lg" isFullWidth onClick={onRetry}>
+              <Button size="lg" isFullWidth disabled={isLoading} onClick={onRetry}>
                 다시 시도
               </Button>
             )}
