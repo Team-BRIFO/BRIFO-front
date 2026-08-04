@@ -55,7 +55,9 @@ export function MyApHistory({
 
         {isEmpty ? (
           <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
-            해당 내역이 없어요.
+            {hasNext
+              ? '아직 불러온 내역에는 해당 항목이 없어요. 더 보기를 눌러 추가 내역을 확인해주세요.'
+              : '해당 내역이 없어요.'}
           </p>
         ) : (
           <ul className="overflow-hidden rounded-lg">
