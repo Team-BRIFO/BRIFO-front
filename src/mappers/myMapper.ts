@@ -7,7 +7,7 @@ import type { Badge, BadgeDetail } from '@/types/domain/badge'
 import type { MyGlossaryPage } from '@/types/domain/glossary'
 import type { UserOverview } from '@/types/domain/user'
 
-const MY_PROFILE_PRESENTATION_FALLBACK = {
+const MY_PROFILE_PRESENTATION_DEFAULT = {
   jobTitle: '사장',
   characterType: 'rookie' as const,
 }
@@ -20,7 +20,6 @@ const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   DECISION_WIN: '결정 적중',
   DECISION_LOSE: '결정 실패',
   NEUTRAL_HIT: '중립 예측 적중',
-  NEUTRAL_MISS: '중립 예측 실패',
   SALARY: '사원 급여',
   SALARY_REFUND: '급여 환급',
   CREDIT_LOAN: 'AP 대출',
@@ -31,8 +30,8 @@ export function mapMyUser(result: GetMyPageResponse): UserOverview {
     profile: {
       nickname: result.nickname,
       companyName: result.companyName,
-      jobTitle: MY_PROFILE_PRESENTATION_FALLBACK.jobTitle,
-      characterType: MY_PROFILE_PRESENTATION_FALLBACK.characterType,
+      jobTitle: MY_PROFILE_PRESENTATION_DEFAULT.jobTitle,
+      characterType: MY_PROFILE_PRESENTATION_DEFAULT.characterType,
     },
     stats: {
       hitRate: result.decisionAccuracyRate,
