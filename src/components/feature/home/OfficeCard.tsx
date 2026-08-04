@@ -4,24 +4,27 @@ import Tanker from '@/assets/characters/home_tanker.svg?react'
 import OfficeBackground from '@/assets/images/OfficeBackground.svg?react'
 import EmployeeLevelBadge from '@/components/feature/home/EmployeeLevelBadge'
 
-export default function OfficeCard() {
+interface OfficeCardProps {
+  levels?: Partial<Record<'ROOKIE' | 'PRO' | 'TANKER', number>>
+}
+
+export default function OfficeCard({ levels = {} }: OfficeCardProps) {
   const employees = [
-    // TODO: 직원 정보는 서버에서 받아오는 것으로 변경 필요
     {
       name: '루키',
-      level: 5,
+      level: levels.ROOKIE ?? 0,
       Character: Rookie,
       wrapperStyle: { left: '34.1%', top: '28.1%', width: '31%', height: '41%' },
     },
     {
       name: '탱커',
-      level: 5,
+      level: levels.TANKER ?? 0,
       Character: Tanker,
       wrapperStyle: { left: '4.5%', top: '51.3%', width: '31%', height: '41%' },
     },
     {
       name: '프로',
-      level: 5,
+      level: levels.PRO ?? 0,
       Character: Pro,
       wrapperStyle: { right: '4.8%', top: '50.5%', width: '31%', height: '41%' },
     },
