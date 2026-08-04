@@ -1,9 +1,9 @@
-import { Settings } from 'lucide-react'
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import BellIcon from '@/assets/icons/bell.svg?react'
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg?react'
+import SettingsIcon from '@/assets/icons/setting.svg?react'
 
 type StatusBarActionButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'>
 
@@ -73,7 +73,7 @@ export function StatusBarSettingsButton({ className = '', ...props }: StatusBarA
       )}
       {...props}
     >
-      <Settings className="h-full w-full" aria-hidden="true" />
+      <SettingsIcon className="h-full w-full" aria-hidden="true" />
     </button>
   )
 }
