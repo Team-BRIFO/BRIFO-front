@@ -10,6 +10,7 @@ import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
+import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueries'
 import { useUserHomeQuery } from '@/hooks/queries/user/useUserHomeQuery'
 import { PATH } from '@/routes/paths'
 
@@ -30,6 +31,7 @@ function formatBatchTime(batchTime?: string) {
 export function HomePage() {
   const navigate = useNavigate()
   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false)
+  const attendanceReward = useCreateAttendanceRewardMutation()
   const homeQuery = useUserHomeQuery()
   const home = homeQuery.data
   const balanceText = `${(home?.user.balanceAp ?? 0).toLocaleString()} AP`
@@ -108,10 +110,12 @@ export function HomePage() {
         isOpen={isAttendanceModalOpen}
         attendedDays={5}
         reward={50}
+        isPending={attendanceReward.isPending}
         onClose={() => setIsAttendanceModalOpen(false)}
         onComplete={() => {
-          // TODO: 출석 API 호출
-          setIsAttendanceModalOpen(false)
+          attendanceReward.mutate(undefined, {
+            onSuccess: () => setIsAttendanceModalOpen(false),
+          })
         }}
       />
     </>

@@ -7,6 +7,7 @@ interface AttendanceModalProps {
   isOpen: boolean
   attendedDays: number
   reward: number
+  isPending?: boolean
   onClose: () => void
   onComplete: () => void
 }
@@ -15,6 +16,7 @@ export default function AttendanceModal({
   isOpen,
   attendedDays,
   reward,
+  isPending = false,
   onClose,
   onComplete,
 }: AttendanceModalProps) {
@@ -39,8 +41,15 @@ export default function AttendanceModal({
       </Modal.Body>
 
       <Modal.Footer className="mt-5">
-        <Button size="lg" color="primary" isFullWidth onClick={onComplete} className="h-15">
-          출석 완료
+        <Button
+          size="lg"
+          color="primary"
+          isFullWidth
+          disabled={isPending}
+          onClick={onComplete}
+          className="h-15"
+        >
+          {isPending ? '처리 중...' : '출석 완료'}
         </Button>
       </Modal.Footer>
     </Modal>
