@@ -1,12 +1,9 @@
 import { z } from 'zod'
 
-import {
-  getBriefingDetail,
-  getStockBriefings,
-} from '@/api/generated/endpoints/briefing-controller/briefing-controller'
+import { getBriefingDetail } from '@/api/generated/endpoints/briefing-controller/briefing-controller'
 import { useApiQuery } from '@/hooks/api'
 import { briefingQueryKeys } from '@/hooks/queries/briefing/briefingQueryKeys'
-import { mapBriefingDetail, mapBriefingList } from '@/mappers/briefingMapper'
+import { mapBriefingDetail } from '@/mappers/briefingMapper'
 import { MOCK_AGENT_DETAIL_RESPONSES } from '@/mocks/agent'
 
 export function useBriefingDetailQuery(briefingId: string | null) {
@@ -26,23 +23,6 @@ export function useBriefingDetailQuery(briefingId: string | null) {
         MOCK_AGENT_DETAIL_RESPONSES[result.agent?.agentId as string]?.result,
       ),
     enabled: Boolean(briefingId),
-    staleTime: 0,
-  })
-}
-
-export function useStockBriefingsQuery(stockId: string | null) {
-  return useApiQuery({
-    queryKey: briefingQueryKeys.listByStock(stockId ?? ''),
-    operation: getStockBriefings,
-    endpoint: 'getStockBriefings',
-    args: [stockId!],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    responseSchema: z.any() as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: 'requiredResult' as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map: (result: any) => mapBriefingList(result),
-    enabled: Boolean(stockId),
     staleTime: 0,
   })
 }

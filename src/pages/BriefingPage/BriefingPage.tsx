@@ -9,7 +9,7 @@ import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
-import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
 
 export function BriefingPage() {
