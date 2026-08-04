@@ -1,7 +1,7 @@
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 
 interface HomeCardNewsItem {
-  id: number
+  id: number | string
   stock: {
     name: string
     code?: string
@@ -19,7 +19,7 @@ interface HomeCardNewsSectionProps {
   date: string
   time: string
   items: HomeCardNewsItem[]
-  onItemClick?: (id: number) => void
+  onItemClick?: (id: number | string) => void
 }
 
 export default function HomeCardNewsSection({

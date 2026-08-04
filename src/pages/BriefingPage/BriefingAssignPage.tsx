@@ -12,11 +12,12 @@ import type { AnalyzeModalType } from '@/components/feature/analyze/AnalyzeReque
 import { AnalyzeRequestModal } from '@/components/feature/analyze/AnalyzeRequestModal'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
-import { useAgentListQuery } from '@/hooks/queries/agent/useAgentQueries'
+import { useAgentListQuery } from '@/hooks/queries/agent/useAgentListQuery'
 import { useCreateCreditLoanMutation } from '@/hooks/queries/ap/useApQueries'
-import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
 import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
+import type { BriefingRequestResult } from '@/types/domain/briefing'
 
 export function BriefingAssignPage() {
   const { stockId } = useParams<{ stockId: string }>()
@@ -37,8 +38,10 @@ export function BriefingAssignPage() {
     new Set([agentsList[0]?.id, agentsList[2]?.id].filter((id): id is string => Boolean(id))),
   )
 
-  // 테스트용 모달 상태
+  // 모달 및 요청 결과 상태
   const [modalType, setModalType] = useState<AnalyzeModalType | null>(null)
+  const [createdBriefingRequest, setCreatedBriefingRequest] =
+    useState<BriefingRequestResult | null>(null)
 
   const stockName = stockBriefingsQuery.data?.stock.name ?? ''
 
@@ -58,16 +61,60 @@ export function BriefingAssignPage() {
       { stockId, agentIds: Array.from(selectedIds) },
       {
         onSuccess: (result) => {
-          navigate(PATH.BRIEFING_COMPLETE(stockId), {
-            state: { briefingRequest: result },
-            replace: true,
-          })
+          setCreatedBriefingRequest(result)
+          setModalType('SUCCESS')
         },
-        onError: () => {
-          setModalType('LLM_FAIL') // Error handling fallback
+        onError: (error) => {
+          // AP 부족 에러
+          if (
+            error.status === 402 ||
+            error.code?.includes('AP_400') ||
+            error.code?.includes('AP_402') ||
+            error.code === 'BRIEFING_400_01'
+          ) {
+            setModalType('SHORTAGE')
+          }
+          // 재시도 횟수 초과 에러
+          else if (error.status === 429 || error.code?.includes('RETRY')) {
+            setModalType('RETRY_COUNT')
+          }
+          // AP 대출 한도 소진 에러
+          else if (error.code === 'AP_409_03' || error.code === 'AP_409_04') {
+            setModalType('EXHAUSTED')
+          }
+          // LLM 분석 실패 및 기타 일반 에러
+          else {
+            setModalType('LLM_FAIL')
+          }
         },
       },
     )
+  }
+
+  const handlePrimaryModalClick = () => {
+    if (modalType === 'SUCCESS') {
+      if (!stockId) return
+      navigate(PATH.BRIEFING_COMPLETE(stockId), {
+        state: { briefingRequest: createdBriefingRequest },
+        replace: true,
+      })
+      setModalType(null)
+      return
+    }
+    handleNextModal()
+  }
+
+  const handleSecondaryModalClick = () => {
+    if (modalType === 'SUCCESS') {
+      navigate(PATH.HOME)
+      setModalType(null)
+      return
+    }
+    if (modalType === 'SHORTAGE') {
+      handleCreditLoan()
+      return
+    }
+    handleNextModal()
   }
 
   const handleNextModal = () => {
@@ -179,7 +226,7 @@ export function BriefingAssignPage() {
         </>
       )}
 
-      {/* 테스트용 모달 */}
+      {/* 분석 의뢰 상태 모달 */}
       <AnalyzeRequestModal
         isOpen={modalType !== null}
         onClose={() => setModalType(null)}
@@ -189,8 +236,8 @@ export function BriefingAssignPage() {
         shortageAP={20}
         retryCount={2}
         maxRetryCount={3}
-        onPrimaryClick={handleNextModal}
-        onSecondaryClick={modalType === 'SHORTAGE' ? handleCreditLoan : handleNextModal}
+        onPrimaryClick={handlePrimaryModalClick}
+        onSecondaryClick={handleSecondaryModalClick}
         secondaryDisabled={modalType === 'SHORTAGE' && isCreditLoanPending}
       />
     </div>

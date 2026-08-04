@@ -64,7 +64,7 @@ export function NewsCardPointList({
       <ul className="flex flex-col gap-1">
         {points.map((point, index) => (
           <li key={index} className="flex items-start gap-2">
-            <div className="bg-Background10 mt-2 h-1.5 w-1.5 shrink-0 rounded-full" />
+            <div className="bg-Gray-10 mt-2 h-1.5 w-1.5 shrink-0 rounded-full" />
             <p className="text-Gray-10 pretendard-Caption1 leading-relaxed">
               {renderHighlightedText(point, terms, onTermClick)}
             </p>
