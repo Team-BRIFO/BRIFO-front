@@ -32,6 +32,7 @@ export function MyGlossaryPage() {
         hasNext={query.hasNextPage}
         onLoadMore={() => query.fetchNextPage()}
         isLoadingMore={query.isFetchingNextPage}
+        loadMoreError={query.isFetchNextPageError}
         isEmpty={entries.length === 0}
       />
     </MyPageLayout>

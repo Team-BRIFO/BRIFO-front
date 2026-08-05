@@ -65,8 +65,16 @@ export function BriefingAssignPage() {
           setModalType('SUCCESS')
         },
         onError: (error) => {
+          // 이미 요청한 브리핑인 경우 (409 Conflict) -> 성공 모달로 처리
+          if (error.code === 'BRIEFING_409_01') {
+            setModalType('SUCCESS')
+          }
+          // 실패 후 대기 시간 미달 (429 Too Many Requests)
+          else if (error.code === 'BRIEFING_429_01') {
+            setModalType('RETRY_COUNT')
+          }
           // AP 부족 에러
-          if (
+          else if (
             error.status === 402 ||
             error.code?.includes('AP_400') ||
             error.code?.includes('AP_402') ||
@@ -82,7 +90,7 @@ export function BriefingAssignPage() {
           else if (error.code === 'AP_409_03' || error.code === 'AP_409_04') {
             setModalType('EXHAUSTED')
           }
-          // LLM 분석 실패 및 기타 일반 에러
+          // 잘못된 요청, 권한 오류, 서버 내부 오류 등 기타 실패 (400, 401, 403, 404, 500)
           else {
             setModalType('LLM_FAIL')
           }
@@ -101,6 +109,21 @@ export function BriefingAssignPage() {
       setModalType(null)
       return
     }
+    if (modalType === 'EXHAUSTED') {
+      navigate(PATH.HOME)
+      setModalType(null)
+      return
+    }
+    if (modalType === 'LLM_FAIL') {
+      handleStartAnalysis()
+      return
+    }
+    if (modalType === 'RETRY_COUNT') {
+      setModalType(null)
+      return
+    }
+
+    // SHORTAGE 등 처리되지 않은 경우의 Fallback
     handleNextModal()
   }
 
@@ -114,7 +137,10 @@ export function BriefingAssignPage() {
       handleCreditLoan()
       return
     }
-    handleNextModal()
+
+    // EXHAUSTED, LLM_FAIL, RETRY_COUNT 에서는
+    // handleNextModal() 로 넘어가지 않고 모달 닫기(안전장치)
+    setModalType(null)
   }
 
   const handleNextModal = () => {
@@ -229,7 +255,12 @@ export function BriefingAssignPage() {
       {/* 분석 의뢰 상태 모달 */}
       <AnalyzeRequestModal
         isOpen={modalType !== null}
-        onClose={() => setModalType(null)}
+        onClose={() => {
+          if (modalType === 'LLM_FAIL') {
+            navigate(PATH.HOME)
+          }
+          setModalType(null)
+        }}
         type={modalType ?? 'SUCCESS'}
         stockName={stockName}
         employeeName="프로"
