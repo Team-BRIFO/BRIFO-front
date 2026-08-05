@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { StatusBar, StatusBarSettingsButton } from '@/components/common/StatusBar'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyHome } from '@/components/feature/my/MyHome'
@@ -37,13 +37,13 @@ export function MyPage() {
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
               {userQuery.data ? `${userQuery.data.apSummary.balance.toLocaleString()} AP` : '0 AP'}
             </div>
-            <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
+            <StatusBarSettingsButton onClick={() => navigate(PATH.MY_SETTINGS)} />
           </div>
         }
       />
-      {!!userQuery.error && userQuery.fetchStatus === 'idle' ? (
+      {!!userQuery.error && userQuery.fetchStatus === 'idle' && !data ? (
         <PageErrorView error={userQuery.error} onRetry={() => userQuery.refetch()} />
-      ) : userQuery.fetchStatus === 'fetching' || !data ? (
+      ) : !data ? (
         <PageLoadingView />
       ) : (
         <div className="px-4 pt-3 pb-24">

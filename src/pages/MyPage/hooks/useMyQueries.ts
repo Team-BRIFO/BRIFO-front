@@ -1,11 +1,20 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-
-import { AP_TRANSACTION_PAGE_SIZE, getApTransactions } from '@/api/ap'
-import { getBadges, getMyBadgeDetail } from '@/api/badge'
+import { ApTransactionsResponseSchema } from '@/api/contracts/ap'
+import { getApTransactions } from '@/api/generated/endpoints/ap-controller/ap-controller'
+import {
+  getBadges,
+  getOwnedBadge,
+} from '@/api/generated/endpoints/badge-controller/badge-controller'
 import { getMyTerms } from '@/api/generated/endpoints/term-controller/term-controller'
-import { ApiResponseGetMyTermsResponse } from '@/api/generated/schemas/term-controller'
-import { MY_TERMS_PAGE_SIZE } from '@/api/myTerms'
-import { useApiInfiniteQuery } from '@/hooks/api'
+import { type GetApTransactionsParams } from '@/api/generated/schemas/ap-controller'
+import {
+  ApiResponseGetBadgesResponse,
+  ApiResponseGetOwnedBadgeResponse,
+} from '@/api/generated/schemas/badge-controller'
+import {
+  ApiResponseGetMyTermsResponse,
+  type GetMyTermsParams,
+} from '@/api/generated/schemas/term-controller'
+import { useApiInfiniteQuery, useApiQuery } from '@/hooks/api'
 import {
   mapApTransactionPage,
   mapBadge,
@@ -13,50 +22,78 @@ import {
   mapMyGlossaryPage,
 } from '@/mappers/myMapper'
 import { myQueryKeys } from '@/pages/MyPage/hooks/myQueryKeys'
-import type { MyGlossaryPage } from '@/types/domain/glossary'
+
+const AP_TRANSACTION_PAGE_SIZE = 20
+const MY_TERMS_PAGE_SIZE = 20
+
+function getNextPageCursor(
+  lastPage: { hasNext: boolean; nextCursor: string | null },
+  endpoint: string,
+) {
+  if (!lastPage.hasNext) return undefined
+  if (lastPage.nextCursor) return lastPage.nextCursor
+
+  console.warn(`[${endpoint}] hasNext is true but nextCursor is missing; stopping pagination.`)
+  return undefined
+}
 
 export function useMyApTransactionsQuery(size: number = AP_TRANSACTION_PAGE_SIZE) {
-  return useInfiniteQuery({
+  return useApiInfiniteQuery({
     queryKey: myQueryKeys.ap(size),
+    operation: getApTransactions,
+    endpoint: 'getApTransactions',
+    responseSchema: ApTransactionsResponseSchema,
+    response: 'requiredResult',
+    getArgs: ({ pageParam }): [GetApTransactionsParams] => [
+      { request: { cursor: pageParam ?? undefined, size } },
+    ],
+    map: mapApTransactionPage,
     staleTime: 0,
-    queryFn: async ({ pageParam }) =>
-      mapApTransactionPage(await getApTransactions(pageParam, size)),
     initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNext ? (lastPage.nextCursor ?? undefined) : undefined,
+    getNextPageParam: (lastPage) => getNextPageCursor(lastPage, 'getApTransactions'),
   })
 }
 
 export function useMyBadgesQuery() {
-  return useQuery({
+  return useApiQuery({
     queryKey: myQueryKeys.badges(),
+    operation: getBadges,
+    endpoint: 'getBadges',
+    args: [],
+    responseSchema: ApiResponseGetBadgesResponse,
+    response: 'requiredResult',
+    map: (result) => result.items.map(mapBadge),
     staleTime: 0,
-    queryFn: async () => (await getBadges()).map(mapBadge),
   })
 }
 
 export function useMyBadgeDetailQuery(id: string | null) {
-  return useQuery({
+  return useApiQuery({
     queryKey: myQueryKeys.badge(id ?? ''),
+    operation: getOwnedBadge,
+    endpoint: 'getOwnedBadge',
+    args: [id ?? ''],
+    responseSchema: ApiResponseGetOwnedBadgeResponse,
+    response: 'requiredResult',
+    map: mapBadgeDetail,
     staleTime: 0,
-    queryFn: async () => mapBadgeDetail(await getMyBadgeDetail(id!)),
     enabled: Boolean(id),
   })
 }
 
 export function useMyLearnedTermsQuery(size: number = MY_TERMS_PAGE_SIZE) {
-  return useApiInfiniteQuery<typeof getMyTerms, string | null, 'requiredResult', MyGlossaryPage>({
+  return useApiInfiniteQuery({
     queryKey: myQueryKeys.terms(size),
     operation: getMyTerms,
     endpoint: 'getMyTerms',
     responseSchema: ApiResponseGetMyTermsResponse,
     response: 'requiredResult',
-    getArgs: ({ pageParam }) => [{ request: { cursor: pageParam ?? undefined, size } }] as const,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map: (result) => mapMyGlossaryPage(result as any), // Type cast due to Orval mismatch with mapper
-    initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNext ? (lastPage.nextCursor ?? undefined) : undefined,
+    getArgs: ({ pageParam }): [GetMyTermsParams] => [
+      { request: { cursor: pageParam ?? undefined, size } },
+    ],
+    map: mapMyGlossaryPage,
     staleTime: 0,
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => getNextPageCursor(lastPage, 'getMyTerms'),
   })
 }

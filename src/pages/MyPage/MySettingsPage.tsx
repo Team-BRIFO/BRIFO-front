@@ -10,8 +10,8 @@ import {
 import { MySettings } from '@/components/feature/my/MySettings'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useDeleteMyAccountMutation } from '@/pages/MyPage/hooks/useDeleteMyAccountMutation'
+import { useLogoutMutation } from '@/pages/MyPage/hooks/useLogoutMutation'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
-import { useLogoutMutation } from '@/pages/SplashPage/hooks/useLogoutMutation'
 import { PATH } from '@/routes/paths'
 
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {

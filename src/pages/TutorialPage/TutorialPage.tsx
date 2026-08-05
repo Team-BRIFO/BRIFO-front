@@ -32,7 +32,7 @@ import type { ConfidenceLevel } from '@/types/domain/decision'
 
 function CardNewsListStep() {
   return (
-    <HomeCardNewsSection items={HOME_CARD_NEWS_MOCK_DATA.slice(0, 2)} date="5/28" time="09:30" />
+    <HomeCardNewsSection items={HOME_CARD_NEWS_MOCK_DATA.slice(0, 2)} date="8/10" time="09:30" />
   )
 }
 

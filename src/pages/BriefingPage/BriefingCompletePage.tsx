@@ -7,7 +7,7 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { BriefingCard } from '@/components/domain/briefing/BriefingCard'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
-import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
 import type { BriefingRequestResult } from '@/types/domain/briefing'
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
@@ -13,6 +13,7 @@ import { GlossaryBottomSheet } from '@/components/feature/glossary/GlossaryBotto
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicator'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
+import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
 import { PATH } from '@/routes/paths'
 
 /** 홈 탭 - SCR-05: 카드뉴스 상세 */
@@ -25,7 +26,21 @@ export function NewsCardPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedTermId, setSelectedTermId] = useState<string | null>(null)
 
-  const cards = newsData || []
+  const fallbackCards = useMemo(() => {
+    if (!stockId) return MOCK_NEWS_CARDS
+
+    if (stockId === '1') return MOCK_NEWS_CARDS.filter((c) => c.cardId.startsWith('brifo01'))
+    if (stockId === '2') return MOCK_NEWS_CARDS.filter((c) => c.cardId.startsWith('brifo02'))
+    if (stockId === '3') return MOCK_NEWS_CARDS.filter((c) => c.cardId.startsWith('brifo03'))
+
+    const prefix = stockId.split('-')[0]
+    const matched = MOCK_NEWS_CARDS.filter(
+      (c) => c.cardId === stockId || c.cardId.startsWith(prefix),
+    )
+    return matched.length > 0 ? matched : MOCK_NEWS_CARDS
+  }, [stockId])
+
+  const cards = newsData && newsData.length > 0 ? newsData : fallbackCards
   const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
 
   const handleTermClick = (termId: string) => {
@@ -59,11 +74,11 @@ export function NewsCardPage() {
 
       {isLoading ? (
         <PageLoadingView />
-      ) : error ? (
+      ) : error && !cards.length ? (
         <PageErrorView error={error} onRetry={() => refetch()} />
       ) : (
         <main className="mx-5 mt-5 flex flex-1 flex-col gap-8">
-          <div className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto">
+          <div className="flex flex-col overflow-x-hidden overflow-y-auto">
             <div
               ref={scrollContainerRef}
               className="flex w-full snap-x snap-mandatory overflow-x-auto [&::-webkit-scrollbar]:hidden"
@@ -75,8 +90,6 @@ export function NewsCardPage() {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="flex justify-center">
             <NewsCardIndicator total={cards.length} currentIndex={currentIndex} />
           </div>
           <div className="flex flex-col items-center gap-2">
