@@ -12,7 +12,6 @@ export const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   DECISION_WIN: '결정 적중',
   DECISION_LOSE: '결정 실패',
   NEUTRAL_HIT: '중립 예측 적중',
-  NEUTRAL_MISS: '중립 예측 실패',
   SALARY: '사원 급여',
   SALARY_REFUND: '급여 환급',
   CREDIT_LOAN: 'AP 대출',

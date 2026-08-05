@@ -9,7 +9,6 @@ import type { ApSummary } from '@/types/domain/ap'
 
 /** 프로필 카드 (닉네임 · 회사 · 직함 · 캐릭터) */
 export interface UserProfile {
-  id: string
   /** 닉네임 (예: 포롱) */
   nickname: string
   /** 회사명 (예: 가즈아 투자사) */
@@ -40,14 +39,6 @@ export interface UserInterestStock {
 export interface UserProfileFormValues {
   nickname: string
   companyName: string
-  interestStocks: UserInterestStock[]
-}
-
-/** Swagger 연동 전 mock이 보완하는 프로필 표시 정보 */
-export interface UserProfileMeta {
-  id: string
-  jobTitle: string
-  characterType: AgentType
   interestStocks: UserInterestStock[]
 }
 

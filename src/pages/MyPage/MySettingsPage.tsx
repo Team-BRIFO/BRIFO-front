@@ -10,8 +10,8 @@ import {
 import { MySettings } from '@/components/feature/my/MySettings'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useDeleteMyAccountMutation } from '@/pages/MyPage/hooks/useDeleteMyAccountMutation'
+import { useLogoutMutation } from '@/pages/MyPage/hooks/useLogoutMutation'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
-import { useLogoutMutation } from '@/pages/SplashPage/hooks/useLogoutMutation'
 import { PATH } from '@/routes/paths'
 
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
@@ -27,9 +27,21 @@ export function MySettingsPage() {
   const removeAccount = useDeleteMyAccountMutation()
   const logout = useLogoutMutation()
   const [action, setAction] = useState<AccountActionType | null>(null)
+
+  const finishLogout = () => {
+    browserTokenStore.clear()
+    queryClient.clear()
+    navigate(PATH.SPLASH, { replace: true })
+  }
+
+  const resetAccountAction = () => {
+    logout.reset()
+    removeAccount.reset()
+  }
+
   const onSelect = (key: MyMenuKey) => {
     if (key === 'logout' || key === 'withdraw') {
-      removeAccount.reset()
+      resetAccountAction()
       setAction(key)
       return
     }
@@ -38,13 +50,18 @@ export function MySettingsPage() {
   }
   const onConfirm = () => {
     if (action === 'logout') {
+      const refreshToken = browserTokenStore.getRefreshToken()
+      if (!refreshToken) {
+        finishLogout()
+        return
+      }
+
       logout.mutate(
-        { refreshToken: browserTokenStore.getRefreshToken() ?? undefined },
+        { refreshToken },
         {
-          onSuccess: () => {
-            browserTokenStore.clear()
-            queryClient.clear()
-            navigate(PATH.SPLASH, { replace: true })
+          onSuccess: finishLogout,
+          onError: (error) => {
+            if (error.status === 401) finishLogout()
           },
         },
       )
@@ -64,7 +81,7 @@ export function MySettingsPage() {
         isOpen={Boolean(action)}
         type={action ?? 'logout'}
         onClose={() => {
-          removeAccount.reset()
+          resetAccountAction()
           setAction(null)
         }}
         onConfirm={onConfirm}

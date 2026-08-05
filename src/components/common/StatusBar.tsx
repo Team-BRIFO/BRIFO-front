@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge'
 
 import BellIcon from '@/assets/icons/bell.svg?react'
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg?react'
+import SettingsIcon from '@/assets/icons/setting.svg?react'
 
 type StatusBarActionButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'>
 
@@ -56,6 +57,23 @@ export function StatusBarNotificationButton({
       {...props}
     >
       <BellIcon className="h-full w-full" aria-hidden="true" />
+    </button>
+  )
+}
+
+export function StatusBarSettingsButton({ className = '', ...props }: StatusBarActionButtonProps) {
+  return (
+    <button
+      type="button"
+      aria-label="설정"
+      className={twMerge(
+        'text-Black flex h-6 w-6 shrink-0 items-center justify-center',
+        'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
+        className,
+      )}
+      {...props}
+    >
+      <SettingsIcon className="h-full w-full" aria-hidden="true" />
     </button>
   )
 }
