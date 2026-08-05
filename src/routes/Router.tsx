@@ -130,7 +130,7 @@ export const router = createBrowserRouter([
         element: withRouteLoadingFallback(<LazyHomePage />),
       },
       {
-        path: '/card-news/:stockId',
+        path: PATH.CARD_NEWS_DETAIL_ROUTE,
         element: withRouteLoadingFallback(<LazyNewsCardPage />),
       },
       {

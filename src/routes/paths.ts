@@ -32,6 +32,7 @@ export const PATH = {
 
   /** 홈 - SCR-05: 카드뉴스 상세 (동적 라우팅) */
   CARD_NEWS_DETAIL: (stockId: string) => `/card-news/${stockId}`,
+  CARD_NEWS_DETAIL_ROUTE: '/card-news/:stockId',
 
   // ─── AppLayout - 사무실 탭 ─────────────────────────────────────
   /** 사무실 탭 - SCR-04: 메인 대시보드 */
