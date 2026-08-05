@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 
+import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import { type DiaryView, DiaryViewTabs } from '@/components/feature/diary/DiaryViewTabs'
-import Logo from '@/components/logos/logo-small.svg?react'
 export interface DiaryTabScreenProps {
   /** 현재 활성 탭 */
   view: DiaryView
