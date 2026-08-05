@@ -22,6 +22,7 @@ export function HomePage() {
   const companyName = useProfileStore((state) => state.companyName)
 
   const userQuery = useUserProfileQuery()
+
   const balanceText = userQuery.data
     ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
     : '0 AP'

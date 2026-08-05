@@ -170,7 +170,12 @@ export function AnalyzeRequestModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} ariaLabel="분석 의뢰 상태 모달">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel="분석 의뢰 상태 모달"
+      shouldCloseOnOverlayClick={false}
+    >
       <div className="flex w-full flex-col items-center">{renderContent()}</div>
     </Modal>
   )

@@ -109,7 +109,7 @@ export function BriefingAssignPage() {
       setModalType(null)
       return
     }
-    if (modalType === 'EXHAUSTED') {
+    if (modalType === 'EXHAUSTED' || modalType === 'SHORTAGE') {
       navigate(PATH.HOME)
       setModalType(null)
       return
@@ -123,8 +123,7 @@ export function BriefingAssignPage() {
       return
     }
 
-    // SHORTAGE 등 처리되지 않은 경우의 Fallback
-    handleNextModal()
+    setModalType(null)
   }
 
   const handleSecondaryModalClick = () => {
@@ -138,26 +137,7 @@ export function BriefingAssignPage() {
       return
     }
 
-    // EXHAUSTED, LLM_FAIL, RETRY_COUNT 에서는
-    // handleNextModal() 로 넘어가지 않고 모달 닫기(안전장치)
     setModalType(null)
-  }
-
-  const handleNextModal = () => {
-    if (!modalType) return
-    const MODAL_TYPES: AnalyzeModalType[] = [
-      'SUCCESS',
-      'SHORTAGE',
-      'EXHAUSTED',
-      'LLM_FAIL',
-      'RETRY_COUNT',
-    ]
-    const currentIndex = MODAL_TYPES.indexOf(modalType)
-    if (currentIndex < MODAL_TYPES.length - 1) {
-      setModalType(MODAL_TYPES[currentIndex + 1])
-    } else {
-      setModalType(null) // 테스트 끝
-    }
   }
 
   const handleCreditLoan = () => {
@@ -255,12 +235,7 @@ export function BriefingAssignPage() {
       {/* 분석 의뢰 상태 모달 */}
       <AnalyzeRequestModal
         isOpen={modalType !== null}
-        onClose={() => {
-          if (modalType === 'LLM_FAIL') {
-            navigate(PATH.HOME)
-          }
-          setModalType(null)
-        }}
+        onClose={() => setModalType(null)}
         type={modalType ?? 'SUCCESS'}
         stockName={stockName}
         employeeName="프로"
