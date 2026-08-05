@@ -7,6 +7,8 @@
  */
 import { z as zod } from 'zod'
 
+export const apiResponseGetMyPageResponseResultStocksMax = 3
+
 export const ApiResponseGetMyPageResponse = zod.object({
   success: zod.boolean(),
   code: zod.string(),
@@ -21,12 +23,15 @@ export const ApiResponseGetMyPageResponse = zod.object({
       totalDecision: zod.int(),
       consecutiveDays: zod.int(),
       learnedTermCount: zod.int(),
-      stocks: zod.array(
-        zod.object({
-          stockId: zod.uuid(),
-          name: zod.string(),
-        }),
-      ),
+      stocks: zod
+        .array(
+          zod.object({
+            stockId: zod.uuid(),
+            name: zod.string(),
+          }),
+        )
+        .min(1)
+        .max(apiResponseGetMyPageResponseResultStocksMax),
     })
     .optional(),
 })

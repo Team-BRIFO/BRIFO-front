@@ -7,10 +7,12 @@
  */
 import { z as zod } from 'zod'
 
+export const updateUserProfileBodyStockIdsMax = 3
+
 export const UpdateUserProfileBody = zod.object({
   nickname: zod.string(),
   companyName: zod.string(),
-  stockIds: zod.array(zod.uuid()),
+  stockIds: zod.array(zod.uuid()).min(1).max(updateUserProfileBodyStockIdsMax),
 })
 
 export type UpdateUserProfileBody = zod.input<typeof UpdateUserProfileBody>
