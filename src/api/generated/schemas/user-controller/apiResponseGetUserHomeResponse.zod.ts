@@ -25,6 +25,8 @@ export const ApiResponseGetUserHomeResponse = zod.object({
           level: zod.int(),
         }),
       ),
+      attendedToday: zod.boolean(),
+      weeklyAttendanceDays: zod.int(),
       todayDecisions: zod.object({
         count: zod.int(),
       }),
