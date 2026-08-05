@@ -38,8 +38,17 @@ export function MySettingsPage() {
   }
   const onConfirm = () => {
     if (action === 'logout') {
+      const refreshToken = browserTokenStore.getRefreshToken()
+
+      if (!refreshToken) {
+        browserTokenStore.clear()
+        queryClient.clear()
+        navigate(PATH.SPLASH, { replace: true })
+        return
+      }
+
       logout.mutate(
-        { refreshToken: browserTokenStore.getRefreshToken() ?? undefined },
+        { refreshToken },
         {
           onSuccess: () => {
             browserTokenStore.clear()
