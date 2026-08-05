@@ -7,15 +7,20 @@
  */
 import { z as zod } from 'zod'
 
+export const getUserProfileResponseStocksMax = 3
+
 export const GetUserProfileResponse = zod.object({
   nickname: zod.string(),
   companyName: zod.string(),
-  stocks: zod.array(
-    zod.object({
-      stockId: zod.uuid(),
-      name: zod.string(),
-    }),
-  ),
+  stocks: zod
+    .array(
+      zod.object({
+        stockId: zod.uuid(),
+        name: zod.string(),
+      }),
+    )
+    .min(1)
+    .max(getUserProfileResponseStocksMax),
 })
 
 export type GetUserProfileResponse = zod.input<typeof GetUserProfileResponse>
