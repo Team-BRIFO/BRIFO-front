@@ -5,8 +5,8 @@ import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { AgentListSection } from '@/components/feature/myEmployee/AgentListSection'
 import Logo from '@/components/logos/logo-small.svg?react'
+import { useAgentListQuery } from '@/hooks/queries/agent/useAgentListQuery'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
-import { useAgentListQuery } from '@/pages/TeamPage/hooks/useAgentListQuery'
 import { PATH } from '@/routes/paths'
 
 /** 팀 탭 - SCR-12: 사원 관리 인사팀 화면 (Level/EXP, 일급) */

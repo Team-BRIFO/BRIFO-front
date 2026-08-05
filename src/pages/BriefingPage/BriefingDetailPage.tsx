@@ -14,7 +14,7 @@ import { DecisionResultModalContent } from '@/components/feature/decision/Decisi
 import { PredictionCompleteModal } from '@/components/feature/decision/PredictionCompleteModal'
 import { PageErrorView } from '@/components/feature/error/PageErrorView'
 import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
-import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingQueries'
+import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingDetailQuery'
 import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecisionMutation'
 import { PATH } from '@/routes/paths'
 import type { AgentType } from '@/types/domain/agent'
