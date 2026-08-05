@@ -87,7 +87,7 @@ export default function OnboardingSlide({
         color="primary"
         isFullWidth
         onClick={onNext}
-        className="mx-auto h-15 w-full shadow-[0_4px_8px_rgba(168,79,1,0.15)] md:max-w-[400px]"
+        className="mx-auto h-15 w-full shadow-[0_4px_8px_rgba(168,79,1,0.15)] md:max-w-100"
       >
         다음
       </Button>

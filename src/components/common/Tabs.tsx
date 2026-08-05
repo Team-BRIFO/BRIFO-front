@@ -196,7 +196,7 @@ function getContainerClass(
       )
     } else {
       // Type 1 (리스트/통계 등, 213px)
-      base.push(isFullWidth ? 'w-full' : 'w-[59.16%]', 'h-6 gap-[4px] rounded-[30px] bg-Gray-2')
+      base.push(isFullWidth ? 'w-full' : 'w-[59.16%]', 'h-6 gap-1 rounded-[30px] bg-Gray-2')
     }
   } else if (variant === 'underline') {
     base.push('border-b border-Gray-2 gap-4')
@@ -233,14 +233,14 @@ function getItemClass(
       base.push('h-full flex-1 rounded-[30px]')
     }
   } else if (variant === 'underline') {
-    base.push('h-[2.5rem] pretendard-Caption1')
+    base.push('h-10 pretendard-Caption1')
     base.push(
       isActive
         ? 'border-b-2 border-Gray-9 text-Gray-9'
         : 'border-b-2 border-transparent text-Gray-5',
     )
   } else if (variant === 'pill') {
-    base.push('h-[2rem] px-4 rounded-full pretendard-Caption1')
+    base.push('h-8 px-4 rounded-full pretendard-Caption1')
     base.push(isActive ? 'bg-Gray-9 text-White' : 'bg-Background1 text-Gray-6')
   } else if (variant === 'plain') {
     base.push('pretendard-Caption1')

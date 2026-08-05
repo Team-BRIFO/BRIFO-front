@@ -37,7 +37,7 @@ export function MyHome({
     <div className="flex flex-col gap-5.5">
       <header className="flex flex-col gap-1">
         <h1 className="dnf-Subtitle2 text-Gray-10">마이페이지</h1>
-        <p className="font-pretendard text-Gray-6 text-[0.875rem] leading-5 font-normal tracking-[-0.56px]">
+        <p className="font-pretendard text-Gray-6 text-sm leading-5 font-normal tracking-[-0.56px]">
           내 AI 사원들을 관리하세요
         </p>
       </header>
