@@ -7,6 +7,7 @@ interface AttendanceModalProps {
   isOpen: boolean
   attendedDays: number
   reward: number
+  isAttended?: boolean
   isPending?: boolean
   onClose: () => void
   onComplete: () => void
@@ -16,6 +17,7 @@ export default function AttendanceModal({
   isOpen,
   attendedDays,
   reward,
+  isAttended = false,
   isPending = false,
   onClose,
   onComplete,
@@ -36,7 +38,7 @@ export default function AttendanceModal({
 
         {/* 주간 출석 현황 */}
         <div className="mt-8">
-          <AttendanceWeekProgress attendedDays={attendedDays} />
+          <AttendanceWeekProgress attendedDays={attendedDays} attendedToday={isAttended} />
         </div>
       </Modal.Body>
 
@@ -45,7 +47,7 @@ export default function AttendanceModal({
           size="lg"
           color="primary"
           isFullWidth
-          disabled={isPending}
+          disabled={isAttended || isPending}
           onClick={onComplete}
           className="h-15"
         >
