@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 
+import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { AgentListSection } from '@/components/feature/myEmployee/AgentListSection'
-import Logo from '@/components/logos/logo-small.svg?react'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentListQuery'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { PATH } from '@/routes/paths'

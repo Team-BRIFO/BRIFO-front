@@ -5,8 +5,8 @@ import Modal from '@/components/common/Modal'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { DecisionResultModalContent } from '@/components/feature/decision/DecisionResultModal'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import {
   useDecisionDetailQuery,
   useDecisionListQuery,

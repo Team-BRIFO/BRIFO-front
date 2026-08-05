@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyProfileEdit } from '@/components/feature/my/MyProfileEdit'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { useUpdateMyProfileMutation } from '@/pages/MyPage/hooks/useUpdateMyProfileMutation'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'

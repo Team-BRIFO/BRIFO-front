@@ -1,10 +1,10 @@
+import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { Badge } from '@/components/common/Badge'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { type AgentStatusMap, Office } from '@/components/feature/office/Office'
 import { OfficeProgressSection } from '@/components/feature/office/OfficeProgressSection'
-import Logo from '@/components/logos/logo-small.svg?react'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { useOfficeBriefingsQuery } from '@/pages/OfficePage/hooks/useOfficeBriefingsQuery'
 

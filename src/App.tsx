@@ -2,7 +2,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 
 import { createAppQueryClient } from '@/api/client/queryPolicy'
-import { GlobalNetworkErrorOverlay } from '@/components/feature/error/GlobalNetworkErrorOverlay'
+import { GlobalNetworkErrorOverlay } from '@/components/feedback/GlobalNetworkErrorOverlay'
 import { router } from '@/routes/Router'
 
 const queryClient = createAppQueryClient()

@@ -7,11 +7,11 @@ import {
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { GlossaryBottomSheet } from '@/components/feature/glossary/GlossaryBottomSheet'
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicator'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
 import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
 import { PATH } from '@/routes/paths'
