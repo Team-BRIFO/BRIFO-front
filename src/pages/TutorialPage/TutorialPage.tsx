@@ -19,7 +19,7 @@ import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import TutorialComplete from '@/components/feature/tutorial/TutorialComplete'
 import TutorialStepLayout from '@/components/feature/tutorial/TutorialStepLayout'
 import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
-import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
+import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/mockData'
 import { useCompleteOnboardingMutation } from '@/pages/TutorialPage/hooks/useCompleteOnboardingMutation'
 import { useCreateTutorialRewardMutation } from '@/pages/TutorialPage/hooks/useCreateTutorialRewardMutation'
 import {

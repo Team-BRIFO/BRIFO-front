@@ -13,7 +13,7 @@ import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicat
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
-import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/newsCard'
+import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/mockData'
 import { PATH } from '@/routes/paths'
 
 /** 홈 탭 - SCR-05: 카드뉴스 상세 */
