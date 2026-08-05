@@ -91,6 +91,7 @@ src/
 ├── components/
 │   ├── common/           # 공용 UI 컴포넌트
 │   ├── domain/           # 도메인별 재사용 컴포넌트
+│   ├── feedback/         # 로딩·에러·상태 피드백 UI
 │   └── feature/          # 화면 기능 단위 컴포넌트
 ├── constants/            # 화면·도메인 공통 상수
 ├── hooks/
@@ -99,9 +100,10 @@ src/
 ├── pages/                # 라우트 단위 페이지
 │   ├── BriefingPage/     # 브리핑 목록·요청·도착·상세
 │   ├── DiaryPage/        # 결정 일기·상세
+│   ├── ErrorPage/        # 404 페이지
 │   ├── MyPage/           # 마이 메인·AP·배지·용어장·프로필·설정
 │   ├── TeamPage/         # 사원 목록·상세
-│   └── error/            # 404·500·네트워크·로딩 화면
+│   └── SplashPage/       # 스플래시·로그인·OAuth 콜백
 ├── routes/               # PATH 상수 및 createBrowserRouter 설정
 ├── types/
 │   ├── api/              # API 요청·응답 타입
@@ -119,8 +121,14 @@ import type { Agent } from '@/types/domain/agent'
 
 - `components/common`: API 호출, store 접근, routing 의존성이 없는 순수 공용 UI
 - `components/domain`: 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
+- `components/feedback`: 라우트·비동기 상태에서 사용하는 로딩·에러·안내 UI
 - `components/feature`: common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
 - `pages`: 라우트 단위로 Query Hook과 화면 기능 컴포넌트를 조합하고, 로딩·에러 UI를 처리
+- `pages/{PageName}/hooks`: 해당 페이지에서만 사용하는 Query·Mutation Hook
+- `constants`: 화면·도메인에서 재사용하는 정적 상수와 표시 설정
+- `types`: 여러 페이지·컴포넌트·API 계층에서 공유하는 도메인/API 타입
+- `mappers`: API DTO·응답을 도메인 또는 UI 모델로 변환하는 순수 함수
+- `mocks`: 여러 페이지에서 재사용하는 목업 데이터. 페이지 전용 목업은 해당 `pages/{PageName}`에 `mockData.ts` 등 역할이 드러나는 이름으로 둔다
 - `api`: 도메인별 데이터 조회·변경 함수. 현재는 Mock 응답을 반환하며 API 연동 시 실제 요청으로 교체
 - `hooks/queries`: 도메인별 React Query Hook
 - `routes/paths.ts`: `PATH` 경로 상수 — 하드코딩 금지, 동적 경로는 함수로 정의
