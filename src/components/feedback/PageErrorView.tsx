@@ -1,13 +1,12 @@
 import { isAxiosError } from 'axios'
 
 import { ApiError } from '@/api/client/ApiError'
-import type { ErrorViewProps } from '@/components/feature/error/ErrorView'
-import { ErrorView } from '@/components/feature/error/ErrorView'
-import { PageStatusShell } from '@/components/feature/error/PageStatusShell'
 import type { AgentStatusMap } from '@/components/feature/office/Office'
 import { Office } from '@/components/feature/office/Office'
+import { PageStatusShell } from '@/components/feedback/PageStatusShell'
+import { StatusMessage, type StatusMessageProps } from '@/components/feedback/StatusMessage'
 
-interface PageErrorViewProps extends Partial<ErrorViewProps> {
+interface PageErrorViewProps extends Partial<StatusMessageProps> {
   onRetry?: () => void
   agentStatusMap?: AgentStatusMap
   error?: unknown
@@ -58,7 +57,7 @@ export function PageErrorView({
   return (
     <PageStatusShell headerText={headerText}>
       <Office agentStatusMap={agentStatusMap} isOffline={isNetworkError} />
-      <ErrorView
+      <StatusMessage
         {...props}
         title={title}
         description={<span className="block text-center whitespace-pre-line">{description}</span>}

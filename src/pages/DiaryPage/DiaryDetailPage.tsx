@@ -7,8 +7,8 @@ import {
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
 import { DiaryDetailShare } from '@/components/feature/diary/DiaryDetailShare'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useCreateDiaryShareImageMutation } from '@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation'
 import { useDiaryDetailQuery } from '@/pages/DiaryPage/hooks/useDiaryQueries'
 

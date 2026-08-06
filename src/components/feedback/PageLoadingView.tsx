@@ -1,7 +1,7 @@
-import { ErrorView } from '@/components/feature/error/ErrorView'
-import { PageStatusShell } from '@/components/feature/error/PageStatusShell'
 import type { AgentStatusMap } from '@/components/feature/office/Office'
 import { Office } from '@/components/feature/office/Office'
+import { PageStatusShell } from '@/components/feedback/PageStatusShell'
+import { StatusMessage } from '@/components/feedback/StatusMessage'
 
 interface PageLoadingViewProps {
   headerText?: string
@@ -23,7 +23,7 @@ export function PageLoadingView({
   return (
     <PageStatusShell headerText={headerText}>
       <Office agentStatusMap={agentStatusMap} />
-      <ErrorView
+      <StatusMessage
         title={title}
         description={<span className="block text-center whitespace-pre-line">{description}</span>}
       />

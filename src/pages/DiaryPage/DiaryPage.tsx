@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import { DiaryCalendar } from '@/components/feature/diary/DiaryCalendar'
 import { DiaryList } from '@/components/feature/diary/DiaryList'
 import { DiaryStatistics } from '@/components/feature/diary/DiaryStatistics'
 import { DiaryTabScreen } from '@/components/feature/diary/DiaryTabScreen'
 import type { DiaryView } from '@/components/feature/diary/DiaryViewTabs'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
-import Logo from '@/components/logos/logo-small.svg?react'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import {
   useDiaryCalendarQuery,

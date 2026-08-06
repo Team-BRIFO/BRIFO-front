@@ -67,7 +67,7 @@ export default function NavigationBar({
 
   return (
     <nav
-      className={`flex h-18 ${isFullWidth ? 'w-full' : 'mx-auto w-full max-w-[360px]'} border-Yellow-100 bg-White items-center justify-between rounded-t-2xl border-x border-t px-4 py-1.5 shadow-[0_0_20px_rgba(242,78,2,0.1)] ${className} `}
+      className={`flex h-18 ${isFullWidth ? 'w-full' : 'mx-auto w-full max-w-90'} border-Yellow-100 bg-White items-center justify-between rounded-t-2xl border-x border-t px-4 py-1.5 shadow-[0_0_20px_rgba(242,78,2,0.1)] ${className} `}
     >
       {NAV_ITEMS.map((item) => {
         return (

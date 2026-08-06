@@ -56,7 +56,7 @@ export function NewsCardInfo({
         <h2 className="text-Gray-9 pretendard-Body1-Semibold">{headline}</h2>
       </div>
       {imageUrl && (
-        <div className="bg-Gray-2 aspect-[2/1] w-full shrink-0 overflow-hidden rounded-lg">
+        <div className="bg-Gray-2 aspect-2/1 w-full shrink-0 overflow-hidden rounded-lg">
           <img src={imageUrl} alt="뉴스 썸네일" className="h-full w-full object-cover" />
         </div>
       )}

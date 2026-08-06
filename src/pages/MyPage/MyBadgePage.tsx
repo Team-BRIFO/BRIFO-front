@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { BadgeUnlockModal } from '@/components/feature/my/BadgeUnlockModal'
 import { MyBadgeGallery } from '@/components/feature/my/MyBadgeGallery'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useMyBadgeDetailQuery, useMyBadgesQuery } from '@/pages/MyPage/hooks/useMyQueries'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 

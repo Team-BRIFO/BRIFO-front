@@ -7,6 +7,8 @@
  */
 import { z as zod } from 'zod'
 
+export const getMyPageResponseStocksMax = 3
+
 export const GetMyPageResponse = zod.object({
   nickname: zod.string(),
   companyName: zod.string(),
@@ -16,12 +18,15 @@ export const GetMyPageResponse = zod.object({
   totalDecision: zod.int(),
   consecutiveDays: zod.int(),
   learnedTermCount: zod.int(),
-  stocks: zod.array(
-    zod.object({
-      stockId: zod.uuid(),
-      name: zod.string(),
-    }),
-  ),
+  stocks: zod
+    .array(
+      zod.object({
+        stockId: zod.uuid(),
+        name: zod.string(),
+      }),
+    )
+    .min(1)
+    .max(getMyPageResponseStocksMax),
 })
 
 export type GetMyPageResponse = zod.input<typeof GetMyPageResponse>

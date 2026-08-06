@@ -24,34 +24,39 @@ reviews:
   path_instructions:
     - path: '**/*'
       instructions: >
-        이 프로젝트의 스택 버전: React 19, TypeScript 5.x+, Vite(latest),
+        이 프로젝트의 스택 버전: React 19, TypeScript 6, Vite(latest),
         TailwindCSS v4(@tailwindcss/vite — v3의 tailwind.config.js 기반 설정이 아닌
         CSS 우선 설정 방식), TanStack Query v5, Zustand v5, React Router DOM v7,
-        React Hook Form v7 + Zod v4, ESLint 9(flat config), pnpm. 이 버전들을
+        Zod v4, ESLint 9(flat config), pnpm. 이 버전들을
         기준으로 리뷰하고, 구버전 API/문법(예: React Router v6 이하의 useHistory,
         Tailwind v3 전용 설정 방식, React 18 이하 관례 등)을 최신 표준이라고 착각해
         지적하지 않도록 주의해줘.
 
     - path: 'src/api/**/*.ts'
       instructions: >
-        이 프로젝트는 서버 상태를 TanStack Query로만 관리한다. 컴포넌트에서 axios를
-        직접 호출하지 않고 반드시 src/api/{도메인}.ts 레이어를 거치는지 확인해줘.
-        apiClient(src/api/axios.ts)의 인터셉터(JWT 주입, 401 처리) 패턴을 우회하는
-        별도의 axios 인스턴스 생성이 있는지 점검해줘.
+        OpenAPI endpoint와 schema는 src/api/generated에서 Orval로 생성한다.
+        컴포넌트는 axios를 직접 호출하지 않고 useApiQuery/useApiMutation 기반의
+        도메인·페이지 hook을 통해 요청해야 한다. 인증·timeout·401 처리는
+        src/api/client/axiosInstance.ts를 사용하며, 별도 axios 인스턴스 생성은 지적해줘.
 
     - path: 'src/components/**/*.tsx'
       instructions: >
-        components 폴더는 반드시 도메인 하위 폴더(agent/, briefing/, feed/, common/,
-        layouts/ 등)로 구성되어야 한다. 최상위에 바로 컴포넌트 파일이 추가되지
-        않았는지 확인해줘. 컴포넌트명은 PascalCase, 파일명은 export하는 컴포넌트명과
-        동일해야 한다. Tailwind 임의 hex 값(예: bg-[#ffffff]) 대신 프로젝트 디자인
-        토큰(BERIFO 디자인 시스템 색상/폰트 토큰) 사용을 권장해줘.
+        컴포넌트는 common, domain, feature, feedback 역할로 구분한다. 최상위에 바로
+        컴포넌트 파일이 추가되지 않았는지 확인해줘. 컴포넌트명은 PascalCase, 파일명은
+        export하는 컴포넌트명과 동일해야 한다. Tailwind 임의 hex 값(예: bg-[#ffffff])
+        대신 프로젝트 디자인 토큰(BRIFO 디자인 시스템 색상/폰트 토큰) 사용을 권장해줘.
 
     - path: 'src/pages/**/*.tsx'
       instructions: >
         페이지 컴포넌트는 pages/{도메인}/XxxPage.tsx 구조를 따라야 한다. 라우트 경로는
-        src/constants/routes.ts의 ROUTES 상수를 사용해야 하며, 문자열 경로 하드코딩이
+        src/routes/paths.ts의 PATH 상수를 사용해야 하며, 문자열 경로 하드코딩이
         있으면 지적해줘.
+
+    - path: 'src/routes/**/*.tsx'
+      instructions: >
+        Router의 path 정의도 src/routes/paths.ts의 PATH 상수로 관리해야 한다.
+        동적 라우트는 `..._ROUTE` 패턴 상수로, 화면 이동 URL은 인자를 받는 함수로
+        분리했는지 확인해줘.
 
     - path: 'src/stores/**/*.ts'
       instructions: >
@@ -60,11 +65,11 @@ reviews:
         Zustand에 그대로 캐싱하려는 패턴이 보이면, TanStack Query로 옮기는 것을
         제안해줘.
 
-    - path: 'src/constants/queryKeys.ts'
+    - path: 'src/**/*.{ts,tsx}'
       instructions: >
-        React Query의 쿼리 키는 이 파일에서 중앙 관리되어야 한다. 컴포넌트나 훅에서
-        인라인 배열(예: ['agents', 'mine'])을 직접 쓰는 코드가 있으면 이 파일의 키를
-        사용하도록 지적해줘.
+        React Query query key는 src/hooks/queries/{domain} 또는 페이지 전용 hooks의
+        query key factory로 관리한다. 컴포넌트·훅에서 인라인 배열(예: ['agents', 'mine'])을
+        직접 쓰는 코드가 있으면 해당 factory를 사용하도록 지적해줘.
 
     - path: 'src/**/*.{ts,tsx}'
       instructions: >

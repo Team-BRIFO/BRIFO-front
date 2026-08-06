@@ -1,4 +1,4 @@
-import NotificationIcon from '@/assets/images/notification_face.svg?react'
+import notificationIconUrl from '@/assets/images/notification_face.png'
 
 interface NotificationItemProps {
   title: string
@@ -19,7 +19,7 @@ export default function NotificationItem({
       onClick={onClick}
       className="border-Gray-2 flex w-full items-start gap-3 rounded-lg border bg-white p-3 text-left"
     >
-      <NotificationIcon className="h-10 w-10 shrink-0" />
+      <img src={notificationIconUrl} alt="" className="h-10 w-10 shrink-0" />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">

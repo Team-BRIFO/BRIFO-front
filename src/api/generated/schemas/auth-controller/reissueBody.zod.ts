@@ -8,7 +8,7 @@
 import { z as zod } from 'zod'
 
 export const ReissueBody = zod.object({
-  refreshToken: zod.string().optional(),
+  refreshToken: zod.string(),
 })
 
 export type ReissueBody = zod.input<typeof ReissueBody>

@@ -7,6 +7,7 @@ interface PageStatusShellProps {
   children: ReactNode
 }
 
+/** 페이지 로딩·오류 상태의 공통 레이아웃입니다. */
 export function PageStatusShell({ headerText, children }: PageStatusShellProps) {
   return (
     <div className="flex w-full flex-1 flex-col gap-3 overflow-y-auto px-4 pt-3 pb-10">

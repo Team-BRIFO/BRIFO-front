@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 
+import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarSettingsButton } from '@/components/common/StatusBar'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyHome } from '@/components/feature/my/MyHome'
-import Logo from '@/components/logos/logo-small.svg?react'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import type { MyMenuKey } from '@/constants/myMenu'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { PATH } from '@/routes/paths'

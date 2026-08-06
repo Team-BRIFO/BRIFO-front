@@ -22,7 +22,7 @@ export function Chip({ children, onRemove, disabled = false, className = '' }: C
   return (
     <div
       className={[
-        'inline-flex h-[1.625rem] items-center justify-center gap-1',
+        'inline-flex h-6.5 items-center justify-center gap-1',
         'bg-Background1 rounded-[20px] px-3 py-1.5 transition-colors duration-150',
         'text-Gray-6 pretendard-Caption1',
         disabled ? 'pointer-events-none cursor-not-allowed opacity-40' : '',

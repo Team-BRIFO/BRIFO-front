@@ -2,14 +2,19 @@ import type { ReactNode } from 'react'
 
 import Button from '@/components/common/Button'
 
-export interface ErrorViewProps {
+export interface StatusMessageProps {
   title: string
   description: ReactNode
   buttonText?: string
   onButtonClick?: () => void
 }
 
-export function ErrorView({ title, description, buttonText, onButtonClick }: ErrorViewProps) {
+export function StatusMessage({
+  title,
+  description,
+  buttonText,
+  onButtonClick,
+}: StatusMessageProps) {
   return (
     <div className="bg-White flex flex-col items-center justify-center gap-6 rounded-xl px-4 py-7">
       <div className="flex flex-col items-center gap-2 text-center">

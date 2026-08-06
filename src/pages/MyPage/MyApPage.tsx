@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { MyApHistory } from '@/components/feature/my/MyApHistory'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useMyApTransactionsQuery } from '@/pages/MyPage/hooks/useMyQueries'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import type { ApPeriod } from '@/types/domain/ap'

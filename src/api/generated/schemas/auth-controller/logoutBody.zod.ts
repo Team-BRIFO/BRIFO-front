@@ -8,7 +8,7 @@
 import { z as zod } from 'zod'
 
 export const LogoutBody = zod.object({
-  refreshToken: zod.string().optional(),
+  refreshToken: zod.string(),
 })
 
 export type LogoutBody = zod.input<typeof LogoutBody>

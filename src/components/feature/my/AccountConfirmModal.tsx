@@ -54,7 +54,7 @@ export function AccountConfirmModal({
       <Modal.Header className="flex flex-col items-center gap-4 text-center">
         <h2 className="dnf-Title4 text-Gray-10">{title}</h2>
         {description && (
-          <p className="font-pretendard text-Gray-6 text-[0.875rem] leading-5 font-normal tracking-[-0.56px] whitespace-pre-line">
+          <p className="font-pretendard text-Gray-6 text-sm leading-5 font-normal tracking-[-0.56px] whitespace-pre-line">
             {description}
           </p>
         )}

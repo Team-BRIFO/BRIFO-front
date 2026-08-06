@@ -134,7 +134,7 @@ const SIZE_STYLES: Record<BadgeSize, string> = {
   sm: 'h-4 px-2 pretendard-Caption1',
   md: 'h-5 px-2 pretendard-Caption1 gap-1',
   lg: 'h-6 px-3 pretendard-Caption1',
-  xl: 'h-[1.625rem] px-3 pretendard-Caption1',
+  xl: 'h-6.5 px-3 pretendard-Caption1',
 }
 
 const INDICATOR_SIZE_STYLES: Record<BadgeSize, string> = {

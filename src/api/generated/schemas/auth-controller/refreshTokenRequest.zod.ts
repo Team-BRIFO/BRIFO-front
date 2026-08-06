@@ -8,7 +8,7 @@
 import { z as zod } from 'zod'
 
 export const RefreshTokenRequest = zod.object({
-  refreshToken: zod.string().optional(),
+  refreshToken: zod.string(),
 })
 
 export type RefreshTokenRequest = zod.input<typeof RefreshTokenRequest>

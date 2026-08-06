@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-import { ErrorPageTemplate } from '@/components/feature/error/ErrorPageTemplate'
+import { PageStatusTemplate } from '@/components/feedback/PageStatusTemplate'
 import { PATH } from '@/routes/paths'
 
 /** 404 페이지 */
@@ -8,7 +8,7 @@ export function NotFoundPage() {
   const navigate = useNavigate()
 
   return (
-    <ErrorPageTemplate
+    <PageStatusTemplate
       headerText="404 Not Found"
       title="길을 잘못 드셨어요"
       description={

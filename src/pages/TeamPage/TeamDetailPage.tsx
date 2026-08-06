@@ -5,9 +5,9 @@ import {
   StatusBarBackButton,
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
 import { AgentDetailSection } from '@/components/feature/myEmployee/AgentDetailSection'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useAgentDetailQuery } from '@/pages/TeamPage/hooks/useAgentDetailQuery'
 import { PATH } from '@/routes/paths'
 

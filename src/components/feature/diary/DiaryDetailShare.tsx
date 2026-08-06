@@ -92,7 +92,7 @@ export function DiaryDetailShare({
         />
       ) : (
         <div
-          className="border-Gray-2 bg-White mx-auto flex w-full max-w-[320px] items-center justify-center rounded-xl border"
+          className="border-Gray-2 bg-White mx-auto flex w-full max-w-80 items-center justify-center rounded-xl border"
           style={{ aspectRatio: CARD_ASPECT }}
         >
           {isFailed ? (

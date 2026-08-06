@@ -7,8 +7,8 @@ import {
 } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { BriefingAgentListItem } from '@/components/feature/briefing/BriefingAgentListItem'
-import { PageErrorView } from '@/components/feature/error/PageErrorView'
-import { PageLoadingView } from '@/components/feature/error/PageLoadingView'
+import { PageErrorView } from '@/components/feedback/PageErrorView'
+import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
 
