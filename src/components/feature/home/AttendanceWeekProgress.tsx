@@ -4,6 +4,24 @@ import StarIcon from '@/assets/icons/star.svg?react'
 
 const DAYS = ['월', '화', '수', '목', '금', '토', '일'] as const
 
+function getValidDayIndex(dateString: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString)
+
+  if (!match) return null
+
+  const [, yearText, monthText, dayText] = match
+  const year = Number(yearText)
+  const month = Number(monthText)
+  const day = Number(dayText)
+  const date = new Date(year, month - 1, day)
+
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null
+  }
+
+  return (date.getDay() + 6) % DAYS.length
+}
+
 interface AttendanceWeekProgressProps {
   attendedDays: number
   attendanceDates: string[]
@@ -17,11 +35,9 @@ export default function AttendanceWeekProgress({
   const safeAttendedDays = Math.min(Math.max(attendedDays, 0), totalDays)
   const attendedDayIndexes = new Set(
     attendanceDates.flatMap((date) => {
-      const [year, month, day] = date.split('-').map(Number)
+      const dayIndex = getValidDayIndex(date)
 
-      if (!year || !month || !day) return []
-
-      return [(new Date(year, month - 1, day).getDay() + 6) % totalDays]
+      return dayIndex === null ? [] : [dayIndex]
     }),
   )
 
