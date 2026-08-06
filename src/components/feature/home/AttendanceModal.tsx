@@ -6,6 +6,7 @@ import AttendanceWeekProgress from '@/components/feature/home/AttendanceWeekProg
 interface AttendanceModalProps {
   isOpen: boolean
   attendedDays: number
+  attendanceDates: string[]
   reward: number
   isAttended?: boolean
   isPending?: boolean
@@ -16,6 +17,7 @@ interface AttendanceModalProps {
 export default function AttendanceModal({
   isOpen,
   attendedDays,
+  attendanceDates,
   reward,
   isAttended = false,
   isPending = false,
@@ -38,7 +40,7 @@ export default function AttendanceModal({
 
         {/* 주간 출석 현황 */}
         <div className="mt-8">
-          <AttendanceWeekProgress attendedDays={attendedDays} attendedToday={isAttended} />
+          <AttendanceWeekProgress attendedDays={attendedDays} attendanceDates={attendanceDates} />
         </div>
       </Modal.Body>
 

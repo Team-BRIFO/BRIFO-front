@@ -109,6 +109,7 @@ export function HomePage() {
       <AttendanceModal
         isOpen={isAttendanceModalOpen}
         attendedDays={home?.weeklyAttendanceDays ?? 0}
+        attendanceDates={home?.dates ?? []}
         reward={50}
         isAttended={home?.attendedToday ?? false}
         isPending={attendanceReward.isPending}

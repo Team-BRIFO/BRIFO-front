@@ -6,18 +6,24 @@ const DAYS = ['월', '화', '수', '목', '금', '토', '일'] as const
 
 interface AttendanceWeekProgressProps {
   attendedDays: number
-  attendedToday: boolean
+  attendanceDates: string[]
 }
 
 export default function AttendanceWeekProgress({
   attendedDays,
-  attendedToday,
+  attendanceDates,
 }: AttendanceWeekProgressProps) {
   const totalDays = DAYS.length
   const safeAttendedDays = Math.min(Math.max(attendedDays, 0), totalDays)
-  const todayIndex = (new Date().getDay() + 6) % totalDays
-  const lastAttendedDayIndex = attendedToday ? todayIndex : todayIndex - 1
-  const firstAttendedDayIndex = lastAttendedDayIndex - safeAttendedDays + 1
+  const attendedDayIndexes = new Set(
+    attendanceDates.flatMap((date) => {
+      const [year, month, day] = date.split('-').map(Number)
+
+      if (!year || !month || !day) return []
+
+      return [(new Date(year, month - 1, day).getDay() + 6) % totalDays]
+    }),
+  )
 
   return (
     <section className="w-full">
@@ -33,8 +39,7 @@ export default function AttendanceWeekProgress({
 
       <div className="mt-3 grid grid-cols-7 gap-1.5">
         {DAYS.map((day, index) => {
-          const isAttended =
-            index >= Math.max(firstAttendedDayIndex, 0) && index <= lastAttendedDayIndex
+          const isAttended = attendedDayIndexes.has(index)
 
           return (
             <div key={day} className="flex flex-col items-center gap-1.5">
