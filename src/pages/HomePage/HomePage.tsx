@@ -10,22 +10,47 @@ import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
-import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
-import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
+import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueries'
+import { useSettlementCountdown } from '@/pages/HomePage/hooks/useSettlementCountdown'
+import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
 import { PATH } from '@/routes/paths'
-import { useProfileStore } from '@/stores/useProfileStore'
+
+function formatBatchTime(batchTime?: string) {
+  if (!batchTime) return { date: '', time: '' }
+
+  const date = new Date(batchTime)
+  return {
+    date: `${date.getMonth() + 1}/${date.getDate()}`,
+    time: new Intl.DateTimeFormat('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(date),
+  }
+}
 
 export function HomePage() {
   const navigate = useNavigate()
   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false)
-  const nickname = useProfileStore((state) => state.nickname)
-  const companyName = useProfileStore((state) => state.companyName)
-
-  const userQuery = useUserProfileQuery()
-
-  const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
-    : '0 AP'
+  const attendanceReward = useCreateAttendanceRewardMutation()
+  const homeQuery = useUserHomeQuery()
+  const settlementRemainingTime = useSettlementCountdown()
+  const home = homeQuery.data
+  const balanceText = `${(home?.user.balanceAp ?? 0).toLocaleString()} AP`
+  const employeeLevels = Object.fromEntries(
+    (home?.agents ?? []).map((agent) => [agent.agentType, agent.level]),
+  )
+  const cardNewsItems = (home?.todayNewsCards.items ?? []).map((item) => ({
+    id: item.cardId,
+    stock: {
+      name: item.stock.name,
+      changeRate: item.stock.changeRate,
+    },
+    newsCount: 1,
+    headline: item.headline,
+    isCompleted: false,
+  }))
+  const batchTime = formatBatchTime(home?.todayNewsCards.batchTime)
 
   return (
     <>
@@ -46,14 +71,20 @@ export function HomePage() {
 
         {/* 상단 흰색 영역 */}
         <div className="flex w-full flex-col px-4 pb-7">
-          <HomeHeader nickname={nickname} companyName={companyName} />
+          <HomeHeader
+            nickname={home?.user.nickname ?? ''}
+            companyName={home?.user.companyName ?? ''}
+          />
 
           <div className="flex flex-col gap-3">
-            <OfficeCard />
+            <OfficeCard levels={employeeLevels} />
 
             <div className="grid grid-cols-2 gap-3">
-              <SettlementCard remainingTime="02:18:42" />
-              <PredictionCard count={3} onClick={() => navigate(PATH.OFFICE_PREDICTION)} />
+              <SettlementCard remainingTime={settlementRemainingTime} />
+              <PredictionCard
+                count={home?.todayDecisions.count ?? 0}
+                onClick={() => navigate(PATH.OFFICE_PREDICTION)}
+              />
             </div>
 
             <AttendanceBonusCard
@@ -68,9 +99,9 @@ export function HomePage() {
         <section className="bg-Background1 w-full pt-6 pb-24">
           <div className="px-4">
             <HomeCardNewsSection
-              items={HOME_CARD_NEWS_MOCK_DATA}
-              date="5/28"
-              time="09:30"
+              items={cardNewsItems}
+              date={batchTime.date}
+              time={batchTime.time}
               onItemClick={(id) => navigate(PATH.CARD_NEWS_DETAIL(String(id)))}
             />
           </div>
@@ -79,12 +110,16 @@ export function HomePage() {
 
       <AttendanceModal
         isOpen={isAttendanceModalOpen}
-        attendedDays={5}
+        attendedDays={home?.weeklyAttendanceDays ?? 0}
+        attendanceDates={home?.dates ?? []}
         reward={50}
+        isAttended={home?.attendedToday ?? false}
+        isPending={attendanceReward.isPending}
         onClose={() => setIsAttendanceModalOpen(false)}
         onComplete={() => {
-          // TODO: 출석 API 호출
-          setIsAttendanceModalOpen(false)
+          attendanceReward.mutate(undefined, {
+            onSuccess: () => setIsAttendanceModalOpen(false),
+          })
         }}
       />
     </>

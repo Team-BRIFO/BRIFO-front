@@ -4,13 +4,42 @@ import StarIcon from '@/assets/icons/star.svg?react'
 
 const DAYS = ['월', '화', '수', '목', '금', '토', '일'] as const
 
-interface AttendanceWeekProgressProps {
-  attendedDays: number
+function getValidDayIndex(dateString: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString)
+
+  if (!match) return null
+
+  const [, yearText, monthText, dayText] = match
+  const year = Number(yearText)
+  const month = Number(monthText)
+  const day = Number(dayText)
+  const date = new Date(year, month - 1, day)
+
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null
+  }
+
+  return (date.getDay() + 6) % DAYS.length
 }
 
-export default function AttendanceWeekProgress({ attendedDays }: AttendanceWeekProgressProps) {
+interface AttendanceWeekProgressProps {
+  attendedDays: number
+  attendanceDates: string[]
+}
+
+export default function AttendanceWeekProgress({
+  attendedDays,
+  attendanceDates,
+}: AttendanceWeekProgressProps) {
   const totalDays = DAYS.length
   const safeAttendedDays = Math.min(Math.max(attendedDays, 0), totalDays)
+  const attendedDayIndexes = new Set(
+    attendanceDates.flatMap((date) => {
+      const dayIndex = getValidDayIndex(date)
+
+      return dayIndex === null ? [] : [dayIndex]
+    }),
+  )
 
   return (
     <section className="w-full">
@@ -26,7 +55,7 @@ export default function AttendanceWeekProgress({ attendedDays }: AttendanceWeekP
 
       <div className="mt-3 grid grid-cols-7 gap-1.5">
         {DAYS.map((day, index) => {
-          const isAttended = index < safeAttendedDays
+          const isAttended = attendedDayIndexes.has(index)
 
           return (
             <div key={day} className="flex flex-col items-center gap-1.5">

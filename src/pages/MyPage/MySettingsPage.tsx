@@ -27,21 +27,9 @@ export function MySettingsPage() {
   const removeAccount = useDeleteMyAccountMutation()
   const logout = useLogoutMutation()
   const [action, setAction] = useState<AccountActionType | null>(null)
-
-  const finishLogout = () => {
-    browserTokenStore.clear()
-    queryClient.clear()
-    navigate(PATH.SPLASH, { replace: true })
-  }
-
-  const resetAccountAction = () => {
-    logout.reset()
-    removeAccount.reset()
-  }
-
   const onSelect = (key: MyMenuKey) => {
     if (key === 'logout' || key === 'withdraw') {
-      resetAccountAction()
+      removeAccount.reset()
       setAction(key)
       return
     }
@@ -51,17 +39,21 @@ export function MySettingsPage() {
   const onConfirm = () => {
     if (action === 'logout') {
       const refreshToken = browserTokenStore.getRefreshToken()
+
       if (!refreshToken) {
-        finishLogout()
+        browserTokenStore.clear()
+        queryClient.clear()
+        navigate(PATH.SPLASH, { replace: true })
         return
       }
 
       logout.mutate(
         { refreshToken },
         {
-          onSuccess: finishLogout,
-          onError: (error) => {
-            if (error.status === 401) finishLogout()
+          onSuccess: () => {
+            browserTokenStore.clear()
+            queryClient.clear()
+            navigate(PATH.SPLASH, { replace: true })
           },
         },
       )
@@ -81,7 +73,7 @@ export function MySettingsPage() {
         isOpen={Boolean(action)}
         type={action ?? 'logout'}
         onClose={() => {
-          resetAccountAction()
+          removeAccount.reset()
           setAction(null)
         }}
         onConfirm={onConfirm}
