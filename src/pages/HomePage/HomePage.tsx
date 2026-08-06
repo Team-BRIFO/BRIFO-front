@@ -11,7 +11,7 @@ import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
 import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueries'
-import { useUserHomeQuery } from '@/hooks/queries/user/useUserHomeQuery'
+import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
 import { PATH } from '@/routes/paths'
 
 function formatBatchTime(batchTime?: string) {
