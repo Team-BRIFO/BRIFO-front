@@ -5,6 +5,7 @@ import { ApiResponse, type UpdateUserProfileRequest } from '@/api/generated/sche
 import { useApiMutation } from '@/hooks/api'
 import { userQueryKeys } from '@/hooks/queries/user/userQueryKeys'
 import type { UserProfileFormValues } from '@/types/domain/user'
+import { normalizeProfileText } from '@/utils/profileValidation'
 
 export function useUpdateMyProfileMutation() {
   const queryClient = useQueryClient()
@@ -15,8 +16,8 @@ export function useUpdateMyProfileMutation() {
     responseSchema: ApiResponse,
     getArgs: (values: UserProfileFormValues): [UpdateUserProfileRequest] => [
       {
-        nickname: values.nickname,
-        companyName: values.companyName,
+        nickname: normalizeProfileText(values.nickname),
+        companyName: normalizeProfileText(values.companyName),
         stockIds: values.interestStocks.map((stock) => stock.id),
       },
     ],
