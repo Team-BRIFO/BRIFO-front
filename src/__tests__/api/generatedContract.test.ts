@@ -3,7 +3,14 @@ import { describe, expect, it } from 'vitest'
 import { createAxiosAdapter } from '@/__tests__/api/testAxiosAdapter'
 import { getDiaries } from '@/api/generated/endpoints/diary-controller/diary-controller'
 import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-controller'
-import { ApiErrorResponse, ApiResponseGetAgentsResponse } from '@/api/generated/schemas'
+import {
+  ApiErrorResponse,
+  ApiResponseGetAgentsResponse,
+  GetMyPageResponse,
+  LogoutBody,
+  UpdateOnboardingProfileRequest,
+  UpdateUserProfileRequest,
+} from '@/api/generated/schemas'
 
 describe('generated OpenAPI contract', () => {
   it('keeps generated paths relative and serializes object query parameters centrally', async () => {
@@ -71,5 +78,59 @@ describe('generated OpenAPI contract', () => {
       code: 'COMMON_400',
       message: '잘못된 요청입니다.',
     })
+  })
+
+  it('matches the current My/Auth OpenAPI constraints', () => {
+    const stockId = '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31'
+    const stocks = Array.from({ length: 3 }, (_, index) => ({
+      stockId: `${stockId.slice(0, -1)}${index + 1}`,
+      name: `종목 ${index + 1}`,
+    }))
+    const fourthStockId = `${stockId.slice(0, -1)}4`
+    const validProfile = {
+      nickname: '브리포',
+      companyName: '브리포 투자사',
+    }
+
+    expect(LogoutBody.safeParse({}).success).toBe(false)
+    expect(LogoutBody.safeParse({ refreshToken: 'refresh-token' }).success).toBe(true)
+    expect(UpdateUserProfileRequest.safeParse({ ...validProfile, stockIds: [] }).success).toBe(
+      false,
+    )
+    expect(
+      UpdateUserProfileRequest.safeParse({
+        ...validProfile,
+        stockIds: [...stocks.map((stock) => stock.stockId), fourthStockId],
+      }).success,
+    ).toBe(false)
+    expect(
+      UpdateOnboardingProfileRequest.safeParse({ ...validProfile, stockIds: [stockId] }).success,
+    ).toBe(true)
+    expect(
+      GetMyPageResponse.safeParse({
+        nickname: '브리포',
+        companyName: '브리포 투자사',
+        balanceAp: 0,
+        thisWeekEarnedAp: 0,
+        decisionAccuracyRate: 0,
+        totalDecision: 0,
+        consecutiveDays: 0,
+        learnedTermCount: 0,
+        stocks,
+      }).success,
+    ).toBe(true)
+    expect(
+      GetMyPageResponse.safeParse({
+        nickname: '브리포',
+        companyName: '브리포 투자사',
+        balanceAp: 0,
+        thisWeekEarnedAp: 0,
+        decisionAccuracyRate: 0,
+        totalDecision: 0,
+        consecutiveDays: 0,
+        learnedTermCount: 0,
+        stocks: [],
+      }).success,
+    ).toBe(false)
   })
 })

@@ -11,11 +11,7 @@ export const ApiResponseDevSignUpResponse = zod.object({
   success: zod.boolean(),
   code: zod.string(),
   message: zod.string(),
-  result: zod
-    .object({
-      signupToken: zod.string(),
-    })
-    .optional(),
+  result: zod.unknown().optional(),
 })
 
 export type ApiResponseDevSignUpResponse = zod.input<typeof ApiResponseDevSignUpResponse>

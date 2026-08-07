@@ -23,6 +23,7 @@ export const GetMyPageResponse = zod.object({
       zod.object({
         stockId: zod.uuid(),
         name: zod.string(),
+        logoUrl: zod.string().optional(),
       }),
     )
     .min(1)

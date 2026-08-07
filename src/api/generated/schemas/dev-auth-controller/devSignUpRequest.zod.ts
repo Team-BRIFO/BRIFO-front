@@ -8,7 +8,7 @@
 import { z as zod } from 'zod'
 
 export const DevSignUpRequest = zod.object({
-  password: zod.string(),
+  password: zod.string().min(1),
 })
 
 export type DevSignUpRequest = zod.input<typeof DevSignUpRequest>

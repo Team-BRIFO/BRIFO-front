@@ -10,7 +10,8 @@ import { z as zod } from 'zod'
 export const HomeNewsStock = zod.object({
   stockId: zod.uuid(),
   name: zod.string(),
-  changeRate: zod.number().optional(),
+  logoUrl: zod.string().optional(),
+  changeRate: zod.number(),
 })
 
 export type HomeNewsStock = zod.input<typeof HomeNewsStock>

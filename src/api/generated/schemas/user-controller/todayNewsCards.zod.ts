@@ -21,7 +21,8 @@ export const TodayNewsCards = zod.object({
       stock: zod.object({
         stockId: zod.uuid(),
         name: zod.string(),
-        changeRate: zod.number().optional(),
+        logoUrl: zod.string().optional(),
+        changeRate: zod.number(),
       }),
     }),
   ),

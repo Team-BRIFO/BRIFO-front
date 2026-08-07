@@ -12,7 +12,8 @@ export const StockNewsCard = zod.object({
   source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
   headline: zod.string(),
   importanceBadge: zod.enum(['HOT', 'MID', 'LOW']),
-  publishedDate: zod.iso.date(),
+  publishedDate: zod.iso.datetime({ offset: true }),
+  imageUrl: zod.string().optional(),
   points: zod.array(zod.string()),
   keywords: zod.array(zod.string()),
   terms: zod.array(

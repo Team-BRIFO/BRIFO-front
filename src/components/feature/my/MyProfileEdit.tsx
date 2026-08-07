@@ -7,47 +7,15 @@ import { TextField } from '@/components/common/TextField'
 import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { AgentType } from '@/types/domain/agent'
 import type { UserInterestStock, UserProfileFormValues } from '@/types/domain/user'
-
-/** 닉네임 정책: 앞뒤 공백을 제외한 1~50자, 문자 종류 제한 없음 */
-const NICKNAME_MIN_LENGTH = 1
-const NICKNAME_MAX_LENGTH = 50
-
-const NICKNAME_HELPER_TEXT = '1~50글자 제한'
-
-const COMPANY_NAME_MAX_LENGTH = 100
-const COMPANY_NAME_HELPER_TEXT = '100글자 이내'
-const INTEREST_STOCK_MIN_COUNT = 1
-const INTEREST_STOCK_MAX_COUNT = 3
-
-function validateNickname(value: string) {
-  const trimmed = value.trim()
-
-  if (trimmed.length === 0) return '닉네임을 입력해주세요.'
-  if (trimmed.length < NICKNAME_MIN_LENGTH || trimmed.length > NICKNAME_MAX_LENGTH) {
-    return `닉네임은 ${NICKNAME_MIN_LENGTH}~${NICKNAME_MAX_LENGTH}자로 입력해주세요.`
-  }
-  return undefined
-}
-
-function validateCompanyName(value: string) {
-  const trimmed = value.trim()
-
-  if (trimmed.length === 0) return '회사명을 입력해주세요.'
-  if (trimmed.length > COMPANY_NAME_MAX_LENGTH) {
-    return `회사명은 ${COMPANY_NAME_MAX_LENGTH}글자까지 입력할 수 있어요.`
-  }
-
-  return undefined
-}
-
-function validateInterestStocks(stocks: UserInterestStock[]) {
-  if (stocks.length < INTEREST_STOCK_MIN_COUNT) return '관심종목을 최소 1개 선택해주세요.'
-  if (stocks.length > INTEREST_STOCK_MAX_COUNT) return '관심종목은 최대 3개까지 선택할 수 있어요.'
-  if (new Set(stocks.map((stock) => stock.id)).size !== stocks.length) {
-    return '중복된 관심종목이 포함되어 있어요.'
-  }
-  return undefined
-}
+import {
+  MAX_INTEREST_STOCK_COUNT,
+  MIN_INTEREST_STOCK_COUNT,
+  normalizeProfileText,
+  PROFILE_INPUT_PLACEHOLDER,
+  validateCompanyName,
+  validateInterestStockIds,
+  validateNickname,
+} from '@/utils/profileValidation'
 
 export interface MyProfileEditProps {
   initialValues: UserProfileFormValues
@@ -57,8 +25,8 @@ export interface MyProfileEditProps {
   /** 캐릭터 변경 진입 — 미전달 시 텍스트만 표시 */
   onChangeCharacter?: () => void
   isSubmitting?: boolean
-  /** 특정 필드에 속하지 않는 저장 오류 */
-  submitError?: string
+  /** 클라이언트 유효성 오류와 구분해 표시하는 서버 저장 오류 */
+  serverError?: string
 }
 
 /** 프로필 편집 화면(SCR-13) 본문 — 캐릭터 · 닉네임 · 회사명 · 관심종목 */
@@ -68,18 +36,16 @@ export function MyProfileEdit({
   onSubmit,
   onChangeCharacter,
   isSubmitting = false,
-  submitError,
+  serverError,
 }: MyProfileEditProps) {
   const [nickname, setNickname] = useState(initialValues.nickname)
   const [companyName, setCompanyName] = useState(initialValues.companyName)
   const [interestStocks, setInterestStocks] = useState<UserInterestStock[]>(
     initialValues.interestStocks,
   )
-  const [isSubmitAttempted, setIsSubmitAttempted] = useState(false)
-
   const nicknameError = validateNickname(nickname)
   const companyNameError = validateCompanyName(companyName)
-  const interestStocksError = validateInterestStocks(interestStocks)
+  const interestStocksError = validateInterestStockIds(interestStocks.map((stock) => stock.id))
   const isValid = !nicknameError && !companyNameError && !interestStocksError
 
   const handleRemoveStock = (stockId: string) => {
@@ -87,12 +53,11 @@ export function MyProfileEdit({
   }
 
   const handleSubmit = () => {
-    setIsSubmitAttempted(true)
     if (!isValid) return
 
     onSubmit({
-      nickname: nickname.trim(),
-      companyName: companyName.trim(),
+      nickname: normalizeProfileText(nickname),
+      companyName: normalizeProfileText(companyName),
       interestStocks,
     })
   }
@@ -119,8 +84,8 @@ export function MyProfileEdit({
           label="닉네임"
           value={nickname}
           onChange={(event) => setNickname(event.target.value)}
-          placeholder={NICKNAME_HELPER_TEXT}
-          errorMessage={isSubmitAttempted ? nicknameError : undefined}
+          placeholder={PROFILE_INPUT_PLACEHOLDER}
+          errorMessage={nicknameError}
           required
         />
 
@@ -128,8 +93,8 @@ export function MyProfileEdit({
           label="회사명"
           value={companyName}
           onChange={(event) => setCompanyName(event.target.value)}
-          placeholder={COMPANY_NAME_HELPER_TEXT}
-          errorMessage={isSubmitAttempted ? companyNameError : undefined}
+          placeholder={PROFILE_INPUT_PLACEHOLDER}
+          errorMessage={companyNameError}
           required
         />
 
@@ -145,7 +110,7 @@ export function MyProfileEdit({
                   key={stock.id}
                   className="bg-Yellow-100 text-Yellow-10"
                   onRemove={() => handleRemoveStock(stock.id)}
-                  disabled={interestStocks.length === INTEREST_STOCK_MIN_COUNT}
+                  disabled={interestStocks.length === MIN_INTEREST_STOCK_COUNT}
                 >
                   {stock.name}
                 </Chip>
@@ -157,7 +122,7 @@ export function MyProfileEdit({
                     디자인에 문의 후, 온보딩 종목 선택 UI를 그대로 가져와 연결할 것.
                     (참고 피그마: node 1054:5175 — 인기 순위 제외 여부는 디자인 확인)
             */}
-            {interestStocks.length < INTEREST_STOCK_MAX_COUNT && (
+            {interestStocks.length < MAX_INTEREST_STOCK_COUNT && (
               <button
                 type="button"
                 disabled
@@ -170,22 +135,22 @@ export function MyProfileEdit({
             )}
           </div>
 
-          {isSubmitAttempted && interestStocksError && (
+          {interestStocksError && (
             <span className="pretendard-Caption2 text-Pink-30">{interestStocksError}</span>
           )}
         </div>
       </div>
 
-      {submitError && (
+      {serverError && (
         <p role="alert" className="pretendard-Caption1 text-Pink-30 text-center">
-          {submitError}
+          저장 오류: {serverError}
         </p>
       )}
 
       <Button
         size="lg"
         isFullWidth
-        disabled={isSubmitting || (isSubmitAttempted && !isValid)}
+        disabled={isSubmitting || !isValid}
         onClick={handleSubmit}
         className="mt-auto"
       >

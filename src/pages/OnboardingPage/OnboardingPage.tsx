@@ -7,14 +7,19 @@ import { TextField } from '@/components/common/TextField'
 import { Toast } from '@/components/common/Toast'
 import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
 import StockSearchView from '@/components/feature/onboarding/StockSearchView'
-import { useProfileNameValidation } from '@/hooks/useProfileNameValidation'
 import { useOnboardingStocksQuery } from '@/pages/OnboardingPage/hooks/useOnboardingStocksQuery'
 import { useUpdateOnboardingProfileMutation } from '@/pages/OnboardingPage/hooks/useUpdateOnboardingProfileMutation'
 import { PATH } from '@/routes/paths'
 import { useProfileStore } from '@/stores/useProfileStore'
-
-const MIN_STOCK_COUNT = 3
-const MAX_STOCK_COUNT = 3
+import {
+  DEFAULT_COMPANY_NAME,
+  MAX_INTEREST_STOCK_COUNT,
+  normalizeProfileText,
+  PROFILE_INPUT_PLACEHOLDER,
+  validateCompanyName,
+  validateInterestStockIds,
+  validateNickname,
+} from '@/utils/profileValidation'
 
 const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사', 'zI존']
 
@@ -26,22 +31,21 @@ export function OnboardingPage() {
   const stocks = stocksQuery.data ?? []
 
   const [nickname, setNickname] = useState('')
-  const [companyName, setCompanyName] = useState('')
+  const [companyName, setCompanyName] = useState(DEFAULT_COMPANY_NAME)
+  const [isNicknameTouched, setIsNicknameTouched] = useState(false)
+  const [isCompanyNameTouched, setIsCompanyNameTouched] = useState(false)
+  const [hasVisitedStockSelection, setHasVisitedStockSelection] = useState(false)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedStockIds, setSelectedStockIds] = useState<string[]>([])
   const [isStockSearchOpen, setIsStockSearchOpen] = useState(false)
 
-  const { isValid: hasValidNickname, errorMessage: nicknameError } =
-    useProfileNameValidation(nickname)
-  const { isValid: hasValidCompanyName, errorMessage: companyNameError } =
-    useProfileNameValidation(companyName)
-
-  const hasValidStockCount =
-    selectedStockIds.length >= MIN_STOCK_COUNT && selectedStockIds.length <= MAX_STOCK_COUNT
-
-  const isFormValid = hasValidNickname && hasValidCompanyName && hasValidStockCount
+  const nicknameError = validateNickname(nickname)
+  const companyNameError = validateCompanyName(companyName)
+  const interestStocksError = validateInterestStockIds(selectedStockIds)
+  const isFormValid = !nicknameError && !companyNameError && !interestStocksError
 
   const handleToggleStock = (stockId: string) => {
+    setHasVisitedStockSelection(true)
     setSelectedStockIds((previous) => {
       const isSelected = previous.includes(stockId)
 
@@ -49,7 +53,7 @@ export function OnboardingPage() {
         return previous.filter((id) => id !== stockId)
       }
 
-      if (previous.length >= MAX_STOCK_COUNT) {
+      if (previous.length >= MAX_INTEREST_STOCK_COUNT) {
         return previous
       }
 
@@ -61,8 +65,8 @@ export function OnboardingPage() {
     if (!isFormValid) return
 
     const profile = {
-      nickname: nickname.trim(),
-      companyName: companyName.trim(),
+      nickname: normalizeProfileText(nickname),
+      companyName: normalizeProfileText(companyName),
       stockIds: selectedStockIds,
     }
 
@@ -110,7 +114,7 @@ export function OnboardingPage() {
           </h1>
 
           <p className="pretendard-Caption1 text-Gray-6 mt-3">
-            닉네임 · 회사명 · 관심 종목 3개를 골라주세요
+            닉네임 · 회사명 · 관심 종목 1~3개를 골라주세요
           </p>
         </div>
 
@@ -120,10 +124,14 @@ export function OnboardingPage() {
             name="nickname"
             label="닉네임"
             value={nickname}
-            placeholder="4~5글자 제한, 특수문자 금지"
-            errorMessage={nicknameError}
+            placeholder={PROFILE_INPUT_PLACEHOLDER}
+            errorMessage={isNicknameTouched ? nicknameError : undefined}
+            required
             className="[&>span:last-child]:ml-3"
-            onChange={(event) => setNickname(event.target.value)}
+            onChange={(event) => {
+              setNickname(event.target.value)
+              setIsNicknameTouched(true)
+            }}
           />
 
           <TextField
@@ -131,10 +139,14 @@ export function OnboardingPage() {
             name="companyName"
             label="회사명"
             value={companyName}
-            placeholder="4~5글자 제한, 특수문자 금지"
-            errorMessage={companyNameError}
+            placeholder={PROFILE_INPUT_PLACEHOLDER}
+            errorMessage={isCompanyNameTouched ? companyNameError : undefined}
+            required
             className="[&>span:last-child]:ml-3"
-            onChange={(event) => setCompanyName(event.target.value)}
+            onChange={(event) => {
+              setCompanyName(event.target.value)
+              setIsCompanyNameTouched(true)
+            }}
           />
         </div>
 
@@ -154,7 +166,11 @@ export function OnboardingPage() {
           searchKeyword={searchKeyword}
           selectedStockIds={selectedStockIds}
           onToggleStock={handleToggleStock}
-          onOpenSearch={() => setIsStockSearchOpen(true)}
+          onOpenSearch={() => {
+            setHasVisitedStockSelection(true)
+            setIsStockSearchOpen(true)
+          }}
+          errorMessage={hasVisitedStockSelection ? interestStocksError : undefined}
         />
       </section>
 

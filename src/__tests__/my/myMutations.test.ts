@@ -41,8 +41,8 @@ describe('My mutation hook effects', () => {
     expect(options).not.toHaveProperty('response')
     expect(
       options.getArgs({
-        nickname: '브리포',
-        companyName: '브리포 투자사',
+        nickname: '  브리포  ',
+        companyName: '  브리포 투자사  ',
         interestStocks: [{ id: '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31', name: '삼성전자' }],
       }),
     ).toEqual([

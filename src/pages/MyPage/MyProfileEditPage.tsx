@@ -35,8 +35,11 @@ export function MyProfileEditPage() {
         initialValues={profileFormValues}
         characterType={profile.characterType}
         isSubmitting={update.isPending}
-        submitError={
-          update.isError ? '프로필을 저장하지 못했어요. 잠시 후 다시 시도해주세요.' : undefined
+        serverError={
+          update.isError
+            ? (update.error.serviceMessage ??
+              '프로필을 저장하지 못했어요. 잠시 후 다시 시도해주세요.')
+            : undefined
         }
         onSubmit={(values) => update.mutate(values, { onSuccess: () => navigate(PATH.MY_PAGE) })}
       />

@@ -16,6 +16,7 @@ export const ApiResponseGetBriefingDetailResponse = zod.object({
       stock: zod.object({
         stockId: zod.uuid(),
         name: zod.string(),
+        logoUrl: zod.string().optional(),
         price: zod.number(),
         changeRate: zod.number(),
         tradeDate: zod.iso.date(),
