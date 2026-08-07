@@ -7,6 +7,7 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import StockRankItem from '@/components/domain/stock/StockRankItem'
 import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
+import { validateInterestStockIds } from '@/utils/profileValidation'
 
 interface StockSearchViewProps {
   stocks: OnboardingStock[]
@@ -122,7 +123,7 @@ export default function StockSearchView({
       <Button
         type="button"
         isFullWidth
-        disabled={selectedStockIds.length < 3}
+        disabled={Boolean(validateInterestStockIds(selectedStockIds))}
         onClick={onComplete}
         className="mt-6"
       >

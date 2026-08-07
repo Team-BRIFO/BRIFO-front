@@ -10,6 +10,7 @@ interface InterestStockSectionProps {
   selectedStockIds: string[]
   onToggleStock: (stockId: string) => void
   onOpenSearch: () => void
+  errorMessage?: string
 }
 
 export default function InterestStockSection({
@@ -18,6 +19,7 @@ export default function InterestStockSection({
   selectedStockIds,
   onToggleStock,
   onOpenSearch,
+  errorMessage,
 }: InterestStockSectionProps) {
   const filteredStocks = useMemo(() => {
     const normalizedKeyword = searchKeyword.trim().toLowerCase()
@@ -108,6 +110,12 @@ export default function InterestStockSection({
           </div>
         ) : (
           <p className="pretendard-Caption2 text-Gray-5 mt-3">{/*확인 필요*/}</p>
+        )}
+
+        {errorMessage && (
+          <p role="alert" className="pretendard-Caption2 text-Pink-30 mt-3">
+            {errorMessage}
+          </p>
         )}
       </div>
     </section>
