@@ -86,21 +86,25 @@ describe('generated OpenAPI contract', () => {
       stockId: `${stockId.slice(0, -1)}${index + 1}`,
       name: `종목 ${index + 1}`,
     }))
+    const fourthStockId = `${stockId.slice(0, -1)}4`
+    const validProfile = {
+      nickname: '브리포',
+      companyName: '브리포 투자사',
+    }
 
     expect(LogoutBody.safeParse({}).success).toBe(false)
     expect(LogoutBody.safeParse({ refreshToken: 'refresh-token' }).success).toBe(true)
-    expect(
-      UpdateUserProfileRequest.safeParse({ nickname: 'a', companyName: 'b', stockIds: [] }).success,
-    ).toBe(false)
+    expect(UpdateUserProfileRequest.safeParse({ ...validProfile, stockIds: [] }).success).toBe(
+      false,
+    )
     expect(
       UpdateUserProfileRequest.safeParse({
-        nickname: 'a',
-        companyName: 'b',
-        stockIds: [...stocks.map((stock) => stock.stockId), stockId],
+        ...validProfile,
+        stockIds: [...stocks.map((stock) => stock.stockId), fourthStockId],
       }).success,
     ).toBe(false)
     expect(
-      UpdateOnboardingProfileRequest.safeParse({ nickname: 'a', stockIds: [stockId] }).success,
+      UpdateOnboardingProfileRequest.safeParse({ ...validProfile, stockIds: [stockId] }).success,
     ).toBe(true)
     expect(
       GetMyPageResponse.safeParse({
