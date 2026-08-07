@@ -10,6 +10,7 @@ import { z as zod } from 'zod'
 export const BriefingStockResponse = zod.object({
   stockId: zod.uuid(),
   name: zod.string(),
+  logoUrl: zod.string().optional(),
   price: zod.number(),
   changeRate: zod.number(),
   tradeDate: zod.iso.date(),

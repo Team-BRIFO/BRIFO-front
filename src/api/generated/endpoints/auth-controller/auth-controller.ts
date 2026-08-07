@@ -75,7 +75,15 @@ export const loginWithKakao = (
     options,
   )
 }
+export const refreshSignupCsrfToken = (
+  options?: SecondParameter<typeof axiosInstance<ApiResponse>>,
+) => {
+  return axiosInstance<ApiResponse>({ url: `/api/auth/signup/csrf`, method: 'GET' }, options)
+}
 export type ReissueResult = NonNullable<Awaited<ReturnType<typeof reissue>>>
 export type LogoutResult = NonNullable<Awaited<ReturnType<typeof logout>>>
 export type LoginWithNaverResult = NonNullable<Awaited<ReturnType<typeof loginWithNaver>>>
 export type LoginWithKakaoResult = NonNullable<Awaited<ReturnType<typeof loginWithKakao>>>
+export type RefreshSignupCsrfTokenResult = NonNullable<
+  Awaited<ReturnType<typeof refreshSignupCsrfToken>>
+>

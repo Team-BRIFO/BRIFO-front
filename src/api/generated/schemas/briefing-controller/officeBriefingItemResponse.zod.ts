@@ -8,6 +8,7 @@
 import { z as zod } from 'zod'
 
 export const OfficeBriefingItemResponse = zod.object({
+  stockId: zod.uuid(),
   stockName: zod.string(),
   agents: zod.array(
     zod.object({

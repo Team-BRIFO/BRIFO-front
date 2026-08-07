@@ -10,6 +10,7 @@ import { z as zod } from 'zod'
 export const GetOfficeBriefingsResponse = zod.object({
   items: zod.array(
     zod.object({
+      stockId: zod.uuid(),
       stockName: zod.string(),
       agents: zod.array(
         zod.object({

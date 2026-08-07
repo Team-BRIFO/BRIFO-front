@@ -32,15 +32,9 @@ export const ApiResponseOAuthLoginResponse = zod.object({
             }),
           }),
         ),
-      zod
-        .object({
-          loginType: zod.enum(['LOGIN', 'SIGNUP_REQUIRED']),
-        })
-        .and(
-          zod.object({
-            signupToken: zod.string(),
-          }),
-        ),
+      zod.object({
+        loginType: zod.enum(['LOGIN', 'SIGNUP_REQUIRED']),
+      }),
     ])
     .optional(),
 })

@@ -10,6 +10,7 @@ import { z as zod } from 'zod'
 export const MyPageStock = zod.object({
   stockId: zod.uuid(),
   name: zod.string(),
+  logoUrl: zod.string().optional(),
 })
 
 export type MyPageStock = zod.input<typeof MyPageStock>

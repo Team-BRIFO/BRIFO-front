@@ -7,15 +7,9 @@
  */
 import { z as zod } from 'zod'
 
-export const SignupRequired = zod
-  .object({
-    loginType: zod.enum(['LOGIN', 'SIGNUP_REQUIRED']),
-  })
-  .and(
-    zod.object({
-      signupToken: zod.string(),
-    }),
-  )
+export const SignupRequired = zod.object({
+  loginType: zod.enum(['LOGIN', 'SIGNUP_REQUIRED']),
+})
 
 export type SignupRequired = zod.input<typeof SignupRequired>
 export type SignupRequiredOutput = zod.output<typeof SignupRequired>

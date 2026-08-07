@@ -10,6 +10,7 @@ import { z as zod } from 'zod'
 export const UserProfileStock = zod.object({
   stockId: zod.uuid(),
   name: zod.string(),
+  logoUrl: zod.string().optional(),
 })
 
 export type UserProfileStock = zod.input<typeof UserProfileStock>
