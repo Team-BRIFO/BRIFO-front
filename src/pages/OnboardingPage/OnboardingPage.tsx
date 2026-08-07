@@ -45,6 +45,7 @@ export function OnboardingPage() {
   const isFormValid = !nicknameError && !companyNameError && !interestStocksError
 
   const handleToggleStock = (stockId: string) => {
+    setHasVisitedStockSelection(true)
     setSelectedStockIds((previous) => {
       const isSelected = previous.includes(stockId)
 
