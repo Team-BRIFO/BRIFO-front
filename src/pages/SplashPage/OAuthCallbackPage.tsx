@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { browserTokenStore, signupTokenStore } from '@/api/client/tokenStore'
+import { browserTokenStore } from '@/api/client/tokenStore'
 import {
   useKakaoLoginMutation,
   useNaverLoginMutation,
@@ -47,7 +47,6 @@ export function OAuthCallbackPage() {
         return
       }
 
-      signupTokenStore.set(result.signupToken)
       navigate(PATH.AGREEMENT, { replace: true })
     }
 
