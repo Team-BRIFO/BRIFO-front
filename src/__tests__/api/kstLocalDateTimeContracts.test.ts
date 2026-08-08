@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { UserHomeResponseSchema } from '@/api/contracts/home'
-import { KstLocalDateTimeSchema } from '@/api/contracts/localDateTime'
+import { getKstLocalDateTimeTimestamp, KstLocalDateTimeSchema } from '@/api/contracts/localDateTime'
 import { PolicyDetailResponseSchema } from '@/api/contracts/policy'
 import { MyTermsResponseSchema } from '@/api/contracts/terms'
 import { Day, DiaryItem } from '@/api/generated/schemas/diary-controller'
@@ -105,6 +105,14 @@ describe('KST LocalDateTime response contracts', () => {
     '2026-02-30T13:57:42',
   ])('rejects %s as a contract error: seconds are required and offsets are forbidden', (value) => {
     expect(KstLocalDateTimeSchema.safeParse(value).success).toBe(false)
+  })
+
+  it('preserves years 0–99 when converting KST LocalDateTime to a timestamp', () => {
+    const timestamp = getKstLocalDateTimeTimestamp(
+      KstLocalDateTimeSchema.parse('0001-01-01T00:00:00'),
+    )
+
+    expect(new Date(timestamp).toISOString()).toBe('0000-12-31T15:00:00.000Z')
   })
 
   it('keeps diary YYYY-MM-DD date-only fields unchanged', () => {

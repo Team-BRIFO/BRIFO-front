@@ -41,9 +41,12 @@ export function getKstLocalDateTimeTimestamp(value: KstLocalDateTime): number {
   const [hour, minute, secondsWithFraction] = value.slice(11).split(':')
   const [second, fraction = ''] = secondsWithFraction.split('.')
   const milliseconds = Number(fraction.slice(0, 3).padEnd(3, '0'))
+  const date = new Date(0)
 
-  return (
-    Date.UTC(year, month - 1, day, Number(hour), Number(minute), Number(second), milliseconds) -
-    KOREA_STANDARD_TIME_OFFSET_MILLISECONDS
-  )
+  // Date.UTC treats years 0–99 as 1900–1999. setUTCFullYear preserves the
+  // four-digit year that the LocalDateTime contract accepts.
+  date.setUTCFullYear(year, month - 1, day)
+  date.setUTCHours(Number(hour), Number(minute), Number(second), milliseconds)
+
+  return date.getTime() - KOREA_STANDARD_TIME_OFFSET_MILLISECONDS
 }
