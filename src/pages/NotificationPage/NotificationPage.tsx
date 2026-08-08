@@ -92,14 +92,25 @@ export function NotificationPage() {
           )}
 
           {query.hasNextPage && (
-            <button
-              type="button"
-              onClick={() => query.fetchNextPage()}
-              disabled={query.isFetchingNextPage}
-              className="pretendard-Button2 text-Gray-6 focus-visible:ring-Yellow-45 rounded-lg py-3 focus-visible:ring-2 focus-visible:outline-hidden disabled:opacity-50"
-            >
-              {query.isFetchingNextPage ? '불러오는 중…' : '더 보기'}
-            </button>
+            <div className="flex flex-col gap-2">
+              {query.isFetchNextPageError && (
+                <p role="alert" className="pretendard-Caption2 text-Pink-30 text-center">
+                  추가 알림을 불러오지 못했어요.
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => query.fetchNextPage()}
+                disabled={query.isFetchingNextPage}
+                className="pretendard-Button2 text-Gray-6 focus-visible:ring-Yellow-45 rounded-lg py-3 focus-visible:ring-2 focus-visible:outline-hidden disabled:opacity-50"
+              >
+                {query.isFetchingNextPage
+                  ? '불러오는 중…'
+                  : query.isFetchNextPageError
+                    ? '다시 시도'
+                    : '더 보기'}
+              </button>
+            </div>
           )}
         </div>
       </div>
