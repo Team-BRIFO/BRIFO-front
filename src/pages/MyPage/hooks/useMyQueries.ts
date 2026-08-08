@@ -1,4 +1,5 @@
 import { ApTransactionsResponseSchema } from '@/api/contracts/ap'
+import { MyTermsResponseSchema } from '@/api/contracts/terms'
 import { getApTransactions } from '@/api/generated/endpoints/ap-controller/ap-controller'
 import {
   getBadges,
@@ -10,10 +11,7 @@ import {
   ApiResponseGetBadgesResponse,
   ApiResponseGetOwnedBadgeResponse,
 } from '@/api/generated/schemas/badge-controller'
-import {
-  ApiResponseGetMyTermsResponse,
-  type GetMyTermsParams,
-} from '@/api/generated/schemas/term-controller'
+import { type GetMyTermsParams } from '@/api/generated/schemas/term-controller'
 import { useApiInfiniteQuery, useApiQuery } from '@/hooks/api'
 import {
   mapApTransactionPage,
@@ -86,7 +84,7 @@ export function useMyLearnedTermsQuery(size: number = MY_TERMS_PAGE_SIZE) {
     queryKey: myQueryKeys.terms(size),
     operation: getMyTerms,
     endpoint: 'getMyTerms',
-    responseSchema: ApiResponseGetMyTermsResponse,
+    responseSchema: MyTermsResponseSchema,
     response: 'requiredResult',
     getArgs: ({ pageParam }): [GetMyTermsParams] => [
       { request: { cursor: pageParam ?? undefined, size } },
