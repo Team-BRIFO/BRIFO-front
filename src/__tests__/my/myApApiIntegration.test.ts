@@ -59,7 +59,7 @@ describe('My AP API integration', () => {
           reason: 'DECISION_WIN',
           label: '결정 적중',
           amount: 80,
-          createdAt: '2026-08-03T13:57:42.446611+09:00',
+          createdAt: '2026-08-03T13:57:42.446611',
         },
       ],
       nextCursor: '7fdfc1be-b994-4f12-9a49-bac9f1b27f10',
