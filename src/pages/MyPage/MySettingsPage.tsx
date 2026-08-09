@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { clearClientSession } from '@/api/client/sessionCleanup'
 import { browserTokenStore } from '@/api/client/tokenStore'
 import {
   type AccountActionType,
@@ -41,7 +42,7 @@ export function MySettingsPage() {
       const refreshToken = browserTokenStore.getRefreshToken()
 
       if (!refreshToken) {
-        browserTokenStore.clear()
+        clearClientSession()
         queryClient.clear()
         navigate(PATH.SPLASH, { replace: true })
         return
@@ -51,7 +52,7 @@ export function MySettingsPage() {
         { refreshToken },
         {
           onSuccess: () => {
-            browserTokenStore.clear()
+            clearClientSession()
             queryClient.clear()
             navigate(PATH.SPLASH, { replace: true })
           },
@@ -61,7 +62,7 @@ export function MySettingsPage() {
     }
     removeAccount.mutate(undefined, {
       onSuccess: () => {
-        browserTokenStore.clear()
+        clearClientSession()
         navigate(PATH.SPLASH, { replace: true })
       },
     })

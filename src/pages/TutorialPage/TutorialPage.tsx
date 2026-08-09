@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { browserTokenStore, signupTokenStore } from '@/api/client/tokenStore'
+import { signupSession } from '@/api/client/signupSession'
+import { browserTokenStore } from '@/api/client/tokenStore'
 import SkHynixLogo from '@/assets/logo/sk-hynix.png'
 import { Toast } from '@/components/common/Toast'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
@@ -255,9 +256,11 @@ export function TutorialPage() {
     }
 
     completeOnboarding.mutate(undefined, {
-      onSuccess: ({ token }) => {
-        browserTokenStore.setTokens(token)
-        signupTokenStore.clear()
+      onSuccess: (result) => {
+        if ('token' in result && result.token) {
+          browserTokenStore.setTokens(result.token)
+        }
+        signupSession.clear()
         hasCompletedOnboarding.current = true
 
         if (shouldReward) requestTutorialReward()

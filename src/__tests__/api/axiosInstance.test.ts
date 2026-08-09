@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { createAxiosAdapter } from '@/__tests__/api/testAxiosAdapter'
 import { createBrifoAxiosInstance } from '@/api/client/axiosInstance'
+import { signupSession } from '@/api/client/signupSession'
 import type { TokenStore } from '@/api/client/tokenStore'
 import type { TokenInfo } from '@/api/generated/schemas'
 
@@ -27,26 +28,30 @@ function createTokenStore(accessToken: string | null, refreshToken: string | nul
 }
 
 describe('createBrifoAxiosInstance', () => {
-  it.each(['/api/auth/login/kakao', '/api/auth/login/naver', '/api/auth/reissue'])(
-    'does not attach an Access Token to %s',
-    async (pathname) => {
-      const tokenStore = createTokenStore('access-token', 'refresh-token')
-      const adapter = createAxiosAdapter((config) => {
-        expect(config.headers.has('Authorization')).toBe(false)
-        return { data: { success: true } }
-      })
-      const client = createBrifoAxiosInstance({ baseURL: API_BASE_URL, adapter, tokenStore })
+  it.each([
+    '/api/auth/login/kakao',
+    '/api/auth/login/naver',
+    '/api/auth/reissue',
+    '/api/auth/signup/csrf',
+  ])('does not attach Authorization to %s', async (pathname) => {
+    const tokenStore = createTokenStore('access-token', 'refresh-token')
+    const adapter = createAxiosAdapter((config) => {
+      expect(config.headers.has('Authorization')).toBe(false)
+      expect(config.withCredentials).toBe(true)
+      return { data: { success: true } }
+    })
+    const client = createBrifoAxiosInstance({ baseURL: API_BASE_URL, adapter, tokenStore })
 
-      await client.post(pathname, undefined, {
-        headers: { Authorization: 'Bearer stale-token' },
-      })
-    },
-  )
+    await client.post(pathname, undefined, {
+      headers: { Authorization: 'Bearer stale-token' },
+    })
+  })
 
-  it('attaches the Access Token to protected API requests', async () => {
+  it('sends cookies and access token on protected API requests', async () => {
     const tokenStore = createTokenStore('access-token', 'refresh-token')
     const adapter = createAxiosAdapter((config) => {
       expect(config.headers.get('Authorization')).toBe('Bearer access-token')
+      expect(config.withCredentials).toBe(true)
       return { data: { success: true } }
     })
     const client = createBrifoAxiosInstance({ baseURL: API_BASE_URL, adapter, tokenStore })
@@ -83,6 +88,22 @@ describe('createBrifoAxiosInstance', () => {
     expect(reissueCalls).toBe(0)
     expect(tokenStore.clear).not.toHaveBeenCalled()
     expect(onSessionExpired).not.toHaveBeenCalled()
+  })
+
+  it('attaches signup CSRF header to onboarding mutations during signup session', async () => {
+    signupSession.activate()
+    signupSession.setCsrfToken('csrf-token')
+
+    const adapter = createAxiosAdapter((config) => {
+      expect(config.headers.get('X-Signup-CSRF-Token')).toBe('csrf-token')
+      expect(config.headers.has('Authorization')).toBe(false)
+      return { data: { success: true } }
+    })
+    const client = createBrifoAxiosInstance({ baseURL: API_BASE_URL, adapter })
+
+    await client.patch('/api/onboarding/profile', { nickname: 'brifo' })
+
+    signupSession.clear()
   })
 
   it('deduplicates concurrent refresh and retries each original request once', async () => {
@@ -176,7 +197,6 @@ describe('createBrifoAxiosInstance', () => {
       {
         headers: { 'X-Client': 'brifo' },
         signal: controller.signal,
-        withCredentials: true,
       },
     )
 
@@ -216,6 +236,28 @@ describe('createBrifoAxiosInstance', () => {
     expect(protectedCalls).toBe(1)
     expect(tokenStore.clear).toHaveBeenCalledOnce()
     expect(onSessionExpired).toHaveBeenCalledOnce()
+  })
+
+  it('expires signup session without refresh when signup API returns 401', async () => {
+    signupSession.activate()
+    const onSessionExpired = vi.fn()
+    const adapter = createAxiosAdapter(() => ({
+      data: { success: false },
+      status: 401,
+    }))
+    const client = createBrifoAxiosInstance({
+      baseURL: API_BASE_URL,
+      adapter,
+      onSessionExpired,
+    })
+
+    await expect(client.get('/api/policies')).rejects.toMatchObject({
+      response: { status: 401 },
+    })
+    expect(onSessionExpired).toHaveBeenCalledOnce()
+    expect(signupSession.isActive()).toBe(false)
+
+    signupSession.clear()
   })
 
   it('handles concurrent 401 responses without a Refresh Token only once', async () => {

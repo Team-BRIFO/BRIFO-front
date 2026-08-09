@@ -5,6 +5,25 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
+function rewriteProxyCookie(cookie: string) {
+  const hasPath = /;\s*path=/i.test(cookie)
+
+  return cookie
+    .replace(/^__Host-/i, '')
+    .replace(/;\s*domain=[^;]+/gi, '')
+    .replace(/;\s*secure/gi, '')
+    .replace(/;\s*samesite=[^;]+/gi, '; SameSite=Lax')
+    .replace(/;\s*path=[^;]+/gi, '; Path=/')
+    .concat(hasPath ? '' : '; Path=/')
+}
+
+function rewriteProxyCookies(setCookie: string | string[] | undefined): string[] | undefined {
+  if (!setCookie) return undefined
+
+  const cookies = Array.isArray(setCookie) ? setCookie : [setCookie]
+  return cookies.map(rewriteProxyCookie)
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const environment = loadEnv(mode, '.', '')
@@ -21,6 +40,23 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    },
+    server: {
+      proxy: {
+        '/api': {
+          target: apiBaseUrl,
+          changeOrigin: true,
+          secure: true,
+          configure: (proxy) => {
+            proxy.on('proxyRes', (proxyRes) => {
+              const rewritten = rewriteProxyCookies(proxyRes.headers['set-cookie'])
+              if (rewritten) {
+                proxyRes.headers['set-cookie'] = rewritten
+              }
+            })
+          },
+        },
       },
     },
   }

@@ -1,4 +1,4 @@
-import { signupTokenStore } from '@/api/client/tokenStore'
+import { signupSession } from '@/api/client/signupSession'
 import {
   agreePolicies,
   getPolicies,
@@ -12,15 +12,7 @@ import {
 } from '@/api/generated/schemas'
 import { useApiMutation, useApiQuery } from '@/hooks/api'
 
-function useSignupTokenRequestConfig() {
-  const signupToken = signupTokenStore.get()
-
-  return signupToken ? { headers: { Authorization: `Bearer ${signupToken}` } } : undefined
-}
-
 export function usePoliciesQuery() {
-  const requestConfig = useSignupTokenRequestConfig()
-
   return useApiQuery({
     queryKey: ['onboarding', 'policies'],
     operation: getPolicies,
@@ -28,14 +20,11 @@ export function usePoliciesQuery() {
     args: [],
     responseSchema: ApiResponseGetPoliciesResponse,
     response: 'requiredResult',
-    enabled: Boolean(requestConfig),
-    requestConfig,
+    enabled: signupSession.isActive(),
   })
 }
 
 export function usePolicyDetailQuery(policyId?: string) {
-  const requestConfig = useSignupTokenRequestConfig()
-
   return useApiQuery({
     queryKey: ['onboarding', 'policies', policyId],
     operation: getPolicyDetail,
@@ -43,19 +32,15 @@ export function usePolicyDetailQuery(policyId?: string) {
     args: [policyId ?? ''],
     responseSchema: ApiResponseGetPolicyDetailResponse,
     response: 'requiredResult',
-    enabled: Boolean(requestConfig && policyId),
-    requestConfig,
+    enabled: signupSession.isActive() && Boolean(policyId),
   })
 }
 
 export function useAgreePoliciesMutation() {
-  const requestConfig = useSignupTokenRequestConfig()
-
   return useApiMutation({
     operation: agreePolicies,
     endpoint: 'agreePolicies',
     responseSchema: ApiResponse,
     getArgs: (request: AgreePoliciesRequest): [AgreePoliciesRequest] => [request],
-    requestConfig,
   })
 }

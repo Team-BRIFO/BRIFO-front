@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import { ensureSignupCsrfToken } from '@/api/client/signupAuth'
+import { signupSession } from '@/api/client/signupSession'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { Toast } from '@/components/common/Toast'
@@ -38,6 +40,11 @@ export default function AgreementPage() {
   const [checked, setChecked] = useState<AgreementCheckedState>(INITIAL_CHECKED_STATE)
   const isAllChecked = Object.values(checked).every(Boolean)
   const isRequiredChecked = REQUIRED_AGREEMENT_IDS.every((id) => checked[id])
+
+  useEffect(() => {
+    signupSession.activate()
+    void ensureSignupCsrfToken()
+  }, [])
 
   useEffect(() => {
     const state = location.state as AgreementLocationState | null

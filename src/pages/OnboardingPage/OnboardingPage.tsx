@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { ensureSignupCsrfToken } from '@/api/client/signupAuth'
+import { signupSession } from '@/api/client/signupSession'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
@@ -10,7 +12,6 @@ import StockSearchView from '@/components/feature/onboarding/StockSearchView'
 import { useOnboardingStocksQuery } from '@/pages/OnboardingPage/hooks/useOnboardingStocksQuery'
 import { useUpdateOnboardingProfileMutation } from '@/pages/OnboardingPage/hooks/useUpdateOnboardingProfileMutation'
 import { PATH } from '@/routes/paths'
-import { useProfileStore } from '@/stores/useProfileStore'
 import {
   DEFAULT_COMPANY_NAME,
   MAX_INTEREST_STOCK_COUNT,
@@ -25,9 +26,13 @@ const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사
 
 export function OnboardingPage() {
   const navigate = useNavigate()
-  const setProfile = useProfileStore((state) => state.setProfile)
   const stocksQuery = useOnboardingStocksQuery()
   const updateProfile = useUpdateOnboardingProfileMutation()
+
+  useEffect(() => {
+    signupSession.activate()
+    void ensureSignupCsrfToken()
+  }, [])
   const stocks = stocksQuery.data ?? []
 
   const [nickname, setNickname] = useState('')
@@ -72,7 +77,6 @@ export function OnboardingPage() {
 
     updateProfile.mutate(profile, {
       onSuccess: () => {
-        setProfile(profile)
         navigate(PATH.TUTORIAL_INTRO)
       },
     })
