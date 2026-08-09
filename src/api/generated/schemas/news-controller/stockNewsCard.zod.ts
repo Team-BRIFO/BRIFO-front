@@ -13,7 +13,7 @@ export const stockNewsCardPublishedDateRegExp = new RegExp(
 
 export const StockNewsCard = zod.object({
   cardId: zod.uuid(),
-  source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
+  source: zod.enum(['DATA_SERVER', 'NAVER', 'DART', 'KRX', 'TEST']),
   headline: zod.string(),
   importanceBadge: zod.enum(['HOT', 'MID', 'LOW']),
   publishedDate: zod.stringFormat('instant-date-time', stockNewsCardPublishedDateRegExp),

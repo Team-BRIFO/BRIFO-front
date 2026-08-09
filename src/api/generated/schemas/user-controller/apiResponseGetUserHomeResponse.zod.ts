@@ -40,7 +40,7 @@ export const ApiResponseGetUserHomeResponse = zod.object({
             news: zod.object({
               newsId: zod.uuid(),
               publishedAt: zod.iso.datetime({ local: true, offset: false }),
-              source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
+              source: zod.enum(['DATA_SERVER', 'NAVER', 'DART', 'KRX', 'TEST']),
             }),
             stock: zod.object({
               stockId: zod.uuid(),
