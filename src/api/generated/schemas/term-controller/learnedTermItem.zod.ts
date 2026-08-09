@@ -12,7 +12,7 @@ export const LearnedTermItem = zod.object({
   term: zod.string(),
   definition: zod.string(),
   category: zod.string(),
-  learnedAt: zod.iso.datetime({ offset: true }),
+  learnedAt: zod.iso.datetime({ local: true, offset: false }),
 })
 
 export type LearnedTermItem = zod.input<typeof LearnedTermItem>

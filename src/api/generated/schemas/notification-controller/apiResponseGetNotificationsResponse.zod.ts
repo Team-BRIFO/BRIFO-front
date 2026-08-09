@@ -20,7 +20,7 @@ export const ApiResponseGetNotificationsResponse = zod.object({
             code: zod.string(),
             title: zod.string(),
             body: zod.string().optional(),
-            createdAt: zod.iso.datetime({ offset: true }),
+            createdAt: zod.iso.datetime({ local: true, offset: false }),
             target: zod.object({
               type: zod.enum([
                 'DECISION',

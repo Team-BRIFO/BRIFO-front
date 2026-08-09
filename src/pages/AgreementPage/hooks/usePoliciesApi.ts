@@ -1,15 +1,12 @@
 import { signupTokenStore } from '@/api/client/tokenStore'
+import { PolicyDetailResponseSchema } from '@/api/contracts/policy'
 import {
   agreePolicies,
   getPolicies,
   getPolicyDetail,
 } from '@/api/generated/endpoints/policy-controller/policy-controller'
 import type { AgreePoliciesRequest } from '@/api/generated/schemas'
-import {
-  ApiResponse,
-  ApiResponseGetPoliciesResponse,
-  ApiResponseGetPolicyDetailResponse,
-} from '@/api/generated/schemas'
+import { ApiResponse, ApiResponseGetPoliciesResponse } from '@/api/generated/schemas'
 import { useApiMutation, useApiQuery } from '@/hooks/api'
 
 function useSignupTokenRequestConfig() {
@@ -41,7 +38,7 @@ export function usePolicyDetailQuery(policyId?: string) {
     operation: getPolicyDetail,
     endpoint: 'getPolicyDetail',
     args: [policyId ?? ''],
-    responseSchema: ApiResponseGetPolicyDetailResponse,
+    responseSchema: PolicyDetailResponseSchema,
     response: 'requiredResult',
     enabled: Boolean(requestConfig && policyId),
     requestConfig,

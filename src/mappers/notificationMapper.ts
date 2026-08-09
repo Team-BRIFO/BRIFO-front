@@ -1,3 +1,4 @@
+import { getKstLocalDateTimeTimestamp, KstLocalDateTimeSchema } from '@/api/contracts/localDateTime'
 import type { NotificationItemOutput } from '@/api/generated/schemas/notification-controller'
 import type { GetNotificationsResponseOutput } from '@/api/generated/schemas/notification-controller'
 import type { NotificationCategory } from '@/components/feature/notification/NotificationTabs'
@@ -23,7 +24,11 @@ const CATEGORY_BY_TARGET_TYPE: Record<
 }
 
 export function formatNotificationRelativeTime(isoDate: string) {
-  const createdAt = new Date(isoDate).getTime()
+  const parsedDate = KstLocalDateTimeSchema.safeParse(isoDate)
+
+  if (!parsedDate.success) return isoDate.slice(0, 10)
+
+  const createdAt = getKstLocalDateTimeTimestamp(parsedDate.data)
   const diffMinutes = Math.floor((Date.now() - createdAt) / 60_000)
 
   if (diffMinutes < 1) return '방금 전'
@@ -35,7 +40,7 @@ export function formatNotificationRelativeTime(isoDate: string) {
   const diffDays = Math.floor(diffHours / 24)
   if (diffDays < 7) return `${diffDays}일 전`
 
-  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate)
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(parsedDate.data)
   if (match) return `${match[2]}.${match[3]}`
 
   return isoDate.slice(0, 10)
