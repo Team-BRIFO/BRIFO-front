@@ -6,6 +6,7 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import type { AgreementId } from '@/pages/AgreementPage/agreement'
 import { SERVICE_TERMS } from '@/pages/AgreementPage/agreement'
 import { usePolicyDetailQuery } from '@/pages/AgreementPage/hooks/usePoliciesApi'
+import { formatPolicyEffectiveDate } from '@/pages/AgreementPage/policyMapping'
 import { PATH } from '@/routes/paths'
 
 interface AgreementDetailLocationState {
@@ -73,7 +74,7 @@ export default function AgreementDetailPage() {
         <p className="pretendard-Caption2 text-Gray-5 mt-2">
           시행일{' '}
           {policyDetail
-            ? new Date(policyDetail.createdAt).toLocaleDateString('ko-KR')
+            ? formatPolicyEffectiveDate(policyDetail.createdAt)
             : SERVICE_TERMS.effectiveDate}
           <span className="mx-2">·</span>
           버전 {policyDetail ? `v${policyDetail.version}` : SERVICE_TERMS.version}

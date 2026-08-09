@@ -24,7 +24,7 @@ export const CursorPageApTransactionItem = zod.object({
         'CREDIT_LOAN',
       ]),
       amount: zod.int(),
-      createdAt: zod.iso.datetime({ offset: true }),
+      createdAt: zod.iso.datetime({ local: true, offset: false }),
     }),
   ),
   nextCursor: zod.uuid().optional(),

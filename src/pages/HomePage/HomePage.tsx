@@ -14,20 +14,7 @@ import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueri
 import { useSettlementCountdown } from '@/pages/HomePage/hooks/useSettlementCountdown'
 import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
 import { PATH } from '@/routes/paths'
-
-function formatBatchTime(batchTime?: string) {
-  if (!batchTime) return { date: '', time: '' }
-
-  const date = new Date(batchTime)
-  return {
-    date: `${date.getMonth() + 1}/${date.getDate()}`,
-    time: new Intl.DateTimeFormat('ko-KR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).format(date),
-  }
-}
+import { formatBatchTime } from '@/utils/formatBatchTime'
 
 export function HomePage() {
   const navigate = useNavigate()

@@ -30,7 +30,7 @@ function notificationsResponse() {
 }
 
 describe('Notification API integration', () => {
-  it('normalizes offset-less createdAt and maps the notification page', async () => {
+  it('validates offset-less createdAt and maps the original response string', async () => {
     const adapter = createAxiosAdapter(() => ({ data: notificationsResponse() }))
 
     const page = await executeGeneratedApiOperation({
@@ -51,7 +51,7 @@ describe('Notification API integration', () => {
           title: '출석 보너스 +50 AP',
           description: '1일 연속 출석 중이에요. 내일도 만나요!',
           category: 'system',
-          createdAt: '2026-08-06T03:56:57.113442+09:00',
+          createdAt: '2026-08-06T03:56:57.113442',
         },
       ],
       nextCursor: null,

@@ -12,7 +12,7 @@ export const NewsCardItem = zod.object({
   headline: zod.string(),
   news: zod.object({
     newsId: zod.uuid(),
-    publishedAt: zod.iso.datetime({ offset: true }),
+    publishedAt: zod.iso.datetime({ local: true, offset: false }),
     source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
   }),
   stock: zod.object({

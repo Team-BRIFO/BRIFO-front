@@ -1,3 +1,4 @@
+import { getKstLocalDate } from '@/api/contracts/localDateTime'
 import type { AgreementId } from '@/pages/AgreementPage/agreement'
 
 interface PolicySummary {
@@ -18,4 +19,11 @@ const POLICY_TITLE_KEYWORDS: Record<AgreementId, string[]> = {
 export function findPolicyByAgreementId(policies: PolicySummary[], agreementId: AgreementId) {
   const keywords = POLICY_TITLE_KEYWORDS[agreementId]
   return policies.find((policy) => keywords.some((keyword) => policy.title.includes(keyword)))
+}
+
+/** Formats the original KST calendar date without a browser-local Date conversion. */
+export function formatPolicyEffectiveDate(createdAt: string): string {
+  const [year, month, day] = getKstLocalDate(createdAt).split('-')
+
+  return `${year}. ${Number(month)}. ${Number(day)}.`
 }

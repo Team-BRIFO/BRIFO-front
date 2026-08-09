@@ -7,6 +7,10 @@
  */
 import { z as zod } from 'zod'
 
+export const apiResponseGetNewsCardsResponseResultNewsCardsItemPublishedDateRegExp = new RegExp(
+  '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$',
+)
+
 export const ApiResponseGetNewsCardsResponse = zod.object({
   success: zod.boolean(),
   code: zod.string(),
@@ -28,7 +32,10 @@ export const ApiResponseGetNewsCardsResponse = zod.object({
           source: zod.enum(['NAVER', 'DART', 'KRX', 'TEST']),
           headline: zod.string(),
           importanceBadge: zod.enum(['HOT', 'MID', 'LOW']),
-          publishedDate: zod.iso.datetime({ offset: true }),
+          publishedDate: zod.stringFormat(
+            'instant-date-time',
+            apiResponseGetNewsCardsResponseResultNewsCardsItemPublishedDateRegExp,
+          ),
           imageUrl: zod.string().optional(),
           points: zod.array(zod.string()),
           keywords: zod.array(zod.string()),

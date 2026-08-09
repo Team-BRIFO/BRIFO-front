@@ -16,7 +16,7 @@ export const ApiResponseGetPolicyDetailResponse = zod.object({
       policyId: zod.uuid(),
       title: zod.string(),
       content: zod.string(),
-      createdAt: zod.iso.datetime({ offset: true }),
+      createdAt: zod.iso.datetime({ local: true, offset: false }),
       version: zod.number(),
     })
     .optional(),

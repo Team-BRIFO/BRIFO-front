@@ -14,7 +14,7 @@ export const CursorPageLearnedTermItem = zod.object({
       term: zod.string(),
       definition: zod.string(),
       category: zod.string(),
-      learnedAt: zod.iso.datetime({ offset: true }),
+      learnedAt: zod.iso.datetime({ local: true, offset: false }),
     }),
   ),
   nextCursor: zod.uuid().optional(),

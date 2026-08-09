@@ -1,5 +1,5 @@
+import { UserHomeResponseSchema } from '@/api/contracts/home'
 import { getUserHome } from '@/api/generated/endpoints/user-controller/user-controller'
-import { ApiResponseGetUserHomeResponse } from '@/api/generated/schemas'
 import { useApiQuery } from '@/hooks/api'
 import { userQueryKeys } from '@/hooks/queries/user/userQueryKeys'
 
@@ -9,7 +9,7 @@ export function useUserHomeQuery() {
     operation: getUserHome,
     endpoint: 'getUserHome',
     args: [],
-    responseSchema: ApiResponseGetUserHomeResponse,
+    responseSchema: UserHomeResponseSchema,
     response: 'requiredResult',
   })
 }
