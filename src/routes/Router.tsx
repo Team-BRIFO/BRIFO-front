@@ -123,6 +123,14 @@ export const router = createBrowserRouter([
         path: PATH.TUTORIAL,
         element: withRouteLoadingFallback(<LazyTutorialPage />),
       },
+      {
+        path: PATH.TUTORIAL_REPLAY_INTRO,
+        element: withRouteLoadingFallback(<LazyTutorialIntroPage />),
+      },
+      {
+        path: PATH.TUTORIAL_REPLAY,
+        element: withRouteLoadingFallback(<LazyTutorialPage />),
+      },
     ],
   },
 

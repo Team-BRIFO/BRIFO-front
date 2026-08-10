@@ -22,6 +22,9 @@ export const PATH = {
   /** SCR-03: 튜토리얼 (3스텝 강제 진행) */
   TUTORIAL_INTRO: '/tutorial/intro',
   TUTORIAL: '/tutorial',
+  /** 설정에서 다시 보는 튜토리얼 — 보상·온보딩 완료 API를 호출하지 않는다. */
+  TUTORIAL_REPLAY_INTRO: '/tutorial/replay',
+  TUTORIAL_REPLAY: '/tutorial/replay/steps',
 
   // ─── AppLayout - 홈 탭 ─────────────────────────────────────────
   /** 홈 탭: 메인 랜딩 */

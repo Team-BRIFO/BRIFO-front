@@ -18,7 +18,7 @@ import { PATH } from '@/routes/paths'
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
   profileEdit: PATH.MY_EDIT,
   glossary: PATH.MY_GLOSSARY,
-  tutorial: PATH.TUTORIAL,
+  tutorial: PATH.TUTORIAL_REPLAY_INTRO,
   notice: PATH.MY_NOTICES,
   terms: PATH.MY_TERMS,
 }
