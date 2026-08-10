@@ -6,11 +6,12 @@ import {
 } from '@/api/generated/endpoints/policy-controller/policy-controller'
 import { ApiResponseGetPoliciesResponse } from '@/api/generated/schemas'
 import { useApiQuery } from '@/hooks/api'
+import { policyQueryKeys } from '@/hooks/queries/policy/policyQueryKeys'
 
 /** 가입 약관과 설정의 읽기 전용 약관 목록에서 함께 사용한다. */
 export function usePoliciesQuery(enabled: boolean = signupSession.isActive()) {
   return useApiQuery({
-    queryKey: ['onboarding', 'policies'],
+    queryKey: policyQueryKeys.list(),
     operation: getPolicies,
     endpoint: 'getPolicies',
     args: [],
@@ -26,7 +27,7 @@ export function usePolicyDetailQuery(
   enabled: boolean = signupSession.isActive(),
 ) {
   return useApiQuery({
-    queryKey: ['onboarding', 'policies', policyId],
+    queryKey: policyQueryKeys.detail(policyId ?? ''),
     operation: getPolicyDetail,
     endpoint: 'getPolicyDetail',
     args: [policyId ?? ''],

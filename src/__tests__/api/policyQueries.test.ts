@@ -12,6 +12,7 @@ interface QueryOptions {
   endpoint: string
   args: unknown
   enabled: boolean
+  queryKey: readonly unknown[]
 }
 
 describe('policy query hooks', () => {
@@ -27,11 +28,13 @@ describe('policy query hooks', () => {
       endpoint: 'getPolicies',
       args: [],
       enabled: true,
+      queryKey: ['onboarding', 'policies'],
     })
     expect(detailOptions).toMatchObject({
       endpoint: 'getPolicyDetail',
       args: ['policy-id'],
       enabled: true,
+      queryKey: ['onboarding', 'policies', 'policy-id'],
     })
   })
 })
