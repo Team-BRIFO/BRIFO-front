@@ -38,7 +38,7 @@ export function MySettingsPage() {
       return
     }
     if (key === 'contact') {
-      window.location.assign(KAKAO_CONTACT_URL)
+      window.open(KAKAO_CONTACT_URL, '_blank', 'noopener,noreferrer')
       return
     }
     if (key === 'interestStocks') {

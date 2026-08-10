@@ -54,7 +54,7 @@ export default function AgreementDetailPage() {
 
   const handleConfirm = () => {
     if (readOnly) {
-      navigate(PATH.MY_TERMS)
+      navigate(PATH.MY_TERMS, { replace: true })
       return
     }
 
@@ -70,7 +70,7 @@ export default function AgreementDetailPage() {
 
   const handleBack = () => {
     if (readOnly) {
-      navigate(PATH.MY_TERMS)
+      navigate(PATH.MY_TERMS, { replace: true })
       return
     }
 
