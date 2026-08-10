@@ -29,7 +29,7 @@ export function TeamDetailPage() {
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(PATH.TEAM)} />}
         title="사원 상세"
-        right={<StatusBarNotificationButton />}
+        right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
         className="bg-White"
       />
 
