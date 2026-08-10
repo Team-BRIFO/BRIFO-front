@@ -8,12 +8,16 @@ export const AGREEMENTS: Agreement[] = [
   { id: 'marketing', label: '광고성 정보 수신', type: 'optional' },
 ]
 
-export const POLICY_TITLE_KEYWORDS: Record<AgreementId, string[]> = {
-  age: ['14세', '연령'],
-  service: ['서비스', '이용약관'],
-  privacy: ['개인정보'],
-  investment: ['투자', '유의'],
-  marketing: ['광고', '마케팅'],
+/**
+ * `/api/policies`는 agreementId를 반환하지 않아 제목으로만 기존 약관 UI와 연결한다.
+ * 각 배열은 모두 충족해야 하는 토큰 그룹이며, 그룹 안에서는 하나만 포함되면 된다.
+ */
+export const POLICY_TITLE_TOKEN_GROUPS: Record<AgreementId, string[][]> = {
+  age: [['14세', '연령']],
+  service: [['서비스'], ['이용약관']],
+  privacy: [['개인정보'], ['처리방침']],
+  investment: [['투자'], ['유의']],
+  marketing: [['광고성', '마케팅'], ['수신']],
 }
 
 export const SERVICE_TERMS: AgreementDetail = {
