@@ -173,6 +173,7 @@ export function DiaryPage() {
           onLoadMore={() => listQuery.fetchNextPage()}
           hasNext={listQuery.hasNextPage}
           isLoadingMore={listQuery.isFetchingNextPage}
+          loadMoreError={listQuery.isFetchNextPageError}
         />
       )
     }
