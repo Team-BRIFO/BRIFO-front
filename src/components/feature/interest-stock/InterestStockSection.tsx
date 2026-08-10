@@ -3,11 +3,13 @@ import { useMemo } from 'react'
 import { TextField } from '@/components/common/TextField'
 import StockRankItem from '@/components/domain/stock/StockRankItem'
 import type { InterestStockOption } from '@/types/domain/stock'
+import { MAX_INTEREST_STOCK_COUNT } from '@/utils/profileValidation'
 
 interface InterestStockSectionProps {
   stocks: InterestStockOption[]
   searchKeyword: string
   selectedStockIds: string[]
+  selectedStocks?: Pick<InterestStockOption, 'id' | 'name'>[]
   onToggleStock: (stockId: string) => void
   onOpenSearch: () => void
   errorMessage?: string
@@ -17,6 +19,7 @@ export default function InterestStockSection({
   stocks,
   searchKeyword,
   selectedStockIds,
+  selectedStocks: selectedStocksProp,
   onToggleStock,
   onOpenSearch,
   errorMessage,
@@ -29,13 +32,12 @@ export default function InterestStockSection({
     return stocks.filter((stock) => stock.name.toLowerCase().includes(normalizedKeyword))
   }, [searchKeyword, stocks])
 
-  const selectedStocks = useMemo(
-    () => stocks.filter((stock) => selectedStockIds.includes(stock.id)),
-    [selectedStockIds, stocks],
-  )
+  const selectedStocks =
+    selectedStocksProp ?? stocks.filter((stock) => selectedStockIds.includes(stock.id))
+  const hasReachedSelectionLimit = selectedStockIds.length >= MAX_INTEREST_STOCK_COUNT
 
   const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
       onOpenSearch()
     }
@@ -84,6 +86,12 @@ export default function InterestStockSection({
                   price={stock.price}
                   changeRate={stock.changeRate}
                   isFavorite={selectedStockIds.includes(stock.id)}
+                  disabled={hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)}
+                  disabledMessage={
+                    hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)
+                      ? '관심종목은 최대 3개까지 선택할 수 있어요.'
+                      : undefined
+                  }
                   onToggleFavorite={() => onToggleStock(stock.id)}
                   onClick={() => onToggleStock(stock.id)}
                 />
@@ -122,6 +130,13 @@ export default function InterestStockSection({
         {errorMessage && (
           <p role="alert" className="pretendard-Caption2 text-Pink-30 mt-3">
             {errorMessage}
+          </p>
+        )}
+
+        {hasReachedSelectionLimit && (
+          <p role="status" className="pretendard-Caption2 text-Gray-6 mt-3">
+            관심종목은 최대 3개까지 선택할 수 있어요. 선택한 종목을 해제하면 다른 종목을 추가할 수
+            있어요.
           </p>
         )}
       </div>

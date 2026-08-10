@@ -67,8 +67,8 @@ export function MyProfileEdit({
 
   const handleAddStock = () => {
     onAddStock({
-      nickname,
-      companyName,
+      nickname: normalizeProfileText(nickname),
+      companyName: normalizeProfileText(companyName),
       interestStocks,
     })
   }

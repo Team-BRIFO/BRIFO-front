@@ -19,6 +19,10 @@ interface StockSearchViewProps {
   onToggleStock: (stockId: string) => void
   onBack: () => void
   onComplete: () => void
+  isLoading?: boolean
+  hasNextPage?: boolean
+  isFetchingNextPage?: boolean
+  onLoadMore?: () => void
   /** 마이 프로필처럼 이미 화면 헤더가 있는 곳에 삽입할 때 사용한다. */
   embedded?: boolean
 }
@@ -32,6 +36,10 @@ export default function StockSearchView({
   onToggleStock,
   onBack,
   onComplete,
+  isLoading = false,
+  hasNextPage = false,
+  isFetchingNextPage = false,
+  onLoadMore,
   embedded = false,
 }: StockSearchViewProps) {
   const selectedStocksFromList = useMemo(
@@ -40,15 +48,7 @@ export default function StockSearchView({
   )
   const selectedStocks = selectedStocksProp ?? selectedStocksFromList
 
-  const filteredStocks = useMemo(() => {
-    const keyword = searchKeyword.trim().toLowerCase()
-
-    if (!keyword) return stocks
-
-    return stocks.filter((stock) => stock.name.toLowerCase().includes(keyword))
-  }, [stocks, searchKeyword])
-
-  const hasSearchResult = filteredStocks.length > 0
+  const hasSearchResult = stocks.length > 0
   const interestStocksError = validateInterestStockIds(selectedStockIds)
   const hasReachedSelectionLimit = selectedStockIds.length >= MAX_INTEREST_STOCK_COUNT
 
@@ -97,15 +97,26 @@ export default function StockSearchView({
         </section>
       )}
 
+      {hasReachedSelectionLimit && (
+        <p role="status" className="pretendard-Caption2 text-Gray-6 mt-4">
+          관심종목은 최대 3개까지 선택할 수 있어요. 선택한 종목을 해제하면 다른 종목을 추가할 수
+          있어요.
+        </p>
+      )}
+
       <section className="mt-7 flex-1">
-        {hasSearchResult ? (
+        {isLoading && !hasSearchResult ? (
+          <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
+            종목을 불러오는 중이에요.
+          </p>
+        ) : hasSearchResult ? (
           <>
             {!searchKeyword.trim() && (
               <h2 className="pretendard-Body2-Semibold text-Yellow-30 mb-3">현재 인기 종목 랭킹</h2>
             )}
 
             <div className="border-Gray-2 overflow-hidden rounded-xl border">
-              {filteredStocks.map((stock, index) => (
+              {stocks.map((stock, index) => (
                 <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
                   <StockRankItem
                     rank={searchKeyword.trim() ? undefined : index + 1}
@@ -133,6 +144,20 @@ export default function StockSearchView({
                 </div>
               ))}
             </div>
+
+            {hasNextPage && onLoadMore && (
+              <div className="mt-4 flex justify-center">
+                <Button
+                  type="button"
+                  size="md"
+                  color="secondary"
+                  disabled={isFetchingNextPage}
+                  onClick={onLoadMore}
+                >
+                  {isFetchingNextPage ? '종목을 불러오는 중...' : '종목 더 보기'}
+                </Button>
+              </div>
+            )}
           </>
         ) : (
           <div className="flex h-full min-h-80 flex-col items-center justify-center">

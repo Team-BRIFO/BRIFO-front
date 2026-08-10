@@ -1,21 +1,36 @@
 import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-controller'
 import { ApiResponseGetStocksResponse, type GetStocksParams } from '@/api/generated/schemas'
-import { useApiQuery } from '@/hooks/api'
+import { useApiInfiniteQuery } from '@/hooks/api'
 
 export const stockQueryKeys = {
   all: ['stocks'] as const,
-  list: (params: GetStocksParams) => [...stockQueryKeys.all, 'list', params] as const,
+  list: (keyword: string, size: number) =>
+    [...stockQueryKeys.all, 'list', { keyword, size }] as const,
 }
 
-export function useGetStocksQuery(params: GetStocksParams, enabled: boolean = true) {
-  return useApiQuery({
-    queryKey: stockQueryKeys.list(params),
+/** 검색어와 cursor를 기준으로 관심종목 후보를 조회한다. */
+export function useGetStocksQuery(keyword: string, size: number, enabled: boolean = true) {
+  const normalizedKeyword = keyword.trim()
+
+  return useApiInfiniteQuery({
+    queryKey: stockQueryKeys.list(normalizedKeyword, size),
     operation: getStocks,
     endpoint: 'getStocks',
     responseSchema: ApiResponseGetStocksResponse,
     response: 'requiredResult',
-    args: [params],
+    getArgs: ({ pageParam }): [GetStocksParams] => [
+      {
+        request: {
+          cursor: pageParam ?? undefined,
+          keyword: normalizedKeyword || undefined,
+          size,
+        },
+      },
+    ],
     enabled,
     staleTime: 0,
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) =>
+      lastPage.page.hasNext ? (lastPage.page.nextCursor ?? undefined) : undefined,
   })
 }

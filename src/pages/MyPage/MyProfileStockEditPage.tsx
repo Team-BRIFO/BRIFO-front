@@ -1,19 +1,23 @@
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import StockLogoPlaceholder from '@/assets/images/diary/stock-logo-placeholder.png'
 import { Toast } from '@/components/common/Toast'
 import StockSearchView from '@/components/feature/interest-stock/StockSearchView'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useGetStocksQuery } from '@/hooks/queries/stock/useStockQueries'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
+import { mapInterestStockOption } from '@/mappers/stockMapper'
 import { useUpdateMyProfileMutation } from '@/pages/MyPage/hooks/useUpdateMyProfileMutation'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
-import type { InterestStockOption } from '@/types/domain/stock'
-import type { UserProfileFormValues } from '@/types/domain/user'
-import { MAX_INTEREST_STOCK_COUNT, validateInterestStockIds } from '@/utils/profileValidation'
+import type { UserInterestStock, UserProfileFormValues } from '@/types/domain/user'
+import {
+  MAX_INTEREST_STOCK_COUNT,
+  validateCompanyName,
+  validateInterestStockIds,
+  validateNickname,
+} from '@/utils/profileValidation'
 
 const STOCK_PAGE_SIZE = 20
 
@@ -29,13 +33,12 @@ export function MyProfileStockEditPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const profileQuery = useUserProfileQuery()
-  const stocksQuery = useGetStocksQuery(
-    { request: { size: STOCK_PAGE_SIZE } },
-    Boolean(profileQuery.data),
-  )
   const updateProfile = useUpdateMyProfileMutation()
-  const [selectedStockIdsOverride, setSelectedStockIdsOverride] = useState<string[] | null>(null)
+  const [selectedStocksOverride, setSelectedStocksOverride] = useState<UserInterestStock[] | null>(
+    null,
+  )
   const [searchKeyword, setSearchKeyword] = useState('')
+  const stocksQuery = useGetStocksQuery(searchKeyword, STOCK_PAGE_SIZE, Boolean(profileQuery.data))
 
   const initialStocks = useMemo(
     () =>
@@ -47,56 +50,40 @@ export function MyProfileStockEditPage() {
   const profileDraft = (location.state as MyProfileStockEditLocationState | null)?.profileDraft
   const returnTo =
     (location.state as MyProfileStockEditLocationState | null)?.returnTo ?? PATH.MY_SETTINGS
-  const selectedStockIds = selectedStockIdsOverride ?? initialStocks.map((stock) => stock.id)
-  const stocks = useMemo<InterestStockOption[]>(
+  const selectedStocks = selectedStocksOverride ?? initialStocks
+  const selectedStockIds = useMemo(() => selectedStocks.map((stock) => stock.id), [selectedStocks])
+  const stocks = useMemo(
     () =>
-      (stocksQuery.data?.page.items ?? []).map((stock) => ({
-        id: stock.stockId,
-        name: stock.name,
-        price: stock.price.toLocaleString('ko-KR'),
-        changeRate: stock.changeRate,
-        logoUrl: stock.logoUrl ?? StockLogoPlaceholder,
-      })),
+      stocksQuery.data?.pages.flatMap((page) => page.page.items.map(mapInterestStockOption)) ?? [],
     [stocksQuery.data],
   )
-  const selectedStocks = useMemo(() => {
-    const stocksById = new Map(stocks.map((stock) => [stock.id, stock]))
-    const initialStocksById = new Map(initialStocks.map((stock) => [stock.id, stock]))
-
-    return selectedStockIds.flatMap((stockId) => {
-      const stock = stocksById.get(stockId)
-      if (stock) return [{ id: stock.id, name: stock.name }]
-
-      const initialStock = initialStocksById.get(stockId)
-      return initialStock ? [{ id: initialStock.id, name: initialStock.name }] : []
-    })
-  }, [initialStocks, selectedStockIds, stocks])
 
   const handleToggleStock = (stockId: string) => {
-    setSelectedStockIdsOverride((previous) => {
-      const current = previous ?? selectedStockIds
-      if (current.includes(stockId)) return current.filter((id) => id !== stockId)
+    setSelectedStocksOverride((previous) => {
+      const current = previous ?? selectedStocks
+      if (current.some((stock) => stock.id === stockId)) {
+        return current.filter((stock) => stock.id !== stockId)
+      }
       if (current.length >= MAX_INTEREST_STOCK_COUNT) return current
-      return [...current, stockId]
+
+      const stock = stocks.find((item) => item.id === stockId)
+      return stock ? [...current, { id: stock.id, name: stock.name }] : current
     })
   }
 
   const currentProfileValues = useMemo<UserProfileFormValues | undefined>(() => {
     if (!profileQuery.data) return undefined
 
-    const nameById = new Map(selectedStocks.map((stock) => [stock.id, stock.name]))
     return {
       nickname: profileDraft?.nickname ?? profileQuery.data.profileFormValues.nickname,
       companyName: profileDraft?.companyName ?? profileQuery.data.profileFormValues.companyName,
-      interestStocks: selectedStockIds.flatMap((id) => {
-        const name = nameById.get(id)
-        return name ? [{ id, name }] : []
-      }),
+      interestStocks: selectedStocks,
     }
-  }, [profileDraft, profileQuery.data, selectedStockIds, selectedStocks])
+  }, [profileDraft, profileQuery.data, selectedStocks])
 
   const handleBack = () => {
     navigate(returnTo, {
+      replace: true,
       state:
         returnTo === PATH.MY_EDIT && currentProfileValues
           ? { profileDraft: currentProfileValues }
@@ -107,11 +94,21 @@ export function MyProfileStockEditPage() {
   const handleComplete = () => {
     if (!currentProfileValues || validateInterestStockIds(selectedStockIds)) return
 
+    if (returnTo === PATH.MY_EDIT) {
+      navigate(returnTo, { replace: true, state: { profileDraft: currentProfileValues } })
+      return
+    }
+
+    if (
+      validateNickname(currentProfileValues.nickname) ||
+      validateCompanyName(currentProfileValues.companyName)
+    )
+      return
+
     updateProfile.mutate(currentProfileValues, {
       onSuccess: () =>
         navigate(returnTo, {
           replace: true,
-          state: returnTo === PATH.MY_EDIT ? { profileDraft: currentProfileValues } : undefined,
         }),
     })
   }
@@ -136,7 +133,12 @@ export function MyProfileStockEditPage() {
     )
   }
 
-  if (!!stocksQuery.error && stocksQuery.fetchStatus === 'idle' && !stocksQuery.data) {
+  if (
+    !searchKeyword.trim() &&
+    !!stocksQuery.error &&
+    stocksQuery.fetchStatus === 'idle' &&
+    !stocksQuery.data
+  ) {
     return (
       <MyPageLayout title="관심종목 변경" onBack={handleBack}>
         <PageErrorView
@@ -148,7 +150,7 @@ export function MyProfileStockEditPage() {
     )
   }
 
-  if (!stocksQuery.data) {
+  if (!stocksQuery.data && !searchKeyword.trim()) {
     return (
       <MyPageLayout title="관심종목 변경" onBack={handleBack}>
         <PageLoadingView />
@@ -168,6 +170,10 @@ export function MyProfileStockEditPage() {
         onToggleStock={handleToggleStock}
         onBack={handleBack}
         onComplete={handleComplete}
+        isLoading={stocksQuery.isPending}
+        hasNextPage={stocksQuery.hasNextPage}
+        isFetchingNextPage={stocksQuery.isFetchingNextPage}
+        onLoadMore={() => void stocksQuery.fetchNextPage()}
       />
       {updateProfile.isError && (
         <Toast
