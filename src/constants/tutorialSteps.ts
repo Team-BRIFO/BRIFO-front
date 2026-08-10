@@ -87,7 +87,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     id: 'prediction-registered',
     step: 3,
     title: '방향 예측하기',
-    message: `예측 등록이 완료 되었네요. \n장 마감까지 기다려볼까요?`,
+    message: `예측 등록이 완료되었네요. \n장 마감까지 기다려볼까요?`,
     content: 'predictionRegistered',
     buttonLabel: '다음',
   },
