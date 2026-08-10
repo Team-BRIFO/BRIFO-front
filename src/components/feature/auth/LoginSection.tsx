@@ -1,6 +1,6 @@
 import Logo from '@/assets/logo/brifo_logo.svg?react'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
-import SocialLoginButton from '@/components/feature/onboarding/SocialLoginButton'
+import SocialLoginButton from '@/components/feature/auth/SocialLoginButton'
 
 interface LoginSectionProps {
   onKakaoLogin: () => void
