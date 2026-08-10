@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
-import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
+import UserAgreementItem from '@/components/feature/policy/UserAgreementItem'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
+import { AGREEMENTS } from '@/constants/agreement'
 import { usePoliciesQuery } from '@/hooks/queries/policy/usePolicyQueries'
-import { AGREEMENTS } from '@/pages/AgreementPage/agreement'
-import { findPolicyByAgreementId } from '@/pages/AgreementPage/policyMapping'
+import { findPolicyByAgreementId } from '@/mappers/policyMapper'
 import { PATH } from '@/routes/paths'
 
 /** 설정에서 약관 내용을 확인하는 읽기 전용 목록. 동의 상태는 변경하지 않는다. */

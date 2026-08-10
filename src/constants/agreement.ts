@@ -1,47 +1,20 @@
-export type AgreementId = 'age' | 'service' | 'privacy' | 'investment' | 'marketing'
+import type { Agreement, AgreementDetail, AgreementId } from '@/types/domain/agreement'
 
-export interface Agreement {
-  id: AgreementId
-  label: string
-  type: 'required' | 'optional'
-}
-
-export interface AgreementDetail {
-  title: string
-  effectiveDate: string
-  version: string
-  sections: {
-    title: string
-    content: string
-  }[]
-}
 export const AGREEMENTS: Agreement[] = [
-  {
-    id: 'age',
-    label: '만 14세 이상입니다.',
-    type: 'required',
-  },
-  {
-    id: 'service',
-    label: '서비스 이용약관',
-    type: 'required',
-  },
-  {
-    id: 'privacy',
-    label: '개인정보 처리방침',
-    type: 'required',
-  },
-  {
-    id: 'investment',
-    label: '투자 정보 유의사항',
-    type: 'required',
-  },
-  {
-    id: 'marketing',
-    label: '광고성 정보 수신',
-    type: 'optional',
-  },
+  { id: 'age', label: '만 14세 이상입니다.', type: 'required' },
+  { id: 'service', label: '서비스 이용약관', type: 'required' },
+  { id: 'privacy', label: '개인정보 처리방침', type: 'required' },
+  { id: 'investment', label: '투자 정보 유의사항', type: 'required' },
+  { id: 'marketing', label: '광고성 정보 수신', type: 'optional' },
 ]
+
+export const POLICY_TITLE_KEYWORDS: Record<AgreementId, string[]> = {
+  age: ['14세', '연령'],
+  service: ['서비스', '이용약관'],
+  privacy: ['개인정보'],
+  investment: ['투자', '유의'],
+  marketing: ['광고', '마케팅'],
+}
 
 export const SERVICE_TERMS: AgreementDetail = {
   title: 'BRIFO 서비스 이용약관',

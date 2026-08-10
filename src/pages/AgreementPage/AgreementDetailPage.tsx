@@ -3,11 +3,11 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
+import { SERVICE_TERMS } from '@/constants/agreement'
 import { usePolicyDetailQuery } from '@/hooks/queries/policy/usePolicyQueries'
-import type { AgreementId } from '@/pages/AgreementPage/agreement'
-import { SERVICE_TERMS } from '@/pages/AgreementPage/agreement'
-import { formatPolicyEffectiveDate } from '@/pages/AgreementPage/policyMapping'
 import { PATH } from '@/routes/paths'
+import type { AgreementId } from '@/types/domain/agreement'
+import { formatPolicyEffectiveDate } from '@/utils/policyDate'
 
 interface AgreementDetailLocationState {
   agreementId?: AgreementId
@@ -148,17 +148,19 @@ export default function AgreementDetailPage() {
         )}
       </div>
 
-      <Button
-        type="button"
-        size={readOnly ? 'semilg' : 'lg'}
-        color="primary"
-        isFullWidth
-        disabled={(!readOnly && !hasReachedBottom) || isReadOnlyDetailLoading}
-        onClick={handleConfirm}
-        className={readOnly ? 'mx-4' : undefined}
-      >
-        {readOnly ? '확인' : '확인했어요'}
-      </Button>
+      <div className={readOnly ? 'mx-4 flex justify-center' : undefined}>
+        <Button
+          type="button"
+          size={readOnly ? 'semilg' : 'lg'}
+          color="primary"
+          isFullWidth
+          disabled={(!readOnly && !hasReachedBottom) || isReadOnlyDetailLoading}
+          onClick={handleConfirm}
+          className={readOnly ? 'max-w-80' : undefined}
+        >
+          {readOnly ? '확인' : '확인했어요'}
+        </Button>
+      </div>
     </main>
   )
 }
