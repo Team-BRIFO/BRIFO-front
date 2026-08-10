@@ -90,8 +90,10 @@ export default defineConfig({
             '@/api/client/paramsSerializer',
             '@/api/client/result',
             '@/api/client/runtimeConfig',
+            '@/api/client/signupSession',
             '@/api/client/tokenStore',
             '@/api/generated/schemas',
+            '@/stores/profileStorage',
           ],
         },
         zod: {

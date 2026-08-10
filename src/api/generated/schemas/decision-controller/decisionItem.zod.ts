@@ -18,6 +18,7 @@ export const DecisionItem = zod.object({
   stock: zod.object({
     stockId: zod.uuid(),
     name: zod.string(),
+    logoUrl: zod.string().optional(),
     price: zod.int().optional(),
     changeRate: zod.number().optional(),
     tradeDate: zod.iso.date().optional(),

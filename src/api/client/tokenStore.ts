@@ -2,7 +2,6 @@ import type { TokenInfo } from '@/api/generated/schemas'
 
 export const ACCESS_TOKEN_STORAGE_KEY = 'accessToken'
 export const REFRESH_TOKEN_STORAGE_KEY = 'refreshToken'
-export const SIGNUP_TOKEN_STORAGE_KEY = 'signupToken'
 
 export interface TokenStore {
   getAccessToken(): string | null
@@ -13,10 +12,6 @@ export interface TokenStore {
 
 function getLocalStorage() {
   return typeof localStorage === 'undefined' ? undefined : localStorage
-}
-
-function getSessionStorage() {
-  return typeof sessionStorage === 'undefined' ? undefined : sessionStorage
 }
 
 export const browserTokenStore: TokenStore = {
@@ -32,10 +27,4 @@ export const browserTokenStore: TokenStore = {
     storage?.removeItem(ACCESS_TOKEN_STORAGE_KEY)
     storage?.removeItem(REFRESH_TOKEN_STORAGE_KEY)
   },
-}
-
-export const signupTokenStore = {
-  get: () => getSessionStorage()?.getItem(SIGNUP_TOKEN_STORAGE_KEY) ?? null,
-  set: (token: string) => getSessionStorage()?.setItem(SIGNUP_TOKEN_STORAGE_KEY, token),
-  clear: () => getSessionStorage()?.removeItem(SIGNUP_TOKEN_STORAGE_KEY),
 }

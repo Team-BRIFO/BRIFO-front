@@ -12,20 +12,30 @@ import axios, {
 import { serializeQueryParameters } from '@/api/client/paramsSerializer'
 import { requireApiResult } from '@/api/client/result'
 import { getApiBaseUrl } from '@/api/client/runtimeConfig'
+import { signupSession } from '@/api/client/signupSession'
 import { browserTokenStore, type TokenStore } from '@/api/client/tokenStore'
 import { ApiResponseReissueResponse as ApiResponseReissueResponseSchema } from '@/api/generated/schemas'
+import { clearStoredProfile } from '@/stores/profileStorage'
 
 const DEFAULT_TIMEOUT_MS = 15_000
 const PUBLIC_AUTH_PATHS = new Set([
   '/api/auth/login/kakao',
   '/api/auth/login/naver',
   '/api/auth/reissue',
+  '/api/auth/signup/csrf',
 ])
 const REISSUE_EXCLUDED_PATHS = new Set(['/api/auth/logout'])
 const REISSUE_PATH = '/api/auth/reissue'
+const SIGNUP_AUTH_PATH_PREFIXES = [
+  '/api/policies',
+  '/api/onboarding/',
+  '/api/users/me/policies',
+] as const
+const SIGNUP_MUTATION_PATH_PREFIXES = ['/api/users/me/policies', '/api/onboarding/'] as const
 
 type RetriableAxiosConfig = InternalAxiosRequestConfig & {
   _retryAfterRefresh?: boolean
+  _authorizationFromTokenStore?: boolean
 }
 
 interface CreateBrifoAxiosInstanceOptions {
@@ -36,7 +46,13 @@ interface CreateBrifoAxiosInstanceOptions {
 }
 
 function getPathname(config: AxiosRequestConfig) {
-  return new URL(config.url ?? '', config.baseURL ?? getApiBaseUrl()).pathname
+  const url = config.url ?? ''
+  if (url.startsWith('/')) return url.split('?')[0] ?? url
+
+  const baseURL = config.baseURL ?? getApiBaseUrl()
+  if (!baseURL) return url.split('?')[0] ?? url
+
+  return new URL(url, baseURL).pathname
 }
 
 function isPublicAuthRequest(config: AxiosRequestConfig) {
@@ -45,6 +61,22 @@ function isPublicAuthRequest(config: AxiosRequestConfig) {
 
 function isReissueExcludedRequest(config: AxiosRequestConfig) {
   return REISSUE_EXCLUDED_PATHS.has(getPathname(config))
+}
+
+function isSignupAuthRequest(config: AxiosRequestConfig) {
+  if (!signupSession.isActive()) return false
+
+  const pathname = getPathname(config)
+  return SIGNUP_AUTH_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+}
+
+function isSignupMutationRequest(config: AxiosRequestConfig) {
+  const method = config.method?.toUpperCase()
+  if (!method || method === 'GET' || method === 'HEAD') return false
+  if (!signupSession.isActive()) return false
+
+  const pathname = getPathname(config)
+  return SIGNUP_MUTATION_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 }
 
 function defaultSessionExpiredHandler() {
@@ -56,6 +88,7 @@ function createBaseAxiosInstance(baseURL: string, adapter: AxiosAdapter | undefi
     baseURL,
     adapter,
     timeout: DEFAULT_TIMEOUT_MS,
+    withCredentials: true,
     paramsSerializer: {
       serialize: serializeQueryParameters,
     },
@@ -106,6 +139,12 @@ export function createBrifoAxiosInstance({
 
     sessionExpirationHandled = true
     tokenStore.clear()
+    clearStoredProfile()
+    onSessionExpired()
+  }
+
+  function expireSignupSession() {
+    signupSession.clear()
     onSessionExpired()
   }
 
@@ -149,13 +188,24 @@ export function createBrifoAxiosInstance({
   }
 
   client.interceptors.request.use((config) => {
+    const authConfig = config as RetriableAxiosConfig
+
     if (tokenStore.getRefreshToken()) sessionExpirationHandled = false
 
-    if (isPublicAuthRequest(config)) {
+    if (isPublicAuthRequest(config) || isSignupAuthRequest(config)) {
       config.headers.delete('Authorization')
-    } else {
+      authConfig._authorizationFromTokenStore = false
+    } else if (!config.headers.has('Authorization') || authConfig._authorizationFromTokenStore) {
       const accessToken = tokenStore.getAccessToken()
-      if (accessToken) config.headers.set('Authorization', `Bearer ${accessToken}`)
+      if (accessToken) {
+        config.headers.set('Authorization', `Bearer ${accessToken}`)
+        authConfig._authorizationFromTokenStore = true
+      }
+    }
+
+    const csrfToken = signupSession.getCsrfToken()
+    if (csrfToken && isSignupMutationRequest(config)) {
+      config.headers.set(signupSession.getCsrfHeaderName(), csrfToken)
     }
 
     return config
@@ -172,6 +222,11 @@ export function createBrifoAxiosInstance({
       isPublicAuthRequest(originalConfig) ||
       isReissueExcludedRequest(originalConfig)
     ) {
+      return Promise.reject(error)
+    }
+
+    if (isSignupAuthRequest(originalConfig)) {
+      expireSignupSession()
       return Promise.reject(error)
     }
 

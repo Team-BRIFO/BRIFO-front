@@ -1,4 +1,4 @@
-import { signupTokenStore } from '@/api/client/tokenStore'
+import { signupSession } from '@/api/client/signupSession'
 import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-controller'
 import { ApiResponseGetStocksResponse } from '@/api/generated/schemas'
 import SkHynixLogo from '@/assets/logo/sk-hynix.png'
@@ -8,8 +8,6 @@ import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
 const STOCK_PAGE_SIZE = 20
 
 export function useOnboardingStocksQuery() {
-  const signupToken = signupTokenStore.get()
-
   return useApiQuery({
     queryKey: ['onboarding', 'stocks'],
     operation: getStocks,
@@ -17,10 +15,7 @@ export function useOnboardingStocksQuery() {
     args: [{ request: { size: STOCK_PAGE_SIZE } }],
     responseSchema: ApiResponseGetStocksResponse,
     response: 'requiredResult',
-    enabled: Boolean(signupToken),
-    requestConfig: signupToken
-      ? { headers: { Authorization: `Bearer ${signupToken}` } }
-      : undefined,
+    enabled: signupSession.isActive(),
     map: (result): OnboardingStock[] =>
       result.page.items.map((stock) => ({
         id: stock.stockId,

@@ -17,6 +17,7 @@ export const ApiResponseGetOfficeBriefingsResponse = zod.object({
         zod.object({
           stockId: zod.uuid(),
           stockName: zod.string(),
+          logoUrl: zod.string().optional(),
           agents: zod.array(
             zod.object({
               briefingId: zod.uuid(),

@@ -11,7 +11,11 @@ export const ApiResponseDevSignUpResponse = zod.object({
   success: zod.boolean(),
   code: zod.string(),
   message: zod.string(),
-  result: zod.unknown().optional(),
+  result: zod
+    .object({
+      csrfToken: zod.string().optional(),
+    })
+    .optional(),
 })
 
 export type ApiResponseDevSignUpResponse = zod.input<typeof ApiResponseDevSignUpResponse>

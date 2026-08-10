@@ -25,7 +25,7 @@ function useLogoutHookTypeExample() {
     operation: logout,
     endpoint: 'logout',
     responseSchema: ApiResponse,
-    getArgs: (refreshToken: string): [{ refreshToken: string }] => [{ refreshToken }],
+    getArgs: () => [undefined] as const,
   })
 }
 
@@ -47,7 +47,7 @@ describe('common API hooks boundary', () => {
     const response = await executeGeneratedApiOperation({
       operation: logout,
       endpoint: 'logout',
-      args: [{ refreshToken: 'refresh-token' }],
+      args: [undefined],
       responseSchema: ApiResponse,
       requestConfig: { adapter },
     })

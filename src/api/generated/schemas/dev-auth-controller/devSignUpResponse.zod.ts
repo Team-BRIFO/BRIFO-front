@@ -7,7 +7,9 @@
  */
 import { z as zod } from 'zod'
 
-export const DevSignUpResponse = zod.unknown()
+export const DevSignUpResponse = zod.object({
+  csrfToken: zod.string().optional(),
+})
 
 export type DevSignUpResponse = zod.input<typeof DevSignUpResponse>
 export type DevSignUpResponseOutput = zod.output<typeof DevSignUpResponse>

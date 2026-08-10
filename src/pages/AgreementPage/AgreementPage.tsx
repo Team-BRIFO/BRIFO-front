@@ -5,6 +5,7 @@ import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { Toast } from '@/components/common/Toast'
 import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
+import { useSignupCsrfBootstrap } from '@/hooks/auth/useSignupCsrfBootstrap'
 import type { AgreementId } from '@/pages/AgreementPage/agreement'
 import { AGREEMENTS } from '@/pages/AgreementPage/agreement'
 import {
@@ -35,6 +36,7 @@ export default function AgreementPage() {
   const location = useLocation()
   const policiesQuery = usePoliciesQuery()
   const agreePolicies = useAgreePoliciesMutation()
+  const { isCsrfReady, isCsrfError, retryCsrf } = useSignupCsrfBootstrap()
   const [checked, setChecked] = useState<AgreementCheckedState>(INITIAL_CHECKED_STATE)
   const isAllChecked = Object.values(checked).every(Boolean)
   const isRequiredChecked = REQUIRED_AGREEMENT_IDS.every((id) => checked[id])
@@ -148,21 +150,31 @@ export default function AgreementPage() {
       <div className="mt-auto">
         <Button
           isFullWidth
-          disabled={!isRequiredChecked || !policiesQuery.data || agreePolicies.isPending}
+          disabled={
+            !isRequiredChecked || !policiesQuery.data || agreePolicies.isPending || !isCsrfReady
+          }
           onClick={handleNext}
         >
           {agreePolicies.isPending ? '동의 처리 중...' : '다음'}
         </Button>
       </div>
 
-      {(policiesQuery.isError || agreePolicies.isError) && (
+      {(isCsrfError || policiesQuery.isError || agreePolicies.isError) && (
         <Toast
           message={
-            agreePolicies.error?.serviceMessage ??
-            policiesQuery.error?.serviceMessage ??
-            '약관 정보를 불러오지 못했어요'
+            isCsrfError
+              ? '온보딩 정보를 불러오지 못했어요'
+              : (agreePolicies.error?.serviceMessage ??
+                policiesQuery.error?.serviceMessage ??
+                '약관 정보를 불러오지 못했어요')
           }
         />
+      )}
+
+      {isCsrfError && (
+        <Button isFullWidth color="secondary" className="mt-3" onClick={() => void retryCsrf()}>
+          다시 시도
+        </Button>
       )}
     </main>
   )
