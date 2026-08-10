@@ -63,6 +63,7 @@ export function MySettingsPage() {
     removeAccount.mutate(undefined, {
       onSuccess: () => {
         clearClientSession()
+        queryClient.clear()
         navigate(PATH.SPLASH, { replace: true })
       },
     })
