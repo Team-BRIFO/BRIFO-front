@@ -6,15 +6,15 @@ import { Image } from '@/components/common/Image'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import StockRankItem from '@/components/domain/stock/StockRankItem'
-import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
+import type { InterestStockOption } from '@/types/domain/stock'
 import { MAX_INTEREST_STOCK_COUNT, validateInterestStockIds } from '@/utils/profileValidation'
 
 interface StockSearchViewProps {
-  stocks: OnboardingStock[]
+  stocks: InterestStockOption[]
   searchKeyword: string
   selectedStockIds: string[]
   /** 목록 첫 페이지에 없는 기존 선택 종목도 칩으로 표시할 때 전달한다. */
-  selectedStocks?: Pick<OnboardingStock, 'id' | 'name'>[]
+  selectedStocks?: Pick<InterestStockOption, 'id' | 'name'>[]
   onSearchKeywordChange: (value: string) => void
   onToggleStock: (stockId: string) => void
   onBack: () => void

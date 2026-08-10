@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { TextField } from '@/components/common/TextField'
 import StockRankItem from '@/components/domain/stock/StockRankItem'
-import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
+import type { InterestStockOption } from '@/types/domain/stock'
 
 interface InterestStockSectionProps {
-  stocks: OnboardingStock[]
+  stocks: InterestStockOption[]
   searchKeyword: string
   selectedStockIds: string[]
   onToggleStock: (stockId: string) => void

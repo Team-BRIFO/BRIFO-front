@@ -3,7 +3,7 @@ import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-cont
 import { ApiResponseGetStocksResponse } from '@/api/generated/schemas'
 import SkHynixLogo from '@/assets/logo/sk-hynix.png'
 import { useApiQuery } from '@/hooks/api'
-import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
+import type { InterestStockOption } from '@/types/domain/stock'
 
 const STOCK_PAGE_SIZE = 20
 
@@ -16,7 +16,7 @@ export function useOnboardingStocksQuery() {
     responseSchema: ApiResponseGetStocksResponse,
     response: 'requiredResult',
     enabled: signupSession.isActive(),
-    map: (result): OnboardingStock[] =>
+    map: (result): InterestStockOption[] =>
       result.page.items.map((stock) => ({
         id: stock.stockId,
         name: stock.name,

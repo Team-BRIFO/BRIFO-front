@@ -3,15 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import StockLogoPlaceholder from '@/assets/images/diary/stock-logo-placeholder.png'
 import { Toast } from '@/components/common/Toast'
-import StockSearchView from '@/components/feature/onboarding/StockSearchView'
+import StockSearchView from '@/components/feature/interest-stock/StockSearchView'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useGetStocksQuery } from '@/hooks/queries/stock/useStockQueries'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { useUpdateMyProfileMutation } from '@/pages/MyPage/hooks/useUpdateMyProfileMutation'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
-import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
 import { PATH } from '@/routes/paths'
+import type { InterestStockOption } from '@/types/domain/stock'
 import type { UserProfileFormValues } from '@/types/domain/user'
 import { MAX_INTEREST_STOCK_COUNT, validateInterestStockIds } from '@/utils/profileValidation'
 
@@ -48,7 +48,7 @@ export function MyProfileStockEditPage() {
   const returnTo =
     (location.state as MyProfileStockEditLocationState | null)?.returnTo ?? PATH.MY_SETTINGS
   const selectedStockIds = selectedStockIdsOverride ?? initialStocks.map((stock) => stock.id)
-  const stocks = useMemo<OnboardingStock[]>(
+  const stocks = useMemo<InterestStockOption[]>(
     () =>
       (stocksQuery.data?.page.items ?? []).map((stock) => ({
         id: stock.stockId,
