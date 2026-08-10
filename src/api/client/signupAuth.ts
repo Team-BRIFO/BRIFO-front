@@ -31,4 +31,5 @@ export async function ensureSignupCsrfToken(options?: { signal?: GenericAbortSig
   }
 
   signupSession.setCsrfToken(csrfToken)
+  return csrfToken
 }
