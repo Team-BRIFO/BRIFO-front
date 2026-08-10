@@ -24,6 +24,8 @@ export interface MyProfileEditProps {
   onSubmit: (values: UserProfileFormValues) => void
   /** 캐릭터 변경 진입 — 미전달 시 텍스트만 표시 */
   onChangeCharacter?: () => void
+  /** 관심종목 선택 화면 진입 */
+  onAddStock: (values: UserProfileFormValues) => void
   isSubmitting?: boolean
   /** 클라이언트 유효성 오류와 구분해 표시하는 서버 저장 오류 */
   serverError?: string
@@ -35,6 +37,7 @@ export function MyProfileEdit({
   characterType,
   onSubmit,
   onChangeCharacter,
+  onAddStock,
   isSubmitting = false,
   serverError,
 }: MyProfileEditProps) {
@@ -58,6 +61,14 @@ export function MyProfileEdit({
     onSubmit({
       nickname: normalizeProfileText(nickname),
       companyName: normalizeProfileText(companyName),
+      interestStocks,
+    })
+  }
+
+  const handleAddStock = () => {
+    onAddStock({
+      nickname,
+      companyName,
       interestStocks,
     })
   }
@@ -117,18 +128,11 @@ export function MyProfileEdit({
               ))}
             </div>
 
-            {/*
-              TODO: 「+ 종목추가」 클릭 플로우는 마이 피그마에 화면 전환 명세가 없다.
-                    디자인에 문의 후, 온보딩 종목 선택 UI를 그대로 가져와 연결할 것.
-                    (참고 피그마: node 1054:5175 — 인기 순위 제외 여부는 디자인 확인)
-            */}
             {interestStocks.length < MAX_INTEREST_STOCK_COUNT && (
               <button
                 type="button"
-                disabled
-                aria-disabled="true"
-                title="종목 추가 플로우는 디자인 확인 후 연결 예정"
-                className="pretendard-Caption1 text-Gray-5 bg-Background1 w-fit cursor-not-allowed rounded-[20px] px-3 py-1.5 leading-none"
+                onClick={handleAddStock}
+                className="pretendard-Caption1 text-Yellow-20 bg-Yellow-100 focus-visible:ring-Yellow-45 w-fit rounded-[20px] px-3 py-1.5 leading-none focus-visible:ring-2 focus-visible:outline-none"
               >
                 + 종목추가
               </button>

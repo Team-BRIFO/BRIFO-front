@@ -12,6 +12,8 @@ interface StockRankItemProps {
   isFavorite?: boolean
   onToggleFavorite?: () => void
   onClick?: () => void
+  disabled?: boolean
+  disabledMessage?: string
 }
 
 export default function StockRankItem({
@@ -23,12 +25,20 @@ export default function StockRankItem({
   isFavorite = false,
   onToggleFavorite,
   onClick,
+  disabled = false,
+  disabledMessage,
 }: StockRankItemProps) {
   const isUp = changeRate >= 0
 
   return (
     <div className="hover:bg-Yellow-105 active:bg-Yellow-105 flex w-full items-center px-5 py-3 transition-colors">
-      <button type="button" onClick={onClick} className="flex flex-1 items-center gap-3 text-left">
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={disabled}
+        title={disabledMessage}
+        className="flex flex-1 items-center gap-3 text-left disabled:cursor-not-allowed disabled:opacity-50"
+      >
         {rank !== undefined && (
           <span className="dnf-Subtitle3 text-Yellow-30 w-6 text-center">{rank}</span>
         )}
@@ -54,8 +64,16 @@ export default function StockRankItem({
       <button
         type="button"
         onClick={onToggleFavorite}
-        aria-label={isFavorite ? '관심 종목 해제' : '관심 종목 추가'}
-        className="ml-4 flex h-5 w-5 shrink-0 items-center justify-center"
+        disabled={disabled}
+        aria-label={
+          disabled && disabledMessage
+            ? `${isFavorite ? '관심 종목 해제' : '관심 종목 추가'}: ${disabledMessage}`
+            : isFavorite
+              ? '관심 종목 해제'
+              : '관심 종목 추가'
+        }
+        title={disabledMessage}
+        className="ml-4 flex h-5 w-5 shrink-0 items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isFavorite ? (
           <FilledHeartIcon className="text-Yellow-45 h-5 w-5" aria-hidden="true" />

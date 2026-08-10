@@ -43,7 +43,14 @@ export default function InterestStockSection({
 
   return (
     <section className="mt-8">
-      <div onClick={onOpenSearch} onKeyDown={handleSearchKeyDown} className="cursor-pointer">
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label="관심종목 검색 열기"
+        onClick={onOpenSearch}
+        onKeyDown={handleSearchKeyDown}
+        className="focus-visible:ring-Yellow-45 cursor-pointer rounded-lg focus-visible:ring-2 focus-visible:outline-none"
+      >
         <div className="pointer-events-none">
           <TextField
             name="stockSearch"

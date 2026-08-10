@@ -7,31 +7,38 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import StockRankItem from '@/components/domain/stock/StockRankItem'
 import type { OnboardingStock } from '@/pages/OnboardingPage/mockStocks'
-import { validateInterestStockIds } from '@/utils/profileValidation'
+import { MAX_INTEREST_STOCK_COUNT, validateInterestStockIds } from '@/utils/profileValidation'
 
 interface StockSearchViewProps {
   stocks: OnboardingStock[]
   searchKeyword: string
   selectedStockIds: string[]
+  /** 목록 첫 페이지에 없는 기존 선택 종목도 칩으로 표시할 때 전달한다. */
+  selectedStocks?: Pick<OnboardingStock, 'id' | 'name'>[]
   onSearchKeywordChange: (value: string) => void
   onToggleStock: (stockId: string) => void
   onBack: () => void
   onComplete: () => void
+  /** 마이 프로필처럼 이미 화면 헤더가 있는 곳에 삽입할 때 사용한다. */
+  embedded?: boolean
 }
 
 export default function StockSearchView({
   stocks,
   searchKeyword,
   selectedStockIds,
+  selectedStocks: selectedStocksProp,
   onSearchKeywordChange,
   onToggleStock,
   onBack,
   onComplete,
+  embedded = false,
 }: StockSearchViewProps) {
-  const selectedStocks = useMemo(
+  const selectedStocksFromList = useMemo(
     () => stocks.filter((stock) => selectedStockIds.includes(stock.id)),
     [stocks, selectedStockIds],
   )
+  const selectedStocks = selectedStocksProp ?? selectedStocksFromList
 
   const filteredStocks = useMemo(() => {
     const keyword = searchKeyword.trim().toLowerCase()
@@ -42,14 +49,22 @@ export default function StockSearchView({
   }, [stocks, searchKeyword])
 
   const hasSearchResult = filteredStocks.length > 0
+  const interestStocksError = validateInterestStockIds(selectedStockIds)
+  const hasReachedSelectionLimit = selectedStockIds.length >= MAX_INTEREST_STOCK_COUNT
 
   return (
-    <main className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
-      <StatusBar
-        hasStatusArea
-        className="w-full [&>div:last-child]:px-0"
-        left={<StatusBarBackButton onClick={onBack} />}
-      />
+    <main
+      className={
+        embedded ? 'flex w-full flex-1 flex-col pb-5' : 'flex w-full flex-1 flex-col px-4 pt-6 pb-5'
+      }
+    >
+      {!embedded && (
+        <StatusBar
+          hasStatusArea
+          className="w-full [&>div:last-child]:px-0"
+          left={<StatusBarBackButton onClick={onBack} />}
+        />
+      )}
 
       <div className="mt-4">
         <TextField
@@ -106,6 +121,12 @@ export default function StockSearchView({
                     price={stock.price}
                     changeRate={stock.changeRate}
                     isFavorite={selectedStockIds.includes(stock.id)}
+                    disabled={hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)}
+                    disabledMessage={
+                      hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)
+                        ? '관심종목은 최대 3개까지 선택할 수 있어요.'
+                        : undefined
+                    }
                     onToggleFavorite={() => onToggleStock(stock.id)}
                     onClick={() => onToggleStock(stock.id)}
                   />
@@ -120,10 +141,16 @@ export default function StockSearchView({
         )}
       </section>
 
+      {interestStocksError && (
+        <p role="alert" className="pretendard-Caption2 text-Pink-30 mt-3 text-center">
+          {interestStocksError}
+        </p>
+      )}
+
       <Button
         type="button"
         isFullWidth
-        disabled={Boolean(validateInterestStockIds(selectedStockIds))}
+        disabled={Boolean(interestStocksError)}
         onClick={onComplete}
         className="mt-6"
       >

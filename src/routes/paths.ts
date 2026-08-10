@@ -94,4 +94,6 @@ export const PATH = {
   MY_TERMS: '/my/terms',
   MY_TERMS_DETAIL: (policyId: string) => `/my/terms/${policyId}`,
   MY_TERMS_DETAIL_ROUTE: '/my/terms/:policyId',
+  /** 마이 탭 - 관심종목 변경 */
+  MY_EDIT_STOCKS: '/my/edit/stocks',
 } as const

@@ -17,7 +17,6 @@ import { PATH } from '@/routes/paths'
 
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
   profileEdit: PATH.MY_EDIT,
-  interestStocks: PATH.MY_EDIT,
   glossary: PATH.MY_GLOSSARY,
   tutorial: PATH.TUTORIAL,
   notice: PATH.MY_NOTICES,
@@ -40,6 +39,10 @@ export function MySettingsPage() {
     }
     if (key === 'contact') {
       window.location.assign(KAKAO_CONTACT_URL)
+      return
+    }
+    if (key === 'interestStocks') {
+      navigate(PATH.MY_EDIT_STOCKS, { state: { returnTo: PATH.MY_SETTINGS } })
       return
     }
     const path = SETTINGS_PATHS[key]

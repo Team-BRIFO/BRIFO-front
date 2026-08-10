@@ -78,6 +78,10 @@ const LazyMyProfileEditPage = lazyNamed(
   () => import('@/pages/MyPage/MyProfileEditPage'),
   'MyProfileEditPage',
 )
+const LazyMyProfileStockEditPage = lazyNamed(
+  () => import('@/pages/MyPage/MyProfileStockEditPage'),
+  'MyProfileStockEditPage',
+)
 const LazyMySettingsPage = lazyNamed(
   () => import('@/pages/MyPage/MySettingsPage'),
   'MySettingsPage',
@@ -206,6 +210,10 @@ export const router = createBrowserRouter([
       {
         path: PATH.MY_EDIT,
         element: withRouteLoadingFallback(<LazyMyProfileEditPage />),
+      },
+      {
+        path: PATH.MY_EDIT_STOCKS,
+        element: withRouteLoadingFallback(<LazyMyProfileStockEditPage />),
       },
       {
         path: PATH.MY_SETTINGS,
