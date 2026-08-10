@@ -1,23 +1,29 @@
+import Step1Image from '@/assets/characters/tutorial_step1.svg?react'
+import Step2Image from '@/assets/characters/tutorial_step2.svg?react'
+import Step3Image from '@/assets/characters/tutorial_step3.svg?react'
 import type { AgentSummary } from '@/types/domain/agent'
+import type { TutorialStep } from '@/types/domain/tutorial'
 
-export type TutorialContent =
-  | 'cardNewsList'
-  | 'cardNewsDetail'
-  | 'agentSelection'
-  | 'analysisRequested'
-  | 'analysisReport'
-  | 'prediction'
-  | 'predictionRegistered'
-  | 'predictionResult'
-
-export interface TutorialStep {
-  id: string
-  step: number
-  title: string
-  message: string
-  content: TutorialContent
-  buttonLabel: string
-}
+export const TUTORIAL_INTRO_STEPS = [
+  {
+    step: 1,
+    title: '첫 카드뉴스 확인',
+    description: 'AI가 만든 5W1H 사실 요약 카드뉴스를 \n받아보세요',
+    image: Step1Image,
+  },
+  {
+    step: 2,
+    title: '루키의 첫 분석',
+    description: '루키 사원에게 분석을 의뢰하고 보고서를 \n채택해보세요',
+    image: Step2Image,
+  },
+  {
+    step: 3,
+    title: '첫 예측 등록',
+    description: `방향(↑↓~)과 확신도(1~5)를 선택해  \n 예측하세요`,
+    image: Step3Image,
+  },
+] as const
 
 export const TUTORIAL_STEPS: TutorialStep[] = [
   {
@@ -81,7 +87,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     id: 'prediction-registered',
     step: 3,
     title: '방향 예측하기',
-    message: `예측 등록이 완료 되었네요! \n장 마감까지 기다려볼까요?`,
+    message: `예측 등록이 완료 되었네요. \n장 마감까지 기다려볼까요?`,
     content: 'predictionRegistered',
     buttonLabel: '다음',
   },

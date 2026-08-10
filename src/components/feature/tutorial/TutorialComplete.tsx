@@ -18,7 +18,7 @@ export default function TutorialComplete({
   return (
     <main
       className={`mx-auto flex w-full flex-col pb-5 ${
-        isReplay ? 'bg-Background1 h-full min-h-0' : 'min-h-dvh bg-white px-4 pt-6'
+        isReplay ? 'bg-Background1 h-dvh min-h-0' : 'min-h-dvh bg-white px-4 pt-6'
       }`}
     >
       <StatusBar
@@ -60,17 +60,19 @@ export default function TutorialComplete({
         )}
       </section>
 
-      <Button
-        type="button"
-        size={isReplay ? 'semilg' : 'lg'}
-        color="primary"
-        isFullWidth
-        disabled={isPending}
-        onClick={onComplete}
-        className={`${isReplay ? 'mx-4' : ''}mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)]`}
-      >
-        {isPending ? '완료 처리 중...' : isReplay ? '설정으로 돌아가기' : '튜토리얼 종료'}
-      </Button>
+      <div className={isReplay ? 'mx-4 flex justify-center' : undefined}>
+        <Button
+          type="button"
+          size={isReplay ? 'semilg' : 'lg'}
+          color="primary"
+          isFullWidth
+          disabled={isPending}
+          onClick={onComplete}
+          className={`mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)] ${isReplay ? 'max-w-80' : ''}`}
+        >
+          {isPending ? '완료 처리 중...' : isReplay ? '설정으로 돌아가기' : '튜토리얼 종료'}
+        </Button>
+      </div>
     </main>
   )
 }

@@ -19,17 +19,14 @@ import HomeCardNewsSection from '@/components/feature/home/HomeCardNewsSection'
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import TutorialComplete from '@/components/feature/tutorial/TutorialComplete'
 import TutorialStepLayout from '@/components/feature/tutorial/TutorialStepLayout'
+import { TUTORIAL_AGENTS, TUTORIAL_STEPS } from '@/constants/tutorialSteps'
 import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
 import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/mockData'
 import { useCompleteOnboardingMutation } from '@/pages/TutorialPage/hooks/useCompleteOnboardingMutation'
 import { useCreateTutorialRewardMutation } from '@/pages/TutorialPage/hooks/useCreateTutorialRewardMutation'
-import {
-  TUTORIAL_AGENTS,
-  TUTORIAL_STEPS,
-  type TutorialContent,
-} from '@/pages/TutorialPage/tutorial'
 import { PATH } from '@/routes/paths'
 import type { ConfidenceLevel } from '@/types/domain/decision'
+import type { TutorialContent } from '@/types/domain/tutorial'
 
 function CardNewsListStep() {
   return (
