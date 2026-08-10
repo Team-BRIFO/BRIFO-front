@@ -88,4 +88,10 @@ export const PATH = {
   MY_EDIT: '/my/edit',
   /** 마이 탭 - SCR-13: 설정 */
   MY_SETTINGS: '/my/settings',
+  /** 마이 탭 - 설정 공지사항 */
+  MY_NOTICES: '/my/notices',
+  /** 마이 탭 - 설정 약관 및 정책 (읽기 전용) */
+  MY_TERMS: '/my/terms',
+  MY_TERMS_DETAIL: (policyId: string) => `/my/terms/${policyId}`,
+  MY_TERMS_DETAIL_ROUTE: '/my/terms/:policyId',
 } as const

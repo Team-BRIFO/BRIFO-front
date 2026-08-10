@@ -20,7 +20,11 @@ const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
   interestStocks: PATH.MY_EDIT,
   glossary: PATH.MY_GLOSSARY,
   tutorial: PATH.TUTORIAL,
+  notice: PATH.MY_NOTICES,
+  terms: PATH.MY_TERMS,
 }
+
+const KAKAO_CONTACT_URL = 'https://open.kakao.com/o/sA4wcnui'
 
 export function MySettingsPage() {
   const navigate = useNavigate()
@@ -32,6 +36,10 @@ export function MySettingsPage() {
     if (key === 'logout' || key === 'withdraw') {
       removeAccount.reset()
       setAction(key)
+      return
+    }
+    if (key === 'contact') {
+      window.location.assign(KAKAO_CONTACT_URL)
       return
     }
     const path = SETTINGS_PATHS[key]

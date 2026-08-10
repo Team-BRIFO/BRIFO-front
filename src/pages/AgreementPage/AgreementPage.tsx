@@ -6,12 +6,10 @@ import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { Toast } from '@/components/common/Toast'
 import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
 import { useSignupCsrfBootstrap } from '@/hooks/auth/useSignupCsrfBootstrap'
+import { usePoliciesQuery } from '@/hooks/queries/policy/usePolicyQueries'
 import type { AgreementId } from '@/pages/AgreementPage/agreement'
 import { AGREEMENTS } from '@/pages/AgreementPage/agreement'
-import {
-  useAgreePoliciesMutation,
-  usePoliciesQuery,
-} from '@/pages/AgreementPage/hooks/usePoliciesApi'
+import { useAgreePoliciesMutation } from '@/pages/AgreementPage/hooks/usePoliciesApi'
 import { findPolicyByAgreementId } from '@/pages/AgreementPage/policyMapping'
 import { PATH } from '@/routes/paths'
 
