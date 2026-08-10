@@ -7,8 +7,10 @@
  */
 import type {
   ApiResponseDevBatchRunResponse,
+  ApiResponseDevSingleNewsCardGenerationResponse,
   DevDateBatchRequest,
   DevNewsCollectionBatchRequest,
+  DevSingleNewsCardGenerationRequest,
 } from '../../schemas'
 
 import { axiosInstance } from '../../../client/axiosInstance'
@@ -26,6 +28,20 @@ export const rerunNewsCollection = (
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       data: devNewsCollectionBatchRequest,
+    },
+    options,
+  )
+}
+export const runSingleNewsCardGeneration = (
+  devSingleNewsCardGenerationRequest: BodyType<DevSingleNewsCardGenerationRequest>,
+  options?: SecondParameter<typeof axiosInstance<ApiResponseDevSingleNewsCardGenerationResponse>>,
+) => {
+  return axiosInstance<ApiResponseDevSingleNewsCardGenerationResponse>(
+    {
+      url: `/api/dev/batches/news-card-generation/run-one`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: devSingleNewsCardGenerationRequest,
     },
     options,
   )
@@ -59,6 +75,9 @@ export const rerunDecisionSettlement = (
   )
 }
 export type RerunNewsCollectionResult = NonNullable<Awaited<ReturnType<typeof rerunNewsCollection>>>
+export type RunSingleNewsCardGenerationResult = NonNullable<
+  Awaited<ReturnType<typeof runSingleNewsCardGeneration>>
+>
 export type RerunNewsCardGenerationResult = NonNullable<
   Awaited<ReturnType<typeof rerunNewsCardGeneration>>
 >
