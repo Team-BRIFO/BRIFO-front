@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { ensureSignupCsrfToken } from '@/api/client/signupAuth'
-import { signupSession } from '@/api/client/signupSession'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import { Toast } from '@/components/common/Toast'
 import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
 import StockSearchView from '@/components/feature/onboarding/StockSearchView'
+import { useSignupCsrfBootstrap } from '@/hooks/auth/useSignupCsrfBootstrap'
 import { useOnboardingStocksQuery } from '@/pages/OnboardingPage/hooks/useOnboardingStocksQuery'
 import { useUpdateOnboardingProfileMutation } from '@/pages/OnboardingPage/hooks/useUpdateOnboardingProfileMutation'
 import { PATH } from '@/routes/paths'
@@ -28,11 +27,8 @@ export function OnboardingPage() {
   const navigate = useNavigate()
   const stocksQuery = useOnboardingStocksQuery()
   const updateProfile = useUpdateOnboardingProfileMutation()
+  const { isCsrfReady, isCsrfError, retryCsrf } = useSignupCsrfBootstrap()
 
-  useEffect(() => {
-    signupSession.activate()
-    void ensureSignupCsrfToken()
-  }, [])
   const stocks = stocksQuery.data ?? []
 
   const [nickname, setNickname] = useState('')
@@ -183,21 +179,36 @@ export function OnboardingPage() {
         size="lg"
         color="primary"
         isFullWidth
-        disabled={!isFormValid || updateProfile.isPending || stocksQuery.isLoading}
+        disabled={!isFormValid || updateProfile.isPending || stocksQuery.isLoading || !isCsrfReady}
         onClick={handleSubmit}
         className="mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
       >
         {updateProfile.isPending ? '저장 중...' : '다음'}
       </Button>
 
-      {(stocksQuery.isError || updateProfile.isError) && (
+      {(isCsrfError || stocksQuery.isError || updateProfile.isError) && (
         <Toast
           message={
-            updateProfile.error?.serviceMessage ??
-            stocksQuery.error?.serviceMessage ??
-            '프로필을 저장하지 못했어요'
+            isCsrfError
+              ? '온보딩 정보를 불러오지 못했어요'
+              : (updateProfile.error?.serviceMessage ??
+                stocksQuery.error?.serviceMessage ??
+                '프로필을 저장하지 못했어요')
           }
         />
+      )}
+
+      {isCsrfError && (
+        <Button
+          type="button"
+          size="lg"
+          color="secondary"
+          isFullWidth
+          className="mt-3"
+          onClick={() => void retryCsrf()}
+        >
+          다시 시도
+        </Button>
       )}
     </main>
   )
