@@ -15,6 +15,12 @@
 
   /* Brand - Kakao */
   --color-Kakao: #fee500;
+  --color-KakaoText: #0000008a;
+  --color-Naver: #03a94d;
+
+  /* Brand text */
+  --color-Brand-Highlight: #ffbe00;
+  --color-Text-Guide: #8a8499;
 
   /* Secondary - Pink */
   --color-Pink-100: #fff7f9;

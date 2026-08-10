@@ -64,7 +64,7 @@ export function MyTermsPage() {
       <div className="mt-8 px-4">
         <h1 className="dnf-Title3 text-Gray-10 leading-[1.2] whitespace-pre-line">
           BRIFO의{'\n'}
-          <span className="text-[#FFBE00]">약관 및 정책</span>
+          <span className="text-Brand-Highlight">약관 및 정책</span>
         </h1>
 
         <p className="pretendard-Caption1 text-Gray-6 mt-3">

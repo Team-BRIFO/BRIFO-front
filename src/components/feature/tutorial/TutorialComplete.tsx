@@ -35,12 +35,12 @@ export default function TutorialComplete({
         <h1 className="dnf-Title3 text-Gray-10 leading-[1.2]">
           {isReplay ? '튜토리얼을 다시 살펴봤어요!' : '튜토리얼 완료!'}
           <br />
-          <span className="text-[#FFBE00]">
+          <span className="text-Brand-Highlight">
             {isReplay ? '투자 결정에 활용해보세요.' : '환영해요 사장님!'}
           </span>
         </h1>
 
-        <p className="pretendard-Caption1 mt-4 leading-[1.45] text-[#8A8499]">
+        <p className="pretendard-Caption1 text-Text-Guide mt-4 leading-[1.45]">
           {isReplay ? '언제든 설정에서 다시 볼 수 있어요.' : '이제 진짜 사장님이 되셨어요.'}
           {!isReplay && (
             <>
