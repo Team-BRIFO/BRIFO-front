@@ -56,6 +56,7 @@ export function OAuthCallbackPage() {
         }
 
         if (!body.result) {
+          browserTokenStore.clear()
           signupSession.clear()
           navigate(PATH.HOME, { replace: true })
           return
@@ -74,6 +75,7 @@ export function OAuthCallbackPage() {
         }
 
         signupSession.clear()
+        browserTokenStore.clear()
         if ('token' in body.result && body.result.token) {
           browserTokenStore.setTokens(body.result.token)
         }
