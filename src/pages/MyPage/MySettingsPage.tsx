@@ -42,7 +42,7 @@ export function MySettingsPage() {
       const refreshToken = browserTokenStore.getRefreshToken()
 
       if (!refreshToken) {
-        clearClientSession()
+        clearClientSession(queryClient)
         queryClient.clear()
         navigate(PATH.SPLASH, { replace: true })
         return
@@ -52,7 +52,7 @@ export function MySettingsPage() {
         { refreshToken },
         {
           onSuccess: () => {
-            clearClientSession()
+            clearClientSession(queryClient)
             queryClient.clear()
             navigate(PATH.SPLASH, { replace: true })
           },
@@ -62,7 +62,7 @@ export function MySettingsPage() {
     }
     removeAccount.mutate(undefined, {
       onSuccess: () => {
-        clearClientSession()
+        clearClientSession(queryClient)
         queryClient.clear()
         navigate(PATH.SPLASH, { replace: true })
       },

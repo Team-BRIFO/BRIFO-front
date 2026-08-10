@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -22,6 +23,7 @@ function isSignupRequired(result: { loginType: 'LOGIN' | 'SIGNUP_REQUIRED' }) {
 
 export function OAuthCallbackPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { provider } = useParams()
   const kakaoLogin = useKakaoLoginMutation()
   const naverLogin = useNaverLoginMutation()
@@ -32,7 +34,7 @@ export function OAuthCallbackPage() {
     hasRequested.current = true
 
     const returnToLogin = () => {
-      clearClientSession()
+      clearClientSession(queryClient)
       navigate(PATH.SPLASH, {
         replace: true,
         state: { loginError: '로그인에 실패했어요' },
@@ -89,7 +91,7 @@ export function OAuthCallbackPage() {
     }
 
     void requestLogin()
-  }, [kakaoLogin, navigate, naverLogin, provider])
+  }, [kakaoLogin, navigate, naverLogin, provider, queryClient])
 
   return null
 }

@@ -1,6 +1,9 @@
+import type { GenericAbortSignal } from 'axios'
+
 import { AXIOS_INSTANCE } from '@/api/client/axiosInstance'
 import { signupSession } from '@/api/client/signupSession'
 
+export const SIGNUP_CSRF_QUERY_KEY = ['auth', 'signup', 'csrf'] as const
 export const SIGNUP_SESSION_EXPIRED_MESSAGE = 'Signup session expired'
 
 function readSignupCsrfToken(headers: Record<string, unknown>) {
@@ -8,9 +11,10 @@ function readSignupCsrfToken(headers: Record<string, unknown>) {
   return typeof value === 'string' ? value : null
 }
 
-export async function ensureSignupCsrfToken() {
+export async function ensureSignupCsrfToken(options?: { signal?: GenericAbortSignal }) {
   const response = await AXIOS_INSTANCE.get('/api/auth/signup/csrf', {
     validateStatus: () => true,
+    signal: options?.signal,
   })
 
   if (response.status === 401) {
