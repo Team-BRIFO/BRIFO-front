@@ -1,14 +1,14 @@
-import type { GetNewsCardsResponse } from '@/api/generated/schemas/news-controller'
+import type { GetNewsCardsResponseOutput } from '@/api/generated/schemas/news-controller'
 import type { NewsCardData } from '@/components/feature/newsCard/NewsCard'
 
-export function mapNewsCards(response: GetNewsCardsResponse): NewsCardData[] {
+import { formatRelativeTime } from '@/utils/formatRelativeTime'
+
+export function mapNewsCards(response: GetNewsCardsResponseOutput): NewsCardData[] {
   return response.newsCards.map((card) => ({
     cardId: card.cardId,
-    // TODO: formatting date string appropriately (e.g. "41분전" or similar based on utility). For now, use raw string.
-    publishedDate: card.publishedDate,
+    publishedDate: formatRelativeTime(card.publishedDate),
     headline: card.headline,
-    imageUrl:
-      'https://images.unsplash.com/photo-1611681283307-eecb46571bc8?q=80&w=600&auto=format&fit=crop', // Provide placeholder image as original schema doesn't have it
+    imageUrl: card.imageUrl,
     importanceBadge: card.importanceBadge,
     source: card.source,
     points: card.points,

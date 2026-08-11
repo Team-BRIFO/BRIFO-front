@@ -1,11 +1,11 @@
 import { mapAgentType } from '@/mappers/agentMapper'
 import type { AgentDetailResponse } from '@/types/api/agent'
 import type {
-  BriefingDetailResult,
-  BriefingListByStockResult,
-  OfficeBriefingListResult,
-  PostBriefingResult,
-} from '@/types/api/briefing'
+  CreateBriefingResponseOutput,
+  GetBriefingDetailResponseOutput,
+  GetOfficeBriefingsResponseOutput,
+  GetStockBriefingsResponseOutput,
+} from '@/api/generated/schemas/briefing-controller'
 import type {
   BriefingDetailData,
   BriefingDirectionType,
@@ -25,18 +25,20 @@ const DIRECTION_META: Record<
   NEUTRAL: { type: 'watch', label: '관망' },
 }
 
-function mapBriefingStock(stock: BriefingDetailResult['stock']): BriefingStock {
+function mapBriefingStock(
+  stock: GetBriefingDetailResponseOutput['stock'] | GetStockBriefingsResponseOutput['stock'],
+): BriefingStock {
   return {
     id: stock.stockId,
     name: stock.name,
     price: stock.price,
     changeRate: stock.changeRate,
     tradeDate: stock.tradeDate,
-    hashtags: stock.hashtags ?? [],
+    hashtags: [],
   }
 }
 
-export function mapBriefingList(result: BriefingListByStockResult): BriefingListData {
+export function mapBriefingList(result: GetStockBriefingsResponseOutput): BriefingListData {
   return {
     stock: mapBriefingStock(result.stock),
     items: result.items.map((item) => ({
@@ -52,7 +54,7 @@ export function mapBriefingList(result: BriefingListByStockResult): BriefingList
 }
 
 export function mapBriefingDetail(
-  result: BriefingDetailResult,
+  result: GetBriefingDetailResponseOutput,
   agentDetail?: AgentDetailResponse,
 ): BriefingDetailData {
   const direction = DIRECTION_META[result.briefing.direction]
@@ -84,7 +86,7 @@ export function mapBriefingDetail(
   }
 }
 
-export function mapOfficeBriefings(result: OfficeBriefingListResult): OfficeBriefingItem[] {
+export function mapOfficeBriefings(result: GetOfficeBriefingsResponseOutput): OfficeBriefingItem[] {
   return result.items.map((item) => ({
     stockName: item.stockName,
     agents: item.agents.map((agent) => ({
@@ -97,7 +99,7 @@ export function mapOfficeBriefings(result: OfficeBriefingListResult): OfficeBrie
   }))
 }
 
-export function mapBriefingRequestResult(result: PostBriefingResult): BriefingRequestResult {
+export function mapBriefingRequestResult(result: CreateBriefingResponseOutput): BriefingRequestResult {
   return {
     requestedCount: result.requestedCount,
     totalSalaryCost: result.totalSalaryCost,

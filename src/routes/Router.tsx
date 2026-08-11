@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { AuthLayout } from '@/layouts/AuthLayout'
+import GlobalErrorFallback from '@/pages/ErrorPage/GlobalErrorFallback'
 import { lazyNamed, withRouteLoadingFallback } from '@/routes/lazyRoute'
 import { PATH } from '@/routes/paths'
 
@@ -88,6 +89,7 @@ export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
   {
     element: <AuthLayout />,
+    errorElement: <GlobalErrorFallback />,
     children: [
       {
         path: PATH.SPLASH,
@@ -123,6 +125,7 @@ export const router = createBrowserRouter([
   // ─── AppLayout 영역 (하단 GNB 탭 포함) ───────────────────────────
   {
     element: <AppLayout />,
+    errorElement: <GlobalErrorFallback />,
     children: [
       // 홈 탭
       {

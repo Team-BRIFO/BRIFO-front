@@ -1,6 +1,7 @@
-import { z } from 'zod'
+
 
 import { getBriefingDetail } from '@/api/generated/endpoints/briefing-controller/briefing-controller'
+import { ApiResponseGetBriefingDetailResponse } from '@/api/generated/schemas/briefing-controller'
 import { useApiQuery } from '@/hooks/api'
 import { briefingQueryKeys } from '@/hooks/queries/briefing/briefingQueryKeys'
 import { mapBriefingDetail } from '@/mappers/briefingMapper'
@@ -12,15 +13,12 @@ export function useBriefingDetailQuery(briefingId: string | null) {
     operation: getBriefingDetail,
     endpoint: 'getBriefingDetail',
     args: [briefingId!],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    responseSchema: z.any() as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: 'requiredResult' as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map: (result: any) =>
+    responseSchema: ApiResponseGetBriefingDetailResponse,
+    response: 'requiredResult',
+    map: (result) =>
       mapBriefingDetail(
         result,
-        MOCK_AGENT_DETAIL_RESPONSES[result.agent?.agentId as string]?.result,
+        MOCK_AGENT_DETAIL_RESPONSES[result.agent.agentId]?.result,
       ),
     enabled: Boolean(briefingId),
     staleTime: 0,

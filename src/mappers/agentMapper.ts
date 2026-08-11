@@ -1,8 +1,11 @@
-import type { AgentDetailResponse, AgentListItemResponse, AgentTypeCode } from '@/types/api/agent'
+import type {
+  GetAgentDetailResponseOutput,
+  GetAgentsResponseOutput,
+} from '@/api/generated/schemas/agent-controller'
 import type { AgentDetail, AgentSummary, AgentType } from '@/types/domain/agent'
 import { AGENT_EXP_PER_LEVEL, getAgentLevelProgress } from '@/utils/agentLevel'
 
-export const AGENT_TYPE_BY_CODE: Record<AgentTypeCode, AgentType> = {
+export const AGENT_TYPE_BY_CODE: Record<'ROOKIE' | 'PRO' | 'TANKER', AgentType> = {
   ROOKIE: 'rookie',
   PRO: 'pro',
   TANKER: 'tanker',
@@ -14,7 +17,7 @@ export function mapAgentType(code: string): AgentType {
   return 'rookie'
 }
 
-export function mapAgentListItem(item: AgentListItemResponse): AgentSummary {
+export function mapAgentListItem(item: GetAgentsResponseOutput['items'][number]): AgentSummary {
   return {
     id: item.agentId,
     type: AGENT_TYPE_BY_CODE[item.agentType],
@@ -27,7 +30,7 @@ export function mapAgentListItem(item: AgentListItemResponse): AgentSummary {
   }
 }
 
-export function mapAgentDetail(res: AgentDetailResponse): AgentDetail {
+export function mapAgentDetail(res: GetAgentDetailResponseOutput): AgentDetail {
   const levelProgress = getAgentLevelProgress(res.exp)
 
   return {

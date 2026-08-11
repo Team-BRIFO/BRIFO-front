@@ -7,9 +7,13 @@
  */
 
 export * from './apiResponseDevBatchRunResponse.zod'
+export * from './apiResponseDevSingleNewsCardGenerationResponse.zod'
 export * from './devBatchRunResponse.zod'
 export * from './devDateBatchRequest.zod'
 export * from './devNewsCollectionBatchRequest.zod'
+export * from './devSingleNewsCardGenerationRequest.zod'
+export * from './devSingleNewsCardGenerationResponse.zod'
 export * from './rerunDecisionSettlementBody.zod'
 export * from './rerunNewsCardGenerationBody.zod'
 export * from './rerunNewsCollectionBody.zod'
+export * from './runSingleNewsCardGenerationBody.zod'

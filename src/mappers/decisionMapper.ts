@@ -1,4 +1,7 @@
-import type { DecisionItemDTO, GetDecisionResult } from '@/types/api/decision'
+import type {
+  GetDecisionResultResponseOutput,
+  GetDecisionsResponseOutput,
+} from '@/api/generated/schemas/decision-controller'
 import type { ConfidenceLevel, DecisionDetail, DecisionListItem } from '@/types/domain/decision'
 
 function mapConfidenceLevel(value: number): ConfidenceLevel {
@@ -6,7 +9,7 @@ function mapConfidenceLevel(value: number): ConfidenceLevel {
   return 1
 }
 
-export function mapDecisionList(items: DecisionItemDTO[]): DecisionListItem[] {
+export function mapDecisionList(items: GetDecisionsResponseOutput['items']): DecisionListItem[] {
   const now = new Date()
   const kstOffset = 9 * 60 * 60 * 1000
   const kstTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + kstOffset)
@@ -24,7 +27,7 @@ export function mapDecisionList(items: DecisionItemDTO[]): DecisionListItem[] {
   }))
 }
 
-export function mapDecisionDetail(result: GetDecisionResult): DecisionDetail {
+export function mapDecisionDetail(result: GetDecisionResultResponseOutput): DecisionDetail {
   return {
     isCorrect: result.isCorrect,
     apDelta: result.apDelta,

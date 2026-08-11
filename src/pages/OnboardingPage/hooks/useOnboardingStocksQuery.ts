@@ -22,7 +22,7 @@ export function useOnboardingStocksQuery() {
         name: stock.name,
         price: stock.price?.toLocaleString('ko-KR') ?? '-',
         changeRate: stock.changeRate ?? 0,
-        logoUrl: SkHynixLogo,
+        logoUrl: stock.logoUrl ?? SkHynixLogo,
       })),
   })
 }

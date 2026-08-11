@@ -1,7 +1,6 @@
-import { z } from 'zod'
-
 import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-controller'
 import type { GetStocksParams } from '@/api/generated/schemas'
+import { ApiResponseGetStocksResponse } from '@/api/generated/schemas/stock-controller'
 import { useApiQuery } from '@/hooks/api'
 
 export const stockQueryKeys = {
@@ -14,10 +13,8 @@ export function useGetStocksQuery(params: GetStocksParams) {
     queryKey: stockQueryKeys.list(params),
     operation: getStocks,
     endpoint: 'getStocks',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    responseSchema: z.any() as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: 'requiredResult' as any,
+    responseSchema: ApiResponseGetStocksResponse,
+    response: 'requiredResult',
     args: [params],
   })
 }

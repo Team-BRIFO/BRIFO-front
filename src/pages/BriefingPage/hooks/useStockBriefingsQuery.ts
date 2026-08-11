@@ -1,6 +1,7 @@
-import { z } from 'zod'
+
 
 import { getStockBriefings } from '@/api/generated/endpoints/briefing-controller/briefing-controller'
+import { ApiResponseGetStockBriefingsResponse } from '@/api/generated/schemas/briefing-controller'
 import { useApiQuery } from '@/hooks/api'
 import { briefingQueryKeys } from '@/hooks/queries/briefing/briefingQueryKeys'
 import { mapBriefingList } from '@/mappers/briefingMapper'
@@ -11,12 +12,9 @@ export function useStockBriefingsQuery(stockId: string | null) {
     operation: getStockBriefings,
     endpoint: 'getStockBriefings',
     args: [stockId!],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    responseSchema: z.any() as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: 'requiredResult' as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map: (result: any) => mapBriefingList(result),
+    responseSchema: ApiResponseGetStockBriefingsResponse,
+    response: 'requiredResult',
+    map: mapBriefingList,
     enabled: Boolean(stockId),
     staleTime: 0,
   })
