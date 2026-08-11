@@ -50,10 +50,6 @@ const LazyBriefingAssignPage = lazyNamed(
   () => import('@/pages/BriefingPage/BriefingAssignPage'),
   'BriefingAssignPage',
 )
-const LazyBriefingCompletePage = lazyNamed(
-  () => import('@/pages/BriefingPage/BriefingCompletePage'),
-  'BriefingCompletePage',
-)
 const LazyBriefingDetailPage = lazyNamed(
   () => import('@/pages/BriefingPage/BriefingDetailPage'),
   'BriefingDetailPage',
@@ -171,10 +167,6 @@ export const router = createBrowserRouter([
       {
         path: PATH.BRIEFING_ASSIGN_ROUTE,
         element: withRouteLoadingFallback(<LazyBriefingAssignPage />),
-      },
-      {
-        path: PATH.BRIEFING_COMPLETE_ROUTE,
-        element: withRouteLoadingFallback(<LazyBriefingCompletePage />),
       },
       {
         path: PATH.BRIEFING_DETAIL_ROUTE,

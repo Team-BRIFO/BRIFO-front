@@ -15,9 +15,8 @@ import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentListQuery'
 import { useCreateCreditLoanMutation } from '@/hooks/queries/ap/useApQueries'
 import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
-import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
+import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
 import { PATH } from '@/routes/paths'
-import type { BriefingRequestResult } from '@/types/domain/briefing'
 
 export function BriefingAssignPage() {
   const { stockId } = useParams<{ stockId: string }>()
@@ -25,25 +24,20 @@ export function BriefingAssignPage() {
   const { mutate: postBriefingRequest, isPending } = usePostBriefingRequestMutation()
   const { mutate: createCreditLoan, isPending: isCreditLoanPending } = useCreateCreditLoanMutation()
 
-  // 임시로 브리핑 목록 API를 통해 주식(stock) 정보를 가져옵니다
-  const stockBriefingsQuery = useStockBriefingsQuery(stockId ?? null)
+  const newsCardQuery = useGetNewsCardDetail(stockId ?? null)
   const agentsQuery = useAgentListQuery()
   const agentsList = agentsQuery.data ?? []
   const isFetching =
-    stockBriefingsQuery.fetchStatus === 'fetching' || agentsQuery.fetchStatus === 'fetching'
-  const hasError = !!stockBriefingsQuery.error || !!agentsQuery.error
+    newsCardQuery.fetchStatus === 'fetching' || agentsQuery.fetchStatus === 'fetching'
+  const hasError = !!newsCardQuery.error || !!agentsQuery.error
 
-  // 테스트 목적으로 기본적으로 루키, 탱커를 선택된 상태로 둠 (피그마 명세 기반)
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(
-    new Set([agentsList[0]?.id, agentsList[2]?.id].filter((id): id is string => Boolean(id))),
-  )
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
   // 모달 및 요청 결과 상태
   const [modalType, setModalType] = useState<AnalyzeModalType | null>(null)
-  const [createdBriefingRequest, setCreatedBriefingRequest] =
-    useState<BriefingRequestResult | null>(null)
 
-  const stockName = stockBriefingsQuery.data?.stock.name ?? ''
+  const cards = newsCardQuery.data ?? []
+  const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
 
   const toggleAgent = (id: string) => {
     setSelectedIds((prev) => {
@@ -65,9 +59,12 @@ export function BriefingAssignPage() {
           setModalType('SUCCESS')
         },
         onError: (error) => {
-          // 이미 요청한 브리핑인 경우 (409 Conflict) -> 성공 모달로 처리
           if (error.code === 'BRIEFING_409_01') {
             setModalType('SUCCESS')
+          }
+          // 브리핑 의뢰 마감 시간 이후 요청한 경우 (409 Conflict)
+          else if (error.code === 'BRIEFING_409_06') {
+            setModalType('TIME_OVER')
           }
           // 실패 후 대기 시간 미달 (429 Too Many Requests)
           else if (error.code === 'BRIEFING_429_01') {
@@ -102,14 +99,13 @@ export function BriefingAssignPage() {
   const handlePrimaryModalClick = () => {
     if (modalType === 'SUCCESS') {
       if (!stockId) return
-      navigate(PATH.BRIEFING_COMPLETE(stockId), {
-        state: { briefingRequest: createdBriefingRequest },
+      navigate(PATH.BRIEFING, {
         replace: true,
       })
       setModalType(null)
       return
     }
-    if (modalType === 'EXHAUSTED' || modalType === 'SHORTAGE') {
+    if (modalType === 'EXHAUSTED' || modalType === 'SHORTAGE' || modalType === 'TIME_OVER') {
       navigate(PATH.HOME)
       setModalType(null)
       return
@@ -164,6 +160,13 @@ export function BriefingAssignPage() {
     .filter((agent) => selectedIds.has(agent.id))
     .reduce((sum, agent) => sum + agent.dailyAP, 0)
 
+  // 선택된 사원 이름들 (쉼표로 구분)
+  const selectedAgentNames =
+    agentsList
+      .filter((agent) => selectedIds.has(agent.id))
+      .map((agent) => agent.nickname)
+      .join(', ') || '선택한 사원'
+
   return (
     <div className="bg-White flex h-screen w-full flex-col">
       <StatusBar
@@ -172,16 +175,16 @@ export function BriefingAssignPage() {
         right={<StatusBarNotificationButton />}
       />
 
-      {hasError && !isFetching ? (
+      {hasError ? (
         <PageErrorView
           title="사원 배치 정보를 불러오지 못했어요"
-          error={stockBriefingsQuery.error || agentsQuery.error}
+          error={newsCardQuery.error || agentsQuery.error}
           onRetry={() => {
-            stockBriefingsQuery.refetch()
+            newsCardQuery.refetch()
             agentsQuery.refetch()
           }}
         />
-      ) : isFetching || !stockBriefingsQuery.data ? (
+      ) : isFetching || !newsCardQuery.data ? (
         <PageLoadingView />
       ) : agentsList.length === 0 ? (
         <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />
@@ -238,8 +241,8 @@ export function BriefingAssignPage() {
         onClose={() => setModalType(null)}
         type={modalType ?? 'SUCCESS'}
         stockName={stockName}
-        employeeName="프로"
-        shortageAP={20}
+        employeeName={selectedAgentNames}
+        shortageAP={totalAP}
         retryCount={2}
         maxRetryCount={3}
         onPrimaryClick={handlePrimaryModalClick}

@@ -28,7 +28,8 @@ export function HomePage() {
     (home?.agents ?? []).map((agent) => [agent.agentType, agent.level]),
   )
   const cardNewsItems = (home?.todayNewsCards.items ?? []).map((item) => ({
-    id: item.stock.stockId,
+    id: item.cardId,
+    stockId: item.stock.stockId,
     stock: {
       name: item.stock.name,
       changeRate: item.stock.changeRate,
