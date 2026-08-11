@@ -79,64 +79,21 @@ export function DiaryPage() {
     (view === 'list' && !listQuery.data) ||
     (view === 'statistics' && !statsQuery.data)
 
-  if (isError) {
-    const handleRetry = () => {
-      if (view === 'calendar') calendarQuery.refetch()
-      if (view === 'list') listQuery.refetch()
-      if (view === 'statistics') statsQuery.refetch()
-    }
-    const title =
-      view === 'calendar'
-        ? '결정 일기를 불러오지 못했어요'
-        : view === 'list'
-          ? '결정 기록을 불러오지 못했어요'
-          : '결정 통계를 불러오지 못했어요'
-
-    const currentError =
-      view === 'calendar'
-        ? calendarQuery.error
-        : view === 'list'
-          ? listQuery.error
-          : statsQuery.error
-
-    return (
-      <div className="bg-Background1 flex flex-1 flex-col">
-        <StatusBar
-          hasStatusArea={false}
-          left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
-          right={
-            <div className="flex items-center gap-3">
-              <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-                {balanceText}
-              </div>
-              <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
-            </div>
-          }
-        />
-        <PageErrorView title={title} error={currentError} onRetry={handleRetry} />
-      </div>
-    )
+  const handleRetry = () => {
+    if (view === 'calendar') calendarQuery.refetch()
+    if (view === 'list') listQuery.refetch()
+    if (view === 'statistics') statsQuery.refetch()
   }
 
-  if (isLoading) {
-    return (
-      <div className="bg-Background1 flex flex-1 flex-col">
-        <StatusBar
-          hasStatusArea={false}
-          left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
-          right={
-            <div className="flex items-center gap-3">
-              <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-                {balanceText}
-              </div>
-              <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
-            </div>
-          }
-        />
-        <PageLoadingView />
-      </div>
-    )
-  }
+  const errorTitle =
+    view === 'calendar'
+      ? '결정 일기를 불러오지 못했어요'
+      : view === 'list'
+        ? '결정 기록을 불러오지 못했어요'
+        : '결정 통계를 불러오지 못했어요'
+
+  const currentError =
+    view === 'calendar' ? calendarQuery.error : view === 'list' ? listQuery.error : statsQuery.error
 
   const renderView = () => {
     if (view === 'calendar') {
@@ -191,13 +148,29 @@ export function DiaryPage() {
   }
 
   return (
-    <DiaryTabScreen
-      view={view}
-      onChangeView={handleChangeView}
-      balanceText={balanceText}
-      onNotificationClick={() => navigate(PATH.NOTIFICATION)}
-    >
-      {renderView()}
-    </DiaryTabScreen>
+    <div className="bg-Background1 flex flex-1 flex-col">
+      <StatusBar
+        hasStatusArea={false}
+        left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
+        right={
+          <div className="flex items-center gap-3">
+            <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
+              {balanceText}
+            </div>
+            <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
+          </div>
+        }
+      />
+
+      {isError ? (
+        <PageErrorView title={errorTitle} error={currentError} onRetry={handleRetry} />
+      ) : isLoading ? (
+        <PageLoadingView />
+      ) : (
+        <DiaryTabScreen view={view} onChangeView={handleChangeView}>
+          {renderView()}
+        </DiaryTabScreen>
+      )}
+    </div>
   )
 }
