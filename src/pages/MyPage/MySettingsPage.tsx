@@ -16,7 +16,6 @@ import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
 const SETTINGS_PATHS: Partial<Record<MyMenuKey, string>> = {
-  profileEdit: PATH.MY_EDIT,
   glossary: PATH.MY_GLOSSARY,
   tutorial: PATH.TUTORIAL_REPLAY_INTRO,
   notice: PATH.MY_NOTICES,
@@ -43,6 +42,10 @@ export function MySettingsPage() {
     }
     if (key === 'interestStocks') {
       navigate(PATH.MY_EDIT_STOCKS, { state: { returnTo: PATH.MY_SETTINGS } })
+      return
+    }
+    if (key === 'profileEdit') {
+      navigate(PATH.MY_EDIT, { state: { returnTo: PATH.MY_SETTINGS } })
       return
     }
     const path = SETTINGS_PATHS[key]
@@ -80,7 +83,7 @@ export function MySettingsPage() {
     })
   }
   return (
-    <MyPageLayout title="설정">
+    <MyPageLayout title="설정" onBack={() => navigate(PATH.MY_PAGE, { replace: true })}>
       <MySettings onSelectMenu={onSelect} />
       <AccountConfirmModal
         isOpen={Boolean(action)}

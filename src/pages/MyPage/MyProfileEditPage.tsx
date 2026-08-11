@@ -11,6 +11,7 @@ import type { UserProfileFormValues } from '@/types/domain/user'
 
 interface MyProfileEditLocationState {
   profileDraft?: UserProfileFormValues
+  returnTo?: typeof PATH.MY_PAGE | typeof PATH.MY_SETTINGS
 }
 
 export function MyProfileEditPage() {
@@ -19,31 +20,24 @@ export function MyProfileEditPage() {
   const userQuery = useUserProfileQuery()
   const update = useUpdateMyProfileMutation()
 
-  const profileDraft = (location.state as MyProfileEditLocationState | null)?.profileDraft
-  const handleBack = () => navigate(PATH.MY_SETTINGS)
+  const locationState = location.state as MyProfileEditLocationState | null
+  const profileDraft = locationState?.profileDraft
+  const returnTo = locationState?.returnTo ?? PATH.MY_PAGE
+  const handleBack = () => navigate(returnTo, { replace: true })
 
-  if (!!userQuery.error && userQuery.fetchStatus === 'idle' && !userQuery.data)
-    return (
-      <MyPageLayout title="프로필 편집" onBack={handleBack}>
-        <PageErrorView
-          title="정보를 불러오지 못했어요."
-          error={userQuery.error}
-          onRetry={() => userQuery.refetch()}
-        />
-      </MyPageLayout>
-    )
-  if (!userQuery.data)
-    return (
-      <MyPageLayout title="프로필 편집" onBack={handleBack}>
-        <PageLoadingView />
-      </MyPageLayout>
-    )
-  const { profile, profileFormValues } = userQuery.data
-  return (
-    <MyPageLayout title="프로필 편집" onBack={handleBack}>
+  const content =
+    !!userQuery.error && userQuery.fetchStatus === 'idle' && !userQuery.data ? (
+      <PageErrorView
+        title="정보를 불러오지 못했어요."
+        error={userQuery.error}
+        onRetry={() => userQuery.refetch()}
+      />
+    ) : !userQuery.data ? (
+      <PageLoadingView />
+    ) : (
       <MyProfileEdit
-        initialValues={profileDraft ?? profileFormValues}
-        characterType={profile.characterType}
+        initialValues={profileDraft ?? userQuery.data.profileFormValues}
+        characterType={userQuery.data.profile.characterType}
         isSubmitting={update.isPending}
         serverError={
           update.isError
@@ -54,10 +48,15 @@ export function MyProfileEditPage() {
         onSubmit={(values) => update.mutate(values, { onSuccess: () => navigate(PATH.MY_PAGE) })}
         onAddStock={(values) =>
           navigate(PATH.MY_EDIT_STOCKS, {
-            state: { profileDraft: values, returnTo: PATH.MY_EDIT },
+            state: { profileDraft: values, returnTo: PATH.MY_EDIT, profileEditReturnTo: returnTo },
           })
         }
       />
+    )
+
+  return (
+    <MyPageLayout title="프로필 편집" onBack={handleBack}>
+      {content}
     </MyPageLayout>
   )
 }

@@ -22,10 +22,12 @@ import {
 const STOCK_PAGE_SIZE = 20
 
 type StockEditReturnPath = typeof PATH.MY_EDIT | typeof PATH.MY_SETTINGS
+type ProfileEditReturnPath = typeof PATH.MY_PAGE | typeof PATH.MY_SETTINGS
 
 interface MyProfileStockEditLocationState {
   profileDraft?: UserProfileFormValues
   returnTo?: StockEditReturnPath
+  profileEditReturnTo?: ProfileEditReturnPath
 }
 
 /** 프로필 관심종목 변경 — 온보딩의 검색·선택 UI와 프로필 PATCH 흐름을 함께 사용한다. */
@@ -39,17 +41,18 @@ export function MyProfileStockEditPage() {
   )
   const [searchKeyword, setSearchKeyword] = useState('')
   const stocksQuery = useGetStocksQuery(searchKeyword, STOCK_PAGE_SIZE, Boolean(profileQuery.data))
+  const locationState = location.state as MyProfileStockEditLocationState | null
 
   const initialStocks = useMemo(
     () =>
-      (location.state as MyProfileStockEditLocationState | null)?.profileDraft?.interestStocks ??
+      locationState?.profileDraft?.interestStocks ??
       profileQuery.data?.profileFormValues.interestStocks ??
       [],
-    [location.state, profileQuery.data],
+    [locationState, profileQuery.data],
   )
-  const profileDraft = (location.state as MyProfileStockEditLocationState | null)?.profileDraft
-  const returnTo =
-    (location.state as MyProfileStockEditLocationState | null)?.returnTo ?? PATH.MY_SETTINGS
+  const profileDraft = locationState?.profileDraft
+  const returnTo = locationState?.returnTo ?? PATH.MY_SETTINGS
+  const profileEditReturnTo = locationState?.profileEditReturnTo ?? PATH.MY_PAGE
   const selectedStocks = selectedStocksOverride ?? initialStocks
   const selectedStockIds = useMemo(() => selectedStocks.map((stock) => stock.id), [selectedStocks])
   const stocks = useMemo(
@@ -86,7 +89,7 @@ export function MyProfileStockEditPage() {
       replace: true,
       state:
         returnTo === PATH.MY_EDIT && currentProfileValues
-          ? { profileDraft: currentProfileValues }
+          ? { profileDraft: currentProfileValues, returnTo: profileEditReturnTo }
           : undefined,
     })
   }
@@ -95,7 +98,10 @@ export function MyProfileStockEditPage() {
     if (!currentProfileValues || validateInterestStockIds(selectedStockIds)) return
 
     if (returnTo === PATH.MY_EDIT) {
-      navigate(returnTo, { replace: true, state: { profileDraft: currentProfileValues } })
+      navigate(returnTo, {
+        replace: true,
+        state: { profileDraft: currentProfileValues, returnTo: profileEditReturnTo },
+      })
       return
     }
 
@@ -113,75 +119,57 @@ export function MyProfileStockEditPage() {
     })
   }
 
-  if (!!profileQuery.error && profileQuery.fetchStatus === 'idle' && !profileQuery.data) {
-    return (
-      <MyPageLayout title="관심종목 변경" onBack={handleBack}>
-        <PageErrorView
-          title="정보를 불러오지 못했어요."
-          error={profileQuery.error}
-          onRetry={() => profileQuery.refetch()}
+  const content =
+    !!profileQuery.error && profileQuery.fetchStatus === 'idle' && !profileQuery.data ? (
+      <PageErrorView
+        title="정보를 불러오지 못했어요."
+        error={profileQuery.error}
+        onRetry={() => profileQuery.refetch()}
+      />
+    ) : !profileQuery.data ? (
+      <PageLoadingView />
+    ) : !searchKeyword.trim() &&
+      !!stocksQuery.error &&
+      stocksQuery.fetchStatus === 'idle' &&
+      !stocksQuery.data ? (
+      <PageErrorView
+        title="종목을 불러오지 못했어요."
+        error={stocksQuery.error}
+        onRetry={() => stocksQuery.refetch()}
+      />
+    ) : !stocksQuery.data && !searchKeyword.trim() ? (
+      <PageLoadingView />
+    ) : (
+      <>
+        <StockSearchView
+          embedded
+          stocks={stocks}
+          selectedStocks={selectedStocks}
+          searchKeyword={searchKeyword}
+          selectedStockIds={selectedStockIds}
+          onSearchKeywordChange={setSearchKeyword}
+          onToggleStock={handleToggleStock}
+          onBack={handleBack}
+          onComplete={handleComplete}
+          isLoading={stocksQuery.isPending}
+          hasNextPage={stocksQuery.hasNextPage}
+          isFetchingNextPage={stocksQuery.isFetchingNextPage}
+          onLoadMore={() => void stocksQuery.fetchNextPage()}
         />
-      </MyPageLayout>
+        {updateProfile.isError && (
+          <Toast
+            message={
+              updateProfile.error.serviceMessage ??
+              '관심종목을 저장하지 못했어요. 다시 시도해주세요.'
+            }
+          />
+        )}
+      </>
     )
-  }
-
-  if (!profileQuery.data) {
-    return (
-      <MyPageLayout title="관심종목 변경" onBack={handleBack}>
-        <PageLoadingView />
-      </MyPageLayout>
-    )
-  }
-
-  if (
-    !searchKeyword.trim() &&
-    !!stocksQuery.error &&
-    stocksQuery.fetchStatus === 'idle' &&
-    !stocksQuery.data
-  ) {
-    return (
-      <MyPageLayout title="관심종목 변경" onBack={handleBack}>
-        <PageErrorView
-          title="종목을 불러오지 못했어요."
-          error={stocksQuery.error}
-          onRetry={() => stocksQuery.refetch()}
-        />
-      </MyPageLayout>
-    )
-  }
-
-  if (!stocksQuery.data && !searchKeyword.trim()) {
-    return (
-      <MyPageLayout title="관심종목 변경" onBack={handleBack}>
-        <PageLoadingView />
-      </MyPageLayout>
-    )
-  }
 
   return (
     <MyPageLayout title="관심종목 변경" onBack={handleBack}>
-      <StockSearchView
-        embedded
-        stocks={stocks}
-        selectedStocks={selectedStocks}
-        searchKeyword={searchKeyword}
-        selectedStockIds={selectedStockIds}
-        onSearchKeywordChange={setSearchKeyword}
-        onToggleStock={handleToggleStock}
-        onBack={handleBack}
-        onComplete={handleComplete}
-        isLoading={stocksQuery.isPending}
-        hasNextPage={stocksQuery.hasNextPage}
-        isFetchingNextPage={stocksQuery.isFetchingNextPage}
-        onLoadMore={() => void stocksQuery.fetchNextPage()}
-      />
-      {updateProfile.isError && (
-        <Toast
-          message={
-            updateProfile.error.serviceMessage ?? '관심종목을 저장하지 못했어요. 다시 시도해주세요.'
-          }
-        />
-      )}
+      {content}
     </MyPageLayout>
   )
 }
