@@ -5,8 +5,8 @@ import { getKstLocalDateTimeTimestamp, KstLocalDateTimeSchema } from '@/api/cont
 import { PolicyDetailResponseSchema } from '@/api/contracts/policy'
 import { MyTermsResponseSchema } from '@/api/contracts/terms'
 import { Day, DiaryItem } from '@/api/generated/schemas/diary-controller'
-import { formatPolicyEffectiveDate } from '@/pages/AgreementPage/policyMapping'
 import { formatBatchTime } from '@/utils/formatBatchTime'
+import { formatPolicyEffectiveDate } from '@/utils/policyDate'
 
 const uuid = '1bcbac27-b08b-452e-a88a-3b7a41c1fe54'
 

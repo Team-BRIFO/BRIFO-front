@@ -4,16 +4,14 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { Toast } from '@/components/common/Toast'
-import UserAgreementItem from '@/components/feature/onboarding/UserAgreementItem'
+import UserAgreementItem from '@/components/feature/policy/UserAgreementItem'
+import { AGREEMENTS } from '@/constants/agreement'
 import { useSignupCsrfBootstrap } from '@/hooks/auth/useSignupCsrfBootstrap'
-import type { AgreementId } from '@/pages/AgreementPage/agreement'
-import { AGREEMENTS } from '@/pages/AgreementPage/agreement'
-import {
-  useAgreePoliciesMutation,
-  usePoliciesQuery,
-} from '@/pages/AgreementPage/hooks/usePoliciesApi'
-import { findPolicyByAgreementId } from '@/pages/AgreementPage/policyMapping'
+import { usePoliciesQuery } from '@/hooks/queries/policy/usePolicyQueries'
+import { findPolicyByAgreementId } from '@/mappers/policyMapper'
+import { useAgreePoliciesMutation } from '@/pages/AgreementPage/hooks/useAgreePoliciesMutation'
 import { PATH } from '@/routes/paths'
+import type { AgreementId } from '@/types/domain/agreement'
 
 type AgreementCheckedState = Record<AgreementId, boolean>
 

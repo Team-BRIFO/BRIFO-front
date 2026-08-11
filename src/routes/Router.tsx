@@ -78,10 +78,16 @@ const LazyMyProfileEditPage = lazyNamed(
   () => import('@/pages/MyPage/MyProfileEditPage'),
   'MyProfileEditPage',
 )
+const LazyMyProfileStockEditPage = lazyNamed(
+  () => import('@/pages/MyPage/MyProfileStockEditPage'),
+  'MyProfileStockEditPage',
+)
 const LazyMySettingsPage = lazyNamed(
   () => import('@/pages/MyPage/MySettingsPage'),
   'MySettingsPage',
 )
+const LazyMyNoticePage = lazyNamed(() => import('@/pages/MyPage/MyNoticePage'), 'MyNoticePage')
+const LazyMyTermsPage = lazyNamed(() => import('@/pages/MyPage/MyTermsPage'), 'MyTermsPage')
 const LazyNotFoundPage = lazyNamed(() => import('@/pages/ErrorPage/NotFoundPage'), 'NotFoundPage')
 
 export const router = createBrowserRouter([
@@ -115,6 +121,14 @@ export const router = createBrowserRouter([
       },
       {
         path: PATH.TUTORIAL,
+        element: withRouteLoadingFallback(<LazyTutorialPage />),
+      },
+      {
+        path: PATH.TUTORIAL_REPLAY_INTRO,
+        element: withRouteLoadingFallback(<LazyTutorialIntroPage />),
+      },
+      {
+        path: PATH.TUTORIAL_REPLAY,
         element: withRouteLoadingFallback(<LazyTutorialPage />),
       },
     ],
@@ -206,8 +220,24 @@ export const router = createBrowserRouter([
         element: withRouteLoadingFallback(<LazyMyProfileEditPage />),
       },
       {
+        path: PATH.MY_EDIT_STOCKS,
+        element: withRouteLoadingFallback(<LazyMyProfileStockEditPage />),
+      },
+      {
         path: PATH.MY_SETTINGS,
         element: withRouteLoadingFallback(<LazyMySettingsPage />),
+      },
+      {
+        path: PATH.MY_NOTICES,
+        element: withRouteLoadingFallback(<LazyMyNoticePage />),
+      },
+      {
+        path: PATH.MY_TERMS,
+        element: withRouteLoadingFallback(<LazyMyTermsPage />),
+      },
+      {
+        path: PATH.MY_TERMS_DETAIL_ROUTE,
+        element: withRouteLoadingFallback(<LazyAgreementDetailPage />),
       },
 
       // ─── Catch-all (404) ───────────────────────────────────────────

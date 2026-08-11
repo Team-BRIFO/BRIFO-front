@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { signupSession } from '@/api/client/signupSession'
 import { browserTokenStore } from '@/api/client/tokenStore'
@@ -19,17 +19,14 @@ import HomeCardNewsSection from '@/components/feature/home/HomeCardNewsSection'
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import TutorialComplete from '@/components/feature/tutorial/TutorialComplete'
 import TutorialStepLayout from '@/components/feature/tutorial/TutorialStepLayout'
+import { TUTORIAL_AGENTS, TUTORIAL_STEPS } from '@/constants/tutorialSteps'
 import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
 import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/mockData'
 import { useCompleteOnboardingMutation } from '@/pages/TutorialPage/hooks/useCompleteOnboardingMutation'
 import { useCreateTutorialRewardMutation } from '@/pages/TutorialPage/hooks/useCreateTutorialRewardMutation'
-import {
-  TUTORIAL_AGENTS,
-  TUTORIAL_STEPS,
-  type TutorialContent,
-} from '@/pages/TutorialPage/tutorial'
 import { PATH } from '@/routes/paths'
 import type { ConfidenceLevel } from '@/types/domain/decision'
+import type { TutorialContent } from '@/types/domain/tutorial'
 
 function CardNewsListStep() {
   return (
@@ -222,6 +219,8 @@ function renderStepContent({
 
 export function TutorialPage() {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const isReplay = pathname === PATH.TUTORIAL_REPLAY
   const completeOnboarding = useCompleteOnboardingMutation()
   const createTutorialReward = useCreateTutorialRewardMutation()
   const hasCompletedOnboarding = useRef(false)
@@ -243,6 +242,7 @@ export function TutorialPage() {
   }
 
   const navigateHome = () => navigate(PATH.HOME, { replace: true })
+  const navigateSettings = () => navigate(PATH.MY_SETTINGS, { replace: true })
 
   const requestTutorialReward = () => {
     createTutorialReward.mutate(undefined, { onSuccess: navigateHome })
@@ -278,8 +278,13 @@ export function TutorialPage() {
   if (isComplete) {
     return (
       <>
-        <TutorialComplete reward={200} onComplete={handleComplete} isPending={isSubmitting} />
-        {submitError && (
+        <TutorialComplete
+          reward={isReplay ? undefined : 200}
+          isReplay={isReplay}
+          onComplete={isReplay ? navigateSettings : handleComplete}
+          isPending={isReplay ? false : isSubmitting}
+        />
+        {!isReplay && submitError && (
           <Toast message={submitError.serviceMessage ?? '온보딩을 완료하지 못했어요'} />
         )}
       </>
@@ -294,9 +299,10 @@ export function TutorialPage() {
         title={currentStep.title}
         message={currentStep.message}
         buttonLabel={currentStep.buttonLabel}
-        skipDisabled={isSubmitting}
+        skipDisabled={!isReplay && isSubmitting}
+        isReplay={isReplay}
         onNext={handleNext}
-        onSkip={handleSkip}
+        onSkip={isReplay ? navigateSettings : handleSkip}
       >
         {renderStepContent({
           content: currentStep.content,
@@ -308,7 +314,7 @@ export function TutorialPage() {
           setConfidence,
         })}
       </TutorialStepLayout>
-      {submitError && (
+      {!isReplay && submitError && (
         <Toast message={submitError.serviceMessage ?? '온보딩을 완료하지 못했어요'} />
       )}
     </>

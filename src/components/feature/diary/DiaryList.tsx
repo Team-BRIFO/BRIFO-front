@@ -18,22 +18,17 @@ export interface DiaryListProps {
   onLoadMore?: () => void
   hasNext?: boolean
   isLoadingMore?: boolean
+  loadMoreError?: boolean
 }
 
-/**
- * 결정일기 리스트 뷰.
- * 카드는 feature/stock 의 AnalyzeCard 를 재사용한다 (배지·푸터·AP 표기가 동일 스펙).
- *
- * 백엔드 문의 중: 시안 카드가 표시하는 주가·등락률·거래일·종목 로고가
- * `GET /api/diaries` 응답에 없다. 시안대로 그리기 위해 지금은 mock 이 채우고 있으며,
- * 값이 없으면 해당 줄을 렌더하지 않으므로 실제 응답이 와도 화면은 깨지지 않는다.
- */
+/** 결정일기 리스트 뷰. 카드는 feature/stock의 AnalyzeCard를 재사용한다. */
 export function DiaryList({
   entries,
   onSelectEntry,
   onLoadMore,
   hasNext = false,
   isLoadingMore = false,
+  loadMoreError = false,
 }: DiaryListProps) {
   if (entries.length === 0) {
     return (
@@ -72,14 +67,21 @@ export function DiaryList({
       </ul>
 
       {hasNext && (
-        <button
-          type="button"
-          onClick={onLoadMore}
-          disabled={isLoadingMore}
-          className="pretendard-Button2 text-Gray-6 focus-visible:ring-Yellow-45 rounded-lg py-3 focus-visible:ring-2 focus-visible:outline-hidden disabled:opacity-50"
-        >
-          {isLoadingMore ? '불러오는 중…' : '더 보기'}
-        </button>
+        <div className="flex flex-col gap-2">
+          {loadMoreError && (
+            <p role="alert" className="pretendard-Caption2 text-Pink-30 text-center">
+              추가 결정 기록을 불러오지 못했어요.
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={onLoadMore}
+            disabled={isLoadingMore}
+            className="pretendard-Button2 text-Gray-6 focus-visible:ring-Yellow-45 rounded-lg py-3 focus-visible:ring-2 focus-visible:outline-hidden disabled:opacity-50"
+          >
+            {isLoadingMore ? '불러오는 중…' : loadMoreError ? '다시 시도' : '더 보기'}
+          </button>
+        </div>
       )}
     </div>
   )

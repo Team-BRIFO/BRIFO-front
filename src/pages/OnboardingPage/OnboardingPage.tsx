@@ -1,16 +1,18 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { TextField } from '@/components/common/TextField'
 import { Toast } from '@/components/common/Toast'
-import InterestStockSection from '@/components/feature/onboarding/InterestStockSection'
-import StockSearchView from '@/components/feature/onboarding/StockSearchView'
+import InterestStockSection from '@/components/feature/interest-stock/InterestStockSection'
+import StockSearchView from '@/components/feature/interest-stock/StockSearchView'
 import { useSignupCsrfBootstrap } from '@/hooks/auth/useSignupCsrfBootstrap'
+import { mapInterestStockOption } from '@/mappers/stockMapper'
 import { useOnboardingStocksQuery } from '@/pages/OnboardingPage/hooks/useOnboardingStocksQuery'
 import { useUpdateOnboardingProfileMutation } from '@/pages/OnboardingPage/hooks/useUpdateOnboardingProfileMutation'
 import { PATH } from '@/routes/paths'
+import type { UserInterestStock } from '@/types/domain/user'
 import {
   DEFAULT_COMPANY_NAME,
   MAX_INTEREST_STOCK_COUNT,
@@ -25,20 +27,24 @@ const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사
 
 export function OnboardingPage() {
   const navigate = useNavigate()
-  const stocksQuery = useOnboardingStocksQuery()
-  const updateProfile = useUpdateOnboardingProfileMutation()
-  const { isCsrfReady, isCsrfError, retryCsrf } = useSignupCsrfBootstrap()
-
-  const stocks = stocksQuery.data ?? []
-
   const [nickname, setNickname] = useState('')
   const [companyName, setCompanyName] = useState(DEFAULT_COMPANY_NAME)
   const [isNicknameTouched, setIsNicknameTouched] = useState(false)
   const [isCompanyNameTouched, setIsCompanyNameTouched] = useState(false)
   const [hasVisitedStockSelection, setHasVisitedStockSelection] = useState(false)
   const [searchKeyword, setSearchKeyword] = useState('')
-  const [selectedStockIds, setSelectedStockIds] = useState<string[]>([])
+  const [selectedStocks, setSelectedStocks] = useState<UserInterestStock[]>([])
   const [isStockSearchOpen, setIsStockSearchOpen] = useState(false)
+  const stocksQuery = useOnboardingStocksQuery(searchKeyword)
+  const updateProfile = useUpdateOnboardingProfileMutation()
+  const { isCsrfReady, isCsrfError, retryCsrf } = useSignupCsrfBootstrap()
+
+  const stocks = useMemo(
+    () =>
+      stocksQuery.data?.pages.flatMap((page) => page.page.items.map(mapInterestStockOption)) ?? [],
+    [stocksQuery.data],
+  )
+  const selectedStockIds = useMemo(() => selectedStocks.map((stock) => stock.id), [selectedStocks])
 
   const nicknameError = validateNickname(nickname)
   const companyNameError = validateCompanyName(companyName)
@@ -47,18 +53,19 @@ export function OnboardingPage() {
 
   const handleToggleStock = (stockId: string) => {
     setHasVisitedStockSelection(true)
-    setSelectedStockIds((previous) => {
-      const isSelected = previous.includes(stockId)
+    setSelectedStocks((previous) => {
+      const isSelected = previous.some((stock) => stock.id === stockId)
 
       if (isSelected) {
-        return previous.filter((id) => id !== stockId)
+        return previous.filter((stock) => stock.id !== stockId)
       }
 
       if (previous.length >= MAX_INTEREST_STOCK_COUNT) {
         return previous
       }
 
-      return [...previous, stockId]
+      const stock = stocks.find((item) => item.id === stockId)
+      return stock ? [...previous, { id: stock.id, name: stock.name }] : previous
     })
   }
 
@@ -81,6 +88,7 @@ export function OnboardingPage() {
     return (
       <StockSearchView
         stocks={stocks}
+        selectedStocks={selectedStocks}
         searchKeyword={searchKeyword}
         selectedStockIds={selectedStockIds}
         onSearchKeywordChange={setSearchKeyword}
@@ -93,6 +101,10 @@ export function OnboardingPage() {
           setSearchKeyword('')
           setIsStockSearchOpen(false)
         }}
+        isLoading={stocksQuery.isPending}
+        hasNextPage={stocksQuery.hasNextPage}
+        isFetchingNextPage={stocksQuery.isFetchingNextPage}
+        onLoadMore={() => void stocksQuery.fetchNextPage()}
       />
     )
   }
@@ -165,6 +177,7 @@ export function OnboardingPage() {
           stocks={stocks}
           searchKeyword={searchKeyword}
           selectedStockIds={selectedStockIds}
+          selectedStocks={selectedStocks}
           onToggleStock={handleToggleStock}
           onOpenSearch={() => {
             setHasVisitedStockSelection(true)

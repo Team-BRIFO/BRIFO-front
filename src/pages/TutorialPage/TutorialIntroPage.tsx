@@ -1,46 +1,32 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-import Step1Image from '@/assets/characters/tutorial_step1.svg?react'
-import Step2Image from '@/assets/characters/tutorial_step2.svg?react'
-import Step3Image from '@/assets/characters/tutorial_step3.svg?react'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import TutorialStepCard from '@/components/feature/tutorial/TutorialStepCard'
+import { TUTORIAL_INTRO_STEPS } from '@/constants/tutorialSteps'
 import { PATH } from '@/routes/paths'
-
-const TUTORIAL_STEPS = [
-  {
-    step: 1,
-    title: '첫 카드뉴스 확인',
-    description: 'AI가 만든 5W1H 사실 요약 카드뉴스를 \n받아보세요',
-    image: Step1Image,
-  },
-  {
-    step: 2,
-    title: '루키의 첫 분석',
-    description: '루키 사원에게 분석을 의뢰하고 보고서를 \n채택해보세요',
-    image: Step2Image,
-  },
-  {
-    step: 3,
-    title: '첫 예측 등록',
-    description: `방향(↑↓~)과 확신도(1~5)를 선택해  \n 예측하세요`,
-    image: Step3Image,
-  },
-] as const
 
 export function TutorialIntroPage() {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const isReplay = pathname === PATH.TUTORIAL_REPLAY_INTRO
 
   return (
-    <main className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
+    <main
+      className={`flex w-full flex-1 flex-col ${
+        isReplay ? 'bg-Background1 h-dvh min-h-0 overflow-hidden pb-5' : 'px-4 pt-6 pb-5'
+      }`}
+    >
       <StatusBar
-        hasStatusArea
-        className="w-full [&>div:last-child]:px-0"
+        hasStatusArea={!isReplay}
+        className={isReplay ? 'w-full' : 'w-full [&>div:last-child]:px-0'}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
+        title={isReplay ? '튜토리얼' : undefined}
       />
 
-      <section className="mt-13 flex flex-1 flex-col">
+      <section
+        className={`mt-13 flex min-h-0 flex-1 flex-col ${isReplay ? 'overflow-y-auto px-4' : ''}`}
+      >
         <div>
           <h1 className="dnf-Title3 text-Gray-10 leading-[1.2]">
             투자 튜토리얼
@@ -53,14 +39,16 @@ export function TutorialIntroPage() {
           </p>
         </div>
 
-        <div className="bg-Yellow-50 mt-5 flex h-12 items-center justify-center rounded-[20px]">
-          <span className="pretendard-Body2-Semibold text-Yellow-5">튜토리얼 완료 시 보너스</span>
+        {!isReplay && (
+          <div className="bg-Yellow-50 mt-5 flex h-12 items-center justify-center rounded-[20px]">
+            <span className="pretendard-Body2-Semibold text-Yellow-5">튜토리얼 완료 시 보너스</span>
 
-          <span className="dnf-Caption2 text-Yellow-5 ml-1">+200 AP</span>
-        </div>
+            <span className="dnf-Caption2 text-Yellow-5 ml-1">+200 AP</span>
+          </div>
+        )}
 
         <div className="mt-4 flex flex-col gap-3">
-          {TUTORIAL_STEPS.map((item) => (
+          {TUTORIAL_INTRO_STEPS.map((item) => (
             <TutorialStepCard
               key={item.step}
               step={item.step}
@@ -72,16 +60,18 @@ export function TutorialIntroPage() {
         </div>
       </section>
 
-      <Button
-        type="button"
-        size="lg"
-        color="primary"
-        isFullWidth
-        onClick={() => navigate(PATH.TUTORIAL)}
-        className="mt-6 shadow-[0_4px_8px_0_rgba(168,79,1,0.15)]"
-      >
-        튜토리얼 시작하기
-      </Button>
+      <div className={isReplay ? 'mx-4 flex justify-center' : undefined}>
+        <Button
+          type="button"
+          size={isReplay ? 'semilg' : 'lg'}
+          color="primary"
+          isFullWidth
+          onClick={() => navigate(isReplay ? PATH.TUTORIAL_REPLAY : PATH.TUTORIAL)}
+          className={`mt-6 shadow-[0_4px_8px_0_rgba(168,79,1,0.15)] ${isReplay ? 'max-w-80' : ''}`}
+        >
+          튜토리얼 시작하기
+        </Button>
+      </div>
     </main>
   )
 }

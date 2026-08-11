@@ -15,11 +15,7 @@ export interface MyGlossaryListProps {
   isEmpty: boolean
 }
 
-/**
- * 내 용어장 화면(SCR-16) 본문 — 저장한 용어 카드 리스트
- *
- * TODO(#31): 용어 상세는 GlossaryBottomSheet(components/feature/glossary) 재사용 여부 확인 후 연결.
- */
+/** 내 용어장 화면(SCR-16) 본문 — 저장한 용어 카드 리스트 */
 export function MyGlossaryList({
   learnedTermCount,
   entries,
