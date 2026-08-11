@@ -1,47 +1,24 @@
-export type AgreementId = 'age' | 'service' | 'privacy' | 'investment' | 'marketing'
+import type { Agreement, AgreementDetail, AgreementId } from '@/types/domain/agreement'
 
-export interface Agreement {
-  id: AgreementId
-  label: string
-  type: 'required' | 'optional'
-}
-
-export interface AgreementDetail {
-  title: string
-  effectiveDate: string
-  version: string
-  sections: {
-    title: string
-    content: string
-  }[]
-}
 export const AGREEMENTS: Agreement[] = [
-  {
-    id: 'age',
-    label: '만 14세 이상입니다.',
-    type: 'required',
-  },
-  {
-    id: 'service',
-    label: '서비스 이용약관',
-    type: 'required',
-  },
-  {
-    id: 'privacy',
-    label: '개인정보 처리방침',
-    type: 'required',
-  },
-  {
-    id: 'investment',
-    label: '투자 정보 유의사항',
-    type: 'required',
-  },
-  {
-    id: 'marketing',
-    label: '광고성 정보 수신',
-    type: 'optional',
-  },
+  { id: 'age', label: '만 14세 이상입니다.', type: 'required' },
+  { id: 'service', label: '서비스 이용약관', type: 'required' },
+  { id: 'privacy', label: '개인정보 처리방침', type: 'required' },
+  { id: 'investment', label: '투자 정보 유의사항', type: 'required' },
+  { id: 'marketing', label: '광고성 정보 수신', type: 'optional' },
 ]
+
+/**
+ * `/api/policies`는 agreementId를 반환하지 않아 제목으로만 기존 약관 UI와 연결한다.
+ * 각 배열은 모두 충족해야 하는 토큰 그룹이며, 그룹 안에서는 하나만 포함되면 된다.
+ */
+export const POLICY_TITLE_TOKEN_GROUPS: Record<AgreementId, string[][]> = {
+  age: [['14세', '연령']],
+  service: [['서비스'], ['이용약관']],
+  privacy: [['개인정보'], ['처리방침']],
+  investment: [['투자'], ['유의']],
+  marketing: [['광고성', '마케팅'], ['수신']],
+}
 
 export const SERVICE_TERMS: AgreementDetail = {
   title: 'BRIFO 서비스 이용약관',

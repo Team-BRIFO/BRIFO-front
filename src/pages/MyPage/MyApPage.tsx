@@ -19,31 +19,18 @@ export function MyApPage() {
     return all
   }, [period, query.data])
 
-  if (!!query.error && query.fetchStatus === 'idle' && !query.data) {
-    return (
-      <MyPageLayout title="AP 내역">
-        <PageErrorView
-          title="정보를 불러오지 못했어요."
-          error={query.error}
-          onRetry={() => query.refetch()}
-        />
-      </MyPageLayout>
-    )
-  }
-  if (!query.data) {
-    return (
-      <MyPageLayout title="AP 내역">
-        <PageLoadingView />
-      </MyPageLayout>
-    )
-  }
-
-  const first = query.data.pages[0]
-
-  return (
-    <MyPageLayout title="AP 내역">
+  const content =
+    !!query.error && query.fetchStatus === 'idle' && !query.data ? (
+      <PageErrorView
+        title="정보를 불러오지 못했어요."
+        error={query.error}
+        onRetry={() => query.refetch()}
+      />
+    ) : !query.data ? (
+      <PageLoadingView />
+    ) : (
       <MyApHistory
-        summary={first.summary}
+        summary={query.data.pages[0].summary}
         transactions={transactions}
         period={period}
         onChangePeriod={setPeriod}
@@ -53,6 +40,7 @@ export function MyApPage() {
         loadMoreError={query.isFetchNextPageError}
         isEmpty={transactions.length === 0}
       />
-    </MyPageLayout>
-  )
+    )
+
+  return <MyPageLayout title="AP 내역">{content}</MyPageLayout>
 }

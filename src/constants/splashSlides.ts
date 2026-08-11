@@ -1,14 +1,7 @@
 import OnboardingStep1 from '@/assets/images/image-1.svg'
 import OnboardingStep2 from '@/assets/images/image-2.svg'
 import OnboardingStep3 from '@/assets/images/image-3.svg'
-
-export interface SplashSlideData {
-  id: number
-  image: string
-  title: string
-  highlightedText: string
-  description: string
-}
+import type { SplashSlideData } from '@/types/domain/splash'
 
 export const SPLASH_SLIDES: SplashSlideData[] = [
   {

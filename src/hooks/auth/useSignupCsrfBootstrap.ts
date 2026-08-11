@@ -13,7 +13,7 @@ import { PATH } from '@/routes/paths'
 
 async function fetchSignupCsrfToken({ signal }: { signal?: AbortSignal }) {
   signupSession.activate()
-  await ensureSignupCsrfToken({ signal })
+  return ensureSignupCsrfToken({ signal })
 }
 
 export function useSignupCsrfBootstrap() {

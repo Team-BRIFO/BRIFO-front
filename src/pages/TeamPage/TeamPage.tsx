@@ -20,52 +20,11 @@ export function TeamPage() {
     : '0 AP'
   const agents = agentsQuery.data
 
-  if (!!agentsQuery.error && agentsQuery.fetchStatus === 'idle') {
-    return (
-      <div className="bg-Background1 flex flex-1 flex-col">
-        <StatusBar
-          hasStatusArea={false}
-          left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
-          right={
-            <div className="flex items-center gap-3">
-              <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-                {balanceText}
-              </div>
-              <StatusBarNotificationButton />
-            </div>
-          }
-        />
-        <PageErrorView
-          title="사원 목록을 불러오지 못했어요"
-          error={agentsQuery.error}
-          onRetry={() => agentsQuery.refetch()}
-        />
-      </div>
-    )
-  }
-
-  if (agentsQuery.fetchStatus === 'fetching' || !agents) {
-    return (
-      <div className="bg-Background1 flex flex-1 flex-col">
-        <StatusBar
-          hasStatusArea={false}
-          left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
-          right={
-            <div className="flex items-center gap-3">
-              <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-                {balanceText}
-              </div>
-              <StatusBarNotificationButton />
-            </div>
-          }
-        />
-        <PageLoadingView />
-      </div>
-    )
-  }
+  const isError = !!agentsQuery.error && agentsQuery.fetchStatus === 'idle'
+  const isLoading = agentsQuery.fetchStatus === 'fetching' || !agents
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="bg-Background1 flex flex-1 flex-col">
       <StatusBar
         hasStatusArea={false}
         left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
@@ -74,21 +33,34 @@ export function TeamPage() {
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
               {balanceText}
             </div>
-            <StatusBarNotificationButton />
+            <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
           </div>
         }
       />
 
-      <div className="px-4 py-4">
-        {agents.length === 0 ? (
-          <PageErrorView title="아직 등록된 사원이 없어요" description="새 사원을 배치해보세요." />
-        ) : (
-          <AgentListSection
-            agents={agents}
-            onSelectAgent={(agentId) => navigate(PATH.TEAM_DETAIL(agentId))}
-          />
-        )}
-      </div>
+      {isError ? (
+        <PageErrorView
+          title="사원 목록을 불러오지 못했어요"
+          error={agentsQuery.error}
+          onRetry={() => agentsQuery.refetch()}
+        />
+      ) : isLoading ? (
+        <PageLoadingView />
+      ) : (
+        <div className="px-4 py-4">
+          {agents.length === 0 ? (
+            <PageErrorView
+              title="아직 등록된 사원이 없어요"
+              description="새 사원을 배치해보세요."
+            />
+          ) : (
+            <AgentListSection
+              agents={agents}
+              onSelectAgent={(agentId) => navigate(PATH.TEAM_DETAIL(agentId))}
+            />
+          )}
+        </div>
+      )}
     </div>
   )
 }

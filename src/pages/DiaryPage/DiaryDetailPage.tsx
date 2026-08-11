@@ -11,6 +11,7 @@ import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useCreateDiaryShareImageMutation } from '@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation'
 import { useDiaryDetailQuery } from '@/pages/DiaryPage/hooks/useDiaryQueries'
+import { PATH } from '@/routes/paths'
 
 /** 피드 탭 - SCR-10: 결정 카드 상세 (서버 렌더 공유 이미지 · 공유) */
 export function DiaryDetailPage() {
@@ -46,7 +47,7 @@ export function DiaryDetailPage() {
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="결정카드"
-        right={<StatusBarNotificationButton />}
+        right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
 
       {!!error && fetchStatus === 'idle' && !detail ? (

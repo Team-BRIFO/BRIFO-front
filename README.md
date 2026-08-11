@@ -50,15 +50,15 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ## 🛠 기술 스택
 
-| 분류            | 기술                                                       |
-| --------------- | ---------------------------------------------------------- |
-| 코어            | `React 19`, `TypeScript`, `Vite`, `pnpm`                   |
-| 스타일링        | `TailwindCSS v4`(`@tailwindcss/vite`), `lucide-react`      |
-| 서버 상태       | `TanStack Query (React Query) v5`                          |
-| 클라이언트 상태 | React Hook (`useState`, `useRef`), `Zustand v5`(도입 준비) |
-| 라우팅          | `React Router DOM v7`                                      |
-| HTTP            | `Axios` (백엔드 API 연동 준비)                             |
-| 린트 / 포맷     | `ESLint 9`(flat config) + `typescript-eslint`, `Prettier`  |
+| 분류            | 기술                                                        |
+| --------------- | ----------------------------------------------------------- |
+| 코어            | `React 19`, `TypeScript`, `Vite`, `pnpm`                    |
+| 스타일링        | `TailwindCSS v4`(`@tailwindcss/vite`), `lucide-react`       |
+| 서버 상태       | `TanStack Query (React Query) v5`                           |
+| 클라이언트 상태 | React Hook (`useState`, `useRef`), `Zustand v5`(도입 준비)  |
+| 라우팅          | `React Router DOM v7`                                       |
+| HTTP            | `Axios`, `Orval`(OpenAPI 클라이언트 생성), `Zod`(계약 검증) |
+| 린트 / 포맷     | `ESLint 9`(flat config) + `typescript-eslint`, `Prettier`   |
 
 ---
 
@@ -66,18 +66,17 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 
 ### 데이터 통신 및 API 연동
 
-현재 화면은 도메인별 `mock*.ts` 파일의 정적 데이터를 기반으로 동작합니다. `src/api`와 `src/hooks/queries`에 API 함수 및 React Query Hook을 분리해 두었으며, 현재는 Mock 응답을 반환합니다. 백엔드 연동 시 API 함수 내부를 Axios 기반 실제 요청으로 교체할 수 있도록 구성되어 있습니다.
+백엔드 API는 Axios 공통 클라이언트와 Orval 생성 코드로 연동합니다. 응답 검증은 Zod 계약(`api/contracts`)으로 처리하고, 화면 데이터는 React Query Hook(`hooks/queries`, `pages/*/hooks`)으로 조회·변경합니다.
 
-- **Mock Data**: `pages/HomePage`, `BriefingPage`, `DecisionPage`, `DiaryPage`, `OfficePage`, `TeamPage`, `NotificationPage`, `MyPage`의 `mock*.ts`
-- **API 레이어**: `src/api`의 도메인별 API 함수
+- **API 레이어**: `src/api/client`(Axios·인증·세션), `src/api/generated`(Orval), `src/api/contracts`(Zod)
 - **서버 상태**: React Query의 `useQuery`, `useMutation`, `useInfiniteQuery` 및 Query Cache 사용
-- **향후 계획**: Axios 공통 클라이언트와 인증·에러 인터셉터를 구성하고, Zod 기반 폼·응답 검증 및 Orval 기반 OpenAPI 타입·API 클라이언트 자동 생성을 도입합니다.
+- **목업**: 공용은 `src/mocks`, 페이지 전용은 해당 `pages/{PageName}`의 `mock*.ts` (일부 화면·개발용)
 
 ### 상태 관리
 
 - **서버 상태**: `QueryClientProvider`와 React Query로 관리합니다. 조회·변경 결과, 로딩·에러 상태, 캐시 갱신을 도메인별 Query Hook에서 처리합니다.
 - **지역 UI 상태**: 모달 열림 여부, 탭·슬라이드 선택, 폼 입력값 등 컴포넌트 내부 상태는 React의 `useState`, `useRef`로 관리합니다.
-- **전역 클라이언트 상태**: Zustand는 의존성에 포함되어 있으나 현재 Store는 구현되지 않았습니다. 로그인 사용자 정보나 온보딩 진행 상태처럼 여러 화면에서 공유할 클라이언트 상태가 필요할 때 적용할 예정입니다. 서버 응답 데이터는 Zustand가 아닌 React Query Cache로 관리합니다.
+- **전역 클라이언트 상태**: Zustand는 의존성에 포함되어 있으나 현재 Store는 구현되지 않았습니다. 여러 화면에서 공유할 클라이언트 상태가 필요할 때 적용할 예정입니다. 서버 응답 데이터는 React Query Cache로 관리합니다.
 
 ---
 
@@ -86,29 +85,34 @@ BRIFO는 사용자가 투자 회사의 **사장(CEO)** 이 되어 개성 있는 
 ```text
 src/
 ├── main.tsx              # RouterProvider, QueryClientProvider 연결
-├── api/                  # 도메인별 API 함수 (현재 Mock 응답)
+├── __tests__/            # Vitest 단위·통합 테스트
+├── api/
+│   ├── client/           # Axios 인스턴스·인증·세션·요청 실행
+│   ├── contracts/        # Zod 응답·요청 계약
+│   └── generated/        # Orval 생성 endpoints·schemas
 ├── assets/               # 캐릭터·아이콘·이미지·로고 에셋
 ├── components/
 │   ├── common/           # 공용 UI 컴포넌트
 │   ├── domain/           # 도메인별 재사용 컴포넌트
 │   ├── feedback/         # 로딩·에러·상태 피드백 UI
 │   └── feature/          # 화면 기능 단위 컴포넌트
-├── constants/            # 화면·도메인 공통 상수
+├── constants/            # 화면·도메인 공통 상수 (agreement, splashSlides, tutorialSteps 등)
 ├── hooks/
-│   └── queries/          # React Query 기반 도메인별 Hook
+│   ├── api/              # 공용 useApiQuery·useApiMutation 래퍼
+│   ├── auth/             # 인증·가입 세션 공통 Hook
+│   └── queries/          # React Query 기반 도메인별 Query·Mutation Hook
 ├── layouts/              # AuthLayout, AppLayout
+├── mappers/              # API DTO·응답을 도메인 또는 UI 모델로 변환
+├── mocks/                # 여러 페이지에서 재사용하는 목업 데이터
 ├── pages/                # 라우트 단위 페이지
-│   ├── BriefingPage/     # 브리핑 목록·요청·도착·상세
-│   ├── DiaryPage/        # 결정 일기·상세
-│   ├── ErrorPage/        # 404 페이지
-│   ├── MyPage/           # 마이 메인·AP·배지·용어장·프로필·설정
-│   ├── TeamPage/         # 사원 목록·상세
-│   └── SplashPage/       # 스플래시·로그인·OAuth 콜백
 ├── routes/               # PATH 상수 및 createBrowserRouter 설정
+├── services/             # 브라우저·외부 SDK 연동 (OAuth 등)
+├── stores/               # 클라이언트 측 저장소 헬퍼 (예: profileStorage)
+├── styles/               # 디자인 토큰 (color, typography)
 ├── types/
 │   ├── api/              # API 요청·응답 타입
 │   └── domain/           # 도메인 타입
-└── utils/                # 도메인 데이터 매핑 및 순수 유틸
+└── utils/                # 포맷·검증 등 순수 유틸
 ```
 
 - **Import 경로**: 항상 `@/` alias 사용 (상대경로 `../../` 지양)
@@ -119,19 +123,9 @@ import { PATH } from '@/routes/paths'
 import type { Agent } from '@/types/domain/agent'
 ```
 
-- `components/common`: API 호출, store 접근, routing 의존성이 없는 순수 공용 UI
-- `components/domain`: 도메인 데이터를 props로 받아 표현하는 재사용 컴포넌트
-- `components/feedback`: 라우트·비동기 상태에서 사용하는 로딩·에러·안내 UI
-- `components/feature`: common/domain 컴포넌트를 조합하는 화면 일부 기능 컴포넌트
-- `pages`: 라우트 단위로 Query Hook과 화면 기능 컴포넌트를 조합하고, 로딩·에러 UI를 처리
-- `pages/{PageName}/hooks`: 해당 페이지에서만 사용하는 Query·Mutation Hook
-- `constants`: 화면·도메인에서 재사용하는 정적 상수와 표시 설정
-- `types`: 여러 페이지·컴포넌트·API 계층에서 공유하는 도메인/API 타입
-- `mappers`: API DTO·응답을 도메인 또는 UI 모델로 변환하는 순수 함수
-- `mocks`: 여러 페이지에서 재사용하는 목업 데이터. 페이지 전용 목업은 해당 `pages/{PageName}`에 `mockData.ts` 등 역할이 드러나는 이름으로 둔다
-- `api`: 도메인별 데이터 조회·변경 함수. 현재는 Mock 응답을 반환하며 API 연동 시 실제 요청으로 교체
-- `hooks/queries`: 도메인별 React Query Hook
+- `pages/{PageName}/hooks`: 해당 페이지에서만 사용하는 Query·Mutation·화면 상태 Hook
 - `routes/paths.ts`: `PATH` 경로 상수 — 하드코딩 금지, 동적 경로는 함수로 정의
+- DTO→도메인 변환은 `utils`가 아니라 `mappers`에 둔다
 
 ---
 
@@ -199,7 +193,7 @@ OAuth redirect URL 연결
 - 팀원이 리뷰하기 쉽도록 자세하게 작성 (`.github/PULL_REQUEST_TEMPLATE.md` 사용)
 - UI 관련 변경 시 **스크린샷/GIF 첨부 필수** (머지 전 로컬에서 직접 화면 확인)
 - PR 작성 후 리뷰어 · 담당자 · 라벨 설정
-- `dev` 브랜치 머지 시 **최소 2명 이상의 Approve** 필요
+- `dev` 브랜치 머지 시 **최소 1명 이상의 Approve** 필요, CodeRabbit 코드리뷰 수정 반영 필요
 - 머지 전 `pnpm lint` 통과 확인
 
 ---
