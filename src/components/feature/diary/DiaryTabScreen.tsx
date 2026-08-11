@@ -10,6 +10,8 @@ export interface DiaryTabScreenProps {
   onChangeView: (view: DiaryView) => void
   /** AP 조회 상태가 반영된 표시 문자열 */
   balanceText: string
+  /** 알림 화면으로 이동 */
+  onNotificationClick: () => void
   children: ReactNode
 }
 
@@ -18,7 +20,13 @@ export interface DiaryTabScreenProps {
  * StatusBar · 페이지 헤더 · 세그먼트 탭을 담당하고, 탭 상태 관리는 페이지가 맡는다.
  * 하단 NavigationBar 는 루트 레이아웃에서 배치되므로 여기서는 여백만 확보한다.
  */
-export function DiaryTabScreen({ view, onChangeView, balanceText, children }: DiaryTabScreenProps) {
+export function DiaryTabScreen({
+  view,
+  onChangeView,
+  balanceText,
+  onNotificationClick,
+  children,
+}: DiaryTabScreenProps) {
   return (
     <div className="bg-Background1 flex flex-1 flex-col">
       <StatusBar
@@ -29,7 +37,7 @@ export function DiaryTabScreen({ view, onChangeView, balanceText, children }: Di
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
               {balanceText}
             </div>
-            <StatusBarNotificationButton />
+            <StatusBarNotificationButton onClick={onNotificationClick} />
           </div>
         }
       />

@@ -109,7 +109,7 @@ export function DiaryPage() {
               <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
                 {balanceText}
               </div>
-              <StatusBarNotificationButton />
+              <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
             </div>
           }
         />
@@ -129,7 +129,7 @@ export function DiaryPage() {
               <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
                 {balanceText}
               </div>
-              <StatusBarNotificationButton />
+              <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
             </div>
           }
         />
@@ -191,7 +191,12 @@ export function DiaryPage() {
   }
 
   return (
-    <DiaryTabScreen view={view} onChangeView={handleChangeView} balanceText={balanceText}>
+    <DiaryTabScreen
+      view={view}
+      onChangeView={handleChangeView}
+      balanceText={balanceText}
+      onNotificationClick={() => navigate(PATH.NOTIFICATION)}
+    >
       {renderView()}
     </DiaryTabScreen>
   )

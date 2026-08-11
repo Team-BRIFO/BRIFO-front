@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom'
+
 import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { Badge } from '@/components/common/Badge'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
@@ -7,9 +9,11 @@ import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { useOfficeBriefingsQuery } from '@/pages/OfficePage/hooks/useOfficeBriefingsQuery'
+import { PATH } from '@/routes/paths'
 
 /** 사무실 탭 - SCR-04: 메인 대시보드 (사원 도트, AP 잔액 등) */
 export function OfficePage() {
+  const navigate = useNavigate()
   const briefingsQuery = useOfficeBriefingsQuery()
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
@@ -29,7 +33,7 @@ export function OfficePage() {
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
               {balanceText}
             </div>
-            <StatusBarNotificationButton />
+            <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
           </div>
         }
       />
