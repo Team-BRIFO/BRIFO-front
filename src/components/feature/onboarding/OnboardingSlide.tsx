@@ -28,15 +28,13 @@ export default function OnboardingSlide({
   const titleParts = title.split(highlightedText)
 
   return (
-    <div className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
-      <div className="flex h-15 items-center justify-between">
-        <StatusBar
-          className="w-full [&>div:last-child]:px-0"
-          hasStatusArea
-          left={onBack ? <StatusBarBackButton onClick={onBack} /> : undefined}
-          right={<StatusBarSkipButton onClick={onSkip} />}
-        />
-      </div>
+    <div className="flex w-full flex-1 flex-col px-4 pb-5">
+      <StatusBar
+        className="w-full [&>div:last-child]:px-0"
+        hasStatusArea={false}
+        left={onBack ? <StatusBarBackButton onClick={onBack} /> : undefined}
+        right={<StatusBarSkipButton onClick={onSkip} />}
+      />
 
       <div className="flex flex-1 flex-col items-center">
         <div className="mt-8 flex h-52 w-full items-center justify-center">

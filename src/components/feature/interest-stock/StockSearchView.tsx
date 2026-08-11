@@ -55,12 +55,12 @@ export default function StockSearchView({
   return (
     <main
       className={
-        embedded ? 'flex w-full flex-1 flex-col pb-5' : 'flex w-full flex-1 flex-col px-4 pt-6 pb-5'
+        embedded ? 'flex w-full flex-1 flex-col pb-5' : 'flex w-full flex-1 flex-col px-4 pb-5'
       }
     >
       {!embedded && (
         <StatusBar
-          hasStatusArea
+          hasStatusArea={false}
           className="w-full [&>div:last-child]:px-0"
           left={<StatusBarBackButton onClick={onBack} />}
         />

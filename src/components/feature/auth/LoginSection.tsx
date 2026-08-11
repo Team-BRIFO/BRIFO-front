@@ -10,14 +10,12 @@ interface LoginSectionProps {
 
 export default function LoginSection({ onKakaoLogin, onNaverLogin, onBack }: LoginSectionProps) {
   return (
-    <main className="flex min-h-dvh w-full flex-1 flex-col px-4 pt-6 pb-8">
-      <div className="flex h-15 items-center justify-between">
-        <StatusBar
-          className="w-full [&>div:last-child]:px-0"
-          hasStatusArea
-          left={<StatusBarBackButton onClick={onBack} />}
-        />
-      </div>
+    <main className="flex min-h-dvh w-full flex-1 flex-col px-4 pb-8">
+      <StatusBar
+        className="w-full [&>div:last-child]:px-0"
+        hasStatusArea={false}
+        left={<StatusBarBackButton onClick={onBack} />}
+      />
 
       <div className="flex flex-1 flex-col items-center pt-44">
         <Logo className="w-50" />
