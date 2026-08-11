@@ -20,45 +20,39 @@ export function MyBadgePage() {
       setParams(next, { replace: true })
     }
   }, [params, setParams])
-  if (!!badgesQuery.error && badgesQuery.fetchStatus === 'idle' && !badgesQuery.data)
-    return (
-      <MyPageLayout title="업적 · 배지">
-        <PageErrorView
-          title="정보를 불러오지 못했어요."
-          error={badgesQuery.error}
-          onRetry={() => badgesQuery.refetch()}
+  const content =
+    !!badgesQuery.error && badgesQuery.fetchStatus === 'idle' && !badgesQuery.data ? (
+      <PageErrorView
+        title="정보를 불러오지 못했어요."
+        error={badgesQuery.error}
+        onRetry={() => badgesQuery.refetch()}
+      />
+    ) : !badgesQuery.data ? (
+      <PageLoadingView />
+    ) : (
+      <>
+        <MyBadgeGallery
+          badges={badgesQuery.data}
+          onSelectBadge={(id) =>
+            badgesQuery.data.find((badge) => badge.id === id)?.isUnlocked && setSelectedId(id)
+          }
+          isEmpty={badgesQuery.data.length === 0}
         />
-      </MyPageLayout>
+        <BadgeUnlockModal
+          isOpen={Boolean(selectedId)}
+          badge={detailQuery.data?.badge ?? null}
+          rewardAp={detailQuery.data?.rewardAp}
+          isLoading={Boolean(selectedId && !detailQuery.data && detailQuery.isFetching)}
+          errorMessage={
+            selectedId && !detailQuery.data && detailQuery.isError
+              ? '배지 정보를 불러오지 못했어요.'
+              : undefined
+          }
+          onRetry={() => detailQuery.refetch()}
+          onClose={() => setSelectedId(null)}
+        />
+      </>
     )
-  if (!badgesQuery.data)
-    return (
-      <MyPageLayout title="업적 · 배지">
-        <PageLoadingView />
-      </MyPageLayout>
-    )
-  const badges = badgesQuery.data
-  return (
-    <MyPageLayout title="업적 · 배지">
-      <MyBadgeGallery
-        badges={badges}
-        onSelectBadge={(id) =>
-          badges.find((badge) => badge.id === id)?.isUnlocked && setSelectedId(id)
-        }
-        isEmpty={badges.length === 0}
-      />
-      <BadgeUnlockModal
-        isOpen={Boolean(selectedId)}
-        badge={detailQuery.data?.badge ?? null}
-        rewardAp={detailQuery.data?.rewardAp}
-        isLoading={Boolean(selectedId && !detailQuery.data && detailQuery.isFetching)}
-        errorMessage={
-          selectedId && !detailQuery.data && detailQuery.isError
-            ? '배지 정보를 불러오지 못했어요.'
-            : undefined
-        }
-        onRetry={() => detailQuery.refetch()}
-        onClose={() => setSelectedId(null)}
-      />
-    </MyPageLayout>
-  )
+
+  return <MyPageLayout title="업적 · 배지">{content}</MyPageLayout>
 }
