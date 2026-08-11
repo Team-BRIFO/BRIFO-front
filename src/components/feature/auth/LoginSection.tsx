@@ -10,7 +10,7 @@ interface LoginSectionProps {
 
 export default function LoginSection({ onKakaoLogin, onNaverLogin, onBack }: LoginSectionProps) {
   return (
-    <main className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
+    <main className="flex min-h-dvh w-full flex-1 flex-col px-4 pt-6 pb-8">
       <div className="flex h-15 items-center justify-between">
         <StatusBar
           className="w-full [&>div:last-child]:px-0"
@@ -30,7 +30,7 @@ export default function LoginSection({ onKakaoLogin, onNaverLogin, onBack }: Log
         </div>
       </div>
 
-      <p className="pretendard-Caption3 text-Gray-5 pb-8 text-center whitespace-pre-line">
+      <p className="pretendard-Caption3 text-Gray-5 mt-auto text-center whitespace-pre-line">
         로그인 시 본 서비스 약관에 동의한 것으로
         {'\n'}
         간주합니다.
