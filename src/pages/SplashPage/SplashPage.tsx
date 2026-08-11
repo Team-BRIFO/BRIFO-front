@@ -74,16 +74,18 @@ export function SplashPage() {
   // 최초 로고 스플래시
   if (isSplashVisible) {
     return (
-      <main className="flex w-full flex-1 flex-col overflow-hidden">
+      <main className="flex min-h-dvh w-full flex-col overflow-hidden">
         <div className="flex flex-1 flex-col items-center justify-center">
           <Logo className="w-50" />
 
           <p className="pretendard-Body1-Semibold mt-2 text-[#FF9500]">나는 사장, AI는 사원</p>
         </div>
 
-        <div className="w-full overflow-hidden">
-          <SplashBackground className="-mt-0.5 block w-full" />
-        </div>
+        <SplashBackground
+          aria-hidden="true"
+          className="block h-auto w-full shrink-0"
+          preserveAspectRatio="xMidYMax meet"
+        />
       </main>
     )
   }

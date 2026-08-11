@@ -18,11 +18,11 @@ export default function TutorialComplete({
   return (
     <main
       className={`mx-auto flex w-full flex-col pb-5 ${
-        isReplay ? 'bg-Background1 h-dvh min-h-0' : 'min-h-dvh bg-white px-4 pt-6'
+        isReplay ? 'bg-Background1 h-dvh min-h-0' : 'min-h-dvh bg-white px-4'
       }`}
     >
       <StatusBar
-        hasStatusArea={!isReplay}
+        hasStatusArea={false}
         className={isReplay ? 'w-full' : 'w-full [&>div:last-child]:px-0'}
         title={isReplay ? '튜토리얼' : undefined}
       />

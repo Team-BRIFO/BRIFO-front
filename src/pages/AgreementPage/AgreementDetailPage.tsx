@@ -80,11 +80,11 @@ export default function AgreementDetailPage() {
   return (
     <main
       className={`flex w-full flex-1 flex-col pb-5 ${
-        readOnly ? 'h-full min-h-0 overflow-hidden' : 'px-4 pt-6'
+        readOnly ? 'h-full min-h-0 overflow-hidden' : 'px-4'
       }`}
     >
       <StatusBar
-        hasStatusArea={!readOnly}
+        hasStatusArea={false}
         className={readOnly ? 'w-full' : 'w-full [&>div:last-child]:px-0'}
         left={<StatusBarBackButton onClick={handleBack} />}
         title="약관"

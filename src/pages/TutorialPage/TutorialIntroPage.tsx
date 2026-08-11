@@ -14,11 +14,11 @@ export function TutorialIntroPage() {
   return (
     <main
       className={`flex w-full flex-1 flex-col ${
-        isReplay ? 'bg-Background1 h-dvh min-h-0 overflow-hidden pb-5' : 'px-4 pt-6 pb-5'
+        isReplay ? 'bg-Background1 h-dvh min-h-0 overflow-hidden pb-5' : 'px-4 pb-5'
       }`}
     >
       <StatusBar
-        hasStatusArea={!isReplay}
+        hasStatusArea={false}
         className={isReplay ? 'w-full' : 'w-full [&>div:last-child]:px-0'}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title={isReplay ? '튜토리얼' : undefined}

@@ -23,12 +23,14 @@ const SOCIAL_LOGIN_OPTIONS: Record<SocialProvider, SocialLoginOption> = {
   kakao: {
     label: '카카오로 로그인 시작하기',
     icon: KakaoIcon,
-    className: 'bg-Kakao text-KakaoText pretendard-Button1! hover:bg-Kakao! active:bg-Kakao!',
+    className:
+      'bg-Kakao! text-KakaoText! pretendard-Button1! hover:bg-Kakao! active:bg-Kakao! disabled:bg-Kakao! disabled:text-KakaoText!',
   },
   naver: {
     label: '네이버로 로그인 시작하기',
     icon: NaverIcon,
-    className: 'bg-Naver text-White pretendard-Button1! hover:bg-Naver! active:bg-Naver!',
+    className:
+      'bg-Naver! text-White! pretendard-Button1! hover:bg-Naver! active:bg-Naver! disabled:bg-Naver! disabled:text-White!',
   },
 }
 

@@ -98,9 +98,9 @@ export default function AgreementPage() {
   }
 
   return (
-    <main className="flex w-full flex-1 flex-col px-4 pt-6 pb-5">
+    <main className="flex w-full flex-1 flex-col px-4 pb-5">
       <StatusBar
-        hasStatusArea
+        hasStatusArea={false}
         className="w-full [&>div:last-child]:px-0"
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="약관동의"
