@@ -1,5 +1,3 @@
-
-
 import { getOfficeBriefings } from '@/api/generated/endpoints/briefing-controller/briefing-controller'
 import { ApiResponseGetOfficeBriefingsResponse } from '@/api/generated/schemas/briefing-controller'
 import { useApiQuery } from '@/hooks/api'

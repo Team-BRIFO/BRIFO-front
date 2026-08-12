@@ -1,5 +1,3 @@
-
-
 import { getStockBriefings } from '@/api/generated/endpoints/briefing-controller/briefing-controller'
 import { ApiResponseGetStockBriefingsResponse } from '@/api/generated/schemas/briefing-controller'
 import { useApiQuery } from '@/hooks/api'
