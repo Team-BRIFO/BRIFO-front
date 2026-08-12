@@ -5,6 +5,7 @@ import {
   createAppQueryClient,
   getQueryRetryDelay,
   shouldRetryQuery,
+  shouldThrowQueryError,
 } from '@/api/client/queryPolicy'
 
 function apiError(kind: ApiError['kind'], status?: number) {
@@ -36,14 +37,26 @@ describe('TanStack Query policy', () => {
     expect(getQueryRetryDelay(20)).toBe(2_000)
   })
 
-  it('defaults Query and Mutation throwOnError to false and Mutation retry to false', () => {
+  it('defaults Query and Mutation throwOnError to shouldThrowQueryError and Mutation retry to false', () => {
     const queryClient = createAppQueryClient()
     const defaults = queryClient.getDefaultOptions()
 
-    expect(defaults.queries?.throwOnError).toBe(false)
-    expect(defaults.mutations?.throwOnError).toBe(false)
+    expect(defaults.queries?.throwOnError).toBe(shouldThrowQueryError)
+    expect(defaults.mutations?.throwOnError).toBe(shouldThrowQueryError)
     expect(defaults.mutations?.retry).toBe(false)
     queryClient.clear()
+  })
+
+  it('throws 5xx, network, and contract errors to error boundary', () => {
+    expect(shouldThrowQueryError(apiError('http', 500))).toBe(true)
+    expect(shouldThrowQueryError(apiError('http', 503))).toBe(true)
+    expect(shouldThrowQueryError(apiError('network'))).toBe(true)
+    expect(shouldThrowQueryError(apiError('contract'))).toBe(true)
+    expect(shouldThrowQueryError(new Error('unknown'))).toBe(true)
+
+    expect(shouldThrowQueryError(apiError('http', 400))).toBe(false)
+    expect(shouldThrowQueryError(apiError('http', 404))).toBe(false)
+    expect(shouldThrowQueryError(apiError('aborted'))).toBe(false)
   })
 
   it('keeps existing cache data when a background refetch fails', async () => {

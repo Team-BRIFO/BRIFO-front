@@ -2,6 +2,7 @@ import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 
 interface HomeCardNewsItem {
   id: string | number
+  stockId?: string
   stock: {
     name: string
     code?: string
@@ -44,7 +45,7 @@ export default function HomeCardNewsSection({
           <button
             key={item.id}
             type="button"
-            onClick={() => onItemClick?.(item.id)}
+            onClick={() => onItemClick?.(item.stockId ?? String(item.id))}
             className="w-full text-left"
           >
             <AnalyzeCard

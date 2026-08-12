@@ -29,9 +29,11 @@ export function HomePage() {
   )
   const cardNewsItems = (home?.todayNewsCards.items ?? []).map((item) => ({
     id: item.cardId,
+    stockId: item.stock.stockId,
     stock: {
       name: item.stock.name,
       changeRate: item.stock.changeRate,
+      logoUrl: item.stock.logoUrl,
     },
     newsCount: 1,
     headline: item.headline,

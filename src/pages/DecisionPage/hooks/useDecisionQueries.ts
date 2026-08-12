@@ -1,9 +1,11 @@
-import { z } from 'zod'
-
 import {
   getDecisionResult,
   getDecisions,
 } from '@/api/generated/endpoints/decision-controller/decision-controller'
+import {
+  ApiResponseGetDecisionResultResponse,
+  ApiResponseGetDecisionsResponse,
+} from '@/api/generated/schemas/decision-controller'
 import { useApiQuery } from '@/hooks/api'
 import { decisionQueryKeys } from '@/hooks/queries/decision/decisionQueryKeys'
 import { mapDecisionDetail, mapDecisionList } from '@/mappers/decisionMapper'
@@ -14,12 +16,9 @@ export function useDecisionListQuery() {
     operation: getDecisions,
     endpoint: 'getDecisions',
     args: [],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    responseSchema: z.any() as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: 'requiredResult' as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map: (result: any) => mapDecisionList(result.items),
+    responseSchema: ApiResponseGetDecisionsResponse,
+    response: 'requiredResult',
+    map: (result) => mapDecisionList(result.items),
     staleTime: 0,
   })
 }
@@ -30,12 +29,9 @@ export function useDecisionDetailQuery(decisionId: string | null) {
     operation: getDecisionResult,
     endpoint: 'getDecisionResult',
     args: [decisionId!],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    responseSchema: z.any() as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: 'requiredResult' as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map: (result: any) => mapDecisionDetail(result),
+    responseSchema: ApiResponseGetDecisionResultResponse,
+    response: 'requiredResult',
+    map: mapDecisionDetail,
     enabled: Boolean(decisionId),
     retry: false,
     staleTime: 0,
