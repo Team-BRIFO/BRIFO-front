@@ -37,6 +37,7 @@ try {
 
   const generation = spawnSync(pnpmExecutable, ['exec', 'orval', '--config', './orval.config.ts'], {
     stdio: 'inherit',
+    shell: process.platform === 'win32',
   })
 
   if (generation.status !== 0) {

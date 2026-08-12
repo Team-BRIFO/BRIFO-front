@@ -20,24 +20,24 @@ import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import TutorialComplete from '@/components/feature/tutorial/TutorialComplete'
 import TutorialStepLayout from '@/components/feature/tutorial/TutorialStepLayout'
 import { TUTORIAL_AGENTS, TUTORIAL_STEPS } from '@/constants/tutorialSteps'
-import { HOME_CARD_NEWS_MOCK_DATA } from '@/pages/HomePage/mockData'
-import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/mockData'
 import { useCompleteOnboardingMutation } from '@/pages/TutorialPage/hooks/useCompleteOnboardingMutation'
 import { useCreateTutorialRewardMutation } from '@/pages/TutorialPage/hooks/useCreateTutorialRewardMutation'
+import {
+  TUTORIAL_HOME_CARD_NEWS_MOCK,
+  TUTORIAL_NEWS_CARD_MOCK,
+} from '@/pages/TutorialPage/mockData'
 import { PATH } from '@/routes/paths'
 import type { ConfidenceLevel } from '@/types/domain/decision'
 import type { TutorialContent } from '@/types/domain/tutorial'
 
 function CardNewsListStep() {
-  return (
-    <HomeCardNewsSection items={HOME_CARD_NEWS_MOCK_DATA.slice(0, 2)} date="8/10" time="09:30" />
-  )
+  return <HomeCardNewsSection items={TUTORIAL_HOME_CARD_NEWS_MOCK} date="8/10" time="09:30" />
 }
 
 function CardNewsDetailStep() {
   return (
     <div className="overflow-hidden">
-      <NewsCard data={MOCK_NEWS_CARDS[0]} />
+      <NewsCard data={TUTORIAL_NEWS_CARD_MOCK} />
     </div>
   )
 }

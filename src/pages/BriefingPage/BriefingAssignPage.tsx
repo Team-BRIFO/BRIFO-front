@@ -35,6 +35,7 @@ export function BriefingAssignPage() {
 
   // 모달 및 요청 결과 상태
   const [modalType, setModalType] = useState<AnalyzeModalType | null>(null)
+  const [modalErrorMessage, setModalErrorMessage] = useState<string | undefined>()
 
   const cards = newsCardQuery.data ?? []
   const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
@@ -54,16 +55,12 @@ export function BriefingAssignPage() {
     postBriefingRequest(
       { stockId, agentIds: Array.from(selectedIds) },
       {
-        onSuccess: (result) => {
-          setCreatedBriefingRequest(result)
+        onSuccess: () => {
           setModalType('SUCCESS')
         },
         onError: (error) => {
-          if (error.code === 'BRIEFING_409_01') {
-            setModalType('SUCCESS')
-          }
           // 브리핑 의뢰 마감 시간 이후 요청한 경우 (409 Conflict)
-          else if (error.code === 'BRIEFING_409_06') {
+          if (error.code === 'BRIEFING_409_06') {
             setModalType('TIME_OVER')
           }
           // 실패 후 대기 시간 미달 (429 Too Many Requests)
@@ -87,9 +84,10 @@ export function BriefingAssignPage() {
           else if (error.code === 'AP_409_03' || error.code === 'AP_409_04') {
             setModalType('EXHAUSTED')
           }
-          // 잘못된 요청, 권한 오류, 서버 내부 오류 등 기타 실패 (400, 401, 403, 404, 500)
+          // 기타 실패 (429, 409, 400 등)
           else {
-            setModalType('LLM_FAIL')
+            setModalErrorMessage(error.message || '요청 중 오류가 발생했습니다.')
+            setModalType('ERROR')
           }
         },
       },
@@ -99,7 +97,7 @@ export function BriefingAssignPage() {
   const handlePrimaryModalClick = () => {
     if (modalType === 'SUCCESS') {
       if (!stockId) return
-      navigate(PATH.BRIEFING, {
+      navigate(`${PATH.BRIEFING}?stockId=${stockId}`, {
         replace: true,
       })
       setModalType(null)
@@ -164,7 +162,7 @@ export function BriefingAssignPage() {
   const selectedAgentNames =
     agentsList
       .filter((agent) => selectedIds.has(agent.id))
-      .map((agent) => agent.nickname)
+      .map((agent) => agent.name)
       .join(', ') || '선택한 사원'
 
   return (
@@ -238,8 +236,12 @@ export function BriefingAssignPage() {
       {/* 분석 의뢰 상태 모달 */}
       <AnalyzeRequestModal
         isOpen={modalType !== null}
-        onClose={() => setModalType(null)}
+        onClose={() => {
+          setModalType(null)
+          setModalErrorMessage(undefined)
+        }}
         type={modalType ?? 'SUCCESS'}
+        errorMessage={modalErrorMessage}
         stockName={stockName}
         employeeName={selectedAgentNames}
         shortageAP={totalAP}

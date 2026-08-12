@@ -49,35 +49,20 @@ export function OfficeProgressSection({
       ) : (
         /* 브리핑 목록 */
         <div className="flex flex-col gap-4">
-          {items.map((item, index) => {
-            const REQUIRED_AGENTS = ['rookie', 'pro', 'tanker'] as const
-            const isCompleted = REQUIRED_AGENTS.every((type) => {
-              const agent = item.agents.find((a) => a.type === type)
-              return agent && agent.status === 'COMPLETED'
-            })
-            const cardType = isCompleted ? '완료' : '진행중'
-
-            const getAgentStatus = (agentType: (typeof REQUIRED_AGENTS)[number]) => {
-              const agent = item.agents.find((a) => a.type === agentType)
-              if (!agent) return cardType
-              return agent.status === 'COMPLETED' ? '완료' : '진행중'
-            }
-
-            return (
-              <BriefingCard
-                key={item.stockName}
-                rank={index + 1}
-                type={cardType}
-                stock={{ name: item.stockName }}
-                agentStatuses={{
-                  rookie: getAgentStatus('rookie'),
-                  pro: getAgentStatus('pro'),
-                  tanker: getAgentStatus('tanker'),
-                }}
-                onClick={isCompleted ? () => navigate(PATH.BRIEFING) : undefined}
-              />
-            )
-          })}
+          {items.map((item, index) => (
+            <BriefingCard
+              key={item.stockName}
+              rank={index + 1}
+              type={item.isCompleted ? '완료' : '진행중'}
+              stock={{ name: item.stockName, logoUrl: item.logoUrl }}
+              agentStatuses={item.agentStatuses}
+              onClick={
+                item.isCompleted
+                  ? () => navigate(`${PATH.BRIEFING}?stockId=${item.stockId}`)
+                  : undefined
+              }
+            />
+          ))}
         </div>
       )}
     </section>

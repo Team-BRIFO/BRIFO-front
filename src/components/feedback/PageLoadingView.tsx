@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import type { AgentStatusMap } from '@/components/feature/office/Office'
 import { Office } from '@/components/feature/office/Office'
 import { PageStatusShell } from '@/components/feedback/PageStatusShell'
@@ -19,7 +21,18 @@ export function PageLoadingView({
     pro: 'ANALYZING',
     tanker: 'ANALYZING',
   },
-}: PageLoadingViewProps) {
+  delayMs = 300,
+}: PageLoadingViewProps & { delayMs?: number }) {
+  const [show, setShow] = useState(delayMs === 0)
+
+  useEffect(() => {
+    if (delayMs === 0) return
+    const timer = setTimeout(() => setShow(true), delayMs)
+    return () => clearTimeout(timer)
+  }, [delayMs])
+
+  if (!show) return null
+
   return (
     <PageStatusShell headerText={headerText}>
       <Office agentStatusMap={agentStatusMap} />

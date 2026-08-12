@@ -14,8 +14,10 @@ import { DecisionResultModalContent } from '@/components/feature/decision/Decisi
 import { PredictionCompleteModal } from '@/components/feature/decision/PredictionCompleteModal'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
+import { useAgentListQuery } from '@/hooks/queries/agent/useAgentListQuery'
 import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingDetailQuery'
 import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecisionMutation'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
 import type { AgentType } from '@/types/domain/agent'
 import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
@@ -28,6 +30,10 @@ export function BriefingDetailPage() {
   const { mutate: submitDecision, isPending: isSubmitting } = usePostDecisionMutation(
     briefingId ?? '',
   )
+
+  const stockId = data?.stock.id ?? null
+  const { data: stockBriefings } = useStockBriefingsQuery(stockId)
+  const { data: agentsList } = useAgentListQuery()
 
   const isReady = !!data && fetchStatus !== 'fetching' && !error
   const activeTab = data?.activeTab ?? 'rookie'
@@ -44,15 +50,17 @@ export function BriefingDetailPage() {
   const handleTabChange = (val: string) => {
     const type = val as AgentType
 
-    // 실제 환경에서는 cardId로 조회한 목록에서 해당 사원의 briefingId를 찾아야 하지만,
-    // 현재는 모의 데이터 조회를 위해 하드코딩된 UUID를 매핑하여 URL을 변경합니다.
-    const MOCK_BRIEFING_IDS: Record<AgentType, string> = {
-      rookie: '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31',
-      pro: '8c3a9f61-9db5-4c0b-90ec-91d3b2a54f81',
-      tanker: '2e3f5d77-c6b3-4d13-8f88-637c8c623c44',
+    if (!stockBriefings) return
+
+    const targetBriefing = stockBriefings.items.find((item) => item.agentType === type)
+    if (targetBriefing) {
+      navigate(PATH.BRIEFING_DETAIL(targetBriefing.id), { replace: true })
     }
-    navigate(`/briefing/detail/${MOCK_BRIEFING_IDS[type]}`, { replace: true })
   }
+
+  // 백엔드 API에서 제공되지 않는 agent 디테일 스펙(레벨, 승률, 일급 등)을 AgentList API 결과를 통해 병합합니다.
+  const realAgent = agentsList?.find((a) => a.id === data?.agent.id)
+  const displayAgent = realAgent ? { ...data!.agent, ...realAgent } : data?.agent
 
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col gap-3">
@@ -99,11 +107,13 @@ export function BriefingDetailPage() {
 
             {/* 메인 브리핑 시트 (가운데 정렬) */}
             <div className="mt-2 flex justify-center">
-              <BriefingMainContentSheet
-                agent={data.agent}
-                briefing={data.briefing}
-                onConfirm={() => setIsDecisionSheetOpen(true)}
-              />
+              {data && displayAgent && (
+                <BriefingMainContentSheet
+                  agent={displayAgent}
+                  briefing={data.briefing}
+                  onConfirm={() => setIsDecisionSheetOpen(true)}
+                />
+              )}
             </div>
           </div>
         </div>

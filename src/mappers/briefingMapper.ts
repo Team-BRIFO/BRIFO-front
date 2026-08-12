@@ -1,11 +1,11 @@
-import { mapAgentType } from '@/mappers/agentMapper'
-import type { AgentDetailResponse } from '@/types/api/agent'
 import type {
   CreateBriefingResponseOutput,
   GetBriefingDetailResponseOutput,
   GetOfficeBriefingsResponseOutput,
   GetStockBriefingsResponseOutput,
 } from '@/api/generated/schemas/briefing-controller'
+import { mapAgentType } from '@/mappers/agentMapper'
+import type { AgentSummary } from '@/types/domain/agent'
 import type {
   BriefingDetailData,
   BriefingDirectionType,
@@ -14,7 +14,6 @@ import type {
   BriefingStock,
   OfficeBriefingItem,
 } from '@/types/domain/briefing'
-import { getAgentLevelProgress } from '@/utils/agentLevel'
 
 const DIRECTION_META: Record<
   'UP' | 'DOWN' | 'NEUTRAL',
@@ -31,6 +30,7 @@ function mapBriefingStock(
   return {
     id: stock.stockId,
     name: stock.name,
+    logoUrl: stock.logoUrl,
     price: stock.price,
     changeRate: stock.changeRate,
     tradeDate: stock.tradeDate,
@@ -48,14 +48,14 @@ export function mapBriefingList(result: GetStockBriefingsResponseOutput): Briefi
       nickname: item.nickname,
       status: item.status,
       direction: item.direction ? DIRECTION_META[item.direction].type : null,
-      oneLiner: item.oneLiner,
+      oneLiner: item.oneLiner ?? null,
     })),
   }
 }
 
 export function mapBriefingDetail(
   result: GetBriefingDetailResponseOutput,
-  agentDetail?: AgentDetailResponse,
+  agentSummary?: AgentSummary,
 ): BriefingDetailData {
   const direction = DIRECTION_META[result.briefing.direction]
   const agentType = mapAgentType(result.agent.agentType)
@@ -68,10 +68,10 @@ export function mapBriefingDetail(
       type: agentType,
       name: result.agent.nickname,
       modelName: result.agent.modelName,
-      level: agentDetail?.level ?? 1,
-      levelProgress: getAgentLevelProgress(agentDetail?.exp ?? 0),
-      hitRate: agentDetail?.accuracyRate ?? 0,
-      dailyAP: agentDetail?.dailySalary ?? 0,
+      level: agentSummary?.level ?? 1,
+      levelProgress: agentSummary?.levelProgress ?? 0,
+      hitRate: agentSummary?.hitRate ?? 0,
+      dailyAP: agentSummary?.dailyAP ?? 0,
     },
     briefing: {
       badgeType: direction.type,
@@ -87,19 +87,46 @@ export function mapBriefingDetail(
 }
 
 export function mapOfficeBriefings(result: GetOfficeBriefingsResponseOutput): OfficeBriefingItem[] {
-  return result.items.map((item) => ({
-    stockName: item.stockName,
-    agents: item.agents.map((agent) => ({
+  return result.items.map((item) => {
+    const agents = item.agents.map((agent) => ({
       briefingId: agent.briefingId,
       agentId: agent.agentId,
       name: agent.nickname,
       type: mapAgentType(agent.agentType),
       status: agent.status,
-    })),
-  }))
+    }))
+
+    const REQUIRED_AGENTS = ['rookie', 'pro', 'tanker'] as const
+    const isCompleted = REQUIRED_AGENTS.every((type) => {
+      const agent = agents.find((a) => a.type === type)
+      return agent && agent.status === 'COMPLETED'
+    })
+    const cardType = isCompleted ? '완료' : '진행중'
+
+    const getAgentStatus = (agentType: (typeof REQUIRED_AGENTS)[number]) => {
+      const agent = agents.find((a) => a.type === agentType)
+      if (!agent) return cardType
+      return agent.status === 'COMPLETED' ? '완료' : '진행중'
+    }
+
+    return {
+      stockId: item.stockId,
+      stockName: item.stockName,
+      logoUrl: item.logoUrl,
+      agents,
+      isCompleted,
+      agentStatuses: {
+        rookie: getAgentStatus('rookie'),
+        pro: getAgentStatus('pro'),
+        tanker: getAgentStatus('tanker'),
+      },
+    }
+  })
 }
 
-export function mapBriefingRequestResult(result: CreateBriefingResponseOutput): BriefingRequestResult {
+export function mapBriefingRequestResult(
+  result: CreateBriefingResponseOutput,
+): BriefingRequestResult {
   return {
     requestedCount: result.requestedCount,
     totalSalaryCost: result.totalSalaryCost,

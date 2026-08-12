@@ -27,6 +27,7 @@ export interface BriefingListItemData {
 export interface BriefingStock {
   id: string
   name: string
+  logoUrl?: string
   price: number
   changeRate: number
   tradeDate: string
@@ -54,8 +55,16 @@ export interface OfficeAgentStatus {
 }
 
 export interface OfficeBriefingItem {
+  stockId: string
   stockName: string
+  logoUrl?: string
   agents: OfficeAgentStatus[]
+  isCompleted: boolean
+  agentStatuses: {
+    rookie: '완료' | '진행중'
+    pro: '완료' | '진행중'
+    tanker: '완료' | '진행중'
+  }
 }
 
 export interface BriefingRequestResult {

@@ -11,7 +11,7 @@ export const UserHomeResponseSchema = ApiResponseGetUserHomeResponse.extend({
   result: generatedResult
     .extend({
       todayNewsCards: generatedTodayNewsCards.extend({
-        batchTime: KstLocalDateTimeSchema.nullable().optional(),
+        batchTime: KstLocalDateTimeSchema.optional(),
         items: generatedNewsCard
           .extend({ news: generatedNews.extend({ publishedAt: KstLocalDateTimeSchema }) })
           .array(),

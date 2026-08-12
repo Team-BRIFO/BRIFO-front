@@ -1,6 +1,5 @@
 import type { GetNewsCardsResponseOutput } from '@/api/generated/schemas/news-controller'
-import type { NewsCardData } from '@/components/feature/newsCard/NewsCard'
-
+import type { NewsCardData } from '@/types/domain/newsCard'
 import { formatRelativeTime } from '@/utils/formatRelativeTime'
 
 export function mapNewsCards(response: GetNewsCardsResponseOutput): NewsCardData[] {
