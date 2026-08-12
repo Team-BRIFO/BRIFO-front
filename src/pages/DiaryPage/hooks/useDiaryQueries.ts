@@ -56,7 +56,7 @@ export function useDiaryListQuery(size: number = DIARY_PAGE_SIZE, enabled: boole
   })
 }
 
-export function useDiaryDetailQuery(diaryId: string | null) {
+export function useDiaryDetailQuery(diaryId: string | null, enabled: boolean = true) {
   return useApiQuery({
     queryKey: diaryQueryKeys.detail(diaryId ?? ''),
     operation: getDiaryDetail,
@@ -66,7 +66,7 @@ export function useDiaryDetailQuery(diaryId: string | null) {
     response: 'requiredResult',
     map: mapDiaryDetail,
     staleTime: 0,
-    enabled: Boolean(diaryId),
+    enabled: Boolean(diaryId) && enabled,
   })
 }
 

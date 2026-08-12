@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { useCallback, useState } from 'react'
 
 import { createDiaryShareImage } from '@/api/generated/endpoints/diary-controller/diary-controller'
 import { ApiResponseCreateDiaryShareImageResponse } from '@/api/generated/schemas/diary-controller'
@@ -9,8 +10,13 @@ import type { DiaryDetail } from '@/types/domain/diary'
 
 export function useCreateDiaryShareImageMutation() {
   const queryClient = useQueryClient()
+  const [mutationDiaryId, setMutationDiaryId] = useState<string | null>(null)
 
-  return useApiMutation({
+  const {
+    mutate: executeMutation,
+    reset: resetMutation,
+    ...mutation
+  } = useApiMutation({
     operation: createDiaryShareImage,
     endpoint: 'createDiaryShareImage',
     responseSchema: ApiResponseCreateDiaryShareImageResponse,
@@ -23,4 +29,19 @@ export function useCreateDiaryShareImageMutation() {
       )
     },
   })
+
+  const mutate = useCallback(
+    (diaryId: string) => {
+      setMutationDiaryId(diaryId)
+      executeMutation(diaryId)
+    },
+    [executeMutation],
+  )
+
+  const reset = useCallback(() => {
+    setMutationDiaryId(null)
+    resetMutation()
+  }, [resetMutation])
+
+  return { ...mutation, mutate, reset, mutationDiaryId }
 }
