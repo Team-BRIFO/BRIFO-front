@@ -41,9 +41,10 @@ export function HomePage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white">
+      <main className="bg-Background1 min-h-full">
         <StatusBar
           hasStatusArea={false}
+          className="bg-white"
           left={<Logo className="h-6 w-21" />}
           right={
             <div className="flex items-center gap-3">
@@ -57,7 +58,7 @@ export function HomePage() {
         />
 
         {/* 상단 흰색 영역 */}
-        <div className="flex w-full flex-col px-4 pb-7">
+        <div className="flex w-full flex-col bg-white px-4 pb-7">
           <HomeHeader
             nickname={home?.user.nickname ?? ''}
             companyName={home?.user.companyName ?? ''}
