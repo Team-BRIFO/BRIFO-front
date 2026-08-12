@@ -47,6 +47,9 @@ export const PATH = {
   /** 사무실 탭 - SCR-07: AI 사원 보고서 리스트 (메인) */
   BRIEFING: '/briefing',
 
+  /** 사무실 - SCR-07: 특정 종목의 브리핑 리스트로 이동 */
+  BRIEFING_FOR_STOCK: (stockId: string) => `/briefing?stockId=${stockId}`,
+
   /** 사무실 - SCR-07: 사원 배치 */
   BRIEFING_ASSIGN: (stockId: string) => `/briefing/assign/${stockId}`,
   BRIEFING_ASSIGN_ROUTE: '/briefing/assign/:stockId',

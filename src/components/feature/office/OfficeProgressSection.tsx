@@ -51,15 +51,13 @@ export function OfficeProgressSection({
         <div className="flex flex-col gap-4">
           {items.map((item, index) => (
             <BriefingCard
-              key={item.stockName}
+              key={item.stockId}
               rank={index + 1}
               type={item.isCompleted ? '완료' : '진행중'}
               stock={{ name: item.stockName, logoUrl: item.logoUrl }}
               agentStatuses={item.agentStatuses}
               onClick={
-                item.isCompleted
-                  ? () => navigate(`${PATH.BRIEFING}?stockId=${item.stockId}`)
-                  : undefined
+                item.isCompleted ? () => navigate(PATH.BRIEFING_FOR_STOCK(item.stockId)) : undefined
               }
             />
           ))}

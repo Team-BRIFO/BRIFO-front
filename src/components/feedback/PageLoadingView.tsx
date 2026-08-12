@@ -24,6 +24,12 @@ export function PageLoadingView({
   delayMs = 300,
 }: PageLoadingViewProps & { delayMs?: number }) {
   const [show, setShow] = useState(delayMs === 0)
+  const [prevDelay, setPrevDelay] = useState(delayMs)
+
+  if (delayMs !== prevDelay) {
+    setPrevDelay(delayMs)
+    setShow(delayMs === 0)
+  }
 
   useEffect(() => {
     if (delayMs === 0) return

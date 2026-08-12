@@ -97,7 +97,7 @@ export function BriefingAssignPage() {
   const handlePrimaryModalClick = () => {
     if (modalType === 'SUCCESS') {
       if (!stockId) return
-      navigate(`${PATH.BRIEFING}?stockId=${stockId}`, {
+      navigate(PATH.BRIEFING_FOR_STOCK(stockId), {
         replace: true,
       })
       setModalType(null)
