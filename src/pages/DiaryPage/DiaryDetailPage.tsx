@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { ApiError } from '@/api/client/ApiError'
 import {
   StatusBar,
   StatusBarBackButton,
@@ -11,23 +12,49 @@ import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useCreateDiaryShareImageMutation } from '@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation'
 import { useDiaryDetailQuery } from '@/pages/DiaryPage/hooks/useDiaryQueries'
+import { useDiaryShareActions } from '@/pages/DiaryPage/hooks/useDiaryShareActions'
 import { PATH } from '@/routes/paths'
+
+function getShareImageErrorMessage(error: unknown) {
+  if (error instanceof ApiError) return error.serviceMessage ?? error.message
+  return '공유 카드 생성 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.'
+}
 
 /** 피드 탭 - SCR-10: 결정 카드 상세 (서버 렌더 공유 이미지 · 공유) */
 export function DiaryDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { data: detail, fetchStatus, error, refetch } = useDiaryDetailQuery(id ?? null)
+  const detailQuery = useDiaryDetailQuery(id ?? null)
+  const detail = detailQuery.data
+  const { fetchStatus, error, refetch } = detailQuery
   const {
     mutate: createShareImage,
     reset: resetShareImage,
     isIdle: isShareImageIdle,
     isPending: isGeneratingShareImage,
     isError: isShareImageFailed,
+    error: shareImageError,
+    mutationDiaryId,
   } = useCreateDiaryShareImageMutation()
 
   const needsShareImage = Boolean(detail && !detail.shareImageUrl)
+  const isCurrentDiaryMutation = mutationDiaryId === id
+  const isGeneratingCurrentShareImage = isCurrentDiaryMutation && isGeneratingShareImage
+  const isCurrentShareImageFailure = isCurrentDiaryMutation && isShareImageFailed
+  const shareImageState = detail?.shareImageUrl
+    ? 'ready'
+    : isCurrentShareImageFailure
+      ? 'failed'
+      : isGeneratingCurrentShareImage
+        ? 'generating'
+        : 'loading'
+  const { actionStates, onShare, statusMessage } = useDiaryShareActions({
+    diaryId: id ?? null,
+    shareImageUrl: detail?.shareImageUrl ?? null,
+    stockName: detail?.stockName ?? '',
+    imageState: shareImageState,
+  })
 
   // 다른 일기로 이동하면 이전 생성 요청의 상태를 비워 새 카드 생성 여부를 판단한다.
   useEffect(() => {
@@ -63,9 +90,15 @@ export function DiaryDetailPage() {
           <DiaryDetailShare
             shareImageUrl={detail.shareImageUrl}
             stockName={detail.stockName}
-            isGenerating={isGeneratingShareImage}
-            isFailed={isShareImageFailed}
+            isGenerating={isGeneratingCurrentShareImage}
+            isFailed={isCurrentShareImageFailure}
+            generationErrorMessage={
+              isCurrentShareImageFailure ? getShareImageErrorMessage(shareImageError) : undefined
+            }
             onRetry={() => id && createShareImage(id)}
+            onShare={onShare}
+            actionStates={actionStates}
+            statusMessage={statusMessage}
           />
         </div>
       ) : null}
