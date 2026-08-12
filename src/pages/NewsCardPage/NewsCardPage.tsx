@@ -10,8 +10,11 @@ import {
 import { GlossaryBottomSheet } from '@/components/feature/glossary/GlossaryBottomSheet'
 import { NewsCard } from '@/components/feature/newsCard/NewsCard'
 import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicator'
+import { Office } from '@/components/feature/office/Office'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
+import { PageStatusShell } from '@/components/feedback/PageStatusShell'
+import { StatusMessage } from '@/components/feedback/StatusMessage'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
 import { PATH } from '@/routes/paths'
 
@@ -27,6 +30,7 @@ export function NewsCardPage() {
 
   const cards = newsData ?? []
   const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
+  const isEmpty = !isLoading && !error && cards.length === 0
 
   const handleTermClick = (termId: string) => {
     setSelectedTermId(termId)
@@ -61,6 +65,16 @@ export function NewsCardPage() {
         <PageLoadingView />
       ) : error && !cards.length ? (
         <PageErrorView error={error} onRetry={() => refetch()} />
+      ) : isEmpty ? (
+        <PageStatusShell>
+          <Office />
+          <StatusMessage
+            title="오늘의 카드뉴스가 아직 준비되지 않았어요"
+            description="조금 뒤에 다시 확인해 주세요."
+            buttonText="홈으로 돌아가기"
+            onButtonClick={() => navigate(PATH.HOME)}
+          />
+        </PageStatusShell>
       ) : (
         <main className="mx-5 mt-5 flex flex-1 flex-col gap-8">
           <div className="flex flex-col overflow-x-hidden overflow-y-auto">
