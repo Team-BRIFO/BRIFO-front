@@ -33,7 +33,8 @@ export async function fetchShareImageBlob(shareImageUrl: string) {
 
   try {
     const image = await response.blob()
-    if (image.size === 0 || image.type !== 'image/png') {
+    const mimeType = image.type.split(';', 1)[0]?.trim().toLowerCase()
+    if (image.size === 0 || mimeType !== 'image/png') {
       throw new Error('The response body is not a PNG image.')
     }
 
@@ -58,7 +59,7 @@ export function createDiaryShareImageFilename(stockName: string) {
   return `brifo-decision-card-${suffix}.png`
 }
 
-/** Blob을 실제 파일 다운로드로 연결하고 Object URL을 즉시 해제한다. */
+/** Blob을 실제 파일 다운로드로 연결하고 Object URL을 다음 태스크에서 해제한다. */
 export function downloadShareImage(image: Blob, filename: string) {
   try {
     const objectUrl = URL.createObjectURL(image)
@@ -72,7 +73,7 @@ export function downloadShareImage(image: Blob, filename: string) {
       link.click()
     } finally {
       link.remove()
-      URL.revokeObjectURL(objectUrl)
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0)
     }
   } catch (cause) {
     throw new ShareImageError(

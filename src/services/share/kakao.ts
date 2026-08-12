@@ -118,10 +118,19 @@ export function loadKakaoJavascriptSdk(
 
   if (sdkLoadPromise) return sdkLoadPromise
 
-  const existingScript = document.getElementById(KAKAO_JAVASCRIPT_SDK.scriptId)
-  const script =
-    existingScript instanceof HTMLScriptElement ? existingScript : document.createElement('script')
-  const isNewScript = !existingScript
+  const existingElement = document.getElementById(KAKAO_JAVASCRIPT_SDK.scriptId)
+  // Kakao 전역 객체가 없으면, 로드 상태를 모르는 기존 태그는 완료·실패 이벤트를 놓쳤을 수 있다.
+  // 이 모듈이 로드 중이라고 표시한 script만 재사용해 Promise가 영구 대기하지 않게 한다.
+  const reusableScript =
+    existingElement instanceof HTMLScriptElement &&
+    existingElement.dataset.kakaoSdkState === 'loading'
+      ? existingElement
+      : null
+
+  if (existingElement && !reusableScript) existingElement.remove()
+
+  const script = reusableScript ?? document.createElement('script')
+  const isNewScript = !reusableScript
 
   sdkLoadPromise = new Promise<KakaoSdk>((resolve, reject) => {
     const cleanUp = () => {
@@ -131,6 +140,7 @@ export function loadKakaoJavascriptSdk(
 
     script.onload = () => {
       cleanUp()
+      script.dataset.kakaoSdkState = 'loaded'
       try {
         resolve(initializeKakaoSdk(javascriptKey))
       } catch (error) {
@@ -140,6 +150,7 @@ export function loadKakaoJavascriptSdk(
 
     script.onerror = () => {
       cleanUp()
+      script.dataset.kakaoSdkState = 'error'
       if (isNewScript) script.remove()
       reject(
         new KakaoSdkError(
@@ -151,6 +162,7 @@ export function loadKakaoJavascriptSdk(
 
     if (isNewScript) {
       script.id = KAKAO_JAVASCRIPT_SDK.scriptId
+      script.dataset.kakaoSdkState = 'loading'
       script.src = KAKAO_JAVASCRIPT_SDK.src
       script.integrity = KAKAO_JAVASCRIPT_SDK.integrity
       script.crossOrigin = 'anonymous'
