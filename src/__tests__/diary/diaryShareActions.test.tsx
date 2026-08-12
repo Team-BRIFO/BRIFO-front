@@ -15,6 +15,7 @@ import {
   loadKakaoJavascriptSdk,
   sendKakaoDefaultShare,
 } from '@/services/share/kakao'
+import { fetchShareImageBlob } from '@/services/share/shareImage'
 
 const diaryId = '019fd537-93a1-7bbb-8850-af72451ba9ad'
 const shareImageUrl = 'https://images.example.com/decision-card.png'
@@ -79,6 +80,7 @@ describe('Diary share actions', () => {
     act(() => root.unmount())
     container.remove()
     delete window.Kakao
+    vi.restoreAllMocks()
     vi.unstubAllGlobals()
     vi.unstubAllEnvs()
   })
@@ -90,6 +92,7 @@ describe('Diary share actions', () => {
   }
 
   it('downloads a predictable PNG and releases the Object URL', async () => {
+    vi.useFakeTimers()
     let downloadedFilename = ''
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function click(
       this: HTMLAnchorElement,
@@ -99,14 +102,30 @@ describe('Diary share actions', () => {
     vi.mocked(fetch).mockResolvedValue(imageResponse())
     renderHarness()
 
-    await act(async () => {
-      getButton('이미지 저장').click()
-    })
+    try {
+      await act(async () => {
+        getButton('이미지 저장').click()
+        await Promise.resolve()
+      })
 
-    expect(downloadedFilename).toBe('brifo-decision-card-삼성전자.png')
-    expect(URL.createObjectURL).toHaveBeenCalledOnce()
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:share')
-    expect(container.textContent).toContain('공유 이미지를 PNG 파일로 저장했어요.')
+      expect(downloadedFilename).toBe('brifo-decision-card-삼성전자.png')
+      expect(URL.createObjectURL).toHaveBeenCalledOnce()
+      expect(URL.revokeObjectURL).not.toHaveBeenCalled()
+      act(() => vi.runOnlyPendingTimers())
+      expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:share')
+      expect(container.textContent).toContain('공유 이미지를 PNG 파일로 저장했어요.')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('accepts a PNG MIME type with case and parameters', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      blob: async () => new Blob(['png'], { type: 'IMAGE/PNG; charset=binary' }),
+    } as Response)
+
+    await expect(fetchShareImageBlob(shareImageUrl)).resolves.toBeInstanceOf(Blob)
   })
 
   it('shows a retryable error when CORS or the image fetch fails', async () => {
@@ -174,6 +193,29 @@ describe('Kakao JavaScript SDK setup', () => {
     const template = { objectType: 'text', text: 'test' }
     await sendKakaoDefaultShare(template, 'javascript-key')
     expect(sendDefault).toHaveBeenCalledWith(template)
+  })
+
+  it('replaces a non-script element with a new SDK script', async () => {
+    const staleElement = document.createElement('div')
+    staleElement.id = 'kakao-javascript-sdk'
+    document.head.append(staleElement)
+
+    const sdkLoad = loadKakaoJavascriptSdk('javascript-key')
+    const script = document.getElementById('kakao-javascript-sdk')
+    expect(script).toBeInstanceOf(HTMLScriptElement)
+    expect(staleElement.isConnected).toBe(false)
+
+    let initialized = false
+    window.Kakao = {
+      init: () => {
+        initialized = true
+      },
+      isInitialized: () => initialized,
+      Share: { sendDefault: vi.fn() },
+    }
+    script?.dispatchEvent(new Event('load'))
+
+    await expect(sdkLoad).resolves.toBe(window.Kakao)
   })
 
   it('invokes KakaoTalk sharing synchronously while the click is still active', () => {

@@ -193,9 +193,11 @@ describe('DiaryDetailPage share image flow', () => {
     expect(container.textContent).toContain('첫 번째 일기의 공유 카드 생성에 실패했습니다.')
 
     diaryMocks.detail = { id: nextDiaryId, shareImageUrl: null, stockName: 'SK하이닉스' }
+    diaryMocks.mutation.reset.mockClear()
     act(() => getButton('다른 결정 카드 열기').click())
 
     expect(container.textContent).not.toContain('첫 번째 일기의 공유 카드 생성에 실패했습니다.')
     expect(container.textContent).toContain('공유 카드를 불러오는 중이에요.')
+    expect(diaryMocks.mutation.reset).toHaveBeenCalledOnce()
   })
 })
