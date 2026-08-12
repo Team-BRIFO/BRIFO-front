@@ -7,6 +7,7 @@ export interface DecisionListItem {
   isSettled: boolean
   stock: {
     name: string
+    logoUrl?: string
     changeRate: number
   }
 }

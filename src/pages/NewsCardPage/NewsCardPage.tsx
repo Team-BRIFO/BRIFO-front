@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
@@ -13,7 +13,6 @@ import { NewsCardIndicator } from '@/components/feature/newsCard/NewsCardIndicat
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
-import { MOCK_NEWS_CARDS } from '@/pages/NewsCardPage/mockData'
 import { PATH } from '@/routes/paths'
 
 /** 홈 탭 - SCR-05: 카드뉴스 상세 */
@@ -26,21 +25,7 @@ export function NewsCardPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedTermId, setSelectedTermId] = useState<string | null>(null)
 
-  const fallbackCards = useMemo(() => {
-    if (!stockId) return MOCK_NEWS_CARDS
-
-    if (stockId === '1') return MOCK_NEWS_CARDS.filter((c) => c.cardId.startsWith('brifo01'))
-    if (stockId === '2') return MOCK_NEWS_CARDS.filter((c) => c.cardId.startsWith('brifo02'))
-    if (stockId === '3') return MOCK_NEWS_CARDS.filter((c) => c.cardId.startsWith('brifo03'))
-
-    const prefix = stockId.split('-')[0]
-    const matched = MOCK_NEWS_CARDS.filter(
-      (c) => c.cardId === stockId || c.cardId.startsWith(prefix),
-    )
-    return matched.length > 0 ? matched : MOCK_NEWS_CARDS
-  }, [stockId])
-
-  const cards = newsData && newsData.length > 0 ? newsData : fallbackCards
+  const cards = newsData ?? []
   const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
 
   const handleTermClick = (termId: string) => {

@@ -12,6 +12,13 @@ export function shouldRetryQuery(failureCount: number, error: unknown) {
   return error.kind === 'http' && error.status !== undefined && error.status >= 500
 }
 
+export function shouldThrowQueryError(error: unknown) {
+  if (!(error instanceof ApiError)) return true
+  if (error.kind === 'aborted') return false
+  if (error.kind === 'network' || error.kind === 'contract') return true
+  return error.kind === 'http' && error.status !== undefined && error.status >= 500
+}
+
 export function getQueryRetryDelay(attemptIndex: number) {
   return Math.min(500 * 2 ** attemptIndex, MAX_RETRY_DELAY_MS)
 }
@@ -22,13 +29,13 @@ export function createAppQueryClient() {
       queries: {
         retry: shouldRetryQuery,
         retryDelay: getQueryRetryDelay,
-        throwOnError: false,
+        throwOnError: shouldThrowQueryError,
         refetchOnWindowFocus: false,
         networkMode: 'always',
       },
       mutations: {
         retry: false,
-        throwOnError: false,
+        throwOnError: shouldThrowQueryError,
         networkMode: 'always',
       },
     },

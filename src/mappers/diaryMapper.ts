@@ -1,13 +1,10 @@
 import type {
-  ConfidenceLevelCode,
-  DiaryCalendarResult,
-  DiaryDetailResult,
-  DiaryListItemResponse,
-  DiaryListResult,
-  DiaryShareImageResult,
-  DiaryStatsResult,
-  DirectionCode,
-} from '@/types/api/diary'
+  CreateDiaryShareImageResponseOutput,
+  GetDiariesResponseOutput,
+  GetDiaryCalendarResponseOutput,
+  GetDiaryDetailResponseOutput,
+  GetDiaryStatsResponseOutput,
+} from '@/api/generated/schemas/diary-controller'
 import type {
   DiaryCalendarData,
   DiaryCalendarOutcome,
@@ -19,7 +16,7 @@ import type {
   DiaryStatistics,
 } from '@/types/domain/diary'
 
-const DIRECTION_BY_CODE: Record<DirectionCode, DiaryDirection> = {
+const DIRECTION_BY_CODE: Record<'UP' | 'DOWN' | 'NEUTRAL', DiaryDirection> = {
   UP: 'up',
   DOWN: 'down',
   NEUTRAL: 'neutral',
@@ -33,7 +30,7 @@ export const DIRECTION_LABEL: Record<DiaryDirection, string> = {
 }
 
 /** 확신도 구간 라벨 (LOW = 1~2, MEDIUM = 3, HIGH = 4~5) */
-export const CONFIDENCE_LEVEL_LABEL: Record<ConfidenceLevelCode, string> = {
+export const CONFIDENCE_LEVEL_LABEL: Record<'LOW' | 'MEDIUM' | 'HIGH', string> = {
   LOW: '낮음',
   MEDIUM: '보통',
   HIGH: '높음',
@@ -48,7 +45,7 @@ export const CONFIDENCE_LEVEL_LABEL: Record<ConfidenceLevelCode, string> = {
  * 미사용: correctDecisionCount — 시안이 적중률(%)과 건수만 표시한다
  *
  */
-export function mapDiaryCalendar(result: DiaryCalendarResult): DiaryCalendarData {
+export function mapDiaryCalendar(result: GetDiaryCalendarResponseOutput): DiaryCalendarData {
   const marks = result.days.map((day) => {
     const outcomes: DiaryCalendarOutcome[] = []
     if (day.outcome.decisionWin) outcomes.push('win')
@@ -76,7 +73,7 @@ export function mapDiaryCalendar(result: DiaryCalendarResult): DiaryCalendarData
  * 사용:   diaryId · stock.name · decision.direction · decision.isCorrect · decision.apDelta
  * 미사용: stock.stockId — 종목 상세 연결이 생기면 쓸 수 있어 도메인에는 남겨둔다
  */
-export function mapDiaryEntry(item: DiaryListItemResponse): DiaryEntry {
+export function mapDiaryEntry(item: GetDiariesResponseOutput['page']['items'][number]): DiaryEntry {
   return {
     id: item.diaryId,
     stockId: item.stock.stockId,
@@ -92,7 +89,7 @@ export function mapDiaryEntry(item: DiaryListItemResponse): DiaryEntry {
 }
 
 /** 목록 페이지 응답 → 도메인 */
-export function mapDiaryEntryPage(result: DiaryListResult): DiaryEntryPage {
+export function mapDiaryEntryPage(result: GetDiariesResponseOutput): DiaryEntryPage {
   return {
     entries: result.page.items.map(mapDiaryEntry),
     nextCursor: result.page.nextCursor ?? null,
@@ -110,7 +107,7 @@ export function mapDiaryEntryPage(result: DiaryListResult): DiaryEntryPage {
  *         → 카드 내용을 서버가 PNG 로 렌더링하므로 화면이 직접 그릴 값이 없다.
  *           상세를 조립형 UI 로 바꾸면 그때 매핑을 되살린다.
  */
-export function mapDiaryDetail(result: DiaryDetailResult): DiaryDetail {
+export function mapDiaryDetail(result: GetDiaryDetailResponseOutput): DiaryDetail {
   return {
     id: result.diaryId,
     shareImageUrl: result.shareImageUrl ?? null,
@@ -118,7 +115,7 @@ export function mapDiaryDetail(result: DiaryDetailResult): DiaryDetail {
   }
 }
 
-export function mapDiaryShareImage(result: DiaryShareImageResult): DiaryShareImage {
+export function mapDiaryShareImage(result: CreateDiaryShareImageResponseOutput): DiaryShareImage {
   return {
     diaryId: result.diaryId,
     shareImageUrl: result.shareImageUrl,
@@ -138,7 +135,7 @@ export function mapDiaryShareImage(result: DiaryShareImageResult): DiaryShareIma
  *         각 배열의 settledDecisionCount · correctDecisionCount — 행이 라벨·바·% 만 보여준다
  *         agentStats[].agentId · agentStats[].agentType · stockStats[].stockId — 화면에 연결 대상이 없다
  */
-export function mapDiaryStatistics(result: DiaryStatsResult): DiaryStatistics {
+export function mapDiaryStatistics(result: GetDiaryStatsResponseOutput): DiaryStatistics {
   const { summary } = result
   const subtitle = `최근 30일 · 결정 ${summary.recent30DaysSettledDecisionCount}건`
 

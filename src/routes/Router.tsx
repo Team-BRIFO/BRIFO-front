@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { AuthLayout } from '@/layouts/AuthLayout'
+import GlobalErrorFallback from '@/pages/ErrorPage/GlobalErrorFallback'
 import { lazyNamed, withRouteLoadingFallback } from '@/routes/lazyRoute'
 import { PATH } from '@/routes/paths'
 
@@ -49,10 +50,6 @@ const LazyBriefingAssignPage = lazyNamed(
   () => import('@/pages/BriefingPage/BriefingAssignPage'),
   'BriefingAssignPage',
 )
-const LazyBriefingCompletePage = lazyNamed(
-  () => import('@/pages/BriefingPage/BriefingCompletePage'),
-  'BriefingCompletePage',
-)
 const LazyBriefingDetailPage = lazyNamed(
   () => import('@/pages/BriefingPage/BriefingDetailPage'),
   'BriefingDetailPage',
@@ -94,6 +91,7 @@ export const router = createBrowserRouter([
   // ─── AuthLayout 영역 (비로그인 전용) ─────────────────────────────
   {
     element: <AuthLayout />,
+    errorElement: <GlobalErrorFallback />,
     children: [
       {
         path: PATH.SPLASH,
@@ -137,6 +135,7 @@ export const router = createBrowserRouter([
   // ─── AppLayout 영역 (하단 GNB 탭 포함) ───────────────────────────
   {
     element: <AppLayout />,
+    errorElement: <GlobalErrorFallback />,
     children: [
       // 홈 탭
       {
@@ -168,10 +167,6 @@ export const router = createBrowserRouter([
       {
         path: PATH.BRIEFING_ASSIGN_ROUTE,
         element: withRouteLoadingFallback(<LazyBriefingAssignPage />),
-      },
-      {
-        path: PATH.BRIEFING_COMPLETE_ROUTE,
-        element: withRouteLoadingFallback(<LazyBriefingCompletePage />),
       },
       {
         path: PATH.BRIEFING_DETAIL_ROUTE,

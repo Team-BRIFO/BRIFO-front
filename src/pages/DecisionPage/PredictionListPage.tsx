@@ -109,6 +109,7 @@ export function PredictionListPage() {
                     }}
                     stock={{
                       name: item.stock.name,
+                      logoUrl: item.stock.logoUrl,
                       changeRate: item.stock.changeRate,
                     }}
                   />

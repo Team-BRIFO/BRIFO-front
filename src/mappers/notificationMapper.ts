@@ -83,7 +83,7 @@ export function getNotificationNavigationPath(notification: Notification) {
     case 'DECISION':
       return targetId ? PATH.DIARY_DETAIL(targetId) : PATH.DIARY
     case 'BRIEFING':
-      return targetId ? PATH.BRIEFING_DETAIL(targetId) : PATH.BRIEFING
+      return targetId ? PATH.BRIEFING_DETAIL(targetId) : PATH.OFFICE
     case 'BADGE':
       return PATH.MY_BADGES
     case 'AGENT':

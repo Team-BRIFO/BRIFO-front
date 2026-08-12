@@ -1,5 +1,6 @@
 import { getStocks } from '@/api/generated/endpoints/stock-controller/stock-controller'
-import { ApiResponseGetStocksResponse, type GetStocksParams } from '@/api/generated/schemas'
+import type { GetStocksParams } from '@/api/generated/schemas'
+import { ApiResponseGetStocksResponse } from '@/api/generated/schemas/stock-controller'
 import { useApiInfiniteQuery } from '@/hooks/api'
 
 export const stockQueryKeys = {

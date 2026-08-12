@@ -1,12 +1,20 @@
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
 
-export type AnalyzeModalType = 'SUCCESS' | 'SHORTAGE' | 'EXHAUSTED' | 'LLM_FAIL' | 'RETRY_COUNT'
+export type AnalyzeModalType =
+  | 'SUCCESS'
+  | 'SHORTAGE'
+  | 'EXHAUSTED'
+  | 'LLM_FAIL'
+  | 'RETRY_COUNT'
+  | 'TIME_OVER'
+  | 'ERROR'
 
 export interface AnalyzeRequestModalProps {
   isOpen: boolean
   onClose: () => void
   type?: AnalyzeModalType
+  errorMessage?: string
   employeeName?: string
   stockName?: string
   shortageAP?: number
@@ -30,6 +38,7 @@ export function AnalyzeRequestModal({
   isOpen,
   onClose,
   type = 'SUCCESS',
+  errorMessage,
   employeeName = '프로',
   stockName = '삼성전자',
   shortageAP = 20,
@@ -159,6 +168,40 @@ export function AnalyzeRequestModal({
             </Modal.Header>
             <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
               <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
+                확인
+              </Button>
+            </Modal.Footer>
+          </>
+        )
+      case 'TIME_OVER':
+        return (
+          <>
+            <Modal.Header className="flex flex-col items-center gap-4 text-center">
+              <h2 className="dnf-Title4 text-Gray-10 m-0">오늘의 의뢰 마감</h2>
+              <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
+                오늘의 브리핑 의뢰 시간이 마감되었어요.
+                <br />
+                내일 다시 찾아와 주세요!
+              </p>
+            </Modal.Header>
+            <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
+              <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
+                홈으로 가기
+              </Button>
+            </Modal.Footer>
+          </>
+        )
+      case 'ERROR':
+        return (
+          <>
+            <Modal.Header className="flex flex-col items-center gap-4 text-center">
+              <h2 className="dnf-Title4 text-Gray-10 m-0">안내</h2>
+              <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
+                {errorMessage ?? '오류가 발생했습니다.'}
+              </p>
+            </Modal.Header>
+            <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
+              <Button isFullWidth size="lg" color="primary" onClick={onClose}>
                 확인
               </Button>
             </Modal.Footer>

@@ -2,22 +2,7 @@ import type { BadgeType } from '@/components/common/Badge'
 import { Badge } from '@/components/common/Badge'
 import { NewsCardInfo } from '@/components/domain/newsCard/NewsCardInfo'
 import { NewsCardPointList } from '@/components/domain/newsCard/NewsCardPointList'
-import type { GlossaryTerm } from '@/types/domain/glossary'
-
-export interface NewsCardData {
-  cardId: string
-  publishedDate: string
-  headline: string
-  imageUrl?: string
-  importanceBadge?: string
-  source?: string
-  points: string[]
-  terms?: GlossaryTerm[]
-  relatedStocks?: Array<{
-    name: string
-    changeRate?: number
-  }>
-}
+import type { NewsCardData } from '@/types/domain/newsCard'
 
 export interface NewsCardProps {
   data: NewsCardData

@@ -1,5 +1,23 @@
+import { useEffect, useState } from 'react'
+
 /** Lazy route module을 가져오는 동안 표시하는 경량 fallback입니다. */
-export function RouteLoadingFallback() {
+export function RouteLoadingFallback({ delayMs = 300 }: { delayMs?: number }) {
+  const [show, setShow] = useState(delayMs === 0)
+  const [prevDelay, setPrevDelay] = useState(delayMs)
+
+  if (delayMs !== prevDelay) {
+    setPrevDelay(delayMs)
+    setShow(delayMs === 0)
+  }
+
+  useEffect(() => {
+    if (delayMs === 0) return
+    const timer = setTimeout(() => setShow(true), delayMs)
+    return () => clearTimeout(timer)
+  }, [delayMs])
+
+  if (!show) return null
+
   return (
     <div
       aria-busy="true"

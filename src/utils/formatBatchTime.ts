@@ -1,7 +1,7 @@
 import { getKstLocalDate, getKstLocalTime } from '@/api/contracts/localDateTime'
 
 /** Formats a validated KST LocalDateTime without a browser-local Date conversion. */
-export function formatBatchTime(batchTime?: string) {
+export function formatBatchTime(batchTime?: string | null) {
   if (!batchTime) return { date: '', time: '' }
 
   const [, month, day] = getKstLocalDate(batchTime).split('-')
