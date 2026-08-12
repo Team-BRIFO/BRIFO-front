@@ -7,8 +7,10 @@ import { Outlet } from 'react-router-dom'
  */
 export function AuthLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Outlet />
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden overscroll-none">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <Outlet />
+      </div>
     </div>
   )
 }

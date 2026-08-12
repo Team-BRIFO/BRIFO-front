@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import Logo from '@/assets/logo/brifo_logo.svg?react'
+import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import AttendanceBonusCard from '@/components/feature/home/AttendanceBonusCard'
 import AttendanceModal from '@/components/feature/home/AttendanceModal'

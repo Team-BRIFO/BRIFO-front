@@ -28,6 +28,15 @@ import { PATH } from '@/routes/paths'
 import type { ConfidenceLevel } from '@/types/domain/decision'
 import type { TutorialContent } from '@/types/domain/tutorial'
 
+/** 카드뉴스 상세·브리핑·예측 등 콘텐츠가 viewport를 넘는 STEP만 스크롤 허용 */
+const SCROLLABLE_TUTORIAL_CONTENTS: TutorialContent[] = [
+  'cardNewsDetail',
+  'analysisReport',
+  'prediction',
+  'predictionRegistered',
+  'predictionResult',
+]
+
 function CardNewsListStep() {
   return (
     <HomeCardNewsSection items={HOME_CARD_NEWS_MOCK_DATA.slice(0, 2)} date="8/10" time="09:30" />
@@ -35,11 +44,7 @@ function CardNewsListStep() {
 }
 
 function CardNewsDetailStep() {
-  return (
-    <div className="overflow-hidden">
-      <NewsCard data={MOCK_NEWS_CARDS[0]} />
-    </div>
-  )
+  return <NewsCard data={MOCK_NEWS_CARDS[0]} />
 }
 
 function AgentSelectionStep({
@@ -65,7 +70,7 @@ function AgentSelectionStep({
 
 function AnalysisRequestedStep() {
   return (
-    <section className="border-Gray-2 mt-9 flex flex-col items-center rounded-xl border px-5 py-6 text-center">
+    <section className="border-Gray-2 mt-9 flex w-full flex-col items-center rounded-xl border px-5 py-6 text-center">
       <h2 className="dnf-Title4 text-Gray-10">분석을 의뢰했어요!</h2>
       <p className="pretendard-Button2 text-Gray-6 mt-4 leading-relaxed font-normal">
         루키 · 프로 · 탱커가 삼성전자 보고서를 쓰고 있어요.
@@ -300,6 +305,7 @@ export function TutorialPage() {
         message={currentStep.message}
         buttonLabel={currentStep.buttonLabel}
         skipDisabled={!isReplay && isSubmitting}
+        isContentScrollable={SCROLLABLE_TUTORIAL_CONTENTS.includes(currentStep.content)}
         isReplay={isReplay}
         onNext={handleNext}
         onSkip={isReplay ? navigateSettings : handleSkip}

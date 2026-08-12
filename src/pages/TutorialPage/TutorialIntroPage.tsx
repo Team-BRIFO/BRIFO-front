@@ -13,21 +13,21 @@ export function TutorialIntroPage() {
 
   return (
     <main
-      className={`flex w-full flex-1 flex-col ${
-        isReplay ? 'bg-Background1 h-dvh min-h-0 overflow-hidden pb-5' : 'px-4 pb-5'
+      className={`flex min-h-0 w-full flex-1 flex-col overflow-hidden overscroll-none pb-5 ${
+        isReplay ? 'bg-Background1' : 'bg-white px-4'
       }`}
     >
       <StatusBar
         hasStatusArea={false}
-        className={isReplay ? 'w-full' : 'w-full [&>div:last-child]:px-0'}
+        className={isReplay ? 'w-full shrink-0' : 'w-full shrink-0 [&>div:last-child]:px-0'}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title={isReplay ? '튜토리얼' : undefined}
       />
 
       <section
-        className={`mt-13 flex min-h-0 flex-1 flex-col ${isReplay ? 'overflow-y-auto px-4' : ''}`}
+        className={`mt-13 flex min-h-0 flex-1 flex-col overflow-hidden ${isReplay ? 'px-4' : ''}`}
       >
-        <div>
+        <div className="shrink-0">
           <h1 className="dnf-Title3 text-Gray-10 leading-[1.2]">
             투자 튜토리얼
             <br />
@@ -40,14 +40,14 @@ export function TutorialIntroPage() {
         </div>
 
         {!isReplay && (
-          <div className="bg-Yellow-50 mt-5 flex h-12 items-center justify-center rounded-[20px]">
+          <div className="bg-Yellow-50 mt-5 flex h-12 shrink-0 items-center justify-center rounded-[20px]">
             <span className="pretendard-Body2-Semibold text-Yellow-5">튜토리얼 완료 시 보너스</span>
 
             <span className="dnf-Caption2 text-Yellow-5 ml-1">+200 AP</span>
           </div>
         )}
 
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-4 flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
           {TUTORIAL_INTRO_STEPS.map((item) => (
             <TutorialStepCard
               key={item.step}
@@ -60,7 +60,7 @@ export function TutorialIntroPage() {
         </div>
       </section>
 
-      <div className={isReplay ? 'mx-4 flex justify-center' : undefined}>
+      <div className={`shrink-0 ${isReplay ? 'mx-4 flex justify-center' : ''}`}>
         <Button
           type="button"
           size={isReplay ? 'semilg' : 'lg'}

@@ -12,6 +12,8 @@ interface TutorialStepLayoutProps {
   buttonLabel?: string
   nextDisabled?: boolean
   skipDisabled?: boolean
+  /** 콘텐츠가 긴 STEP만 내부 스크롤 허용 */
+  isContentScrollable?: boolean
   /** 설정에서 다시 보는 튜토리얼은 설정 하위 화면 헤더를 사용한다. */
   isReplay?: boolean
   onNext: () => void
@@ -26,25 +28,28 @@ export default function TutorialStepLayout({
   buttonLabel = '다음',
   nextDisabled = false,
   skipDisabled = false,
+  isContentScrollable = false,
   isReplay = false,
   onNext,
   onSkip,
 }: TutorialStepLayoutProps) {
   return (
     <main
-      className={`mx-auto flex w-full flex-col overflow-hidden pb-5 ${
-        isReplay ? 'bg-Background1 h-dvh min-h-0' : 'h-dvh bg-white px-4'
+      className={`flex min-h-0 w-full flex-1 flex-col overflow-hidden overscroll-none pb-5 ${
+        isReplay ? 'bg-Background1' : 'bg-white px-4'
       }`}
     >
       <StatusBar
         hasStatusArea={false}
-        className={isReplay ? 'w-full' : 'w-full [&>div:last-child]:px-0'}
+        className={isReplay ? 'w-full shrink-0' : 'w-full shrink-0 [&>div:last-child]:px-0'}
         right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
         title={isReplay ? '튜토리얼' : undefined}
       />
 
-      <section className={`mt-8 flex min-h-0 flex-1 flex-col ${isReplay ? 'px-4' : ''}`}>
-        <div>
+      <section
+        className={`mt-8 flex min-h-0 flex-1 flex-col overflow-hidden ${isReplay ? 'px-4' : ''}`}
+      >
+        <div className="shrink-0">
           <p className="dnf-Title3 text-Gray-10 leading-[1.15]">STEP {step}</p>
           <h1 className="dnf-Title3 mt-1 leading-[1.15] text-[#FFBE00]">{title}</h1>
           <p className="pretendard-Caption1 mt-4 text-[#8A8499]">
@@ -52,12 +57,16 @@ export default function TutorialStepLayout({
           </p>
         </div>
 
-        <AgentChat type="rookie" message={message} className="mt-8" />
+        <AgentChat type="rookie" message={message} className="mt-8 shrink-0" />
 
-        <div className="mt-8 min-h-0 flex-1 overflow-y-auto pb-2">{children}</div>
+        <div
+          className={`mt-8 min-h-0 flex-1 ${isContentScrollable ? 'overflow-y-auto overscroll-y-contain pb-2' : 'overflow-hidden'}`}
+        >
+          {children}
+        </div>
       </section>
 
-      <div className={isReplay ? 'mx-4 flex justify-center' : undefined}>
+      <div className={`shrink-0 ${isReplay ? 'mx-4 flex justify-center' : ''}`}>
         <Button
           type="button"
           size={isReplay ? 'semilg' : 'lg'}
