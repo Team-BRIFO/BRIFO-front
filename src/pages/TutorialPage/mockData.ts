@@ -1,4 +1,5 @@
 import NewscardImg from '@/assets/images/newscardImg.svg'
+import BrifoLogo from '@/assets/logo/brifo_logo_small.svg'
 import type { NewsCardData } from '@/types/domain/newsCard'
 
 export const TUTORIAL_HOME_CARD_NEWS_MOCK = [
@@ -8,6 +9,7 @@ export const TUTORIAL_HOME_CARD_NEWS_MOCK = [
       name: '브리포테크',
       code: 'BRIFO01',
       marketType: 'KOSPI',
+      logoUrl: BrifoLogo,
       price: 31850,
       changeRate: 17.96,
     },
@@ -21,6 +23,7 @@ export const TUTORIAL_HOME_CARD_NEWS_MOCK = [
       name: '브리포시스템',
       code: 'BRIFO02',
       marketType: 'KOSPI',
+      logoUrl: BrifoLogo,
       price: 25000,
       changeRate: 0.0,
     },
