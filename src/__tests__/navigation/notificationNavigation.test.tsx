@@ -119,6 +119,12 @@ vi.mock('@/pages/NewsCardPage/hooks/useNewsQueries', () => ({
     error: null,
     refetch: vi.fn(),
   }),
+  useStockNewsCards: () => ({
+    cards: [{ cardId: 'card-1', relatedStocks: [{ name: '삼성전자' }], terms: [] }],
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  }),
 }))
 
 import { BriefingAssignPage } from '@/pages/BriefingPage/BriefingAssignPage'
