@@ -13,6 +13,7 @@ export interface HomeCardNewsItem {
   newsCount: number
   headline: string
   isCompleted: boolean
+  isRequested: boolean
 }
 
 /** 홈 todayNewsCards.items를 stockId 기준으로 묶어 종목당 카드 1개로 표시 */
@@ -47,7 +48,8 @@ export function mapTodayNewsCardsByStock(
           logoUrl: item.stock.logoUrl,
         },
         headline: item.headline,
-        isCompleted: briefingStatusMap.get(stockId) ?? true,
+        isCompleted: briefingStatusMap.get(stockId) ?? false,
+        isRequested: briefingStatusMap.has(stockId),
       },
     })
   }

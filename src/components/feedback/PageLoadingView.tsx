@@ -10,6 +10,7 @@ interface PageLoadingViewProps {
   title?: string
   description?: string
   agentStatusMap?: AgentStatusMap
+  className?: string
 }
 
 export function PageLoadingView({
@@ -22,6 +23,7 @@ export function PageLoadingView({
     tanker: 'ANALYZING',
   },
   delayMs = 300,
+  className,
 }: PageLoadingViewProps & { delayMs?: number }) {
   const [show, setShow] = useState(delayMs === 0)
   const [prevDelay, setPrevDelay] = useState(delayMs)
@@ -40,7 +42,7 @@ export function PageLoadingView({
   if (!show) return null
 
   return (
-    <PageStatusShell headerText={headerText}>
+    <PageStatusShell headerText={headerText} className={className}>
       <Office agentStatusMap={agentStatusMap} />
       <StatusMessage
         title={title}

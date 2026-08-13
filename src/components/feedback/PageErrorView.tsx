@@ -11,6 +11,7 @@ interface PageErrorViewProps extends Partial<StatusMessageProps> {
   agentStatusMap?: AgentStatusMap
   error?: unknown
   headerText?: string
+  className?: string
 }
 
 export function PageErrorView({
@@ -20,6 +21,7 @@ export function PageErrorView({
   description: initialDescription,
   onRetry,
   agentStatusMap,
+  className,
   ...props
 }: PageErrorViewProps) {
   let headerText = initialHeaderText
@@ -55,7 +57,7 @@ export function PageErrorView({
   }
 
   return (
-    <PageStatusShell headerText={headerText}>
+    <PageStatusShell headerText={headerText} className={className}>
       <Office agentStatusMap={agentStatusMap} isOffline={isNetworkError} />
       <StatusMessage
         {...props}

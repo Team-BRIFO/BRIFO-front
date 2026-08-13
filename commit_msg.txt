@@ -1,0 +1,11 @@
+fix(#127): 정산 대기 409 에러 처리 등 프론트엔드 UI/API 업데이트 종합
+
+- 카드뉴스 재분석 기능 연동 및 NewsCardPage 라우팅/조회 로직 최적화
+- 급여 환급 관련 버그 수정 및 라우팅 분석/개선
+- 분석 카드 및 주요 컴포넌트의 CSS 테두리 스타일 이슈 수정
+- src/api/generated/schemas/ 내 백엔드 API 명세 동기화 및 DTO 최신화
+- PredictionListPage에서 정산 결과 조회 중 409 발생 시 '정산 대기 중입니다' 안내 및 '닫기' 액션 노출
+- BriefingDetailPage 내 잘못된 예측 등록 예외 처리 롤백
+- PredictionCompleteModal의 15:30 장 마감 시간에 따른 정산 안내 분기 처리
+- AnalyzeCard 등 브리핑 상태 렌더링 세분화 로직 수정
+- decisionMapper.ts 내 정산 상태 판단(isSettled) 로직 최적화 및 Lint 에러 해결
