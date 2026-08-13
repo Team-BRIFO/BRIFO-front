@@ -110,97 +110,99 @@ export function OnboardingPage() {
   }
 
   return (
-    <main className="flex w-full flex-1 flex-col px-4 pb-5">
+    <main className="flex min-h-0 w-full flex-1 flex-col overflow-hidden px-4 pb-5">
       <StatusBar
         hasStatusArea={false}
         className="w-full [&>div:last-child]:px-0"
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
       />
 
-      <section className="mt-8 flex flex-1 flex-col">
-        <div>
-          <h1 className="dnf-Title3 text-Gray-10 leading-tight">
-            사장님의 프로필을
-            <br />
-            <span className="text-[#FFBE00]">알려주세요!</span>
-          </h1>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+        <section className="mt-8 flex flex-col">
+          <div>
+            <h1 className="dnf-Title3 text-Gray-10 leading-tight">
+              사장님의 프로필을
+              <br />
+              <span className="text-[#FFBE00]">알려주세요!</span>
+            </h1>
 
-          <p className="pretendard-Caption1 text-Gray-6 mt-3">
-            닉네임 · 회사명 · 관심 종목 1~3개를 골라주세요
-          </p>
-        </div>
+            <p className="pretendard-Caption1 text-Gray-6 mt-3">
+              닉네임 · 회사명 · 관심 종목 1~3개를 골라주세요
+            </p>
+          </div>
 
-        <div className="mt-8 flex flex-col gap-5">
-          <TextField
-            id="onboarding-nickname"
-            name="nickname"
-            label="닉네임"
-            value={nickname}
-            placeholder={PROFILE_INPUT_PLACEHOLDER}
-            errorMessage={isNicknameTouched ? nicknameError : undefined}
-            required
-            className="[&>span:last-child]:ml-3"
-            onChange={(event) => {
-              setNickname(event.target.value)
-              setIsNicknameTouched(true)
+          <div className="mt-8 flex flex-col gap-5">
+            <TextField
+              id="onboarding-nickname"
+              name="nickname"
+              label="닉네임"
+              value={nickname}
+              placeholder={PROFILE_INPUT_PLACEHOLDER}
+              errorMessage={isNicknameTouched ? nicknameError : undefined}
+              required
+              className="[&>span:last-child]:ml-3"
+              onChange={(event) => {
+                setNickname(event.target.value)
+                setIsNicknameTouched(true)
+              }}
+            />
+
+            <TextField
+              id="onboarding-company-name"
+              name="companyName"
+              label="회사명"
+              value={companyName}
+              placeholder={PROFILE_INPUT_PLACEHOLDER}
+              errorMessage={isCompanyNameTouched ? companyNameError : undefined}
+              required
+              className="[&>span:last-child]:ml-3"
+              onChange={(event) => {
+                setCompanyName(event.target.value)
+                setIsCompanyNameTouched(true)
+              }}
+            />
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-1">
+            {PROFILE_KEYWORDS.map((keyword) => {
+              const isSelected = companyName === keyword
+
+              return (
+                <button
+                  key={keyword}
+                  type="button"
+                  aria-pressed={isSelected}
+                  aria-label={`회사명을 ${keyword}(으)로 채우기`}
+                  onClick={() => {
+                    setCompanyName(keyword)
+                    setIsCompanyNameTouched(true)
+                  }}
+                  className={`pretendard-Caption2 focus-visible:ring-Yellow-45 rounded-full px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none ${
+                    isSelected
+                      ? 'bg-Yellow-45 text-Yellow-5'
+                      : 'bg-Yellow-100 text-Yellow-10 hover:bg-Yellow-80'
+                  }`}
+                >
+                  # {keyword}
+                </button>
+              )
+            })}
+          </div>
+
+          <InterestStockSection
+            stocks={stocks}
+            searchKeyword={searchKeyword}
+            selectedStockIds={selectedStockIds}
+            selectedStocks={selectedStocks}
+            onToggleStock={handleToggleStock}
+            onOpenSearch={() => {
+              setHasVisitedStockSelection(true)
+              setIsStockSearchOpen(true)
             }}
+            errorMessage={hasVisitedStockSelection ? interestStocksError : undefined}
           />
-
-          <TextField
-            id="onboarding-company-name"
-            name="companyName"
-            label="회사명"
-            value={companyName}
-            placeholder={PROFILE_INPUT_PLACEHOLDER}
-            errorMessage={isCompanyNameTouched ? companyNameError : undefined}
-            required
-            className="[&>span:last-child]:ml-3"
-            onChange={(event) => {
-              setCompanyName(event.target.value)
-              setIsCompanyNameTouched(true)
-            }}
-          />
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-1">
-          {PROFILE_KEYWORDS.map((keyword) => {
-            const isSelected = companyName === keyword
-
-            return (
-              <button
-                key={keyword}
-                type="button"
-                aria-pressed={isSelected}
-                aria-label={`회사명을 ${keyword}(으)로 채우기`}
-                onClick={() => {
-                  setCompanyName(keyword)
-                  setIsCompanyNameTouched(true)
-                }}
-                className={`pretendard-Caption2 focus-visible:ring-Yellow-45 rounded-full px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none ${
-                  isSelected
-                    ? 'bg-Yellow-45 text-Yellow-5'
-                    : 'bg-Yellow-100 text-Yellow-10 hover:bg-Yellow-80'
-                }`}
-              >
-                # {keyword}
-              </button>
-            )
-          })}
-        </div>
-
-        <InterestStockSection
-          stocks={stocks}
-          searchKeyword={searchKeyword}
-          selectedStockIds={selectedStockIds}
-          selectedStocks={selectedStocks}
-          onToggleStock={handleToggleStock}
-          onOpenSearch={() => {
-            setHasVisitedStockSelection(true)
-            setIsStockSearchOpen(true)
-          }}
-          errorMessage={hasVisitedStockSelection ? interestStocksError : undefined}
-        />
-      </section>
+        </section>
+      </div>
 
       <Button
         type="button"
@@ -209,7 +211,7 @@ export function OnboardingPage() {
         isFullWidth
         disabled={!isFormValid || updateProfile.isPending || stocksQuery.isLoading || !isCsrfReady}
         onClick={handleSubmit}
-        className="mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
+        className="mt-6 shrink-0 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
       >
         {updateProfile.isPending ? '저장 중...' : '다음'}
       </Button>

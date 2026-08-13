@@ -98,7 +98,7 @@ export default function AgreementPage() {
   }
 
   return (
-    <main className="flex w-full flex-1 flex-col px-4 pb-5">
+    <main className="flex min-h-0 w-full flex-1 flex-col overflow-hidden px-4 pb-5">
       <StatusBar
         hasStatusArea={false}
         className="w-full [&>div:last-child]:px-0"
@@ -106,46 +106,50 @@ export default function AgreementPage() {
         title="약관동의"
       />
 
-      <div className="mt-8">
-        <h1 className="dnf-Title3 text-Gray-10 leading-[1.2] whitespace-pre-line">
-          시작하기 전에{'\n'}
-          <span className="text-[#FFBE00]">약관에 동의해주세요</span>
-        </h1>
-      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+        <div className="mt-8">
+          <h1 className="dnf-Title3 text-Gray-10 leading-[1.2] whitespace-pre-line">
+            시작하기 전에{'\n'}
+            <span className="text-[#FFBE00]">약관에 동의해주세요</span>
+          </h1>
+        </div>
 
-      <div className="mt-8">
-        <UserAgreementItem
-          label="약관에 전체 동의"
-          checked={isAllChecked}
-          showType={false}
-          variant="all"
-          onToggle={handleToggleAll}
-          className="pretendard-Body2-Semibold text-Gray-9"
-        />
+        <div className="mt-8">
+          <UserAgreementItem
+            label="약관에 전체 동의"
+            checked={isAllChecked}
+            showType={false}
+            variant="all"
+            onToggle={handleToggleAll}
+            className="pretendard-Body2-Semibold text-Gray-9"
+          />
 
-        <div className="border-Gray-2 mt-2 border-t">
-          {AGREEMENTS.map((agreement) => (
-            <UserAgreementItem
-              key={agreement.id}
-              label={agreement.label}
-              type={agreement.type}
-              checked={checked[agreement.id]}
-              onToggle={() => handleToggle(agreement.id)}
-              onView={() =>
-                navigate(PATH.AGREEMENT_DETAIL, {
-                  state: {
-                    agreementId: agreement.id,
-                    policyId: findPolicyByAgreementId(policiesQuery.data?.items ?? [], agreement.id)
-                      ?.policyId,
-                  },
-                })
-              }
-            />
-          ))}
+          <div className="border-Gray-2 mt-2 border-t">
+            {AGREEMENTS.map((agreement) => (
+              <UserAgreementItem
+                key={agreement.id}
+                label={agreement.label}
+                type={agreement.type}
+                checked={checked[agreement.id]}
+                onToggle={() => handleToggle(agreement.id)}
+                onView={() =>
+                  navigate(PATH.AGREEMENT_DETAIL, {
+                    state: {
+                      agreementId: agreement.id,
+                      policyId: findPolicyByAgreementId(
+                        policiesQuery.data?.items ?? [],
+                        agreement.id,
+                      )?.policyId,
+                    },
+                  })
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="mt-auto">
+      <div className="shrink-0 pt-6">
         <Button
           isFullWidth
           disabled={

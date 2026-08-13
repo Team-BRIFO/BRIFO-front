@@ -100,8 +100,8 @@ export default function AgreementDetailPage() {
 
   return (
     <main
-      className={`flex w-full flex-1 flex-col pb-5 ${
-        readOnly ? 'h-full min-h-0 overflow-hidden' : 'px-4'
+      className={`flex min-h-0 w-full flex-1 flex-col pb-5 ${
+        readOnly ? 'h-full overflow-hidden' : 'overflow-hidden px-4'
       }`}
     >
       <StatusBar
