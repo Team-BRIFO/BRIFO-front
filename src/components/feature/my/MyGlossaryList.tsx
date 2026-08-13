@@ -6,7 +6,6 @@ import type { MyGlossaryEntry } from '@/types/domain/glossary'
 export interface MyGlossaryListProps {
   learnedTermCount: number
   entries: MyGlossaryEntry[]
-  onSelectEntry?: (termId: string) => void
   hasNext?: boolean
   onLoadMore?: () => void
   isLoadingMore?: boolean
@@ -19,7 +18,6 @@ export interface MyGlossaryListProps {
 export function MyGlossaryList({
   learnedTermCount,
   entries,
-  onSelectEntry,
   hasNext = false,
   onLoadMore,
   isLoadingMore = false,
@@ -48,7 +46,7 @@ export function MyGlossaryList({
         <ul className="flex flex-col gap-2">
           {entries.map((entry) => (
             <li key={entry.termId}>
-              <GlossaryCard entry={entry} onClick={() => onSelectEntry?.(entry.termId)} />
+              <GlossaryCard entry={entry} />
             </li>
           ))}
         </ul>
