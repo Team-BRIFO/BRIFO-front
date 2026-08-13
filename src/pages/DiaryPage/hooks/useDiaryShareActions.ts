@@ -111,12 +111,10 @@ export function useDiaryShareActions({
       !diaryId ||
       !shareImage ||
       !kakaoJavascriptKey ||
-      currentKakaoSdkStatus?.state !== 'ready' ||
-      currentKakaoImageStatus?.state === 'uploading' ||
-      currentKakaoImageStatus?.state === 'ready' ||
-      currentKakaoImageStatus?.state === 'error'
-    )
+      currentKakaoSdkStatus?.state !== 'ready'
+    ) {
       return
+    }
 
     let isCurrentUpload = true
     const imageFile = new File([shareImage], createDiaryShareImageFilename(stockName), {
@@ -150,14 +148,9 @@ export function useDiaryShareActions({
     return () => {
       isCurrentUpload = false
     }
-  }, [
-    currentKakaoImageStatus?.state,
-    currentKakaoSdkStatus?.state,
-    diaryId,
-    kakaoJavascriptKey,
-    shareImage,
-    stockName,
-  ])
+    // kakaoImageStatus는 이 effect가 쓰는 결과 상태라 의존성에 넣으면
+    // uploading 전환 시 cleanup이 업로드 완료를 버려 버튼이 영구 비활성화된다.
+  }, [currentKakaoSdkStatus?.state, diaryId, kakaoJavascriptKey, shareImage, stockName])
 
   const saveShareImage = useCallback(() => {
     if (!diaryId || !shareImage || processingTarget) return

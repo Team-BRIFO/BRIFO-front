@@ -139,6 +139,33 @@ describe('Diary share actions', () => {
     )
     expect(uploadImage).toHaveBeenCalledOnce()
   })
+
+  it('enables Kakao share after a delayed image upload finishes', async () => {
+    vi.stubEnv('VITE_KAKAO_JAVASCRIPT_KEY', 'javascript-key')
+    vi.stubEnv('VITE_KAKAO_SHARE_WEB_URL', 'https://brifo.example.com')
+    let resolveUpload: (value: { infos: { original: { url: string } } }) => void = () => undefined
+    const uploadImage = vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveUpload = resolve
+        }),
+    )
+    window.Kakao = {
+      init: vi.fn(),
+      isInitialized: () => true,
+      Share: { sendDefault: vi.fn(), uploadImage },
+    }
+    renderHarness()
+
+    await vi.waitFor(() => expect(uploadImage).toHaveBeenCalledOnce())
+    expect(getButton('카카오톡으로 공유').disabled).toBe(true)
+
+    await act(async () => {
+      resolveUpload({ infos: { original: { url: 'https://k.kakaocdn.net/decision-card.png' } } })
+    })
+
+    await vi.waitFor(() => expect(getButton('카카오톡으로 공유').disabled).toBe(false))
+  })
 })
 
 describe('Kakao JavaScript SDK setup', () => {
