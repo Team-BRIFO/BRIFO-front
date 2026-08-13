@@ -38,7 +38,7 @@ export function BriefingPage() {
           shouldCloseOnOverlayClick={false}
         >
           <Modal.Header className="pt-4">
-            <h2 className="dnf-Title1 text-Gray-10">알림</h2>
+            <h2 className="dnf-Title3 text-Gray-10">알림</h2>
           </Modal.Header>
           <Modal.Body className="py-4">
             <p className="pretendard-Body1-Regular text-Gray-8 text-center">
@@ -54,6 +54,9 @@ export function BriefingPage() {
       </div>
     )
   }
+
+  const validItems = data?.items.filter((item) => item.status !== 'FAILED') ?? []
+  const requestedCount = validItems.length
 
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col">
@@ -91,38 +94,38 @@ export function BriefingPage() {
             <div className="flex flex-col gap-4">
               <div>
                 <h2 className="dnf-Subtitle2 text-Gray-10">AI 사원 브리핑</h2>
-                <p className="pretendard-Button2 text-Gray-6 mt-1">
-                  세 사원이 같은 종목을 다르게 봅니다
-                </p>
+                {requestedCount > 1 && (
+                  <p className="pretendard-Button2 text-Gray-6 mt-1">
+                    {requestedCount === 2
+                      ? '두 사원이 같은 종목을 다르게 봅니다'
+                      : '세 사원이 같은 종목을 다르게 봅니다'}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-3">
-                {data.items.filter((item) => item.status !== 'FAILED').length === 0 ? (
+                {requestedCount === 0 ? (
                   <p className="pretendard-Body2-Regular text-Gray-6 py-10 text-center">
                     아직 도착한 브리핑이 없어요.
                   </p>
                 ) : (
-                  data.items
-                    .filter((item) => item.status !== 'FAILED')
-                    .map((item) => (
-                      <BriefingAgentListItem
-                        key={item.id}
-                        agentType={item.agentType}
-                        agentName={item.nickname}
-                        badgeType={item.direction}
-                        comment={item.oneLiner}
-                        onClick={() =>
-                          item.status === 'COMPLETED'
-                            ? navigate(PATH.BRIEFING_DETAIL(item.id))
-                            : null
-                        }
-                        className={
-                          item.status !== 'COMPLETED'
-                            ? 'cursor-not-allowed opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    ))
+                  validItems.map((item) => (
+                    <BriefingAgentListItem
+                      key={item.id}
+                      agentType={item.agentType}
+                      agentName={item.nickname}
+                      badgeType={item.direction}
+                      comment={item.oneLiner}
+                      onClick={() =>
+                        item.status === 'COMPLETED' ? navigate(PATH.BRIEFING_DETAIL(item.id)) : null
+                      }
+                      className={
+                        item.status !== 'COMPLETED'
+                          ? 'cursor-not-allowed opacity-50'
+                          : 'cursor-pointer'
+                      }
+                    />
+                  ))
                 )}
               </div>
             </div>
