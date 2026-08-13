@@ -35,7 +35,9 @@ export function useStockNewsCards(stockId: string | null) {
 
     const detailCards = detailQuery.data ?? []
     const homeItems =
-      homeQuery.data?.todayNewsCards.items.filter((item) => item.stock.stockId === stockId) ?? []
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      homeQuery.data?.todayNewsCards.items.filter((item: any) => item.stock.stockId === stockId) ??
+      []
 
     if (homeItems.length === 0) return detailCards
     return mergeStockNewsCards(homeItems, detailCards)

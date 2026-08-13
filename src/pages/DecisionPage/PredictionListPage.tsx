@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { PredictionDecisionCard } from '@/components/feature/decision/PredictionDecisionCard'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
@@ -100,7 +99,11 @@ export function PredictionListPage() {
             {/* 예측 리스트 */}
             <div className="flex flex-col gap-4">
               {decisions.map((item) => (
-                <PredictionDecisionCard key={item.id} decision={item} isAfterMarketClose={isAfterMarketClose} />
+                <PredictionDecisionCard
+                  key={item.id}
+                  decision={item}
+                  isAfterMarketClose={isAfterMarketClose}
+                />
               ))}
             </div>
           </>

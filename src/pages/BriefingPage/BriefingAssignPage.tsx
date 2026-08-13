@@ -30,10 +30,8 @@ export function BriefingAssignPage() {
   const agentsQuery = useAgentListQuery()
   const briefingsQuery = useStockBriefingsQuery(stockId ?? null)
   const agentsList = agentsQuery.data ?? []
-  const isFetching =
-    newsCardQuery.fetchStatus === 'fetching' ||
-    agentsQuery.fetchStatus === 'fetching' ||
-    briefingsQuery.fetchStatus === 'fetching'
+  const isQueriesPending =
+    newsCardQuery.isPending || agentsQuery.isPending || briefingsQuery.isPending
   const hasError = !!newsCardQuery.error || !!agentsQuery.error || !!briefingsQuery.error
 
   const requestedAgentIds = new Set(
@@ -209,13 +207,14 @@ export function BriefingAssignPage() {
       {hasError ? (
         <PageErrorView
           title="사원 배치 정보를 불러오지 못했어요"
-          error={newsCardQuery.error || agentsQuery.error}
+          error={newsCardQuery.error || agentsQuery.error || briefingsQuery.error}
           onRetry={() => {
             newsCardQuery.refetch()
             agentsQuery.refetch()
+            briefingsQuery.refetch()
           }}
         />
-      ) : isFetching || !newsCardQuery.data ? (
+      ) : isQueriesPending || !newsCardQuery.data || !agentsQuery.data || !briefingsQuery.data ? (
         <PageLoadingView />
       ) : agentsList.length === 0 ? (
         <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />

@@ -1,5 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+import Button from '@/components/common/Button'
+import Modal from '@/components/common/Modal'
 import {
   StatusBar,
   StatusBarBackButton,
@@ -19,13 +21,47 @@ export function BriefingPage() {
 
   const { data, fetchStatus, error, refetch } = useStockBriefingsQuery(stockId)
 
+  if (!stockId) {
+    return (
+      <div className="bg-Background1 flex h-screen w-full flex-col">
+        <StatusBar
+          hasStatusArea={false}
+          className="bg-White"
+          left={<StatusBarBackButton onClick={() => navigate(PATH.OFFICE)} />}
+          title="브리핑"
+          right={<StatusBarNotificationButton />}
+        />
+        <Modal
+          isOpen={true}
+          onClose={() => navigate(-1)}
+          shouldCloseOnEscape={false}
+          shouldCloseOnOverlayClick={false}
+        >
+          <Modal.Header className="pt-4">
+            <h2 className="dnf-Title1 text-Gray-10">알림</h2>
+          </Modal.Header>
+          <Modal.Body className="py-4">
+            <p className="pretendard-Body1-Regular text-Gray-8 text-center">
+              유효한 종목이 아닙니다.
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button size="lg" isFullWidth color="primary" onClick={() => navigate(PATH.OFFICE)}>
+              확인
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col">
       {/* 글로벌 상태바 헤더 */}
       <StatusBar
         hasStatusArea={false}
         className="bg-White"
-        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
+        left={<StatusBarBackButton onClick={() => navigate(PATH.OFFICE)} />}
         title="브리핑"
         right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />

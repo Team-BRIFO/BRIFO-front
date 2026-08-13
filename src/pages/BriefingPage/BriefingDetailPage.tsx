@@ -19,14 +19,13 @@ import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingDe
 import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecisionMutation'
 import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
-import type { AgentType } from '@/types/domain/agent'
 import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
 
 export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()
   const navigate = useNavigate()
 
-  const { data, fetchStatus, error, refetch } = useBriefingDetailQuery(briefingId ?? null)
+  const { data, error, refetch } = useBriefingDetailQuery(briefingId ?? null)
   const { mutate: submitDecision, isPending: isSubmitting } = usePostDecisionMutation(
     briefingId ?? '',
   )
@@ -35,8 +34,8 @@ export function BriefingDetailPage() {
   const { data: stockBriefings } = useStockBriefingsQuery(stockId)
   const { data: agentsList } = useAgentListQuery()
 
-  const isReady = !!data && fetchStatus !== 'fetching' && !error
-  const activeTab = data?.activeTab ?? 'rookie'
+  const isReady = !!data && !error
+  const activeTab = briefingId ?? ''
 
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
@@ -48,19 +47,12 @@ export function BriefingDetailPage() {
   } | null>(null)
 
   const handleTabChange = (val: string) => {
-    const type = val as AgentType
-
-    if (!stockBriefings) return
-
-    const targetBriefing = stockBriefings.items.find((item) => item.agentType === type)
-    if (targetBriefing) {
-      navigate(PATH.BRIEFING_DETAIL(targetBriefing.id), { replace: true })
-    }
+    navigate(PATH.BRIEFING_DETAIL(val), { replace: true })
   }
 
   // 백엔드 API에서 제공되지 않는 agent 디테일 스펙(레벨, 승률, 일급 등)을 AgentList API 결과를 통해 병합합니다.
-  const realAgent = agentsList?.find((a) => a.id === data?.agent.id)
-  const displayAgent = realAgent ? { ...data!.agent, ...realAgent } : data?.agent
+  const realAgent = data ? agentsList?.find((a) => a.id === data.agent.id) : undefined
+  const displayAgent = data ? { ...data.agent, ...(realAgent ?? {}) } : undefined
 
   return (
     <div className="bg-Background1 flex min-h-full w-full flex-col gap-3 pb-8">
@@ -77,13 +69,13 @@ export function BriefingDetailPage() {
         right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
 
-      {!!error && fetchStatus === 'idle' ? (
+      {error ? (
         <PageErrorView
           title="브리핑 데이터를 불러오지 못했습니다."
           error={error}
           onRetry={() => refetch()}
         />
-      ) : fetchStatus === 'fetching' || !data ? (
+      ) : !data ? (
         <PageLoadingView />
       ) : (
         <div className="flex flex-col">
@@ -99,20 +91,14 @@ export function BriefingDetailPage() {
               segmentedType={1}
               value={activeTab}
               onChange={handleTabChange}
-              items={[
-                {
-                  label: '루키',
-                  value: 'rookie',
-                },
-                {
-                  label: '프로',
-                  value: 'pro',
-                },
-                {
-                  label: '탱커',
-                  value: 'tanker',
-                },
-              ]}
+              items={
+                stockBriefings?.items
+                  .filter((item) => item.status === 'COMPLETED')
+                  .map((item) => ({
+                    label: item.nickname,
+                    value: item.id,
+                  })) ?? []
+              }
             />
 
             {/* 메인 브리핑 시트 (가운데 정렬) */}

@@ -102,7 +102,10 @@ export function NewsCardPage() {
                 size="lg"
                 isFullWidth
                 color="secondary"
-                onClick={() => navigate(PATH.BRIEFING_FOR_STOCK(stockId || ''))}
+                disabled={!stockId}
+                onClick={() => {
+                  if (stockId) navigate(PATH.BRIEFING_FOR_STOCK(stockId))
+                }}
               >
                 분석 현황 보기
               </Button>
@@ -112,7 +115,10 @@ export function NewsCardPage() {
                   size="lg"
                   isFullWidth
                   color="primary"
-                  onClick={() => navigate(PATH.BRIEFING_ASSIGN(stockId || ''))}
+                  disabled={!stockId}
+                  onClick={() => {
+                    if (stockId) navigate(PATH.BRIEFING_ASSIGN(stockId))
+                  }}
                 >
                   사원에게 추가 분석 의뢰하기
                 </Button>
@@ -120,7 +126,10 @@ export function NewsCardPage() {
                   size="lg"
                   isFullWidth
                   color="secondary"
-                  onClick={() => navigate(PATH.BRIEFING_FOR_STOCK(stockId || ''))}
+                  disabled={!stockId}
+                  onClick={() => {
+                    if (stockId) navigate(PATH.BRIEFING_FOR_STOCK(stockId))
+                  }}
                 >
                   분석 현황 보기
                 </Button>
@@ -130,7 +139,10 @@ export function NewsCardPage() {
                 size="lg"
                 isFullWidth
                 color="primary"
-                onClick={() => navigate(PATH.BRIEFING_ASSIGN(stockId || ''))}
+                disabled={!stockId}
+                onClick={() => {
+                  if (stockId) navigate(PATH.BRIEFING_ASSIGN(stockId))
+                }}
               >
                 사원에게 분석 의뢰하기
               </Button>

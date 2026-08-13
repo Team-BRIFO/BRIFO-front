@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { ApiError } from '@/api/client/ApiError'
 import Modal from '@/components/common/Modal'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { DecisionResultModalContent } from '@/components/feature/decision/DecisionResultModal'
@@ -17,10 +18,16 @@ interface PredictionDecisionCardProps {
  * 결정 카드 한 건과 정산 결과 모달.
  * 모달 상태를 카드 단위로 보유해 다른 결정 카드의 렌더를 막는다.
  */
-export function PredictionDecisionCard({ decision, isAfterMarketClose }: PredictionDecisionCardProps) {
+export function PredictionDecisionCard({
+  decision,
+  isAfterMarketClose,
+}: PredictionDecisionCardProps) {
   const [isResultModalOpen, setIsResultModalOpen] = useState(false)
   const resultQuery = useDecisionDetailQuery(isResultModalOpen ? decision.id : null)
   const detail = resultQuery.data
+
+  const isSettlementWaiting =
+    resultQuery.error instanceof ApiError && resultQuery.error.status === 409
 
   const openResultModal = () => {
     if (decision.isSettled) setIsResultModalOpen(true)
@@ -66,9 +73,12 @@ export function PredictionDecisionCard({ decision, isAfterMarketClose }: Predict
         <Modal isOpen onClose={closeResultModal}>
           {!!resultQuery.error && resultQuery.fetchStatus === 'idle' && !detail ? (
             <PageErrorView
-              title="예측 결과를 불러오지 못했어요"
+              title={isSettlementWaiting ? '정산 대기 중입니다' : '예측 결과를 불러오지 못했어요'}
+              description={isSettlementWaiting ? '잠시 후 다시 확인해 주세요.' : undefined}
               error={resultQuery.error}
-              onRetry={() => resultQuery.refetch()}
+              onRetry={isSettlementWaiting ? undefined : () => resultQuery.refetch()}
+              buttonText={isSettlementWaiting ? '닫기' : undefined}
+              onButtonClick={isSettlementWaiting ? closeResultModal : undefined}
             />
           ) : !detail ? (
             <PageLoadingView />

@@ -10,11 +10,11 @@ function mapConfidenceLevel(value: number): ConfidenceLevel {
 }
 
 export function mapDecisionList(items: GetDecisionsResponseOutput['items']): DecisionListItem[] {
-  const now = new Date()
-  const kstOffset = 9 * 60 * 60 * 1000
-  const kstTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + kstOffset)
-
   return items.map((item) => {
+    const now = new Date()
+    const kstOffset = 9 * 60 * 60 * 1000
+    const kstTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + kstOffset)
+
     let isSettled: boolean
 
     // API 응답에 isSettled 필드가 추가되기 전까지 tradeDate 기반으로 정산 여부 판단
