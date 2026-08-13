@@ -39,15 +39,21 @@ export default function TutorialStepLayout({
         isReplay ? 'bg-Background1' : 'bg-white px-4'
       }`}
     >
-      <StatusBar
-        hasStatusArea={false}
-        className={isReplay ? 'w-full shrink-0' : 'w-full shrink-0 [&>div:last-child]:px-0'}
-        right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
-        title={isReplay ? '튜토리얼' : undefined}
-      />
+      <div className={`sticky top-0 z-50 ${isReplay ? 'bg-Background1' : 'bg-white'}`}>
+        <StatusBar
+          hasStatusArea={false}
+          className={isReplay ? 'w-full shrink-0' : 'w-full shrink-0 [&>div:last-child]:px-0'}
+          right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
+          title={isReplay ? '튜토리얼' : undefined}
+        />
+      </div>
 
       <section
-        className={`mt-8 flex min-h-0 flex-1 flex-col overflow-hidden ${isReplay ? 'px-4' : ''}`}
+        className={`mt-8 flex min-h-0 flex-1 flex-col ${
+          isContentScrollable
+            ? 'no-scrollbar overflow-y-auto overscroll-y-contain'
+            : 'overflow-hidden'
+        } ${isReplay ? 'px-4' : ''}`}
       >
         <div className="shrink-0">
           <p className="dnf-Title3 text-Gray-10 leading-[1.15]">STEP {step}</p>
@@ -59,11 +65,7 @@ export default function TutorialStepLayout({
 
         <AgentChat type="rookie" message={message} className="mt-8 shrink-0" />
 
-        <div
-          className={`mt-8 min-h-0 flex-1 ${isContentScrollable ? 'overflow-y-auto overscroll-y-contain pb-2' : 'overflow-hidden'}`}
-        >
-          {children}
-        </div>
+        <div className="mt-8 min-h-0 flex-1 shrink-0 pb-2">{children}</div>
       </section>
 
       <div className={`shrink-0 ${isReplay ? 'mx-4 flex justify-center' : ''}`}>

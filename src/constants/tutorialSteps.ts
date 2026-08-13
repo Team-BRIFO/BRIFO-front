@@ -122,4 +122,14 @@ export const TUTORIAL_AGENTS: AgentSummary[] = [
     hitRate: 64,
     dailyAP: 10,
   },
+  {
+    id: 'tanker',
+    type: 'tanker',
+    name: '탱커',
+    modelName: 'Claude Sonnet 3.5',
+    level: 7,
+    levelProgress: 30,
+    hitRate: 64,
+    dailyAP: 10,
+  },
 ]
