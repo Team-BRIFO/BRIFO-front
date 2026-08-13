@@ -29,7 +29,7 @@ export function BriefingPage() {
           className="bg-White"
           left={<StatusBarBackButton onClick={() => navigate(PATH.OFFICE)} />}
           title="브리핑"
-          right={<StatusBarNotificationButton />}
+          right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
         />
         <Modal
           isOpen={true}
