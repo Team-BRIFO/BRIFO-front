@@ -338,6 +338,27 @@ describe('createBrifoAxiosInstance', () => {
     expect(onSessionExpired).toHaveBeenCalledOnce()
   })
 
+  it('expires the session when a current-user request returns 403 without a refresh token', async () => {
+    const tokenStore = createTokenStore(null, null)
+    const onSessionExpired = vi.fn()
+    const adapter = createAxiosAdapter(() => ({
+      data: { success: false, code: 'AUTH_403', message: '접근 권한이 없습니다.' },
+      status: 403,
+    }))
+    const client = createBrifoAxiosInstance({
+      baseURL: API_BASE_URL,
+      adapter,
+      tokenStore,
+      onSessionExpired,
+    })
+
+    await expect(client.get('/api/users/me/policies/pending')).rejects.toMatchObject({
+      response: { status: 403 },
+    })
+    expect(tokenStore.clear).toHaveBeenCalledOnce()
+    expect(onSessionExpired).toHaveBeenCalledOnce()
+  })
+
   it('does not retry an original request aborted while refresh is pending', async () => {
     const tokenStore = createTokenStore('expired-access', 'refresh-token')
     const controller = new AbortController()
