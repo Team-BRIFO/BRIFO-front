@@ -9,7 +9,6 @@ import type {
   ApiResponseDevBatchRunResponse,
   ApiResponseDevSingleNewsCardGenerationResponse,
   DevDateBatchRequest,
-  DevNewsCollectionBatchRequest,
   DevSingleNewsCardGenerationRequest,
 } from '../../schemas'
 
@@ -19,7 +18,7 @@ import type { BodyType } from '../../../client/axiosInstance'
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 export const rerunNewsCollection = (
-  devNewsCollectionBatchRequest: BodyType<DevNewsCollectionBatchRequest>,
+  devDateBatchRequest: BodyType<DevDateBatchRequest>,
   options?: SecondParameter<typeof axiosInstance<ApiResponseDevBatchRunResponse>>,
 ) => {
   return axiosInstance<ApiResponseDevBatchRunResponse>(
@@ -27,7 +26,7 @@ export const rerunNewsCollection = (
       url: `/api/dev/batches/news-collection/rerun`,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      data: devNewsCollectionBatchRequest,
+      data: devDateBatchRequest,
     },
     options,
   )
