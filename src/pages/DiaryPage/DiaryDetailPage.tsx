@@ -11,7 +11,10 @@ import { DiaryDetailShare } from '@/components/feature/diary/DiaryDetailShare'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useCreateDiaryShareImageMutation } from '@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation'
-import { useDiaryDetailQuery } from '@/pages/DiaryPage/hooks/useDiaryQueries'
+import {
+  useDiaryDetailQuery,
+  useDiaryStatisticsQuery,
+} from '@/pages/DiaryPage/hooks/useDiaryQueries'
 import { useDiaryShareActions } from '@/pages/DiaryPage/hooks/useDiaryShareActions'
 import { PATH } from '@/routes/paths'
 
@@ -26,6 +29,8 @@ export function DiaryDetailPage() {
   const navigate = useNavigate()
 
   const detailQuery = useDiaryDetailQuery(id ?? null)
+  // 카카오톡 문구에 실제 누적 적중률을 쓰기 위해 상세 진입 시 통계도 함께 가져온다.
+  const statisticsQuery = useDiaryStatisticsQuery(Boolean(id))
   const detail = detailQuery.data
   const { fetchStatus, error, refetch } = detailQuery
   const {
@@ -53,6 +58,9 @@ export function DiaryDetailPage() {
     diaryId: id ?? null,
     shareImageUrl: detail?.shareImageUrl ?? null,
     stockName: detail?.stockName ?? '',
+    direction: detail?.direction ?? 'neutral',
+    isCorrect: detail?.isCorrect ?? false,
+    accuracyRate: statisticsQuery.data?.cumulativeHitRate,
     imageState: shareImageState,
   })
 

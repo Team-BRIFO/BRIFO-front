@@ -18,6 +18,7 @@ import {
   downloadShareImage,
   fetchShareImageBlob,
 } from '@/services/share/shareImage'
+import type { DiaryDirection } from '@/types/domain/diary'
 
 export type DiaryShareImageState = 'loading' | 'generating' | 'failed' | 'ready'
 type KakaoSdkState = 'ready' | 'error'
@@ -26,6 +27,10 @@ interface UseDiaryShareActionsOptions {
   diaryId: string | null
   shareImageUrl: string | null
   stockName: string
+  direction: DiaryDirection
+  isCorrect: boolean
+  /** 아직 통계를 불러오는 중이면 undefined */
+  accuracyRate: number | undefined
   imageState: DiaryShareImageState
 }
 
@@ -40,6 +45,9 @@ export function useDiaryShareActions({
   diaryId,
   shareImageUrl,
   stockName,
+  direction,
+  isCorrect,
+  accuracyRate,
   imageState,
 }: UseDiaryShareActionsOptions) {
   const [processing, setProcessing] = useState<{
@@ -124,7 +132,14 @@ export function useDiaryShareActions({
   }, [diaryId, processingTarget, setCurrentNotice, shareImageUrl, stockName])
 
   const shareToKakao = useCallback(() => {
-    if (!diaryId || !shareImageUrl || processingTarget || !kakaoJavascriptKey || !kakaoShareUrl)
+    if (
+      !diaryId ||
+      !shareImageUrl ||
+      processingTarget ||
+      !kakaoJavascriptKey ||
+      !kakaoShareUrl ||
+      accuracyRate === undefined
+    )
       return
 
     setProcessing({ diaryId, target: 'kakao' })
@@ -132,7 +147,14 @@ export function useDiaryShareActions({
     try {
       // `sendDefault`가 팝업을 열 수 있으므로 클릭 이벤트가 유지되는 동기 구간에서 바로 호출한다.
       const shareRequest = sendKakaoDefaultShare(
-        createKakaoDiaryShareTemplate({ stockName, shareImageUrl, diaryUrl: kakaoShareUrl }),
+        createKakaoDiaryShareTemplate({
+          stockName,
+          direction,
+          isCorrect,
+          accuracyRate,
+          shareImageUrl,
+          diaryUrl: kakaoShareUrl,
+        }),
         kakaoJavascriptKey,
       )
       setCurrentNotice({
@@ -170,6 +192,9 @@ export function useDiaryShareActions({
     setCurrentNotice,
     shareImageUrl,
     stockName,
+    direction,
+    isCorrect,
+    accuracyRate,
   ])
 
   const onShare = useCallback(
@@ -207,20 +232,24 @@ export function useDiaryShareActions({
       ? '카카오 JavaScript 키가 설정되지 않았어요. 배포 환경 설정을 확인해 주세요.'
       : !kakaoShareUrl
         ? '카카오톡 공유에는 Product Link에 등록한 공개 웹 주소가 필요해요. localhost에서는 사용할 수 없어요.'
-        : currentKakaoSdkStatus?.state === 'error'
-          ? (currentKakaoSdkStatus.errorMessage ??
-            '카카오톡 공유 도구를 준비하지 못했어요. 잠시 후 다시 시도해 주세요.')
-          : '카카오톡 공유 도구를 준비하는 중이에요.'
+        : accuracyRate === undefined
+          ? '내 누적 적중률을 불러오는 중이에요.'
+          : currentKakaoSdkStatus?.state === 'error'
+            ? (currentKakaoSdkStatus.errorMessage ??
+              '카카오톡 공유 도구를 준비하지 못했어요. 잠시 후 다시 시도해 주세요.')
+            : '카카오톡 공유 도구를 준비하는 중이에요.'
 
     return {
       kakao: {
-        disabled: !kakaoShareUrl || currentKakaoSdkStatus?.state !== 'ready',
+        disabled:
+          !kakaoShareUrl || accuracyRate === undefined || currentKakaoSdkStatus?.state !== 'ready',
         disabledReason: kakaoDisabledReason,
       },
       download: { disabled: false },
     }
   }, [
     currentKakaoSdkStatus,
+    accuracyRate,
     imageState,
     kakaoJavascriptKey,
     kakaoShareUrl,

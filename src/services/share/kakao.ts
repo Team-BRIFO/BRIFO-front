@@ -1,4 +1,5 @@
 import { KAKAO_JAVASCRIPT_SDK } from '@/constants/kakao'
+import type { DiaryDirection } from '@/types/domain/diary'
 
 export type KakaoSdkErrorCode = 'MISSING_JAVASCRIPT_KEY' | 'LOAD_FAILED' | 'INITIALIZATION_FAILED'
 
@@ -22,6 +23,10 @@ export interface KakaoSdk {
 
 export interface KakaoDiaryShareTemplateOptions {
   stockName: string
+  direction: DiaryDirection
+  isCorrect: boolean
+  /** 사용자의 누적 결정 적중률 (0~100, %) */
+  accuracyRate: number
   shareImageUrl: string
   diaryUrl: string
 }
@@ -180,24 +185,49 @@ export function loadKakaoJavascriptSdk(
   return loadingPromise
 }
 
-/** 결정 카드의 임시 카카오톡 기본 메시지 템플릿을 만든다. */
+function formatAccuracyRate(rate: number) {
+  return `${rate.toLocaleString('ko-KR', { maximumFractionDigits: 2 })}%`
+}
+
+/** 결정 결과에 맞춘 카카오톡 기본 메시지 템플릿을 만든다. */
 export function createKakaoDiaryShareTemplate({
   stockName,
+  direction,
+  isCorrect,
+  accuracyRate,
   shareImageUrl,
   diaryUrl,
 }: KakaoDiaryShareTemplateOptions) {
-  const title = `${stockName || '오늘의 종목'}, AI 사원과 내린 투자 결정`
+  const directionLabel = direction === 'up' ? 'UP' : direction === 'down' ? 'DOWN' : '관망'
+  const shareMessage =
+    direction === 'neutral'
+      ? {
+          title: '오늘은 순방했다^^',
+          description: `${stockName || '오늘의 종목'} 관망 찍었다 이게 바로 리스크 관리다`,
+          buttonTitle: '나도 해보기',
+        }
+      : isCorrect
+        ? {
+            title: '나 어쩌면 주식 고수일지도?',
+            description: `${stockName || '오늘의 종목'} ${directionLabel} 찍고 ${formatAccuracyRate(accuracyRate)} 적중! 나보다 적중률 높을 자신 있으면 들어와`,
+            buttonTitle: '적중률 대결',
+          }
+        : {
+            title: '영차영차... 개미는 오늘도 힘들다',
+            description: `${stockName || '오늘의 종목'} ${directionLabel} 찍었는데 ${formatAccuracyRate(accuracyRate)}네 내일은 잘해보자 아자스!`,
+            buttonTitle: '너도 해볼래?',
+          }
   const link = { mobileWebUrl: diaryUrl, webUrl: diaryUrl }
 
   return {
     objectType: 'feed',
     content: {
-      title,
-      description: 'BRIFO에서 AI 사원과 투자 결정을 기록하고 결과를 확인하세요!',
+      title: shareMessage.title,
+      description: shareMessage.description,
       imageUrl: shareImageUrl,
       link,
     },
-    buttons: [{ title: 'BRIFO 시작하기', link }],
+    buttons: [{ title: shareMessage.buttonTitle, link }],
   }
 }
 
