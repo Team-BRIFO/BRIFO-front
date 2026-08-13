@@ -43,10 +43,7 @@ function PolicyReagreementSheetContent({
     [items],
   )
 
-  const isRequiredChecked =
-    requiredPolicyIds.length > 0
-      ? requiredPolicyIds.every((policyId) => checked[policyId])
-      : items.every((item) => checked[item.policyId])
+  const isRequiredChecked = requiredPolicyIds.every((policyId) => checked[policyId])
 
   const selectedPolicyIds = useMemo(
     () => items.filter((item) => checked[item.policyId]).map((item) => item.policyId),
