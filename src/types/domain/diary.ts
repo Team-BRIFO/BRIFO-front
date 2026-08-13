@@ -58,27 +58,29 @@ export interface DiaryEntryPage {
 /**
  * 결정카드 상세.
  *
- * 카드 내용(종목·칩·AP·별·인용문·날짜)은 **서버가 PNG로 렌더링**하므로,
- * 화면은 shareImageUrl 을 표시하기만 한다.
- *
- * 화면의 카카오톡 공유 문구에는 예측 방향·적중 여부를 쓴다.
- * 나머지 카드 내용은 서버 PNG 안에 이미 그려져 있다.
+ * 카드 내용은 상세 응답과 공유 이미지 POST 응답을 조합해 프론트에서 렌더링한다.
+ * `tradeDate`와 `apDelta`는 공유 이미지 POST 응답에서 받는다.
  */
 export interface DiaryDetail {
   id: string
-  /** 공유 이미지 URL. 생성 전이면 null → POST 로 생성 필요 */
+  /** 서버가 기존 호환을 위해 제공하는 공유 이미지 URL. 프론트 공유 카드에는 사용하지 않는다. */
   shareImageUrl: string | null
-  /** 이미지 대체 텍스트에만 사용 */
   stockName: string
-  /** 사용자의 예측 방향 (카카오톡 공유 문구용) */
+  changeRate: number
   direction: DiaryDirection
-  /** 예측 적중 여부 (카카오톡 공유 문구용) */
   isCorrect: boolean
+  agentType: 'rookie' | 'pro' | 'tanker'
+  confidenceLevel: number
 }
 
 export interface DiaryShareImage {
   diaryId: string
+  /** 서버 렌더 PNG URL. 프론트 카드 전환 기간에만 호환 목적으로 유지한다. */
   shareImageUrl: string
+  /** YYYY-MM-DD */
+  tradeDate: string
+  /** API 명세 반영 전 응답은 null로 처리해 잘못된 AP를 카드에 그리지 않는다. */
+  apDelta: number | null
 }
 
 export interface DiaryCalendarData {

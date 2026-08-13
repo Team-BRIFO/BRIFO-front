@@ -22,6 +22,12 @@ const DIRECTION_BY_CODE: Record<'UP' | 'DOWN' | 'NEUTRAL', DiaryDirection> = {
   NEUTRAL: 'neutral',
 }
 
+const AGENT_TYPE_BY_CODE = {
+  ROOKIE: 'rookie',
+  PRO: 'pro',
+  TANKER: 'tanker',
+} as const
+
 /** 방향 표시 라벨 */
 export const DIRECTION_LABEL: Record<DiaryDirection, string> = {
   up: '상승',
@@ -102,18 +108,19 @@ export function mapDiaryEntryPage(result: GetDiariesResponseOutput): DiaryEntryP
 /**
  * 상세 응답 → 도메인
  *
- * 사용: diaryId · shareImageUrl · stock.name(이미지 alt·카카오톡 문구)
- *       briefing.direction · decision.isCorrect(카카오톡 문구)
- * 미사용: stock.stockId · agent.* · briefing.briefingId · briefing.confidenceRate
- *         · decision.confidenceLevel → 카드 내용은 서버 PNG로 렌더링한다.
+ * 사용: diaryId · stock.name/changeRate · agent.agentType · briefing.direction
+ *       decision.isCorrect/confidenceLevel. 공유 카드의 날짜/AP는 POST 응답과 결합한다.
  */
 export function mapDiaryDetail(result: GetDiaryDetailResponseOutput): DiaryDetail {
   return {
     id: result.diaryId,
     shareImageUrl: result.shareImageUrl ?? null,
     stockName: result.stock.name,
+    changeRate: result.stock.changeRate,
     direction: DIRECTION_BY_CODE[result.briefing.direction],
     isCorrect: result.decision.isCorrect,
+    agentType: AGENT_TYPE_BY_CODE[result.agent.agentType],
+    confidenceLevel: result.decision.confidenceLevel,
   }
 }
 
@@ -121,6 +128,8 @@ export function mapDiaryShareImage(result: CreateDiaryShareImageResponseOutput):
   return {
     diaryId: result.diaryId,
     shareImageUrl: result.shareImageUrl,
+    tradeDate: result.tradeDate,
+    apDelta: result.apDelta ?? null,
   }
 }
 
