@@ -73,6 +73,7 @@ export function PredictionDecisionCard({
         <Modal isOpen onClose={closeResultModal}>
           {!!resultQuery.error && resultQuery.fetchStatus === 'idle' && !detail ? (
             <PageErrorView
+              className="p-0"
               title={isSettlementWaiting ? '정산 대기 중입니다' : '예측 결과를 불러오지 못했어요'}
               description={isSettlementWaiting ? '잠시 후 다시 확인해 주세요.' : undefined}
               error={resultQuery.error}
@@ -81,7 +82,7 @@ export function PredictionDecisionCard({
               onButtonClick={isSettlementWaiting ? closeResultModal : undefined}
             />
           ) : !detail ? (
-            <PageLoadingView />
+            <PageLoadingView className="p-0" />
           ) : (
             <DecisionResultModalContent
               decisionId={decision.id}
