@@ -3,7 +3,10 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import NavigationBar from '@/components/common/NavigationBar'
 import { type NavigationValue } from '@/components/common/NavigationBar'
+import { Toast } from '@/components/common/Toast'
+import { PolicyReagreementBottomSheet } from '@/components/feature/policy/PolicyReagreementBottomSheet'
 import { useSessionValidationOnFocus } from '@/hooks/auth/useSessionValidationOnFocus'
+import { usePolicyReagreement } from '@/hooks/policy/usePolicyReagreement'
 import { PATH } from '@/routes/paths'
 
 const NAVIGATION_PATHS: Record<NavigationValue, string> = {
@@ -36,6 +39,7 @@ export function AppLayout() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
+  const policyReagreement = usePolicyReagreement()
 
   useSessionValidationOnFocus()
 
@@ -70,6 +74,15 @@ export function AppLayout() {
           className="max-md:w-full md:max-w-3xl"
         />
       </div>
+      <PolicyReagreementBottomSheet
+        isOpen={policyReagreement.isOpen}
+        items={policyReagreement.items}
+        preCheckedPolicyIds={policyReagreement.preCheckedPolicyIds}
+        onAgree={policyReagreement.onAgree}
+        onViewPolicy={policyReagreement.onViewPolicy}
+        isPending={policyReagreement.isPending}
+      />
+      {policyReagreement.errorMessage && <Toast message={policyReagreement.errorMessage} />}
     </div>
   )
 }

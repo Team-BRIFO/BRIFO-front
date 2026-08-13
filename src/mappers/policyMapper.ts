@@ -1,11 +1,19 @@
 import { AGREEMENTS, POLICY_TITLE_TOKEN_GROUPS } from '@/constants/agreement'
 import type { AgreementId } from '@/types/domain/agreement'
+import type { PolicyReagreementItem } from '@/types/domain/policy'
 
 interface PolicySummary {
   policyId: string
   title: string
   isRequired: boolean
   isAgreed: boolean
+}
+
+interface PendingPolicyItem {
+  policyId: string
+  title: string
+  isRequired: boolean
+  version: number
 }
 
 function normalizeTitle(title: string) {
@@ -36,4 +44,13 @@ export function findPolicyByAgreementId(policies: PolicySummary[], agreementId: 
   })
 
   return candidates.length === 1 ? candidates[0] : undefined
+}
+
+export function mapPendingPolicyItems(items: PendingPolicyItem[]): PolicyReagreementItem[] {
+  return items.map((item) => ({
+    policyId: item.policyId,
+    title: item.title,
+    isRequired: item.isRequired,
+    version: item.version,
+  }))
 }

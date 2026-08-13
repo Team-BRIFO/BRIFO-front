@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { findPolicyByAgreementId } from '@/mappers/policyMapper'
+import { findPolicyByAgreementId, mapPendingPolicyItems } from '@/mappers/policyMapper'
 
 const policies = [
   { policyId: 'age', title: '만 14세 이상입니다.', isRequired: true, isAgreed: false },
@@ -34,5 +34,25 @@ describe('findPolicyByAgreementId', () => {
     ]
 
     expect(findPolicyByAgreementId(duplicatedServicePolicies, 'service')).toBeUndefined()
+  })
+
+  it('maps pending policy items for the reagreement bottom sheet', () => {
+    expect(
+      mapPendingPolicyItems([
+        {
+          policyId: 'policy-id',
+          title: '서비스 이용약관',
+          isRequired: true,
+          version: 1.1,
+        },
+      ]),
+    ).toEqual([
+      {
+        policyId: 'policy-id',
+        title: '서비스 이용약관',
+        isRequired: true,
+        version: 1.1,
+      },
+    ])
   })
 })
