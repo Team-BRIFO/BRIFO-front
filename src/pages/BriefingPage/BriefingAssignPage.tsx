@@ -170,7 +170,7 @@ export function BriefingAssignPage() {
       <StatusBar
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="사원배치"
-        right={<StatusBarNotificationButton />}
+        right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
 
       {hasError ? (

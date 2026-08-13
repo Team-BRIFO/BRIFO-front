@@ -27,7 +27,7 @@ export function BriefingPage() {
         className="bg-White"
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="브리핑"
-        right={<StatusBarNotificationButton />}
+        right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
 
       {!!error && fetchStatus === 'idle' ? (
