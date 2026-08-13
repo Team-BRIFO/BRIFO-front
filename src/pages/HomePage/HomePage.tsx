@@ -1,16 +1,13 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
-import AttendanceBonusCard from '@/components/feature/home/AttendanceBonusCard'
-import AttendanceModal from '@/components/feature/home/AttendanceModal'
+import AttendanceRewardSection from '@/components/feature/home/AttendanceRewardSection'
 import HomeCardNewsSection from '@/components/feature/home/HomeCardNewsSection'
 import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCountdownCard from '@/components/feature/home/SettlementCountdownCard'
-import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueries'
 import { mapTodayNewsCardsByStock } from '@/mappers/homeMapper'
 import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
 import { PATH } from '@/routes/paths'
@@ -18,8 +15,6 @@ import { formatBatchTime } from '@/utils/formatBatchTime'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false)
-  const attendanceReward = useCreateAttendanceRewardMutation()
   const homeQuery = useUserHomeQuery()
   const home = homeQuery.data
   const balanceText = `${(home?.user.balanceAp ?? 0).toLocaleString()} AP`
@@ -65,10 +60,10 @@ export function HomePage() {
               />
             </div>
 
-            <AttendanceBonusCard
-              bonus={50}
-              endTime="15:30"
-              onClick={() => setIsAttendanceModalOpen(true)}
+            <AttendanceRewardSection
+              attendedDays={home?.weeklyAttendanceDays ?? 0}
+              attendanceDates={home?.dates ?? []}
+              isAttended={home?.attendedToday ?? false}
             />
           </div>
         </div>
@@ -85,21 +80,6 @@ export function HomePage() {
           </div>
         </section>
       </main>
-
-      <AttendanceModal
-        isOpen={isAttendanceModalOpen}
-        attendedDays={home?.weeklyAttendanceDays ?? 0}
-        attendanceDates={home?.dates ?? []}
-        reward={50}
-        isAttended={home?.attendedToday ?? false}
-        isPending={attendanceReward.isPending}
-        onClose={() => setIsAttendanceModalOpen(false)}
-        onComplete={() => {
-          attendanceReward.mutate(undefined, {
-            onSuccess: () => setIsAttendanceModalOpen(false),
-          })
-        }}
-      />
     </>
   )
 }
