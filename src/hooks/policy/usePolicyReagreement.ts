@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import { browserTokenStore } from '@/api/client/tokenStore'
 import { useAgreePoliciesMutation } from '@/hooks/queries/policy/useAgreePoliciesMutation'
 import { usePendingPoliciesQuery } from '@/hooks/queries/policy/usePolicyQueries'
 import { PATH } from '@/routes/paths'
@@ -9,10 +10,14 @@ interface PolicyReagreementLocationState {
   checkedPolicyId?: string
 }
 
+function hasSessionToken() {
+  return Boolean(browserTokenStore.getAccessToken() || browserTokenStore.getRefreshToken())
+}
+
 export function usePolicyReagreement() {
   const navigate = useNavigate()
   const location = useLocation()
-  const pendingQuery = usePendingPoliciesQuery()
+  const pendingQuery = usePendingPoliciesQuery(hasSessionToken())
   const agreePolicies = useAgreePoliciesMutation()
   const [preCheckedPolicyIds, setPreCheckedPolicyIds] = useState<string[]>([])
 
@@ -53,10 +58,17 @@ export function usePolicyReagreement() {
     [location.pathname, location.search, navigate],
   )
 
-  const errorMessage =
-    pendingQuery.error?.serviceMessage ??
-    agreePolicies.error?.serviceMessage ??
-    (pendingQuery.isError || agreePolicies.isError ? '약관 정보를 불러오지 못했어요' : null)
+  const isAuthError =
+    pendingQuery.error?.status === 401 ||
+    pendingQuery.error?.status === 403 ||
+    agreePolicies.error?.status === 401 ||
+    agreePolicies.error?.status === 403
+
+  const errorMessage = isAuthError
+    ? null
+    : (pendingQuery.error?.serviceMessage ??
+      agreePolicies.error?.serviceMessage ??
+      (pendingQuery.isError || agreePolicies.isError ? '약관 정보를 불러오지 못했어요' : null))
 
   return {
     isOpen,

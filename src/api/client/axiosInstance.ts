@@ -236,6 +236,14 @@ export function createBrifoAxiosInstance({
       return Promise.reject(error)
     }
 
+    if (axios.isAxiosError(error) && error.config) {
+      const status = error.response?.status
+      if (status === 403 && isCurrentUserRequest(error.config) && !tokenStore.getRefreshToken()) {
+        expireSessionOnce()
+        return Promise.reject(error)
+      }
+    }
+
     if (!axios.isAxiosError(error) || !error.config || error.response?.status !== 401) {
       return Promise.reject(error)
     }
