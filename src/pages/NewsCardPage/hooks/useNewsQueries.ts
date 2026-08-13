@@ -43,7 +43,7 @@ export function useStockNewsCards(stockId: string | null) {
 
   return {
     cards,
-    isLoading: detailQuery.isLoading,
+    isLoading: detailQuery.isLoading || homeQuery.isLoading,
     error: detailQuery.error,
     refetch: detailQuery.refetch,
     fetchStatus: detailQuery.fetchStatus,
