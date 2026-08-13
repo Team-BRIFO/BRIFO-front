@@ -7,8 +7,9 @@ interface StockRankItemProps {
   rank?: number
   logo: ReactNode
   name: string
-  price: string
-  changeRate: number
+  /** 종가가 아직 수집되지 않았으면 null */
+  price: string | null
+  changeRate: number | null
   isFavorite?: boolean
   onToggleFavorite?: () => void
   onClick?: () => void
@@ -28,7 +29,7 @@ export default function StockRankItem({
   disabled = false,
   disabledMessage,
 }: StockRankItemProps) {
-  const isUp = changeRate >= 0
+  const isUp = (changeRate ?? 0) >= 0
 
   return (
     <div className="hover:bg-Yellow-105 active:bg-Yellow-105 flex w-full items-center px-5 py-3 transition-colors">
@@ -51,12 +52,18 @@ export default function StockRankItem({
           <span className="pretendard-Body2-Semibold text-Yellow-5">{name}</span>
 
           <div className="flex items-center gap-1">
-            <span className="pretendard-Caption3 text-Gray-5">{price}</span>
+            {price !== null && changeRate !== null ? (
+              <>
+                <span className="pretendard-Caption3 text-Gray-5">{price}</span>
 
-            <span className={`pretendard-Caption3 ${isUp ? 'text-Pink-30' : 'text-Green-30'}`}>
-              {isUp ? '+' : ''}
-              {changeRate.toFixed(1)}%
-            </span>
+                <span className={`pretendard-Caption3 ${isUp ? 'text-Pink-30' : 'text-Green-30'}`}>
+                  {isUp ? '+' : ''}
+                  {changeRate.toFixed(1)}%
+                </span>
+              </>
+            ) : (
+              <span className="pretendard-Caption3 text-Gray-5">가격 정보 준비 중</span>
+            )}
           </div>
         </div>
       </button>

@@ -163,14 +163,29 @@ export function OnboardingPage() {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-1">
-          {PROFILE_KEYWORDS.map((keyword) => (
-            <span
-              key={keyword}
-              className="pretendard-Caption2 bg-Yellow-100 text-Yellow-10 rounded-full px-3 py-1.5"
-            >
-              # {keyword}
-            </span>
-          ))}
+          {PROFILE_KEYWORDS.map((keyword) => {
+            const isSelected = companyName === keyword
+
+            return (
+              <button
+                key={keyword}
+                type="button"
+                aria-pressed={isSelected}
+                aria-label={`회사명을 ${keyword}(으)로 채우기`}
+                onClick={() => {
+                  setCompanyName(keyword)
+                  setIsCompanyNameTouched(true)
+                }}
+                className={`pretendard-Caption2 focus-visible:ring-Yellow-45 rounded-full px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none ${
+                  isSelected
+                    ? 'bg-Yellow-45 text-Yellow-5'
+                    : 'bg-Yellow-100 text-Yellow-10 hover:bg-Yellow-80'
+                }`}
+              >
+                # {keyword}
+              </button>
+            )
+          })}
         </div>
 
         <InterestStockSection
