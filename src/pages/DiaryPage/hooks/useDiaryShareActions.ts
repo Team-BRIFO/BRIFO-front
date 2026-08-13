@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import type {
   DiaryDetailShareActionState,
-  DiaryDetailShareStatus,
   DiaryShareTarget,
 } from '@/components/feature/diary/DiaryDetailShare'
 import { PATH } from '@/routes/paths'
@@ -15,8 +14,7 @@ import {
 } from '@/services/share/kakao'
 import {
   createDiaryShareImageFilename,
-  downloadShareImage,
-  fetchShareImageBlob,
+  saveShareImage as saveDiaryShareImage,
 } from '@/services/share/shareImage'
 import type { DiaryDirection } from '@/types/domain/diary'
 
@@ -54,9 +52,6 @@ export function useDiaryShareActions({
     diaryId: string
     target: DiaryShareTarget
   } | null>(null)
-  const [notice, setNotice] = useState<{ diaryId: string; status: DiaryDetailShareStatus } | null>(
-    null,
-  )
   const [kakaoSdkStatus, setKakaoSdkStatus] = useState<{
     diaryId: string
     state: KakaoSdkState
@@ -64,7 +59,6 @@ export function useDiaryShareActions({
   } | null>(null)
 
   const processingTarget = processing?.diaryId === diaryId ? processing.target : null
-  const statusMessage = notice?.diaryId === diaryId ? notice.status : undefined
   const currentKakaoSdkStatus = kakaoSdkStatus?.diaryId === diaryId ? kakaoSdkStatus : null
   const kakaoJavascriptKey = getKakaoJavascriptKey()
   // 공유받은 사람은 타인의 비공개 결정 카드를 볼 수 없으므로 BRIFO 랜딩으로 안내한다.
@@ -99,13 +93,6 @@ export function useDiaryShareActions({
     }
   }, [diaryId, kakaoJavascriptKey])
 
-  const setCurrentNotice = useCallback(
-    (status: DiaryDetailShareStatus) => {
-      if (diaryId) setNotice({ diaryId, status })
-    },
-    [diaryId],
-  )
-
   const saveShareImage = useCallback(async () => {
     if (!diaryId || !shareImageUrl || processingTarget) return
 
@@ -113,23 +100,15 @@ export function useDiaryShareActions({
     const filename = createDiaryShareImageFilename(stockName)
 
     try {
-      const image = await fetchShareImageBlob(shareImageUrl)
-      downloadShareImage(image, filename)
-      setCurrentNotice({ tone: 'success', message: '공유 이미지를 PNG 파일로 저장했어요.' })
-    } catch (error) {
-      setCurrentNotice({
-        tone: 'error',
-        message:
-          error instanceof Error
-            ? error.message
-            : '공유 이미지를 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
-      })
+      await saveDiaryShareImage(shareImageUrl, filename)
+    } catch {
+      // 저장 실패 안내는 이 화면에서 노출하지 않는다.
     } finally {
       setProcessing((previous) =>
         previous?.diaryId === diaryId && previous.target === 'download' ? null : previous,
       )
     }
-  }, [diaryId, processingTarget, setCurrentNotice, shareImageUrl, stockName])
+  }, [diaryId, processingTarget, shareImageUrl, stockName])
 
   const shareToKakao = useCallback(() => {
     if (
@@ -157,28 +136,9 @@ export function useDiaryShareActions({
         }),
         kakaoJavascriptKey,
       )
-      setCurrentNotice({
-        tone: 'info',
-        message: '카카오톡 공유를 요청했어요. 공유 대상 선택 화면에서 전송을 완료해 주세요.',
-      })
-
-      void Promise.resolve(shareRequest).catch((error: unknown) => {
-        setCurrentNotice({
-          tone: 'error',
-          message:
-            error instanceof Error
-              ? error.message
-              : '카카오톡 공유를 열지 못했어요. 잠시 후 다시 시도해 주세요.',
-        })
-      })
-    } catch (error) {
-      setCurrentNotice({
-        tone: 'error',
-        message:
-          error instanceof Error
-            ? error.message
-            : '카카오톡 공유를 열지 못했어요. 잠시 후 다시 시도해 주세요.',
-      })
+      void Promise.resolve(shareRequest).catch(() => undefined)
+    } catch {
+      // 카카오 SDK 오류 안내는 이 화면에서 노출하지 않는다.
     }
 
     setProcessing((previous) =>
@@ -189,7 +149,6 @@ export function useDiaryShareActions({
     kakaoJavascriptKey,
     kakaoShareUrl,
     processingTarget,
-    setCurrentNotice,
     shareImageUrl,
     stockName,
     direction,
@@ -257,5 +216,5 @@ export function useDiaryShareActions({
     shareImageUrl,
   ])
 
-  return { actionStates, onShare, statusMessage }
+  return { actionStates, onShare }
 }

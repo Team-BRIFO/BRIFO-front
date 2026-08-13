@@ -54,7 +54,7 @@ export function DiaryDetailPage() {
       : isGeneratingCurrentShareImage
         ? 'generating'
         : 'loading'
-  const { actionStates, onShare, statusMessage } = useDiaryShareActions({
+  const { actionStates, onShare } = useDiaryShareActions({
     diaryId: id ?? null,
     shareImageUrl: detail?.shareImageUrl ?? null,
     stockName: detail?.stockName ?? '',
@@ -106,7 +106,6 @@ export function DiaryDetailPage() {
             onRetry={() => id && createShareImage(id)}
             onShare={onShare}
             actionStates={actionStates}
-            statusMessage={statusMessage}
           />
         </div>
       ) : null}

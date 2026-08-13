@@ -1,4 +1,4 @@
-import { type ComponentType, type SVGProps, useId } from 'react'
+import { type ComponentType, type SVGProps } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import LoaderIcon from '@/assets/icons/loader-1.svg?react'
@@ -12,11 +12,6 @@ export interface DiaryDetailShareActionState {
   disabled: boolean
   disabledReason?: string
   isProcessing?: boolean
-}
-
-export interface DiaryDetailShareStatus {
-  tone: 'info' | 'success' | 'error'
-  message: string
 }
 
 interface ShareAction {
@@ -63,8 +58,6 @@ export interface DiaryDetailShareProps {
   onShare?: (target: DiaryShareTarget) => void
   /** 대상별 비활성·처리 상태 */
   actionStates?: Partial<Record<DiaryShareTarget, DiaryDetailShareActionState>>
-  /** 공유 처리 결과 또는 안내 */
-  statusMessage?: DiaryDetailShareStatus
 }
 
 /**
@@ -82,11 +75,7 @@ export function DiaryDetailShare({
   onRetry,
   onShare,
   actionStates,
-  statusMessage,
 }: DiaryDetailShareProps) {
-  const shareId = useId()
-  const statusId = `${shareId}-status`
-  const disabledReasonsId = `${shareId}-disabled-reasons`
   const hasImage = Boolean(shareImageUrl)
   const imageStateMessage = isFailed
     ? '공유 카드 생성에 실패했어요. 다시 시도한 뒤 공유할 수 있어요.'
@@ -103,15 +92,6 @@ export function DiaryDetailShare({
 
     return { ...action, actionState, disabled, disabledReason }
   })
-  const disabledReasons = shareActions.flatMap(({ label, disabled, disabledReason }) =>
-    disabled ? [`${label}: ${disabledReason}`] : [],
-  )
-  const statusToneClassName =
-    statusMessage?.tone === 'error'
-      ? 'text-Pink-30'
-      : statusMessage?.tone === 'success'
-        ? 'text-Green-30'
-        : 'text-Gray-6'
 
   return (
     <div className="flex w-full flex-col items-center gap-3">
@@ -176,7 +156,6 @@ export function DiaryDetailShare({
               key={target}
               type="button"
               aria-label={label}
-              aria-describedby={disabled ? disabledReasonsId : statusId}
               title={disabled ? disabledReason : undefined}
               disabled={disabled}
               onClick={() => onShare?.(target)}
@@ -201,26 +180,6 @@ export function DiaryDetailShare({
           ),
         )}
       </div>
-
-      <p
-        id={statusId}
-        role="status"
-        aria-live="polite"
-        className={twMerge('pretendard-Caption2 text-center', statusToneClassName)}
-      >
-        {statusMessage?.message ?? imageStateMessage}
-      </p>
-
-      {disabledReasons.length > 0 && (
-        <ul
-          id={disabledReasonsId}
-          className="pretendard-Caption2 text-Gray-5 flex max-w-80 flex-col gap-1 text-center"
-        >
-          {disabledReasons.map((reason) => (
-            <li key={reason}>{reason}</li>
-          ))}
-        </ul>
-      )}
     </div>
   )
 }

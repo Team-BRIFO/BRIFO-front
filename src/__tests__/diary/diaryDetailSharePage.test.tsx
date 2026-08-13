@@ -147,7 +147,7 @@ describe('DiaryDetailPage share image flow', () => {
     expect(getButton('이미지 저장').disabled).toBe(false)
     expect(getButton('카카오톡으로 공유').disabled).toBe(true)
     expect(container.querySelector('[aria-label="인스타그램으로 공유"]')).toBeNull()
-    expect(container.textContent).toContain('공유 카드가 준비되었어요.')
+    expect(container.textContent).not.toContain('공유 카드가 준비되었어요.')
   })
 
   it('shows the generation failure reason and retries the same diary', () => {
@@ -198,7 +198,7 @@ describe('DiaryDetailPage share image flow', () => {
     act(() => getButton('다른 결정 카드 열기').click())
 
     expect(container.textContent).not.toContain('첫 번째 일기의 공유 카드 생성에 실패했습니다.')
-    expect(container.textContent).toContain('공유 카드를 불러오는 중이에요.')
+    expect(container.textContent).not.toContain('공유 카드를 불러오는 중이에요.')
     expect(diaryMocks.mutation.reset).toHaveBeenCalledOnce()
   })
 })

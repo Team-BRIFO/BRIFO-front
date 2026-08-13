@@ -28,7 +28,7 @@ function imageResponse() {
 }
 
 function ShareActionHarness() {
-  const { actionStates, onShare, statusMessage } = useDiaryShareActions({
+  const { actionStates, onShare } = useDiaryShareActions({
     diaryId,
     shareImageUrl,
     stockName: '삼성전자',
@@ -44,7 +44,6 @@ function ShareActionHarness() {
       stockName="삼성전자"
       onShare={onShare}
       actionStates={actionStates}
-      statusMessage={statusMessage}
     />
   )
 }
@@ -114,9 +113,8 @@ describe('Diary share actions', () => {
       expect(downloadedFilename).toBe('brifo-decision-card-삼성전자.png')
       expect(URL.createObjectURL).toHaveBeenCalledOnce()
       expect(URL.revokeObjectURL).not.toHaveBeenCalled()
-      act(() => vi.runOnlyPendingTimers())
+      act(() => vi.advanceTimersByTime(1_000))
       expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:share')
-      expect(container.textContent).toContain('공유 이미지를 PNG 파일로 저장했어요.')
     } finally {
       vi.useRealTimers()
     }
@@ -131,7 +129,13 @@ describe('Diary share actions', () => {
     await expect(fetchShareImageBlob(shareImageUrl)).resolves.toBeInstanceOf(Blob)
   })
 
-  it('shows a retryable error when CORS or the image fetch fails', async () => {
+  it('opens the source image when CORS prevents Blob downloading', async () => {
+    let openedImageUrl = ''
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function click(
+      this: HTMLAnchorElement,
+    ) {
+      openedImageUrl = this.href
+    })
     vi.mocked(fetch).mockRejectedValue(new TypeError('Failed to fetch'))
     renderHarness()
 
@@ -139,8 +143,7 @@ describe('Diary share actions', () => {
       getButton('이미지 저장').click()
     })
 
-    expect(container.textContent).toContain('공유 이미지를 가져오지 못했어요.')
-    expect(container.textContent).toContain('다시 시도해 주세요.')
+    expect(openedImageUrl).toBe(shareImageUrl)
     expect(URL.createObjectURL).not.toHaveBeenCalled()
   })
 
@@ -175,7 +178,6 @@ describe('Diary share actions', () => {
         diaryUrl,
       }),
     )
-    expect(container.textContent).toContain('카카오톡 공유를 요청했어요.')
   })
 })
 
