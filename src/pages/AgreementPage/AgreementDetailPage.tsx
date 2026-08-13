@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
@@ -16,13 +16,62 @@ interface AgreementDetailLocationState {
   readOnly?: boolean
 }
 
+interface AgreementConfirmationButtonProps {
+  readOnly: boolean
+  isLoading: boolean
+  scrollContainerRef: RefObject<HTMLDivElement | null>
+  onConfirm: () => void
+}
+
+/** 스크롤 완료 상태는 하단 확인 버튼에만 필요한 로컬 상태다. */
+function AgreementConfirmationButton({
+  readOnly,
+  isLoading,
+  scrollContainerRef,
+  onConfirm,
+}: AgreementConfirmationButtonProps) {
+  const [hasReachedBottom, setHasReachedBottom] = useState(false)
+
+  useEffect(() => {
+    if (readOnly) return
+
+    const container = scrollContainerRef.current
+    if (!container) return
+
+    const checkScrollBottom = () => {
+      const isBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 4
+      if (isBottom) setHasReachedBottom(true)
+    }
+
+    checkScrollBottom()
+    container.addEventListener('scroll', checkScrollBottom)
+
+    return () => container.removeEventListener('scroll', checkScrollBottom)
+  }, [readOnly, scrollContainerRef])
+
+  return (
+    <div className={readOnly ? 'mx-4 flex justify-center' : undefined}>
+      <Button
+        type="button"
+        size={readOnly ? 'semilg' : 'lg'}
+        color="primary"
+        isFullWidth
+        disabled={(!readOnly && !hasReachedBottom) || isLoading}
+        onClick={onConfirm}
+        className={readOnly ? 'max-w-80' : undefined}
+      >
+        {readOnly ? '확인' : '확인했어요'}
+      </Button>
+    </div>
+  )
+}
+
 export default function AgreementDetailPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { policyId: routePolicyId } = useParams<{ policyId: string }>()
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [hasReachedBottom, setHasReachedBottom] = useState(false)
 
   const {
     agreementId = 'service',
@@ -36,29 +85,11 @@ export default function AgreementDetailPage() {
   const policyDetail = policyDetailQuery.data
   const isReadOnlyDetailLoading = readOnly && policyDetailQuery.isPending
 
-  const checkScrollBottom = useCallback(() => {
-    const container = scrollContainerRef.current
-
-    if (!container) return
-
-    const isBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 4
-
-    if (isBottom) {
-      setHasReachedBottom(true)
-    }
-  }, [])
-
-  useEffect(() => {
-    checkScrollBottom()
-  }, [checkScrollBottom])
-
   const handleConfirm = () => {
     if (readOnly) {
       navigate(PATH.MY_TERMS, { replace: true })
       return
     }
-
-    if (!hasReachedBottom) return
 
     navigate(PATH.AGREEMENT, {
       replace: true,
@@ -92,7 +123,6 @@ export default function AgreementDetailPage() {
 
       <div
         ref={scrollContainerRef}
-        onScroll={checkScrollBottom}
         className={`min-h-0 flex-1 overflow-y-auto px-2 py-6 ${readOnly ? 'mx-4' : ''}`}
       >
         {isReadOnlyDetailLoading ? (
@@ -148,19 +178,12 @@ export default function AgreementDetailPage() {
         )}
       </div>
 
-      <div className={readOnly ? 'mx-4 flex justify-center' : undefined}>
-        <Button
-          type="button"
-          size={readOnly ? 'semilg' : 'lg'}
-          color="primary"
-          isFullWidth
-          disabled={(!readOnly && !hasReachedBottom) || isReadOnlyDetailLoading}
-          onClick={handleConfirm}
-          className={readOnly ? 'max-w-80' : undefined}
-        >
-          {readOnly ? '확인' : '확인했어요'}
-        </Button>
-      </div>
+      <AgreementConfirmationButton
+        readOnly={readOnly}
+        isLoading={isReadOnlyDetailLoading}
+        scrollContainerRef={scrollContainerRef}
+        onConfirm={handleConfirm}
+      />
     </main>
   )
 }

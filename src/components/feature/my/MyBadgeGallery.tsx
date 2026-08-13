@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 // 대체: domain/badge — 배지 그리드 아이템 (BadgeUnlockModal과 동일)
 import { BadgeItem } from '@/components/domain/badge/BadgeItem'
 // 대체: domain/badge — 해금 진행률 카드
@@ -14,7 +16,12 @@ export interface MyBadgeGalleryProps {
 }
 
 /** 업적 · 배지 화면(SCR-14) 본문 — 진행률 + 배지 그리드 */
-export function MyBadgeGallery({ badges, progress, onSelectBadge, isEmpty }: MyBadgeGalleryProps) {
+export const MyBadgeGallery = memo(function MyBadgeGallery({
+  badges,
+  progress,
+  onSelectBadge,
+  isEmpty,
+}: MyBadgeGalleryProps) {
   const badgeProgress: BadgeProgress = progress ?? {
     unlockedCount: badges.filter((badge) => badge.isUnlocked).length,
     totalCount: badges.length,
@@ -39,4 +46,4 @@ export function MyBadgeGallery({ badges, progress, onSelectBadge, isEmpty }: MyB
       )}
     </div>
   )
-}
+})

@@ -74,7 +74,7 @@ export function BriefingDetailPage() {
           />
         }
         title="브리핑"
-        right={<StatusBarNotificationButton />}
+        right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
 
       {!!error && fetchStatus === 'idle' ? (
