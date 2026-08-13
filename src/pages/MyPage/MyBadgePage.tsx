@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import BadgeUnlockSection from '@/components/feature/my/BadgeUnlockSection'
@@ -9,7 +9,7 @@ import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 
 export function MyBadgePage() {
   const [params, setParams] = useSearchParams()
-  const initialBadgeId = params.get('newBadgeId')
+  const [initialBadgeId] = useState(() => params.get('newBadgeId'))
   const badgesQuery = useMyBadgesQuery()
   useEffect(() => {
     if (params.get('newBadgeId')) {

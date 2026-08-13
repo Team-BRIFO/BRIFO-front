@@ -67,9 +67,13 @@ describe('Agreement detail render boundary', () => {
     container.remove()
     if (originalClientHeight) {
       Object.defineProperty(HTMLElement.prototype, 'clientHeight', originalClientHeight)
+    } else {
+      Reflect.deleteProperty(HTMLElement.prototype, 'clientHeight')
     }
     if (originalScrollHeight) {
       Object.defineProperty(HTMLElement.prototype, 'scrollHeight', originalScrollHeight)
+    } else {
+      Reflect.deleteProperty(HTMLElement.prototype, 'scrollHeight')
     }
   })
 

@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const settingsMocks = vi.hoisted(() => ({
   renderSettings: vi.fn(),
+  resetLogout: vi.fn(),
 }))
 
 vi.mock('@tanstack/react-query', () => ({
@@ -50,6 +51,7 @@ vi.mock('@/pages/MyPage/hooks/useLogoutMutation', () => ({
     isError: false,
     isPending: false,
     mutate: vi.fn(),
+    reset: settingsMocks.resetLogout,
   }),
 }))
 
@@ -64,6 +66,7 @@ describe('Settings render boundary', () => {
       globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
     ).IS_REACT_ACT_ENVIRONMENT = true
     settingsMocks.renderSettings.mockReset()
+    settingsMocks.resetLogout.mockReset()
     container = document.createElement('div')
     document.body.append(container)
     root = createRoot(container)
@@ -94,6 +97,7 @@ describe('Settings render boundary', () => {
 
     expect(container.textContent).toContain('계정 모달 닫기')
     expect(settingsMocks.renderSettings).toHaveBeenCalledTimes(1)
+    expect(settingsMocks.resetLogout).toHaveBeenCalledTimes(1)
 
     act(() => {
       Array.from(container.querySelectorAll('button'))
@@ -102,5 +106,6 @@ describe('Settings render boundary', () => {
     })
 
     expect(settingsMocks.renderSettings).toHaveBeenCalledTimes(1)
+    expect(settingsMocks.resetLogout).toHaveBeenCalledTimes(2)
   })
 })

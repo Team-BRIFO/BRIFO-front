@@ -23,11 +23,13 @@ export function AccountManagementSection() {
 
   const handleOpen = (nextAction: AccountActionType) => {
     removeAccount.reset()
+    logout.reset()
     setAction(nextAction)
   }
 
   const handleClose = () => {
     removeAccount.reset()
+    logout.reset()
     setAction(null)
   }
 
