@@ -238,6 +238,63 @@ describe('createBrifoAxiosInstance', () => {
     expect(onSessionExpired).toHaveBeenCalledOnce()
   })
 
+  it('expires the session without refresh when a current-user request reports a withdrawn account', async () => {
+    const tokenStore = createTokenStore('access-token', 'refresh-token')
+    const onSessionExpired = vi.fn()
+    let reissueCalls = 0
+    const adapter = createAxiosAdapter((config) => {
+      if (config.url === '/api/auth/reissue') {
+        reissueCalls += 1
+        return { data: { success: true } }
+      }
+
+      return {
+        data: {
+          success: false,
+          code: 'USER_404',
+          message: '사용자를 찾을 수 없습니다.',
+        },
+        status: 404,
+      }
+    })
+    const client = createBrifoAxiosInstance({
+      baseURL: API_BASE_URL,
+      adapter,
+      tokenStore,
+      onSessionExpired,
+    })
+
+    await expect(client.get('/api/users/me/profile')).rejects.toMatchObject({
+      response: { status: 404 },
+    })
+    expect(reissueCalls).toBe(0)
+    expect(tokenStore.clear).toHaveBeenCalledOnce()
+    expect(onSessionExpired).toHaveBeenCalledOnce()
+  })
+
+  it('keeps the session for USER_404 responses outside current-user APIs', async () => {
+    const tokenStore = createTokenStore('access-token', 'refresh-token')
+    const onSessionExpired = vi.fn()
+    const adapter = createAxiosAdapter(() => ({
+      data: {
+        success: false,
+        code: 'USER_404',
+        message: '사용자를 찾을 수 없습니다.',
+      },
+      status: 404,
+    }))
+    const client = createBrifoAxiosInstance({
+      baseURL: API_BASE_URL,
+      adapter,
+      tokenStore,
+      onSessionExpired,
+    })
+
+    await expect(client.get('/api/agents')).rejects.toMatchObject({ response: { status: 404 } })
+    expect(tokenStore.clear).not.toHaveBeenCalled()
+    expect(onSessionExpired).not.toHaveBeenCalled()
+  })
+
   it('expires signup session without refresh when signup API returns 401', async () => {
     signupSession.activate()
     const onSessionExpired = vi.fn()

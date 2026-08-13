@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import NavigationBar from '@/components/common/NavigationBar'
 import { type NavigationValue } from '@/components/common/NavigationBar'
+import { useSessionValidationOnFocus } from '@/hooks/auth/useSessionValidationOnFocus'
 import { PATH } from '@/routes/paths'
 
 const NAVIGATION_PATHS: Record<NavigationValue, string> = {
@@ -35,6 +36,8 @@ export function AppLayout() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
+
+  useSessionValidationOnFocus()
 
   useEffect(() => {
     if (mainRef.current) {
