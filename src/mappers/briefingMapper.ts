@@ -96,12 +96,12 @@ export function mapOfficeBriefings(result: GetOfficeBriefingsResponseOutput): Of
       status: agent.status,
     }))
 
-    const isCompleted = agents.length > 0 && agents.every((a) => a.status === 'COMPLETED')
+    const isCompleted = agents.length > 0 && agents.every((a) => a.status === 'COMPLETED' || a.status === 'FAILED')
 
     const getAgentStatus = (agentType: 'rookie' | 'pro' | 'tanker') => {
       const agent = agents.find((a) => a.type === agentType)
       if (!agent) return undefined
-      return agent.status === 'COMPLETED' ? '완료' : '진행중'
+      return agent.status === 'COMPLETED' || agent.status === 'FAILED' ? '완료' : '진행중'
     }
 
     return {
