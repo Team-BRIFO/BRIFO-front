@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import { signupSession } from '@/api/client/signupSession'
 import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { SERVICE_TERMS } from '@/constants/agreement'
@@ -12,8 +13,9 @@ import { formatPolicyEffectiveDate } from '@/utils/policyDate'
 interface AgreementDetailLocationState {
   agreementId?: AgreementId
   policyId?: string
-  /** 설정에서는 동의 상태를 바꾸지 않는 읽기 전용으로 열어야 한다. */
   readOnly?: boolean
+  fromPolicyReagreement?: boolean
+  returnTo?: string
 }
 
 export default function AgreementDetailPage() {
@@ -28,11 +30,15 @@ export default function AgreementDetailPage() {
     agreementId = 'service',
     policyId: statePolicyId,
     readOnly: stateReadOnly = false,
+    fromPolicyReagreement = false,
+    returnTo,
   } = (location.state as AgreementDetailLocationState | null) ?? {}
   const policyId = routePolicyId ?? statePolicyId
-  // `/my/terms/:policyId`는 새로고침/딥링크에도 설정의 읽기 전용 정책 상세여야 한다.
   const readOnly = stateReadOnly || Boolean(routePolicyId)
-  const policyDetailQuery = usePolicyDetailQuery(policyId, readOnly || undefined)
+  const policyDetailQuery = usePolicyDetailQuery(
+    policyId,
+    Boolean(policyId) && (readOnly || fromPolicyReagreement || signupSession.isActive()),
+  )
   const policyDetail = policyDetailQuery.data
   const isReadOnlyDetailLoading = readOnly && policyDetailQuery.isPending
 
@@ -60,6 +66,16 @@ export default function AgreementDetailPage() {
 
     if (!hasReachedBottom) return
 
+    if (fromPolicyReagreement && returnTo && policyId) {
+      navigate(returnTo, {
+        replace: true,
+        state: {
+          checkedPolicyId: policyId,
+        },
+      })
+      return
+    }
+
     navigate(PATH.AGREEMENT, {
       replace: true,
       state: {
@@ -71,6 +87,11 @@ export default function AgreementDetailPage() {
   const handleBack = () => {
     if (readOnly) {
       navigate(PATH.MY_TERMS, { replace: true })
+      return
+    }
+
+    if (fromPolicyReagreement && returnTo) {
+      navigate(returnTo, { replace: true })
       return
     }
 

@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import NavigationBar from '@/components/common/NavigationBar'
 import { type NavigationValue } from '@/components/common/NavigationBar'
+import { Toast } from '@/components/common/Toast'
 import { PolicyReagreementBottomSheet } from '@/components/feature/policy/PolicyReagreementBottomSheet'
 import { useSessionValidationOnFocus } from '@/hooks/auth/useSessionValidationOnFocus'
-import { POLICY_REAGREEMENT_MOCK_ITEMS } from '@/mocks/policyReagreement'
+import { usePolicyReagreement } from '@/hooks/policy/usePolicyReagreement'
 import { PATH } from '@/routes/paths'
 
 const NAVIGATION_PATHS: Record<NavigationValue, string> = {
@@ -38,10 +39,7 @@ export function AppLayout() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
-  const [isPolicyReagreementOpen, setIsPolicyReagreementOpen] = useState(
-    () =>
-      import.meta.env.DEV && new URLSearchParams(window.location.search).has('policyReagreement'),
-  )
+  const policyReagreement = usePolicyReagreement()
 
   useSessionValidationOnFocus()
 
@@ -74,11 +72,14 @@ export function AppLayout() {
         />
       </div>
       <PolicyReagreementBottomSheet
-        isOpen={isPolicyReagreementOpen}
-        items={POLICY_REAGREEMENT_MOCK_ITEMS}
-        onAgree={() => setIsPolicyReagreementOpen(false)}
-        onViewPolicy={(policyId) => navigate(PATH.AGREEMENT_DETAIL, { state: { policyId } })}
+        isOpen={policyReagreement.isOpen}
+        items={policyReagreement.items}
+        preCheckedPolicyIds={policyReagreement.preCheckedPolicyIds}
+        onAgree={policyReagreement.onAgree}
+        onViewPolicy={policyReagreement.onViewPolicy}
+        isPending={policyReagreement.isPending}
       />
+      {policyReagreement.errorMessage && <Toast message={policyReagreement.errorMessage} />}
     </div>
   )
 }

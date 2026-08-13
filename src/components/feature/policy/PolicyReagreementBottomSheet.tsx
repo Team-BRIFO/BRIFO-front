@@ -9,6 +9,7 @@ import { formatPolicyVersionTransition } from '@/utils/policyDate'
 export interface PolicyReagreementBottomSheetProps {
   isOpen: boolean
   items: PolicyReagreementItem[]
+  preCheckedPolicyIds?: string[]
   onAgree: (policyIds: string[]) => void
   onViewPolicy: (policyId: string) => void
   isPending?: boolean
@@ -16,22 +17,26 @@ export interface PolicyReagreementBottomSheetProps {
 
 interface PolicyReagreementSheetContentProps {
   items: PolicyReagreementItem[]
+  preCheckedPolicyIds: string[]
   onAgree: (policyIds: string[]) => void
   onViewPolicy: (policyId: string) => void
   isPending: boolean
 }
 
-function buildInitialCheckedState(items: PolicyReagreementItem[]) {
-  return Object.fromEntries(items.map((item) => [item.policyId, false]))
+function buildInitialCheckedState(items: PolicyReagreementItem[], preCheckedPolicyIds: string[]) {
+  return Object.fromEntries(
+    items.map((item) => [item.policyId, preCheckedPolicyIds.includes(item.policyId)]),
+  )
 }
 
 function PolicyReagreementSheetContent({
   items,
+  preCheckedPolicyIds,
   onAgree,
   onViewPolicy,
   isPending,
 }: PolicyReagreementSheetContentProps) {
-  const [checked, setChecked] = useState(() => buildInitialCheckedState(items))
+  const [checked, setChecked] = useState(() => buildInitialCheckedState(items, preCheckedPolicyIds))
 
   const requiredPolicyIds = useMemo(
     () => items.filter((item) => item.isRequired).map((item) => item.policyId),
@@ -103,6 +108,7 @@ function PolicyReagreementSheetContent({
 export function PolicyReagreementBottomSheet({
   isOpen,
   items,
+  preCheckedPolicyIds = [],
   onAgree,
   onViewPolicy,
   isPending = false,
@@ -111,6 +117,7 @@ export function PolicyReagreementBottomSheet({
     () => items.map((item) => `${item.policyId}:${item.version}`).join('|'),
     [items],
   )
+  const preCheckedKey = preCheckedPolicyIds.join('|')
 
   if (items.length === 0) return null
 
@@ -124,8 +131,9 @@ export function PolicyReagreementBottomSheet({
     >
       {isOpen ? (
         <PolicyReagreementSheetContent
-          key={itemsKey}
+          key={`${itemsKey}:${preCheckedKey}`}
           items={items}
+          preCheckedPolicyIds={preCheckedPolicyIds}
           onAgree={onAgree}
           onViewPolicy={onViewPolicy}
           isPending={isPending}
