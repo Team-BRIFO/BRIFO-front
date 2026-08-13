@@ -63,6 +63,9 @@ vi.mock('@/components/feature/home/SettlementCountdownCard', () => ({ default: (
 vi.mock('@/hooks/queries/ap/useApQueries', () => ({
   useCreateAttendanceRewardMutation: () => ({ isPending: false, mutate: vi.fn() }),
 }))
+vi.mock('@/pages/OfficePage/hooks/useOfficeBriefingsQuery', () => ({
+  useOfficeBriefingsQuery: () => ({ data: [] }),
+}))
 vi.mock('@/pages/HomePage/hooks/useUserHomeQuery', () => ({
   useUserHomeQuery: () => ({
     data: {

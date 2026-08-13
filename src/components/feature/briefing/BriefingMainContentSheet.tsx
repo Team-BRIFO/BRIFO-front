@@ -34,9 +34,9 @@ export function BriefingMainContentSheet({
   className,
 }: BriefingMainContentSheetProps) {
   return (
-    <div className={twMerge('flex h-132 w-full flex-col items-stretch overflow-hidden', className)}>
-      <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
-        <AgentCard agent={agent} />
+    <div className={twMerge('flex w-full flex-col items-stretch', className)}>
+      <div className="flex flex-col gap-2 pb-8">
+        <AgentCard agent={agent} className="border-none shadow-none" />
         <BriefingTopCard
           badgeType={briefing.badgeType}
           badgeText={briefing.badgeText}
@@ -59,9 +59,12 @@ export function BriefingMainContentSheet({
           />
         )}
 
-        <Button isFullWidth color="primary" size="lg" onClick={onConfirm}>
-          이 브리핑으로 결정
-        </Button>
+        {/* 버튼이 스크롤 마지막에 위치하도록 영역 내부로 이동 */}
+        <div className="mt-4 pt-2">
+          <Button isFullWidth color="primary" size="lg" onClick={onConfirm}>
+            이 브리핑으로 결정
+          </Button>
+        </div>
       </div>
     </div>
   )

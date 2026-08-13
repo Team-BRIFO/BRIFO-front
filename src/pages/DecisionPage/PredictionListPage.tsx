@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
@@ -9,7 +10,35 @@ import { useDecisionListQuery } from '@/pages/DecisionPage/hooks/useDecisionQuer
 export function PredictionListPage() {
   const navigate = useNavigate()
 
+  const [isAfterMarketClose, setIsAfterMarketClose] = useState(() => {
+    const kstTime = new Date(
+      Date.now() + new Date().getTimezoneOffset() * 60000 + 9 * 60 * 60 * 1000,
+    )
+    return kstTime.getHours() > 15 || (kstTime.getHours() === 15 && kstTime.getMinutes() >= 30)
+  })
+
   const decisionsQuery = useDecisionListQuery()
+
+  useEffect(() => {
+    if (isAfterMarketClose) return
+
+    const now = new Date()
+    const kstNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 60 * 60 * 1000)
+    const targetKst = new Date(kstNow.getFullYear(), kstNow.getMonth(), kstNow.getDate(), 15, 30, 0)
+    const delay = targetKst.getTime() - kstNow.getTime()
+
+    if (delay > 0) {
+      const timer = setTimeout(() => {
+        setIsAfterMarketClose(true)
+        decisionsQuery.refetch()
+      }, delay)
+      return () => clearTimeout(timer)
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsAfterMarketClose(true)
+    }
+  }, [isAfterMarketClose, decisionsQuery])
+
   const decisions = decisionsQuery.data
 
   if (!!decisionsQuery.error && decisionsQuery.fetchStatus === 'idle' && !decisions) {
@@ -70,7 +99,11 @@ export function PredictionListPage() {
             {/* 예측 리스트 */}
             <div className="flex flex-col gap-4">
               {decisions.map((item) => (
-                <PredictionDecisionCard key={item.id} decision={item} />
+                <PredictionDecisionCard
+                  key={item.id}
+                  decision={item}
+                  isAfterMarketClose={isAfterMarketClose}
+                />
               ))}
             </div>
           </>

@@ -10,18 +10,25 @@ import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCountdownCard from '@/components/feature/home/SettlementCountdownCard'
 import { mapTodayNewsCardsByStock } from '@/mappers/homeMapper'
 import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
+import { useOfficeBriefingsQuery } from '@/pages/OfficePage/hooks/useOfficeBriefingsQuery'
 import { PATH } from '@/routes/paths'
 import { formatBatchTime } from '@/utils/formatBatchTime'
 
 export function HomePage() {
   const navigate = useNavigate()
   const homeQuery = useUserHomeQuery()
+  const officeQuery = useOfficeBriefingsQuery()
+
   const home = homeQuery.data
   const balanceText = `${(home?.user.balanceAp ?? 0).toLocaleString()} AP`
   const employeeLevels = Object.fromEntries(
-    (home?.agents ?? []).map((agent) => [agent.agentType, agent.level]),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (home?.agents ?? []).map((agent: any) => [agent.agentType, agent.level]),
   )
-  const cardNewsItems = mapTodayNewsCardsByStock(home?.todayNewsCards.items ?? [])
+  const cardNewsItems = mapTodayNewsCardsByStock(
+    home?.todayNewsCards.items ?? [],
+    officeQuery.data ?? [],
+  )
   const batchTime = formatBatchTime(home?.todayNewsCards.batchTime)
 
   return (

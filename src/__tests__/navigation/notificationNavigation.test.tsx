@@ -35,9 +35,13 @@ vi.mock('@/components/common/Button', () => ({
     </button>
   ),
 }))
-vi.mock('@/components/common/Modal', () => ({
-  default: ({ children }: { children?: React.ReactNode }) => children,
-}))
+vi.mock('@/components/common/Modal', () => {
+  const Modal = ({ children }: { children?: React.ReactNode }) => children
+  Modal.Header = ({ children }: { children?: React.ReactNode }) => children
+  Modal.Body = ({ children }: { children?: React.ReactNode }) => children
+  Modal.Footer = ({ children }: { children?: React.ReactNode }) => children
+  return { default: Modal }
+})
 vi.mock('@/components/common/Tabs', () => ({ Tabs: () => <div /> }))
 vi.mock('@/components/domain/agent/AgentCard', () => ({ AgentCard: () => <div /> }))
 vi.mock('@/components/feature/analyze/AnalyzeCard', () => ({ AnalyzeCard: () => <div /> }))

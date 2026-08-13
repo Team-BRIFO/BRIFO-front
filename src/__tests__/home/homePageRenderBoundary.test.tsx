@@ -36,6 +36,9 @@ vi.mock('@/components/feature/home/HomeCardNewsSection', () => ({
 vi.mock('@/hooks/queries/ap/useApQueries', () => ({
   useCreateAttendanceRewardMutation: () => ({ isPending: false, mutate: vi.fn() }),
 }))
+vi.mock('@/pages/OfficePage/hooks/useOfficeBriefingsQuery', () => ({
+  useOfficeBriefingsQuery: () => ({ data: [] }),
+}))
 vi.mock('@/pages/HomePage/hooks/useUserHomeQuery', () => ({
   useUserHomeQuery: () => ({
     data: {

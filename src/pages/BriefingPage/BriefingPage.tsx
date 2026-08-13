@@ -1,5 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+import Button from '@/components/common/Button'
+import Modal from '@/components/common/Modal'
 import {
   StatusBar,
   StatusBarBackButton,
@@ -14,11 +16,44 @@ import { PATH } from '@/routes/paths'
 
 export function BriefingPage() {
   const [searchParams] = useSearchParams()
-  // URL에서 stockId 추출 (없으면 기본 mock UUID 사용)
-  const stockId = searchParams.get('stockId') ?? 'mock-stock-id'
+  const stockId = searchParams.get('stockId')
   const navigate = useNavigate()
 
   const { data, fetchStatus, error, refetch } = useStockBriefingsQuery(stockId)
+
+  if (!stockId) {
+    return (
+      <div className="bg-Background1 flex h-screen w-full flex-col">
+        <StatusBar
+          hasStatusArea={false}
+          className="bg-White"
+          left={<StatusBarBackButton onClick={() => navigate(PATH.OFFICE)} />}
+          title="브리핑"
+          right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
+        />
+        <Modal
+          isOpen={true}
+          onClose={() => navigate(-1)}
+          shouldCloseOnEscape={false}
+          shouldCloseOnOverlayClick={false}
+        >
+          <Modal.Header className="pt-4">
+            <h2 className="dnf-Title1 text-Gray-10">알림</h2>
+          </Modal.Header>
+          <Modal.Body className="py-4">
+            <p className="pretendard-Body1-Regular text-Gray-8 text-center">
+              유효한 종목이 아닙니다.
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button size="lg" isFullWidth color="primary" onClick={() => navigate(PATH.OFFICE)}>
+              확인
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-Background1 flex h-screen w-full flex-col">
@@ -26,7 +61,7 @@ export function BriefingPage() {
       <StatusBar
         hasStatusArea={false}
         className="bg-White"
-        left={<StatusBarBackButton onClick={() => navigate(-1)} />}
+        left={<StatusBarBackButton onClick={() => navigate(PATH.OFFICE)} />}
         title="브리핑"
         right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
@@ -62,28 +97,32 @@ export function BriefingPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                {data.items.length === 0 ? (
+                {data.items.filter((item) => item.status !== 'FAILED').length === 0 ? (
                   <p className="pretendard-Body2-Regular text-Gray-6 py-10 text-center">
                     아직 도착한 브리핑이 없어요.
                   </p>
                 ) : (
-                  data.items.map((item) => (
-                    <BriefingAgentListItem
-                      key={item.id}
-                      agentType={item.agentType}
-                      agentName={item.nickname}
-                      badgeType={item.direction}
-                      comment={item.oneLiner}
-                      onClick={() =>
-                        item.status === 'COMPLETED' ? navigate(PATH.BRIEFING_DETAIL(item.id)) : null
-                      }
-                      className={
-                        item.status !== 'COMPLETED'
-                          ? 'cursor-not-allowed opacity-50'
-                          : 'cursor-pointer'
-                      }
-                    />
-                  ))
+                  data.items
+                    .filter((item) => item.status !== 'FAILED')
+                    .map((item) => (
+                      <BriefingAgentListItem
+                        key={item.id}
+                        agentType={item.agentType}
+                        agentName={item.nickname}
+                        badgeType={item.direction}
+                        comment={item.oneLiner}
+                        onClick={() =>
+                          item.status === 'COMPLETED'
+                            ? navigate(PATH.BRIEFING_DETAIL(item.id))
+                            : null
+                        }
+                        className={
+                          item.status !== 'COMPLETED'
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'cursor-pointer'
+                        }
+                      />
+                    ))
                 )}
               </div>
             </div>

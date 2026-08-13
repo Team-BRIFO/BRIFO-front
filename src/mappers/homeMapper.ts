@@ -1,5 +1,5 @@
 import type { GetUserHomeResponseOutput } from '@/api/generated/schemas/user-controller'
-
+import type { OfficeBriefingItem } from '@/types/domain/briefing'
 export type TodayNewsCardItem = GetUserHomeResponseOutput['todayNewsCards']['items'][number]
 
 export interface HomeCardNewsItem {
@@ -16,11 +16,16 @@ export interface HomeCardNewsItem {
 }
 
 /** 홈 todayNewsCards.items를 stockId 기준으로 묶어 종목당 카드 1개로 표시 */
-export function mapTodayNewsCardsByStock(items: TodayNewsCardItem[]): HomeCardNewsItem[] {
+export function mapTodayNewsCardsByStock(
+  items: TodayNewsCardItem[],
+  officeBriefings: OfficeBriefingItem[] = [],
+): HomeCardNewsItem[] {
   const grouped = new Map<
     string,
     { item: Omit<HomeCardNewsItem, 'newsCount'>; cardIds: Set<string> }
   >()
+
+  const briefingStatusMap = new Map(officeBriefings.map((b) => [b.stockId, b.isCompleted]))
 
   for (const item of items) {
     const { stockId } = item.stock
@@ -42,7 +47,7 @@ export function mapTodayNewsCardsByStock(items: TodayNewsCardItem[]): HomeCardNe
           logoUrl: item.stock.logoUrl,
         },
         headline: item.headline,
-        isCompleted: false,
+        isCompleted: briefingStatusMap.get(stockId) ?? true,
       },
     })
   }

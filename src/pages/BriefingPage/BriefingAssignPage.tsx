@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { ApiError } from '@/api/client/ApiError'
 import Button from '@/components/common/Button'
 import {
   StatusBar,
@@ -15,6 +16,7 @@ import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useAgentListQuery } from '@/hooks/queries/agent/useAgentListQuery'
 import { useCreateCreditLoanMutation } from '@/hooks/queries/ap/useApQueries'
 import { usePostBriefingRequestMutation } from '@/pages/BriefingPage/hooks/usePostBriefingRequestMutation'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
 import { PATH } from '@/routes/paths'
 
@@ -26,10 +28,17 @@ export function BriefingAssignPage() {
 
   const newsCardQuery = useGetNewsCardDetail(stockId ?? null)
   const agentsQuery = useAgentListQuery()
+  const briefingsQuery = useStockBriefingsQuery(stockId ?? null)
   const agentsList = agentsQuery.data ?? []
-  const isFetching =
-    newsCardQuery.fetchStatus === 'fetching' || agentsQuery.fetchStatus === 'fetching'
-  const hasError = !!newsCardQuery.error || !!agentsQuery.error
+  const isQueriesPending =
+    newsCardQuery.isPending || agentsQuery.isPending || briefingsQuery.isPending
+  const hasError = !!newsCardQuery.error || !!agentsQuery.error || !!briefingsQuery.error
+
+  const requestedAgentIds = new Set(
+    briefingsQuery.data?.items
+      .filter((item) => item.status !== 'FAILED')
+      .map((item) => item.agentId) || [],
+  )
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
@@ -55,38 +64,59 @@ export function BriefingAssignPage() {
     postBriefingRequest(
       { stockId, agentIds: Array.from(selectedIds) },
       {
-        onSuccess: () => {
-          setModalType('SUCCESS')
+        onSuccess: (data) => {
+          if (data.requestedCount < selectedIds.size) {
+            const successAgentIds = new Set(data.requestedAgents.map((a) => a.agentId))
+            const failedAgentIds = new Set(
+              Array.from(selectedIds).filter((id) => !successAgentIds.has(id)),
+            )
+            setSelectedIds(failedAgentIds)
+            setModalType('LLM_FAIL')
+          } else {
+            setModalType('SUCCESS')
+          }
         },
         onError: (error) => {
-          // 브리핑 의뢰 마감 시간 이후 요청한 경우 (409 Conflict)
-          if (error.code === 'BRIEFING_409_06') {
-            setModalType('TIME_OVER')
-          }
-          // 실패 후 대기 시간 미달 (429 Too Many Requests)
-          else if (error.code === 'BRIEFING_429_01') {
-            setModalType('RETRY_COUNT')
-          }
-          // AP 부족 에러
-          else if (
-            error.status === 402 ||
-            error.code?.includes('AP_400') ||
-            error.code?.includes('AP_402') ||
-            error.code === 'BRIEFING_400_01'
-          ) {
-            setModalType('SHORTAGE')
-          }
-          // 재시도 횟수 초과 에러
-          else if (error.status === 429 || error.code?.includes('RETRY')) {
-            setModalType('RETRY_COUNT')
-          }
-          // AP 대출 한도 소진 에러
-          else if (error.code === 'AP_409_03' || error.code === 'AP_409_04') {
-            setModalType('EXHAUSTED')
-          }
-          // 기타 실패 (429, 409, 400 등)
-          else {
-            setModalErrorMessage(error.message || '요청 중 오류가 발생했습니다.')
+          if (error instanceof ApiError) {
+            if (
+              error.code === 'LLM_FAIL' ||
+              error.code?.includes('LLM_FAIL') ||
+              error.code?.includes('BRIEFING_500')
+            ) {
+              setModalType('LLM_FAIL')
+            }
+            // 브리핑 의뢰 마감 시간 이후 요청한 경우 (409 Conflict)
+            else if (error.code === 'BRIEFING_409_06') {
+              setModalType('TIME_OVER')
+            }
+            // 실패 후 대기 시간 미달 (429 Too Many Requests)
+            else if (error.code === 'BRIEFING_429_01') {
+              setModalType('RETRY_COUNT')
+            }
+            // AP 부족 에러
+            else if (
+              error.status === 402 ||
+              error.code?.includes('AP_400') ||
+              error.code?.includes('AP_402') ||
+              error.code === 'BRIEFING_400_01'
+            ) {
+              setModalType('SHORTAGE')
+            }
+            // 재시도 횟수 초과 에러
+            else if (error.status === 429 || error.code?.includes('RETRY')) {
+              setModalType('RETRY_COUNT')
+            }
+            // AP 대출 한도 소진 에러
+            else if (error.code === 'AP_409_03' || error.code === 'AP_409_04') {
+              setModalType('EXHAUSTED')
+            }
+            // 기타 실패 (429, 409, 400 등)
+            else {
+              setModalErrorMessage(error.message || '요청 중 오류가 발생했습니다.')
+              setModalType('ERROR')
+            }
+          } else {
+            setModalErrorMessage((error as Error).message || '요청 중 오류가 발생했습니다.')
             setModalType('ERROR')
           }
         },
@@ -177,13 +207,14 @@ export function BriefingAssignPage() {
       {hasError ? (
         <PageErrorView
           title="사원 배치 정보를 불러오지 못했어요"
-          error={newsCardQuery.error || agentsQuery.error}
+          error={newsCardQuery.error || agentsQuery.error || briefingsQuery.error}
           onRetry={() => {
             newsCardQuery.refetch()
             agentsQuery.refetch()
+            briefingsQuery.refetch()
           }}
         />
-      ) : isFetching || !newsCardQuery.data ? (
+      ) : isQueriesPending || !newsCardQuery.data || !agentsQuery.data || !briefingsQuery.data ? (
         <PageLoadingView />
       ) : agentsList.length === 0 ? (
         <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />
@@ -201,14 +232,21 @@ export function BriefingAssignPage() {
 
               {/* 사원 카드리스트 */}
               <div className="flex w-full flex-col gap-2">
-                {agentsList.map((agent) => (
-                  <AgentCard
-                    key={agent.id}
-                    agent={agent}
-                    active={selectedIds.has(agent.id)}
-                    onClick={() => toggleAgent(agent.id)}
-                  />
-                ))}
+                {agentsList.map((agent) => {
+                  const isRequested = requestedAgentIds.has(agent.id)
+                  return (
+                    <AgentCard
+                      key={agent.id}
+                      agent={agent}
+                      active={selectedIds.has(agent.id)}
+                      disabled={isRequested}
+                      className={isRequested ? 'cursor-not-allowed opacity-50' : ''}
+                      onClick={() => {
+                        if (!isRequested) toggleAgent(agent.id)
+                      }}
+                    />
+                  )
+                })}
                 {/* 합계 AP 문구 */}
                 <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
                   <span className="pretendard-Caption1 text-Gray-9">선택한 사원 일급 합계</span>

@@ -61,9 +61,9 @@ export interface OfficeBriefingItem {
   agents: OfficeAgentStatus[]
   isCompleted: boolean
   agentStatuses: {
-    rookie: '완료' | '진행중'
-    pro: '완료' | '진행중'
-    tanker: '완료' | '진행중'
+    rookie?: '완료' | '진행중'
+    pro?: '완료' | '진행중'
+    tanker?: '완료' | '진행중'
   }
 }
 
