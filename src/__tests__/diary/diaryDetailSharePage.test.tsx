@@ -58,6 +58,7 @@ vi.mock('@/pages/DiaryPage/hooks/useDiaryQueries', () => ({
     error: null,
     refetch: vi.fn(),
   }),
+  useDiaryStatisticsQuery: () => ({ data: { cumulativeHitRate: 73 } }),
 }))
 
 vi.mock('@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation', () => ({

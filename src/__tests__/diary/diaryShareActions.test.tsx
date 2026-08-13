@@ -32,6 +32,9 @@ function ShareActionHarness() {
     diaryId,
     shareImageUrl,
     stockName: '삼성전자',
+    direction: 'up',
+    isCorrect: true,
+    accuracyRate: 73,
     imageState: 'ready',
   })
 
@@ -163,7 +166,14 @@ describe('Diary share actions', () => {
 
     const diaryUrl = 'https://brifo.example.com/'
     expect(sendDefault).toHaveBeenCalledWith(
-      createKakaoDiaryShareTemplate({ stockName: '삼성전자', shareImageUrl, diaryUrl }),
+      createKakaoDiaryShareTemplate({
+        stockName: '삼성전자',
+        direction: 'up',
+        isCorrect: true,
+        accuracyRate: 73,
+        shareImageUrl,
+        diaryUrl,
+      }),
     )
     expect(container.textContent).toContain('카카오톡 공유를 요청했어요.')
   })
@@ -231,9 +241,12 @@ describe('Kakao JavaScript SDK setup', () => {
     expect(sendDefault).toHaveBeenCalledOnce()
   })
 
-  it('creates a feed template with the decision-card image and a BRIFO landing link', () => {
+  it('creates a winning feed template with the decision-card image and a BRIFO landing link', () => {
     const template = createKakaoDiaryShareTemplate({
       stockName: '삼성전자',
+      direction: 'up',
+      isCorrect: true,
+      accuracyRate: 73,
       shareImageUrl,
       diaryUrl: 'https://brifo.example.com/',
     })
@@ -241,8 +254,8 @@ describe('Kakao JavaScript SDK setup', () => {
     expect(template).toEqual({
       objectType: 'feed',
       content: {
-        title: '삼성전자, AI 사원과 내린 투자 결정',
-        description: 'BRIFO에서 AI 사원과 투자 결정을 기록하고 결과를 확인하세요!',
+        title: '나 어쩌면 주식 고수일지도?',
+        description: '삼성전자 UP 찍고 73% 적중! 나보다 적중률 높을 자신 있으면 들어와',
         imageUrl: shareImageUrl,
         link: {
           mobileWebUrl: 'https://brifo.example.com/',
@@ -251,7 +264,7 @@ describe('Kakao JavaScript SDK setup', () => {
       },
       buttons: [
         {
-          title: 'BRIFO 시작하기',
+          title: '적중률 대결',
           link: {
             mobileWebUrl: 'https://brifo.example.com/',
             webUrl: 'https://brifo.example.com/',
@@ -259,6 +272,40 @@ describe('Kakao JavaScript SDK setup', () => {
         },
       ],
     })
+  })
+
+  it.each([
+    {
+      direction: 'down' as const,
+      isCorrect: false,
+      expected: {
+        title: '영차영차...개미는 오늘도 힘들다',
+        description: '삼성전자 DOWN 찍었는데 64%네 내일은 잘해보자 아자스!',
+        buttonTitle: '너도 해볼래?',
+      },
+    },
+    {
+      direction: 'neutral' as const,
+      isCorrect: false,
+      expected: {
+        title: '오늘은 순방했다^^',
+        description: '삼성전자 관망 찍었다 이게 바로 리스크 관리다',
+        buttonTitle: '나도 해보기',
+      },
+    },
+  ])('creates the configured message for $direction', ({ direction, isCorrect, expected }) => {
+    const template = createKakaoDiaryShareTemplate({
+      stockName: '삼성전자',
+      direction,
+      isCorrect,
+      accuracyRate: 64,
+      shareImageUrl,
+      diaryUrl: 'https://brifo.example.com/',
+    })
+
+    const { buttonTitle, ...content } = expected
+    expect(template.content).toMatchObject(content)
+    expect(template.buttons[0]).toMatchObject({ title: buttonTitle })
   })
 
   it('reports a missing JavaScript key instead of using the OAuth client ID', async () => {
