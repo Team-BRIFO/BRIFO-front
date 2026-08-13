@@ -125,5 +125,6 @@ describe('diaryMapper', () => {
     })
 
     expect(statistics.isEmpty).toBe(true)
+    expect(statistics.cumulativeHitRate).toBe(0)
   })
 })
