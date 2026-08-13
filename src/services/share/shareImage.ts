@@ -1,5 +1,4 @@
-export type ShareImageErrorCode = 'FETCH_FAILED' | 'INVALID_RESPONSE' | 'DOWNLOAD_FAILED'
-export type ShareImageSaveResult = 'downloaded' | 'opened'
+export type ShareImageErrorCode = 'DOWNLOAD_FAILED'
 
 export class ShareImageError extends Error {
   readonly code: ShareImageErrorCode
@@ -8,44 +7,6 @@ export class ShareImageError extends Error {
     super(message, options)
     this.name = 'ShareImageError'
     this.code = code
-  }
-}
-
-/** 서버가 준 공유 이미지 URL을 저장에 쓸 수 있는 Blob으로 바꾼다. */
-export async function fetchShareImageBlob(shareImageUrl: string) {
-  let response: Response
-
-  try {
-    response = await fetch(shareImageUrl)
-  } catch (cause) {
-    throw new ShareImageError(
-      'FETCH_FAILED',
-      '공유 이미지를 가져오지 못했어요. 네트워크 연결 또는 이미지 접근 권한을 확인한 뒤 다시 시도해 주세요.',
-      { cause },
-    )
-  }
-
-  if (!response.ok) {
-    throw new ShareImageError(
-      'INVALID_RESPONSE',
-      '공유 이미지를 가져오지 못했어요. 잠시 후 다시 시도해 주세요.',
-    )
-  }
-
-  try {
-    const image = await response.blob()
-    const mimeType = image.type.split(';', 1)[0]?.trim().toLowerCase()
-    if (image.size === 0 || mimeType !== 'image/png') {
-      throw new Error('The response body is not a PNG image.')
-    }
-
-    return image
-  } catch (cause) {
-    throw new ShareImageError(
-      'INVALID_RESPONSE',
-      '공유 이미지가 PNG 형식인지 확인하지 못했어요. 잠시 후 다시 시도해 주세요.',
-      { cause },
-    )
   }
 }
 
@@ -86,52 +47,5 @@ export function downloadShareImage(image: Blob, filename: string) {
       '이미지를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
       { cause },
     )
-  }
-}
-
-/**
- * 외부 이미지 서버가 CORS를 허용하지 않아 Blob 저장을 할 수 없을 때 원본을 별도 탭에 연다.
- * 브라우저에서 이미지를 길게 누르거나 컨텍스트 메뉴로 저장할 수 있는 최후 수단이다.
- */
-export function openShareImageForSaving(shareImageUrl: string) {
-  try {
-    const link = document.createElement('a')
-    link.href = shareImageUrl
-    link.target = '_blank'
-    link.rel = 'noopener noreferrer'
-    link.style.display = 'none'
-    document.body.append(link)
-
-    try {
-      link.click()
-    } finally {
-      window.setTimeout(() => link.remove(), 0)
-    }
-  } catch (cause) {
-    throw new ShareImageError(
-      'DOWNLOAD_FAILED',
-      '이미지를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
-      { cause },
-    )
-  }
-}
-
-/**
- * CORS가 가능한 이미지 URL은 Blob으로 내려받아 바로 저장한다.
- * CORS가 없는 외부 스토리지 URL도 저장 버튼이 무반응으로 끝나지 않도록 원본 이미지를 연다.
- */
-export async function saveShareImage(
-  shareImageUrl: string,
-  filename: string,
-): Promise<ShareImageSaveResult> {
-  try {
-    const image = await fetchShareImageBlob(shareImageUrl)
-    downloadShareImage(image, filename)
-    return 'downloaded'
-  } catch (error) {
-    if (!(error instanceof ShareImageError) || error.code !== 'FETCH_FAILED') throw error
-
-    openShareImageForSaving(shareImageUrl)
-    return 'opened'
   }
 }

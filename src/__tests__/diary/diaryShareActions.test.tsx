@@ -15,22 +15,15 @@ import {
   loadKakaoJavascriptSdk,
   sendKakaoDefaultShare,
 } from '@/services/share/kakao'
-import { fetchShareImageBlob } from '@/services/share/shareImage'
 
 const diaryId = '019fd537-93a1-7bbb-8850-af72451ba9ad'
 const shareImageUrl = 'https://images.example.com/decision-card.png'
-
-function imageResponse() {
-  return {
-    ok: true,
-    blob: async () => new Blob(['png'], { type: 'image/png' }),
-  } as Response
-}
+const generatedShareImage = new Blob(['png'], { type: 'image/png' })
 
 function ShareActionHarness() {
   const { actionStates, onShare } = useDiaryShareActions({
     diaryId,
-    shareImageUrl,
+    shareImage: generatedShareImage,
     stockName: '삼성전자',
     direction: 'up',
     isCorrect: true,
@@ -39,12 +32,7 @@ function ShareActionHarness() {
   })
 
   return (
-    <DiaryDetailShare
-      shareImageUrl={shareImageUrl}
-      stockName="삼성전자"
-      onShare={onShare}
-      actionStates={actionStates}
-    />
+    <DiaryDetailShare card={<div>공유 카드</div>} onShare={onShare} actionStates={actionStates} />
   )
 }
 
@@ -68,9 +56,8 @@ describe('Diary share actions', () => {
     window.Kakao = {
       init: vi.fn(),
       isInitialized: () => true,
-      Share: { sendDefault: vi.fn() },
+      Share: { sendDefault: vi.fn(), uploadImage: vi.fn() },
     }
-    vi.stubGlobal('fetch', vi.fn())
     Object.defineProperty(URL, 'createObjectURL', {
       configurable: true,
       value: vi.fn(() => 'blob:share'),
@@ -83,7 +70,6 @@ describe('Diary share actions', () => {
     container.remove()
     delete window.Kakao
     vi.restoreAllMocks()
-    vi.unstubAllGlobals()
     vi.unstubAllEnvs()
   })
 
@@ -101,7 +87,6 @@ describe('Diary share actions', () => {
     ) {
       downloadedFilename = this.download
     })
-    vi.mocked(fetch).mockResolvedValue(imageResponse())
     renderHarness()
 
     try {
@@ -120,47 +105,21 @@ describe('Diary share actions', () => {
     }
   })
 
-  it('accepts a PNG MIME type with case and parameters', async () => {
-    vi.mocked(fetch).mockResolvedValue({
-      ok: true,
-      blob: async () => new Blob(['png'], { type: 'IMAGE/PNG; charset=binary' }),
-    } as Response)
-
-    await expect(fetchShareImageBlob(shareImageUrl)).resolves.toBeInstanceOf(Blob)
-  })
-
-  it('opens the source image when CORS prevents Blob downloading', async () => {
-    let openedImageUrl = ''
-    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function click(
-      this: HTMLAnchorElement,
-    ) {
-      openedImageUrl = this.href
-    })
-    vi.mocked(fetch).mockRejectedValue(new TypeError('Failed to fetch'))
-    renderHarness()
-
-    await act(async () => {
-      getButton('이미지 저장').click()
-    })
-
-    expect(openedImageUrl).toBe(shareImageUrl)
-    expect(URL.createObjectURL).not.toHaveBeenCalled()
-  })
-
-  it('sends an arbitrary decision-card message through KakaoTalk', async () => {
+  it('uploads the generated PNG once and sends its Kakao URL through KakaoTalk', async () => {
     vi.stubEnv('VITE_KAKAO_JAVASCRIPT_KEY', 'javascript-key')
     vi.stubEnv('VITE_KAKAO_SHARE_WEB_URL', 'https://brifo.example.com')
     const sendDefault = vi.fn<() => Promise<void>>().mockResolvedValue()
+    const uploadImage = vi.fn().mockResolvedValue({
+      infos: { original: { url: 'https://k.kakaocdn.net/decision-card.png' } },
+    })
     window.Kakao = {
       init: vi.fn(),
       isInitialized: () => true,
-      Share: { sendDefault },
+      Share: { sendDefault, uploadImage },
     }
     renderHarness()
 
-    await act(async () => {
-      await Promise.resolve()
-    })
+    await vi.waitFor(() => expect(uploadImage).toHaveBeenCalledOnce())
     expect(getButton('카카오톡으로 공유').disabled).toBe(false)
 
     await act(async () => {
@@ -174,10 +133,11 @@ describe('Diary share actions', () => {
         direction: 'up',
         isCorrect: true,
         accuracyRate: 73,
-        shareImageUrl,
+        shareImageUrl: 'https://k.kakaocdn.net/decision-card.png',
         diaryUrl,
       }),
     )
+    expect(uploadImage).toHaveBeenCalledOnce()
   })
 })
 
