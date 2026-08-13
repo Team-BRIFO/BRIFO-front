@@ -26,6 +26,7 @@ const PUBLIC_AUTH_PATHS = new Set([
 ])
 const REISSUE_EXCLUDED_PATHS = new Set(['/api/auth/logout'])
 const REISSUE_PATH = '/api/auth/reissue'
+const USER_NOT_FOUND_ERROR_CODE = 'USER_404'
 const SIGNUP_AUTH_PATH_PREFIXES = [
   '/api/policies',
   '/api/onboarding/',
@@ -63,6 +64,24 @@ function isReissueExcludedRequest(config: AxiosRequestConfig) {
   return REISSUE_EXCLUDED_PATHS.has(getPathname(config))
 }
 
+function isCurrentUserRequest(config: AxiosRequestConfig) {
+  const pathname = getPathname(config)
+  return pathname === '/api/users/me' || pathname.startsWith('/api/users/me/')
+}
+
+function isWithdrawnUserRequest(error: unknown): error is import('axios').AxiosError {
+  if (!axios.isAxiosError(error) || !error.config || error.response?.status !== 404) return false
+  if (!isCurrentUserRequest(error.config)) return false
+
+  const responseBody = error.response.data
+  return (
+    typeof responseBody === 'object' &&
+    responseBody !== null &&
+    'code' in responseBody &&
+    responseBody.code === USER_NOT_FOUND_ERROR_CODE
+  )
+}
+
 function isSignupAuthRequest(config: AxiosRequestConfig) {
   if (!signupSession.isActive()) return false
 
@@ -80,7 +99,7 @@ function isSignupMutationRequest(config: AxiosRequestConfig) {
 }
 
 function defaultSessionExpiredHandler() {
-  if (typeof window !== 'undefined') window.location.assign('/splash')
+  if (typeof window !== 'undefined') window.location.replace('/splash')
 }
 
 function createBaseAxiosInstance(baseURL: string, adapter: AxiosAdapter | undefined) {
@@ -212,6 +231,11 @@ export function createBrifoAxiosInstance({
   })
 
   client.interceptors.response.use(undefined, async (error: unknown) => {
+    if (isWithdrawnUserRequest(error)) {
+      expireSessionOnce()
+      return Promise.reject(error)
+    }
+
     if (!axios.isAxiosError(error) || !error.config || error.response?.status !== 401) {
       return Promise.reject(error)
     }
