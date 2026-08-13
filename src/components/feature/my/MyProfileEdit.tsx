@@ -1,9 +1,8 @@
-import { useState } from 'react'
+import { type ChangeEventHandler, memo, useCallback, useEffect, useRef, useState } from 'react'
 
 import Button from '@/components/common/Button'
 import { Chip } from '@/components/common/Chip'
 import { TextField } from '@/components/common/TextField'
-// 대체: domain/agent — AgentCard/AgentChat/UserProfileCard와 동일 아바타
 import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { AgentType } from '@/types/domain/agent'
 import type { UserInterestStock, UserProfileFormValues } from '@/types/domain/user'
@@ -31,6 +30,97 @@ export interface MyProfileEditProps {
   serverError?: string
 }
 
+interface ProfileTextFieldProps {
+  label: '닉네임' | '회사명'
+  value: string
+  errorMessage?: string
+  onChange: ChangeEventHandler<HTMLInputElement>
+}
+
+function ProfileTextField({ label, value, errorMessage, onChange }: ProfileTextFieldProps) {
+  return (
+    <TextField
+      label={label}
+      value={value}
+      onChange={onChange}
+      placeholder={PROFILE_INPUT_PLACEHOLDER}
+      errorMessage={errorMessage}
+      required
+    />
+  )
+}
+
+const MemoizedProfileTextField = memo(ProfileTextField)
+
+interface InterestStockChipProps {
+  stock: UserInterestStock
+  disabled: boolean
+  onRemoveStock: (stockId: string) => void
+}
+
+const InterestStockChip = memo(function InterestStockChip({
+  stock,
+  disabled,
+  onRemoveStock,
+}: InterestStockChipProps) {
+  const handleRemove = useCallback(() => {
+    onRemoveStock(stock.id)
+  }, [onRemoveStock, stock.id])
+
+  return (
+    <Chip className="bg-Yellow-100 text-Yellow-10" onRemove={handleRemove} disabled={disabled}>
+      {stock.name}
+    </Chip>
+  )
+})
+
+interface InterestStocksSectionProps {
+  interestStocks: UserInterestStock[]
+  errorMessage?: string
+  onRemoveStock: (stockId: string) => void
+  onAddStock: () => void
+}
+
+const InterestStocksSection = memo(function InterestStocksSection({
+  interestStocks,
+  errorMessage,
+  onRemoveStock,
+  onAddStock,
+}: InterestStocksSectionProps) {
+  const isMinimumStockCount = interestStocks.length === MIN_INTEREST_STOCK_COUNT
+
+  return (
+    <div className="flex flex-col gap-3">
+      <span className="pretendard-Body2-Semibold text-Yellow-30">나의 관심종목</span>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {interestStocks.map((stock) => (
+            <InterestStockChip
+              key={stock.id}
+              stock={stock}
+              onRemoveStock={onRemoveStock}
+              disabled={isMinimumStockCount}
+            />
+          ))}
+        </div>
+
+        {interestStocks.length < MAX_INTEREST_STOCK_COUNT && (
+          <button
+            type="button"
+            onClick={onAddStock}
+            className="pretendard-Caption1 text-Yellow-20 bg-Yellow-100 focus-visible:ring-Yellow-45 w-fit rounded-[20px] px-3 py-1.5 leading-none focus-visible:ring-2 focus-visible:outline-none"
+          >
+            + 종목추가
+          </button>
+        )}
+      </div>
+
+      {errorMessage && <span className="pretendard-Caption2 text-Pink-30">{errorMessage}</span>}
+    </div>
+  )
+})
+
 /** 프로필 편집 화면(SCR-13) 본문 — 캐릭터 · 닉네임 · 회사명 · 관심종목 */
 export function MyProfileEdit({
   initialValues,
@@ -46,14 +136,36 @@ export function MyProfileEdit({
   const [interestStocks, setInterestStocks] = useState<UserInterestStock[]>(
     initialValues.interestStocks,
   )
+  const onAddStockRef = useRef(onAddStock)
+  const profileValuesRef = useRef<UserProfileFormValues>(initialValues)
   const nicknameError = validateNickname(nickname)
   const companyNameError = validateCompanyName(companyName)
   const interestStocksError = validateInterestStockIds(interestStocks.map((stock) => stock.id))
   const isValid = !nicknameError && !companyNameError && !interestStocksError
 
-  const handleRemoveStock = (stockId: string) => {
+  useEffect(() => {
+    onAddStockRef.current = onAddStock
+  }, [onAddStock])
+
+  useEffect(() => {
+    profileValuesRef.current = {
+      nickname: normalizeProfileText(nickname),
+      companyName: normalizeProfileText(companyName),
+      interestStocks,
+    }
+  }, [companyName, interestStocks, nickname])
+
+  const handleNicknameChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
+    setNickname(event.target.value)
+  }, [])
+
+  const handleCompanyNameChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
+    setCompanyName(event.target.value)
+  }, [])
+
+  const handleRemoveStock = useCallback((stockId: string) => {
     setInterestStocks((prev) => prev.filter((stock) => stock.id !== stockId))
-  }
+  }, [])
 
   const handleSubmit = () => {
     if (!isValid) return
@@ -65,13 +177,9 @@ export function MyProfileEdit({
     })
   }
 
-  const handleAddStock = () => {
-    onAddStock({
-      nickname: normalizeProfileText(nickname),
-      companyName: normalizeProfileText(companyName),
-      interestStocks,
-    })
-  }
+  const handleAddStock = useCallback(() => {
+    onAddStockRef.current(profileValuesRef.current)
+  }, [])
 
   return (
     <div className="flex flex-col gap-5 pt-10">
@@ -91,58 +199,26 @@ export function MyProfileEdit({
       </div>
 
       <div className="flex flex-col gap-6">
-        <TextField
+        <MemoizedProfileTextField
           label="닉네임"
           value={nickname}
-          onChange={(event) => setNickname(event.target.value)}
-          placeholder={PROFILE_INPUT_PLACEHOLDER}
+          onChange={handleNicknameChange}
           errorMessage={nicknameError}
-          required
         />
 
-        <TextField
+        <MemoizedProfileTextField
           label="회사명"
           value={companyName}
-          onChange={(event) => setCompanyName(event.target.value)}
-          placeholder={PROFILE_INPUT_PLACEHOLDER}
+          onChange={handleCompanyNameChange}
           errorMessage={companyNameError}
-          required
         />
 
-        {/* 피그마 845:5853 — 나의 관심종목 칩 + 종목추가 */}
-        <div className="flex flex-col gap-3">
-          <span className="pretendard-Body2-Semibold text-Yellow-30">나의 관심종목</span>
-
-          {/* 피그마 845:5855 — 칩 줄 / 종목추가 줄 분리 */}
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              {interestStocks.map((stock) => (
-                <Chip
-                  key={stock.id}
-                  className="bg-Yellow-100 text-Yellow-10"
-                  onRemove={() => handleRemoveStock(stock.id)}
-                  disabled={interestStocks.length === MIN_INTEREST_STOCK_COUNT}
-                >
-                  {stock.name}
-                </Chip>
-              ))}
-            </div>
-
-            {interestStocks.length < MAX_INTEREST_STOCK_COUNT && (
-              <button
-                type="button"
-                onClick={handleAddStock}
-                className="pretendard-Caption1 text-Yellow-20 bg-Yellow-100 focus-visible:ring-Yellow-45 w-fit rounded-[20px] px-3 py-1.5 leading-none focus-visible:ring-2 focus-visible:outline-none"
-              >
-                + 종목추가
-              </button>
-            )}
-          </div>
-
-          {interestStocksError && (
-            <span className="pretendard-Caption2 text-Pink-30">{interestStocksError}</span>
-          )}
-        </div>
+        <InterestStocksSection
+          interestStocks={interestStocks}
+          errorMessage={interestStocksError}
+          onRemoveStock={handleRemoveStock}
+          onAddStock={handleAddStock}
+        />
       </div>
 
       {serverError && (

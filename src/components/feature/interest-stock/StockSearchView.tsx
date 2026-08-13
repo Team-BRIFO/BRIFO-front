@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 
 import NotFound from '@/assets/images/not_found.svg?react'
 import Button from '@/components/common/Button'
@@ -26,6 +26,106 @@ interface StockSearchViewProps {
   /** 마이 프로필처럼 이미 화면 헤더가 있는 곳에 삽입할 때 사용한다. */
   embedded?: boolean
 }
+
+interface StockSearchInputProps {
+  value: string
+  onSearchKeywordChange: (value: string) => void
+}
+
+const StockSearchInput = memo(function StockSearchInput({
+  value,
+  onSearchKeywordChange,
+}: StockSearchInputProps) {
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onSearchKeywordChange(event.target.value)
+    },
+    [onSearchKeywordChange],
+  )
+  const handleClear = useCallback(() => {
+    onSearchKeywordChange('')
+  }, [onSearchKeywordChange])
+
+  return (
+    <TextField
+      name="stockSearch"
+      variant="search"
+      value={value}
+      placeholder="코스피 200 종목 검색"
+      onChange={handleChange}
+      onClear={handleClear}
+    />
+  )
+})
+
+interface SelectedStockChipProps {
+  stock: Pick<InterestStockOption, 'id' | 'name'>
+  onToggleStock: (stockId: string) => void
+}
+
+const SelectedStockChip = memo(function SelectedStockChip({
+  stock,
+  onToggleStock,
+}: SelectedStockChipProps) {
+  const handleToggle = useCallback(() => {
+    onToggleStock(stock.id)
+  }, [onToggleStock, stock.id])
+
+  return (
+    <button
+      type="button"
+      onClick={handleToggle}
+      className="pretendard-Caption2 bg-Yellow-100 text-Yellow-20 flex items-center gap-1 rounded-full px-3 py-1.5"
+    >
+      {stock.name}
+      <span aria-hidden="true">×</span>
+    </button>
+  )
+})
+
+interface StockSearchResultItemProps {
+  stock: InterestStockOption
+  rank?: number
+  isFavorite: boolean
+  disabled: boolean
+  disabledMessage?: string
+  onToggleStock: (stockId: string) => void
+}
+
+const StockSearchResultItem = memo(function StockSearchResultItem({
+  stock,
+  rank,
+  isFavorite,
+  disabled,
+  disabledMessage,
+  onToggleStock,
+}: StockSearchResultItemProps) {
+  const handleToggle = useCallback(() => {
+    onToggleStock(stock.id)
+  }, [onToggleStock, stock.id])
+
+  return (
+    <StockRankItem
+      rank={rank}
+      logo={
+        <Image
+          src={stock.logoUrl!}
+          alt={`${stock.name} 로고`}
+          responsiveSize="none"
+          className="h-full w-full object-cover"
+        />
+      }
+      name={stock.name}
+      price={stock.price}
+      changeRate={stock.changeRate}
+      isFavorite={isFavorite}
+      disabled={disabled}
+      disabledMessage={disabledMessage}
+      onToggleFavorite={handleToggle}
+      onClick={handleToggle}
+    />
+  )
+})
 
 export default function StockSearchView({
   stocks,
@@ -67,14 +167,7 @@ export default function StockSearchView({
       )}
 
       <div className="mt-4">
-        <TextField
-          name="stockSearch"
-          variant="search"
-          value={searchKeyword}
-          placeholder="코스피 200 종목 검색"
-          onChange={(event) => onSearchKeywordChange(event.target.value)}
-          onClear={() => onSearchKeywordChange('')}
-        />
+        <StockSearchInput value={searchKeyword} onSearchKeywordChange={onSearchKeywordChange} />
       </div>
 
       {!searchKeyword.trim() && selectedStocks.length > 0 && (
@@ -83,15 +176,7 @@ export default function StockSearchView({
 
           <div className="mt-3 flex flex-wrap gap-2">
             {selectedStocks.map((stock) => (
-              <button
-                key={stock.id}
-                type="button"
-                onClick={() => onToggleStock(stock.id)}
-                className="pretendard-Caption2 bg-Yellow-100 text-Yellow-20 flex items-center gap-1 rounded-full px-3 py-1.5"
-              >
-                {stock.name}
-                <span aria-hidden="true">×</span>
-              </button>
+              <SelectedStockChip key={stock.id} stock={stock} onToggleStock={onToggleStock} />
             ))}
           </div>
         </section>
@@ -118,19 +203,9 @@ export default function StockSearchView({
             <div className="border-Gray-2 overflow-hidden rounded-xl border">
               {stocks.map((stock, index) => (
                 <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
-                  <StockRankItem
+                  <StockSearchResultItem
                     rank={searchKeyword.trim() ? undefined : index + 1}
-                    logo={
-                      <Image
-                        src={stock.logoUrl!}
-                        alt={`${stock.name} 로고`}
-                        responsiveSize="none"
-                        className="h-full w-full object-cover"
-                      />
-                    }
-                    name={stock.name}
-                    price={stock.price}
-                    changeRate={stock.changeRate}
+                    stock={stock}
                     isFavorite={selectedStockIds.includes(stock.id)}
                     disabled={hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)}
                     disabledMessage={
@@ -138,8 +213,7 @@ export default function StockSearchView({
                         ? '관심종목은 최대 3개까지 선택할 수 있어요.'
                         : undefined
                     }
-                    onToggleFavorite={() => onToggleStock(stock.id)}
-                    onClick={() => onToggleStock(stock.id)}
+                    onToggleStock={onToggleStock}
                   />
                 </div>
               ))}
