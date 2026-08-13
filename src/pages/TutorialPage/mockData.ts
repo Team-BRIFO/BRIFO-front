@@ -18,6 +18,7 @@ export const TUTORIAL_HOME_CARD_NEWS_MOCK = [
     newsCount: 7,
     headline: '브리포테크, 차세대 공정 모듈 연구개발 1단계 검증 착수',
     isCompleted: false,
+    isRequested: false,
   },
   {
     id: 2,
@@ -32,6 +33,7 @@ export const TUTORIAL_HOME_CARD_NEWS_MOCK = [
     newsCount: 5,
     headline: '브리포시스템, 신규 제품군 시제품 조립 절차 돌입',
     isCompleted: false,
+    isRequested: false,
   },
 ]
 

@@ -24,6 +24,8 @@ export interface BriefingCardFooterBarProps {
   headline: string
   /** 분석 완료 여부 */
   isCompleted: boolean
+  /** 분석 요청 여부 */
+  isRequested?: boolean
 }
 
 export interface PredictionFooterBarProps {
@@ -82,9 +84,12 @@ export function AnalyzeCard({
       FAIL_UP: { type: 'fall', text: '실패', apColor: 'text-Green-30' },
       FAIL_DOWN: { type: 'fall', text: '실패', apColor: 'text-Green-30' },
       FAIL_HOLD: { type: 'fall', text: '실패', apColor: 'text-Green-30' },
-      BRIEFING: briefingFooter?.isCompleted
-        ? { type: 'complete', text: '분석 완료', apColor: '' }
-        : { type: 'progress', text: '분석 중', apColor: '' },
+      BRIEFING:
+        briefingFooter?.isRequested === false
+          ? null
+          : briefingFooter?.isCompleted
+            ? { type: 'complete', text: '분석 완료', apColor: '' }
+            : { type: 'progress', text: '분석 중', apColor: '' },
       PREDICTION: (() => {
         switch (predictionFooter?.status) {
           case 'ANALYZING':

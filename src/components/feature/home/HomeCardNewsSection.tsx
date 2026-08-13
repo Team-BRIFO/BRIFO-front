@@ -14,6 +14,7 @@ interface HomeCardNewsItem {
   newsCount: number
   headline: string
   isCompleted: boolean
+  isRequested: boolean
 }
 
 interface HomeCardNewsSectionProps {
@@ -68,6 +69,7 @@ export default function HomeCardNewsSection({
                   newsCount: item.newsCount,
                   headline: item.headline,
                   isCompleted: item.isCompleted,
+                  isRequested: item.isRequested,
                 }}
                 className={
                   selectedId === (item.stockId ?? String(item.id))
