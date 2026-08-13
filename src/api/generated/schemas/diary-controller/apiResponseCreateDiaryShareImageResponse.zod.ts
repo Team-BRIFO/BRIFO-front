@@ -16,6 +16,9 @@ export const ApiResponseCreateDiaryShareImageResponse = zod.object({
       diaryId: zod.uuid(),
       shareImageUrl: zod.string(),
       reused: zod.boolean(),
+      changeRate: zod.number(),
+      tradeDate: zod.iso.date(),
+      apDelta: zod.int(),
     })
     .optional(),
 })

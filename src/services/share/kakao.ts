@@ -1,7 +1,11 @@
 import { KAKAO_JAVASCRIPT_SDK } from '@/constants/kakao'
 import type { DiaryDirection } from '@/types/domain/diary'
 
-export type KakaoSdkErrorCode = 'MISSING_JAVASCRIPT_KEY' | 'LOAD_FAILED' | 'INITIALIZATION_FAILED'
+export type KakaoSdkErrorCode =
+  | 'MISSING_JAVASCRIPT_KEY'
+  | 'LOAD_FAILED'
+  | 'INITIALIZATION_FAILED'
+  | 'UPLOAD_FAILED'
 
 export class KakaoSdkError extends Error {
   readonly code: KakaoSdkErrorCode
@@ -18,6 +22,15 @@ export interface KakaoSdk {
   isInitialized: () => boolean
   Share?: {
     sendDefault: (template: unknown) => void | Promise<void>
+    uploadImage?: (options: { file: FileList }) => Promise<KakaoUploadedImageResponse>
+  }
+}
+
+interface KakaoUploadedImageResponse {
+  infos?: {
+    original?: {
+      url?: string
+    }
   }
 }
 
@@ -262,4 +275,60 @@ export function sendKakaoDefaultShare(
   }
 
   return kakao.Share.sendDefault(template)
+}
+
+function toFileList(file: File) {
+  if (typeof DataTransfer !== 'undefined') {
+    const dataTransfer = new DataTransfer()
+    dataTransfer.items.add(file)
+    return dataTransfer.files
+  }
+
+  // 테스트 환경처럼 DataTransfer가 없는 경우에도 SDK가 요구하는 FileList 형태를 보장한다.
+  return {
+    0: file,
+    length: 1,
+    item: (index: number) => (index === 0 ? file : null),
+  } as unknown as FileList
+}
+
+/** PNG Blob을 카카오 이미지 서버에 올리고 메시지 템플릿에서 쓸 공개 URL을 얻는다. */
+export async function uploadKakaoShareImage(
+  image: File,
+  javascriptKey: string | undefined = getKakaoJavascriptKey(),
+) {
+  if (!javascriptKey) {
+    throw new KakaoSdkError(
+      'MISSING_JAVASCRIPT_KEY',
+      '카카오 JavaScript 키가 설정되지 않았어요. 배포 환경 설정을 확인해 주세요.',
+    )
+  }
+
+  if (typeof window === 'undefined') {
+    throw new KakaoSdkError('LOAD_FAILED', '카카오톡 공유는 브라우저에서만 사용할 수 있어요.')
+  }
+
+  const kakao = initializeKakaoSdk(javascriptKey)
+  if (!kakao.Share?.uploadImage) {
+    throw new KakaoSdkError(
+      'INITIALIZATION_FAILED',
+      '카카오톡 이미지 업로드 기능을 준비하지 못했어요. 잠시 후 다시 시도해 주세요.',
+    )
+  }
+
+  try {
+    const response = await kakao.Share.uploadImage({ file: toFileList(image) })
+    const imageUrl = response.infos?.original?.url
+    if (!imageUrl) throw new Error('Kakao image upload did not return an original URL.')
+
+    return imageUrl
+  } catch (cause) {
+    if (cause instanceof KakaoSdkError) throw cause
+
+    throw new KakaoSdkError(
+      'UPLOAD_FAILED',
+      '카카오톡에 공유 이미지를 올리지 못했어요. 잠시 후 다시 시도해 주세요.',
+      { cause },
+    )
+  }
 }

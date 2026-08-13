@@ -5,6 +5,18 @@ import { createRoot, type Root } from 'react-dom/client'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { ApiError } from '@/api/client/ApiError'
+
+const briefingQueryMock = vi.hoisted(() => ({
+  data: { stock: { hashtags: [] }, items: [] } as
+    | { stock: { hashtags: string[] }; items: [] }
+    | undefined,
+  error: null as Error | null,
+  fetchStatus: 'idle' as const,
+  isPending: false,
+  refetch: vi.fn(),
+}))
+
 vi.mock('@/components/common/StatusBar', () => ({
   StatusBar: ({
     left,
@@ -108,12 +120,7 @@ vi.mock('@/pages/BriefingPage/hooks/usePostDecisionMutation', () => ({
   usePostDecisionMutation: () => ({ mutate: vi.fn(), isPending: false }),
 }))
 vi.mock('@/pages/BriefingPage/hooks/useStockBriefingsQuery', () => ({
-  useStockBriefingsQuery: () => ({
-    data: { stock: { hashtags: [] }, items: [] },
-    fetchStatus: 'idle',
-    error: null,
-    refetch: vi.fn(),
-  }),
+  useStockBriefingsQuery: () => briefingQueryMock,
 }))
 vi.mock('@/pages/NewsCardPage/hooks/useNewsQueries', () => ({
   useGetNewsCardDetail: () => ({
@@ -186,6 +193,8 @@ describe('notification navigation', () => {
   afterEach(() => {
     act(() => root.unmount())
     container.remove()
+    briefingQueryMock.data = { stock: { hashtags: [] }, items: [] }
+    briefingQueryMock.error = null
   })
 
   it.each(notificationNavigationCases)(
@@ -211,4 +220,27 @@ describe('notification navigation', () => {
       expect(container.querySelector('output')?.textContent).toBe(PATH.NOTIFICATION)
     },
   )
+
+  it('treats a missing briefing as an empty assignment history', () => {
+    briefingQueryMock.data = undefined
+    briefingQueryMock.error = new ApiError({
+      kind: 'http',
+      endpoint: 'getStockBriefings',
+      code: 'BRIEFING_404',
+      message: '요청한 정보를 찾을 수 없습니다.',
+      status: 404,
+    })
+
+    act(() => {
+      root.render(
+        <MemoryRouter initialEntries={[PATH.BRIEFING_ASSIGN('stock-1')]}>
+          <Routes>
+            <Route path={PATH.BRIEFING_ASSIGN_ROUTE} element={<BriefingAssignPage />} />
+          </Routes>
+        </MemoryRouter>,
+      )
+    })
+
+    expect(container.textContent).toContain('누구에게 맡길까요?')
+  })
 })

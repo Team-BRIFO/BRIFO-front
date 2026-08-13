@@ -1,4 +1,4 @@
-export type ShareImageErrorCode = 'FETCH_FAILED' | 'INVALID_RESPONSE' | 'DOWNLOAD_FAILED'
+export type ShareImageErrorCode = 'DOWNLOAD_FAILED'
 
 export class ShareImageError extends Error {
   readonly code: ShareImageErrorCode
@@ -7,44 +7,6 @@ export class ShareImageError extends Error {
     super(message, options)
     this.name = 'ShareImageError'
     this.code = code
-  }
-}
-
-/** 서버가 준 공유 이미지 URL을 저장에 쓸 수 있는 Blob으로 바꾼다. */
-export async function fetchShareImageBlob(shareImageUrl: string) {
-  let response: Response
-
-  try {
-    response = await fetch(shareImageUrl)
-  } catch (cause) {
-    throw new ShareImageError(
-      'FETCH_FAILED',
-      '공유 이미지를 가져오지 못했어요. 네트워크 연결 또는 이미지 접근 권한을 확인한 뒤 다시 시도해 주세요.',
-      { cause },
-    )
-  }
-
-  if (!response.ok) {
-    throw new ShareImageError(
-      'INVALID_RESPONSE',
-      '공유 이미지를 가져오지 못했어요. 잠시 후 다시 시도해 주세요.',
-    )
-  }
-
-  try {
-    const image = await response.blob()
-    const mimeType = image.type.split(';', 1)[0]?.trim().toLowerCase()
-    if (image.size === 0 || mimeType !== 'image/png') {
-      throw new Error('The response body is not a PNG image.')
-    }
-
-    return image
-  } catch (cause) {
-    throw new ShareImageError(
-      'INVALID_RESPONSE',
-      '공유 이미지가 PNG 형식인지 확인하지 못했어요. 잠시 후 다시 시도해 주세요.',
-      { cause },
-    )
   }
 }
 
@@ -72,8 +34,12 @@ export function downloadShareImage(image: Blob, filename: string) {
     try {
       link.click()
     } finally {
-      link.remove()
-      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0)
+      // 일부 모바일 브라우저는 클릭 직후 앵커를 제거하면 다운로드를 취소한다.
+      // 파일 저장이 시작될 시간을 준 뒤 링크와 Object URL을 함께 정리한다.
+      window.setTimeout(() => {
+        link.remove()
+        URL.revokeObjectURL(objectUrl)
+      }, 1_000)
     }
   } catch (cause) {
     throw new ShareImageError(

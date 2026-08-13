@@ -11,6 +11,9 @@ export const CreateDiaryShareImageResponse = zod.object({
   diaryId: zod.uuid(),
   shareImageUrl: zod.string(),
   reused: zod.boolean(),
+  changeRate: zod.number(),
+  tradeDate: zod.iso.date(),
+  apDelta: zod.int(),
 })
 
 export type CreateDiaryShareImageResponse = zod.input<typeof CreateDiaryShareImageResponse>

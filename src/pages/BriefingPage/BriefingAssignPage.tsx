@@ -20,6 +20,10 @@ import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBrief
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
 import { PATH } from '@/routes/paths'
 
+function isBriefingNotFoundError(error: unknown) {
+  return error instanceof ApiError && error.code === 'BRIEFING_404'
+}
+
 export function BriefingAssignPage() {
   const { stockId } = useParams<{ stockId: string }>()
   const navigate = useNavigate()
@@ -32,7 +36,9 @@ export function BriefingAssignPage() {
   const agentsList = agentsQuery.data ?? []
   const isQueriesPending =
     newsCardQuery.isPending || agentsQuery.isPending || briefingsQuery.isPending
-  const hasError = !!newsCardQuery.error || !!agentsQuery.error || !!briefingsQuery.error
+  const isBriefingNotFound = isBriefingNotFoundError(briefingsQuery.error)
+  const hasError =
+    !!newsCardQuery.error || !!agentsQuery.error || (!!briefingsQuery.error && !isBriefingNotFound)
 
   const requestedAgentIds = new Set(
     briefingsQuery.data?.items
@@ -214,7 +220,7 @@ export function BriefingAssignPage() {
             briefingsQuery.refetch()
           }}
         />
-      ) : isQueriesPending || !newsCardQuery.data || !agentsQuery.data || !briefingsQuery.data ? (
+      ) : isQueriesPending || !newsCardQuery.data || !agentsQuery.data ? (
         <PageLoadingView />
       ) : agentsList.length === 0 ? (
         <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />

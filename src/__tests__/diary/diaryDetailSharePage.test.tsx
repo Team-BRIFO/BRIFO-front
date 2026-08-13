@@ -10,6 +10,7 @@ import { ApiError } from '@/api/client/ApiError'
 vi.mock('@/assets/icons/loader-1.svg?react', () => ({ default: () => <svg /> }))
 vi.mock('@/assets/icons/share/download.svg?react', () => ({ default: () => <svg /> }))
 vi.mock('@/assets/icons/share/kakao.svg?react', () => ({ default: () => <svg /> }))
+vi.mock('@/assets/icons/star.svg?react', () => ({ default: () => <svg /> }))
 vi.mock('@/components/common/StatusBar', () => ({
   StatusBar: ({
     left,
@@ -39,6 +40,11 @@ const diaryMocks = vi.hoisted(() => ({
     id: string
     shareImageUrl: string | null
     stockName: string
+    changeRate: number
+    direction: 'up' | 'down' | 'neutral'
+    isCorrect: boolean
+    agentType: 'rookie' | 'pro' | 'tanker'
+    confidenceLevel: number
   } | null,
   mutation: {
     mutate: vi.fn(),
@@ -48,6 +54,9 @@ const diaryMocks = vi.hoisted(() => ({
     isError: false,
     error: null as unknown,
     mutationDiaryId: null as string | null,
+    data: undefined as
+      | { diaryId: string; shareImageUrl: string; tradeDate: string; apDelta: number | null }
+      | undefined,
   },
 }))
 
@@ -63,6 +72,19 @@ vi.mock('@/pages/DiaryPage/hooks/useDiaryQueries', () => ({
 
 vi.mock('@/pages/DiaryPage/hooks/useCreateDiaryShareImageMutation', () => ({
   useCreateDiaryShareImageMutation: () => diaryMocks.mutation,
+}))
+
+vi.mock('@/hooks/queries/user/useUserProfileQuery', () => ({
+  useUserProfileQuery: () => ({ data: { profile: { companyName: '브리포 주식회사' } } }),
+}))
+
+vi.mock('@/pages/DiaryPage/hooks/useDiaryShareCardImage', () => ({
+  useDiaryShareCardImage: () => ({
+    image: new Blob(['share-card'], { type: 'image/png' }),
+    state: 'ready',
+    error: null,
+    retry: vi.fn(),
+  }),
 }))
 
 import { DiaryDetailPage } from '@/pages/DiaryPage/DiaryDetailPage'
@@ -111,7 +133,16 @@ describe('DiaryDetailPage share image flow', () => {
     ;(
       globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
     ).IS_REACT_ACT_ENVIRONMENT = true
-    diaryMocks.detail = { id: diaryId, shareImageUrl: null, stockName: '삼성전자' }
+    diaryMocks.detail = {
+      id: diaryId,
+      shareImageUrl: null,
+      stockName: '삼성전자',
+      changeRate: 2,
+      direction: 'up',
+      isCorrect: true,
+      agentType: 'rookie',
+      confidenceLevel: 4,
+    }
     diaryMocks.mutation.mutate.mockReset()
     diaryMocks.mutation.reset.mockReset()
     diaryMocks.mutation.isIdle = true
@@ -119,6 +150,7 @@ describe('DiaryDetailPage share image flow', () => {
     diaryMocks.mutation.isError = false
     diaryMocks.mutation.error = null
     diaryMocks.mutation.mutationDiaryId = null
+    diaryMocks.mutation.data = undefined
     container = document.createElement('div')
     document.body.append(container)
     root = createRoot(container)
@@ -129,16 +161,17 @@ describe('DiaryDetailPage share image flow', () => {
     container.remove()
   })
 
-  it('creates an absent share image and enables image saving after the cache URL is available', () => {
+  it('requests share-card data and enables image saving after the front PNG is ready', () => {
     renderDetail(root)
 
     expect(diaryMocks.mutation.mutate).toHaveBeenCalledWith(diaryId)
     expect(getButton('이미지 저장').disabled).toBe(true)
 
-    diaryMocks.detail = {
-      id: diaryId,
+    diaryMocks.mutation.data = {
+      diaryId,
       shareImageUrl: 'https://images.example.com/decision-card.png',
-      stockName: '삼성전자',
+      tradeDate: '2026-08-13',
+      apDelta: 80,
     }
     diaryMocks.mutation.isIdle = false
     diaryMocks.mutation.mutationDiaryId = diaryId
@@ -147,7 +180,7 @@ describe('DiaryDetailPage share image flow', () => {
     expect(getButton('이미지 저장').disabled).toBe(false)
     expect(getButton('카카오톡으로 공유').disabled).toBe(true)
     expect(container.querySelector('[aria-label="인스타그램으로 공유"]')).toBeNull()
-    expect(container.textContent).toContain('공유 카드가 준비되었어요.')
+    expect(container.textContent).not.toContain('공유 카드가 준비되었어요.')
   })
 
   it('shows the generation failure reason and retries the same diary', () => {
@@ -193,12 +226,21 @@ describe('DiaryDetailPage share image flow', () => {
     renderDetail(root)
     expect(container.textContent).toContain('첫 번째 일기의 공유 카드 생성에 실패했습니다.')
 
-    diaryMocks.detail = { id: nextDiaryId, shareImageUrl: null, stockName: 'SK하이닉스' }
+    diaryMocks.detail = {
+      id: nextDiaryId,
+      shareImageUrl: null,
+      stockName: 'SK하이닉스',
+      changeRate: -1.2,
+      direction: 'down',
+      isCorrect: false,
+      agentType: 'pro',
+      confidenceLevel: 3,
+    }
     diaryMocks.mutation.reset.mockClear()
     act(() => getButton('다른 결정 카드 열기').click())
 
     expect(container.textContent).not.toContain('첫 번째 일기의 공유 카드 생성에 실패했습니다.')
-    expect(container.textContent).toContain('공유 카드를 불러오는 중이에요.')
+    expect(container.textContent).not.toContain('공유 카드를 불러오는 중이에요.')
     expect(diaryMocks.mutation.reset).toHaveBeenCalledOnce()
   })
 })
