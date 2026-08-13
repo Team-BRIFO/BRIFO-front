@@ -30,6 +30,7 @@ export function NotificationPage() {
       <main className="min-h-screen bg-white">
         <div className="flex w-full flex-col gap-3 px-4">
           <StatusBar
+            hasStatusArea={false}
             className="w-full [&>div:last-child]:px-0"
             left={<StatusBarBackButton onClick={() => navigate(-1)} />}
             title="알림"
@@ -49,6 +50,7 @@ export function NotificationPage() {
       <main className="min-h-screen bg-white">
         <div className="flex w-full flex-col gap-3 px-4">
           <StatusBar
+            hasStatusArea={false}
             className="w-full [&>div:last-child]:px-0"
             left={<StatusBarBackButton onClick={() => navigate(-1)} />}
             title="알림"
@@ -63,6 +65,7 @@ export function NotificationPage() {
     <main className="min-h-screen bg-white">
       <div className="flex w-full flex-col gap-3 px-4">
         <StatusBar
+          hasStatusArea={false}
           className="w-full [&>div:last-child]:px-0"
           left={<StatusBarBackButton onClick={() => navigate(-1)} />}
           title="알림"

@@ -24,6 +24,7 @@ export function BriefingPage() {
     <div className="bg-Background1 flex h-screen w-full flex-col">
       {/* 글로벌 상태바 헤더 */}
       <StatusBar
+        hasStatusArea={false}
         className="bg-White"
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="브리핑"

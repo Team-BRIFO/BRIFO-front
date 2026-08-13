@@ -168,6 +168,7 @@ export function BriefingAssignPage() {
   return (
     <div className="bg-White flex h-screen w-full flex-col">
       <StatusBar
+        hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title="사원배치"
         right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
