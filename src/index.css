@@ -39,4 +39,11 @@
     /* 360px 기준 16px. 최대 768px 너비까지만 비례해서 커짐 */
     font-size: calc(min(100vw, 768px) / 360 * 16);
   }
+
+  img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
 }
