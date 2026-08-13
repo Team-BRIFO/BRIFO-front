@@ -7,7 +7,9 @@
  */
 import type {
   ApiResponseCompleteOnboardingResponse,
+  ApiResponseDevMasterTokenResponse,
   ApiResponseDevSignUpResponse,
+  DevMasterTokenRequest,
   DevSignUpRequest,
 } from '../../schemas'
 
@@ -38,5 +40,20 @@ export const completeOnboarding1 = (
     options,
   )
 }
+export const issueMasterToken = (
+  devMasterTokenRequest: BodyType<DevMasterTokenRequest>,
+  options?: SecondParameter<typeof axiosInstance<ApiResponseDevMasterTokenResponse>>,
+) => {
+  return axiosInstance<ApiResponseDevMasterTokenResponse>(
+    {
+      url: `/api/dev/master/token`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: devMasterTokenRequest,
+    },
+    options,
+  )
+}
 export type SignUpResult = NonNullable<Awaited<ReturnType<typeof signUp>>>
 export type CompleteOnboarding1Result = NonNullable<Awaited<ReturnType<typeof completeOnboarding1>>>
+export type IssueMasterTokenResult = NonNullable<Awaited<ReturnType<typeof issueMasterToken>>>
