@@ -42,32 +42,43 @@ export default function HomeCardNewsSection({
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => onItemClick?.(item.stockId ?? String(item.id))}
-            className="w-full text-left"
-          >
-            <AnalyzeCard
-              type="normal"
-              resultType="BRIEFING"
-              stock={item.stock}
-              briefingFooter={{
-                newsCount: item.newsCount,
-                headline: item.headline,
-                isCompleted: item.isCompleted,
-              }}
-              className={
-                selectedId === (item.stockId ?? String(item.id))
-                  ? 'border-Yellow-40 border-2 transition-colors'
-                  : 'transition-colors'
-              }
-            />
-          </button>
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <div className="border-Gray-2 flex flex-col items-center gap-1 rounded-xl border border-dashed px-4 py-10 text-center">
+          <p className="pretendard-Body2-Semibold text-Gray-7">
+            오늘의 카드뉴스를 아직 준비하고 있어요
+          </p>
+          <p className="pretendard-Caption2 text-Gray-5">
+            사원들이 기사를 정리하는 중이에요. 조금 뒤에 다시 확인해 주세요!
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-1">
+          {items.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onItemClick?.(item.stockId ?? String(item.id))}
+              className="w-full text-left"
+            >
+              <AnalyzeCard
+                type="normal"
+                resultType="BRIEFING"
+                stock={item.stock}
+                briefingFooter={{
+                  newsCount: item.newsCount,
+                  headline: item.headline,
+                  isCompleted: item.isCompleted,
+                }}
+                className={
+                  selectedId === (item.stockId ?? String(item.id))
+                    ? 'border-Yellow-40 border-2 transition-colors'
+                    : 'transition-colors'
+                }
+              />
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

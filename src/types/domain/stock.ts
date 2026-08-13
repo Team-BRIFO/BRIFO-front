@@ -2,7 +2,8 @@
 export interface InterestStockOption {
   id: string
   name: string
-  price: string
-  changeRate: number
+  /** 종가가 아직 수집되지 않았으면 null. 0원·0% 대신 안내 문구를 보여준다. */
+  price: string | null
+  changeRate: number | null
   logoUrl: string
 }
