@@ -279,7 +279,7 @@ describe('Kakao JavaScript SDK setup', () => {
       direction: 'down' as const,
       isCorrect: false,
       expected: {
-        title: '영차영차...개미는 오늘도 힘들다',
+        title: '영차영차... 개미는 오늘도 힘들다',
         description: '삼성전자 DOWN 찍었는데 64%네 내일은 잘해보자 아자스!',
         buttonTitle: '너도 해볼래?',
       },
