@@ -106,7 +106,7 @@ function AnalysisRequestedStep() {
     <section className="border-Gray-2 mt-9 flex w-full flex-col items-center rounded-xl border px-5 py-6 text-center">
       <h2 className="dnf-Title4 text-Gray-10">분석을 의뢰했어요!</h2>
       <p className="pretendard-Button2 text-Gray-6 mt-4 leading-relaxed font-normal">
-        루키 · 프로 · 탱커가 보고서를 쓰고 있어요.
+        루키 · 프로 · 탱커가 브리포테크 보고서를 쓰고 있어요.
         <br />
         사무실에서 진행 상황을 볼 수 있어요!
       </p>
@@ -126,8 +126,8 @@ function AnalysisReportStep() {
         percentage={72}
         newsTitleText="통합 시험용 시제품 제작 완료"
       />
-      <BriefingComment comment="사장님, 지난번 종목 관망이 적중하셨죠! 이번 브리포테크도 결이 비슷해요." />
-      <BriefingNote message="사장님, 이건 진짜 기회예요! 차세대 공정 모듈의 통합 시험용 시제품 제작을 마쳤어요. 장시간 연속 운전과 제어 기능 연동 여부 확인에 따라 수급도 든든합니다! 다만 아직 검증이 남아있는 단기 급등 구간이라 분할 접근만 주의하면 좋겠습니다." />
+      <BriefingComment comment="사장님, 지난번 브리포시스템 관망이 적중하셨죠! 이번 브리포테크도 결이 비슷해요." />
+      <BriefingNote message="사장님, 이건 진짜 기회예요! HBM3E 12단 양산이 시작됐고, 엔비디아·AMD 공급 계약까지 임박했어요. 게다가 외국인이 5거래일 연속 순매수 중이라 수급도 든든합니다! 과거 HBM3 양산 발표 때도 한 달간 강세였던 전례가 있어요. 다만 단기 급등 구간이라 분할 접근만 주의하면 좋겠습니다." />
     </article>
   )
 }
@@ -180,11 +180,11 @@ function PredictionRegisteredStep() {
         stock={{
           name: '브리포테크',
           code: 'BRIFO01',
-          marketType: 'KOSPI',
+          marketType: '코스피',
           logoUrl: BrifoTecLogo,
           price: 31850,
           changeRate: 17.96,
-          keywords: ['차세대공정', '모듈', '성능검증'],
+          keywords: ['HBM', '반도체', '외국인 순매수'],
         }}
         className="mt-5"
       />
