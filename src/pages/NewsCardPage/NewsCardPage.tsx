@@ -15,7 +15,7 @@ import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { PageStatusShell } from '@/components/feedback/PageStatusShell'
 import { StatusMessage } from '@/components/feedback/StatusMessage'
-import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
+import { useStockNewsCards } from '@/pages/NewsCardPage/hooks/useNewsQueries'
 import { PATH } from '@/routes/paths'
 
 /** 홈 탭 - SCR-05: 카드뉴스 상세 */
@@ -24,11 +24,9 @@ export function NewsCardPage() {
   const navigate = useNavigate()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const { data: newsData, isLoading, error, refetch } = useGetNewsCardDetail(stockId ?? null)
+  const { cards, isLoading, error, refetch } = useStockNewsCards(stockId ?? null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedTermId, setSelectedTermId] = useState<string | null>(null)
-
-  const cards = newsData ?? []
   const stockName = cards[0]?.relatedStocks?.[0]?.name || ''
   const isEmpty = !isLoading && !error && cards.length === 0
 

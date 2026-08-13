@@ -11,6 +11,7 @@ import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
 import SettlementCard from '@/components/feature/home/SettlementCard'
 import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueries'
+import { mapTodayNewsCardsByStock } from '@/mappers/homeMapper'
 import { useSettlementCountdown } from '@/pages/HomePage/hooks/useSettlementCountdown'
 import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
 import { PATH } from '@/routes/paths'
@@ -27,18 +28,7 @@ export function HomePage() {
   const employeeLevels = Object.fromEntries(
     (home?.agents ?? []).map((agent) => [agent.agentType, agent.level]),
   )
-  const cardNewsItems = (home?.todayNewsCards.items ?? []).map((item) => ({
-    id: item.cardId,
-    stockId: item.stock.stockId,
-    stock: {
-      name: item.stock.name,
-      changeRate: item.stock.changeRate,
-      logoUrl: item.stock.logoUrl,
-    },
-    newsCount: 1,
-    headline: item.headline,
-    isCompleted: false,
-  }))
+  const cardNewsItems = mapTodayNewsCardsByStock(home?.todayNewsCards.items ?? [])
   const batchTime = formatBatchTime(home?.todayNewsCards.batchTime)
 
   return (
