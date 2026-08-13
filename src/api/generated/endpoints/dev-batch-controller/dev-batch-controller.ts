@@ -73,6 +73,20 @@ export const rerunDecisionSettlement = (
     options,
   )
 }
+export const rerunDailyClosingPrice = (
+  devDateBatchRequest: BodyType<DevDateBatchRequest>,
+  options?: SecondParameter<typeof axiosInstance<ApiResponseDevBatchRunResponse>>,
+) => {
+  return axiosInstance<ApiResponseDevBatchRunResponse>(
+    {
+      url: `/api/dev/batches/daily-closing-price/rerun`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: devDateBatchRequest,
+    },
+    options,
+  )
+}
 export type RerunNewsCollectionResult = NonNullable<Awaited<ReturnType<typeof rerunNewsCollection>>>
 export type RunSingleNewsCardGenerationResult = NonNullable<
   Awaited<ReturnType<typeof runSingleNewsCardGeneration>>
@@ -82,4 +96,7 @@ export type RerunNewsCardGenerationResult = NonNullable<
 >
 export type RerunDecisionSettlementResult = NonNullable<
   Awaited<ReturnType<typeof rerunDecisionSettlement>>
+>
+export type RerunDailyClosingPriceResult = NonNullable<
+  Awaited<ReturnType<typeof rerunDailyClosingPrice>>
 >
