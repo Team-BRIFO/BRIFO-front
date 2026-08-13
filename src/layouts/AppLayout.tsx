@@ -47,11 +47,11 @@ export function AppLayout() {
     navigate(NAVIGATION_PATHS[value])
   }
   return (
-    <div className="bg-White relative mx-auto flex h-dvh w-full max-w-3xl flex-col overflow-hidden shadow-xl">
+    <div className="bg-Background1 relative mx-auto flex h-dvh w-full max-w-3xl flex-col overflow-hidden shadow-xl">
       <main
         ref={mainRef}
-        className={`flex min-h-0 flex-1 flex-col overflow-y-auto ${
-          selectedNavigation === 'home' ? 'bg-White' : 'bg-Background1'
+        className={`bg-Background1 flex min-h-0 flex-1 flex-col overflow-y-auto ${
+          selectedNavigation === 'home' ? 'overscroll-y-contain' : ''
         }`}
       >
         <Outlet />
