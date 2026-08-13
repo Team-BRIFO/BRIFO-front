@@ -63,7 +63,7 @@ export function BriefingDetailPage() {
   const displayAgent = realAgent ? { ...data!.agent, ...realAgent } : data?.agent
 
   return (
-    <div className="bg-Background1 flex h-screen w-full flex-col gap-3">
+    <div className="bg-Background1 flex min-h-full w-full flex-col gap-3 pb-8">
       {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
       <StatusBar
         className="bg-White"
@@ -85,7 +85,7 @@ export function BriefingDetailPage() {
       ) : fetchStatus === 'fetching' || !data ? (
         <PageLoadingView />
       ) : (
-        <div className="flex flex-1 flex-col overflow-y-auto">
+        <div className="flex flex-col">
           <div className="flex flex-col gap-3 px-4">
             {/* 타이틀 */}
             <div className="flex items-center justify-between">
@@ -99,9 +99,18 @@ export function BriefingDetailPage() {
               value={activeTab}
               onChange={handleTabChange}
               items={[
-                { label: '루키', value: 'rookie' },
-                { label: '프로', value: 'pro' },
-                { label: '탱커', value: 'tanker' },
+                {
+                  label: '루키',
+                  value: 'rookie',
+                },
+                {
+                  label: '프로',
+                  value: 'pro',
+                },
+                {
+                  label: '탱커',
+                  value: 'tanker',
+                },
               ]}
             />
 

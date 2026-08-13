@@ -14,8 +14,7 @@ import { PATH } from '@/routes/paths'
 
 export function BriefingPage() {
   const [searchParams] = useSearchParams()
-  // URL에서 stockId 추출 (없으면 기본 mock UUID 사용)
-  const stockId = searchParams.get('stockId') ?? 'mock-stock-id'
+  const stockId = searchParams.get('stockId')
   const navigate = useNavigate()
 
   const { data, fetchStatus, error, refetch } = useStockBriefingsQuery(stockId)
@@ -61,28 +60,32 @@ export function BriefingPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                {data.items.length === 0 ? (
+                {data.items.filter((item) => item.status !== 'FAILED').length === 0 ? (
                   <p className="pretendard-Body2-Regular text-Gray-6 py-10 text-center">
                     아직 도착한 브리핑이 없어요.
                   </p>
                 ) : (
-                  data.items.map((item) => (
-                    <BriefingAgentListItem
-                      key={item.id}
-                      agentType={item.agentType}
-                      agentName={item.nickname}
-                      badgeType={item.direction}
-                      comment={item.oneLiner}
-                      onClick={() =>
-                        item.status === 'COMPLETED' ? navigate(PATH.BRIEFING_DETAIL(item.id)) : null
-                      }
-                      className={
-                        item.status !== 'COMPLETED'
-                          ? 'cursor-not-allowed opacity-50'
-                          : 'cursor-pointer'
-                      }
-                    />
-                  ))
+                  data.items
+                    .filter((item) => item.status !== 'FAILED')
+                    .map((item) => (
+                      <BriefingAgentListItem
+                        key={item.id}
+                        agentType={item.agentType}
+                        agentName={item.nickname}
+                        badgeType={item.direction}
+                        comment={item.oneLiner}
+                        onClick={() =>
+                          item.status === 'COMPLETED'
+                            ? navigate(PATH.BRIEFING_DETAIL(item.id))
+                            : null
+                        }
+                        className={
+                          item.status !== 'COMPLETED'
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'cursor-pointer'
+                        }
+                      />
+                    ))
                 )}
               </div>
             </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { ApiError } from '@/api/client/ApiError'
 import Modal from '@/components/common/Modal'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
@@ -16,8 +17,18 @@ export function PredictionListPage() {
   const navigate = useNavigate()
   const [selectedDecisionId, setSelectedDecisionId] = useState<string | null>(null)
 
+  const [isAfterMarketClose] = useState(() => {
+    const kstTime = new Date(
+      Date.now() + new Date().getTimezoneOffset() * 60000 + 9 * 60 * 60 * 1000,
+    )
+    return kstTime.getHours() > 15 || (kstTime.getHours() === 15 && kstTime.getMinutes() >= 30)
+  })
+
   const decisionsQuery = useDecisionListQuery()
   const selectedDecisionQuery = useDecisionDetailQuery(selectedDecisionId)
+
+  const isSettlementWaiting =
+    selectedDecisionQuery.error instanceof ApiError && selectedDecisionQuery.error.status === 409
   const decisions = decisionsQuery.data
   const selectedDecisionDetail = selectedDecisionQuery.data
   const selectedDecision = decisions?.find((decision) => decision.id === selectedDecisionId)
@@ -79,42 +90,52 @@ export function PredictionListPage() {
 
             {/* 예측 리스트 */}
             <div className="flex flex-col gap-4">
-              {decisions.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    if (item.isSettled) {
-                      setSelectedDecisionId(item.id)
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (item.isSettled && (e.key === 'Enter' || e.key === ' ')) {
-                      e.preventDefault()
-                      setSelectedDecisionId(item.id)
-                    }
-                  }}
-                  role={item.isSettled ? 'button' : undefined}
-                  tabIndex={item.isSettled ? 0 : undefined}
-                  className={
-                    item.isSettled
-                      ? 'focus-visible:ring-Pink-30 cursor-pointer rounded-xl focus:outline-none focus-visible:ring-2'
-                      : ''
-                  }
-                >
-                  <AnalyzeCard
-                    resultType="PREDICTION"
-                    predictionFooter={{
-                      status: item.isSettled ? 'SETTLED' : 'WAITING',
-                      currentRate: item.stock.changeRate,
+              {decisions.map((item) => {
+                let footerStatus: 'SETTLED' | 'WAITING' | 'SETTLING' = item.isSettled
+                  ? 'SETTLED'
+                  : 'WAITING'
+                // 당일 15:30 이후에는 무조건 정산 중으로 표시
+                if (isAfterMarketClose) {
+                  footerStatus = 'SETTLING'
+                }
+
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => {
+                      if (item.isSettled) {
+                        setSelectedDecisionId(item.id)
+                      }
                     }}
-                    stock={{
-                      name: item.stock.name,
-                      logoUrl: item.stock.logoUrl,
-                      changeRate: item.stock.changeRate,
+                    onKeyDown={(e) => {
+                      if (item.isSettled && (e.key === 'Enter' || e.key === ' ')) {
+                        e.preventDefault()
+                        setSelectedDecisionId(item.id)
+                      }
                     }}
-                  />
-                </div>
-              ))}
+                    role={item.isSettled ? 'button' : undefined}
+                    tabIndex={item.isSettled ? 0 : undefined}
+                    className={
+                      item.isSettled
+                        ? 'focus-visible:ring-Pink-30 cursor-pointer rounded-xl focus:outline-none focus-visible:ring-2'
+                        : ''
+                    }
+                  >
+                    <AnalyzeCard
+                      resultType="PREDICTION"
+                      predictionFooter={{
+                        status: footerStatus,
+                        currentRate: item.stock.changeRate,
+                      }}
+                      stock={{
+                        name: item.stock.name,
+                        logoUrl: item.stock.logoUrl,
+                        changeRate: item.stock.changeRate,
+                      }}
+                    />
+                  </div>
+                )
+              })}
             </div>
           </>
         )}
@@ -125,9 +146,12 @@ export function PredictionListPage() {
             selectedDecisionQuery.fetchStatus === 'idle' &&
             !selectedDecisionDetail ? (
               <PageErrorView
-                title="예측 결과를 불러오지 못했어요"
+                title={isSettlementWaiting ? '정산 대기 중입니다' : '예측 결과를 불러오지 못했어요'}
+                description={isSettlementWaiting ? '잠시 후 다시 확인해 주세요.' : undefined}
                 error={selectedDecisionQuery.error}
-                onRetry={() => selectedDecisionQuery.refetch()}
+                onRetry={isSettlementWaiting ? undefined : () => selectedDecisionQuery.refetch()}
+                buttonText={isSettlementWaiting ? '닫기' : undefined}
+                onButtonClick={isSettlementWaiting ? () => setSelectedDecisionId(null) : undefined}
               />
             ) : !selectedDecisionDetail ? (
               <PageLoadingView />

@@ -15,6 +15,7 @@ import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { PageStatusShell } from '@/components/feedback/PageStatusShell'
 import { StatusMessage } from '@/components/feedback/StatusMessage'
+import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { useGetNewsCardDetail } from '@/pages/NewsCardPage/hooks/useNewsQueries'
 import { PATH } from '@/routes/paths'
 
@@ -25,6 +26,9 @@ export function NewsCardPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const { data: newsData, isLoading, error, refetch } = useGetNewsCardDetail(stockId ?? null)
+  const { data: briefingData } = useStockBriefingsQuery(stockId ?? null)
+  const requestedBriefings = briefingData?.items.filter((item) => item.status !== 'FAILED') ?? []
+  const requestedCount = requestedBriefings.length
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedTermId, setSelectedTermId] = useState<string | null>(null)
 
@@ -76,11 +80,11 @@ export function NewsCardPage() {
           />
         </PageStatusShell>
       ) : (
-        <main className="mx-5 mt-5 flex flex-1 flex-col gap-8">
-          <div className="flex flex-col overflow-x-hidden overflow-y-auto">
+        <main className="mx-5 mt-5 flex min-h-0 flex-1 flex-col gap-8 pb-6">
+          <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto">
             <div
               ref={scrollContainerRef}
-              className="flex w-full snap-x snap-mandatory overflow-x-auto [&::-webkit-scrollbar]:hidden"
+              className="flex w-full snap-x snap-mandatory overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden"
               onScroll={handleScroll}
             >
               {cards.map((card) => (
@@ -91,17 +95,48 @@ export function NewsCardPage() {
             </div>
             <NewsCardIndicator total={cards.length} currentIndex={currentIndex} />
           </div>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex shrink-0 flex-col items-center gap-2">
             <p className="text-Gray-6 pretendard-Caption2 text-center">
               카드뉴스 {cards.length}건을 사원이 모두 읽고 분석해요 · 종목당 1회
             </p>
-            <Button
-              size="lg"
-              isFullWidth
-              onClick={() => navigate(PATH.BRIEFING_ASSIGN(stockId || ''))}
-            >
-              사원에게 분석 의뢰하기
-            </Button>
+            {requestedCount === 3 ? (
+              <Button
+                size="lg"
+                isFullWidth
+                color="secondary"
+                onClick={() => navigate(PATH.BRIEFING_FOR_STOCK(stockId || ''))}
+              >
+                분석 현황 보기
+              </Button>
+            ) : requestedCount > 0 ? (
+              <div className="flex w-full flex-col gap-2">
+                <Button
+                  size="lg"
+                  isFullWidth
+                  color="primary"
+                  onClick={() => navigate(PATH.BRIEFING_ASSIGN(stockId || ''))}
+                >
+                  사원에게 추가 분석 의뢰하기
+                </Button>
+                <Button
+                  size="lg"
+                  isFullWidth
+                  color="secondary"
+                  onClick={() => navigate(PATH.BRIEFING_FOR_STOCK(stockId || ''))}
+                >
+                  분석 현황 보기
+                </Button>
+              </div>
+            ) : (
+              <Button
+                size="lg"
+                isFullWidth
+                color="primary"
+                onClick={() => navigate(PATH.BRIEFING_ASSIGN(stockId || ''))}
+              >
+                사원에게 분석 의뢰하기
+              </Button>
+            )}
           </div>
         </main>
       )}

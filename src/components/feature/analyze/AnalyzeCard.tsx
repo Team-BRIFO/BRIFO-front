@@ -28,7 +28,7 @@ export interface BriefingCardFooterBarProps {
 
 export interface PredictionFooterBarProps {
   /** 분석/정산 상태 */
-  status: 'ANALYZING' | 'COMPLETED' | 'WAITING' | 'SETTLED'
+  status: 'ANALYZING' | 'COMPLETED' | 'WAITING' | 'SETTLED' | 'SETTLING'
   /** 현재 수익률 (예: 6.3) */
   currentRate: number
 }
@@ -95,6 +95,8 @@ export function AnalyzeCard({
             return { type: 'gray', text: '정산대기', apColor: 'text-Gray-7' }
           case 'SETTLED':
             return { type: 'gray', text: '정산완료', apColor: 'text-Gray-7' }
+          case 'SETTLING':
+            return { type: 'progress', text: '정산 중', apColor: '' }
           default:
             return { type: 'gray', text: '정산대기', apColor: 'text-Gray-7' }
         }
