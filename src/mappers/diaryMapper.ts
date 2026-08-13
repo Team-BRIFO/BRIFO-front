@@ -102,16 +102,18 @@ export function mapDiaryEntryPage(result: GetDiariesResponseOutput): DiaryEntryP
 /**
  * 상세 응답 → 도메인
  *
- * 사용:   diaryId · shareImageUrl · stock.name(이미지 alt)
- * 미사용: stock.stockId · stock.changeRate · agent.* · briefing.* · decision.*
- *         → 카드 내용을 서버가 PNG 로 렌더링하므로 화면이 직접 그릴 값이 없다.
- *           상세를 조립형 UI 로 바꾸면 그때 매핑을 되살린다.
+ * 사용: diaryId · shareImageUrl · stock.name(이미지 alt·카카오톡 문구)
+ *       briefing.direction · decision.isCorrect(카카오톡 문구)
+ * 미사용: stock.stockId · agent.* · briefing.briefingId · briefing.confidenceRate
+ *         · decision.confidenceLevel → 카드 내용은 서버 PNG로 렌더링한다.
  */
 export function mapDiaryDetail(result: GetDiaryDetailResponseOutput): DiaryDetail {
   return {
     id: result.diaryId,
     shareImageUrl: result.shareImageUrl ?? null,
     stockName: result.stock.name,
+    direction: DIRECTION_BY_CODE[result.briefing.direction],
+    isCorrect: result.decision.isCorrect,
   }
 }
 
@@ -138,9 +140,14 @@ export function mapDiaryShareImage(result: CreateDiaryShareImageResponseOutput):
 export function mapDiaryStatistics(result: GetDiaryStatsResponseOutput): DiaryStatistics {
   const { summary } = result
   const subtitle = `최근 30일 · 결정 ${summary.recent30DaysSettledDecisionCount}건`
+  const cumulativeHitRate =
+    summary.settledDecisionCount === 0
+      ? 0
+      : Math.round((summary.correctDecisionCount / summary.settledDecisionCount) * 100)
 
   return {
     isEmpty: summary.settledDecisionCount === 0,
+    cumulativeHitRate,
     hitRate: {
       rate: summary.recent30DaysAccuracyRate,
       totalCount: summary.recent30DaysSettledDecisionCount,

@@ -61,12 +61,8 @@ export interface DiaryEntryPage {
  * 카드 내용(종목·칩·AP·별·인용문·날짜)은 **서버가 PNG로 렌더링**하므로,
  * 화면은 shareImageUrl 을 표시하기만 한다.
  *
- * ⚠️ 그래서 상세 응답의 아래 필드는 화면에서 쓰지 않는다 — 모두 PNG 안에 이미 그려져 있다:
- *   stock.stockId · stock.changeRate
- *   agent.agentId · agent.agentType · agent.nickname
- *   briefing.briefingId · briefing.direction · briefing.confidenceRate
- *   decision.isCorrect · decision.confidenceLevel
- * 상세 화면을 이미지 대신 조립형 UI 로 바꾸게 되면 이 값들이 필요해진다.
+ * 화면의 카카오톡 공유 문구에는 예측 방향·적중 여부를 쓴다.
+ * 나머지 카드 내용은 서버 PNG 안에 이미 그려져 있다.
  */
 export interface DiaryDetail {
   id: string
@@ -74,6 +70,10 @@ export interface DiaryDetail {
   shareImageUrl: string | null
   /** 이미지 대체 텍스트에만 사용 */
   stockName: string
+  /** 사용자의 예측 방향 (카카오톡 공유 문구용) */
+  direction: DiaryDirection
+  /** 예측 적중 여부 (카카오톡 공유 문구용) */
+  isCorrect: boolean
 }
 
 export interface DiaryShareImage {
@@ -117,6 +117,8 @@ export interface DiaryRateGroup {
 /** 통계 화면 전체 */
 export interface DiaryStatistics {
   isEmpty: boolean
+  /** 누적 결정 기준 적중률 (카카오톡 공유 문구용) */
+  cumulativeHitRate: number
   hitRate: DiaryHitRate
   items: DiaryStatItem[]
   groups: DiaryRateGroup[]

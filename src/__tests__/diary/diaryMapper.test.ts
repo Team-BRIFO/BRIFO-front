@@ -78,7 +78,12 @@ describe('diaryMapper', () => {
       decision: { isCorrect: true, confidenceLevel: 4 },
     })
 
-    expect(detail.shareImageUrl).toBeNull()
+    expect(detail).toMatchObject({
+      shareImageUrl: null,
+      stockName: '삼성전자',
+      direction: 'up',
+      isCorrect: true,
+    })
   })
 
   it('marks statistics empty only when there are no settled decisions at all', () => {
@@ -99,6 +104,7 @@ describe('diaryMapper', () => {
     })
 
     expect(statistics.isEmpty).toBe(false)
+    expect(statistics.cumulativeHitRate).toBe(100)
   })
 
   it('marks statistics empty when there are no settled decisions', () => {
@@ -119,5 +125,6 @@ describe('diaryMapper', () => {
     })
 
     expect(statistics.isEmpty).toBe(true)
+    expect(statistics.cumulativeHitRate).toBe(0)
   })
 })

@@ -57,8 +57,9 @@ export function DiaryPage() {
       : 'AP 불러오는 중'
 
   const handleChangeView = (next: DiaryView) => {
-    // 기본 탭(캘린더)은 파라미터 없이 /diary 로 유지
-    setSearchParams(next === 'calendar' ? {} : { [VIEW_PARAM]: next })
+    const nextSearchParams = new URLSearchParams()
+    if (next !== 'calendar') nextSearchParams.set(VIEW_PARAM, next)
+    setSearchParams(nextSearchParams)
   }
 
   const currentFetchStatus =
