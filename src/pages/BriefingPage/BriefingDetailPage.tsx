@@ -66,6 +66,7 @@ export function BriefingDetailPage() {
     <div className="bg-Background1 flex min-h-full w-full flex-col gap-3 pb-8">
       {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
       <StatusBar
+        hasStatusArea={false}
         className="bg-White"
         left={
           <StatusBarBackButton

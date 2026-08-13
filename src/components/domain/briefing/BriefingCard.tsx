@@ -66,9 +66,9 @@ export function BriefingCard({
     }
   }
 
-  const rookieStatus = agentStatuses?.rookie ?? type
-  const proStatus = agentStatuses?.pro ?? type
-  const tankerStatus = agentStatuses?.tanker ?? type
+  const rookieStatus = agentStatuses ? agentStatuses.rookie : type
+  const proStatus = agentStatuses ? agentStatuses.pro : type
+  const tankerStatus = agentStatuses ? agentStatuses.tanker : type
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (onClick && (e.key === 'Enter' || e.key === ' ')) {
@@ -104,19 +104,25 @@ export function BriefingCard({
         <Badge type={type === '완료' ? 'complete' : 'progress'}>{type}</Badge>
       </div>
 
-      {/* 하단 라인: 3개의 개별 에이전트 완료/진행중 배지 */}
+      {/* 하단 라인: 개별 에이전트 완료/진행중 배지 */}
       <div
         className={`flex w-full items-center gap-3 px-4 py-2 transition-colors ${bottomBgClass}`}
       >
-        <Badge type={rookieStatus === '완료' ? 'rookie-complete' : 'rookie-progress'}>
-          {`루키 ${rookieStatus}`}
-        </Badge>
-        <Badge type={proStatus === '완료' ? 'pro-complete' : 'pro-progress'}>
-          {`프로 ${proStatus}`}
-        </Badge>
-        <Badge type={tankerStatus === '완료' ? 'tanker-complete' : 'tanker-progress'}>
-          {`탱커 ${tankerStatus}`}
-        </Badge>
+        {rookieStatus && (
+          <Badge type={rookieStatus === '완료' ? 'rookie-complete' : 'rookie-progress'}>
+            {`루키 ${rookieStatus}`}
+          </Badge>
+        )}
+        {proStatus && (
+          <Badge type={proStatus === '완료' ? 'pro-complete' : 'pro-progress'}>
+            {`프로 ${proStatus}`}
+          </Badge>
+        )}
+        {tankerStatus && (
+          <Badge type={tankerStatus === '완료' ? 'tanker-complete' : 'tanker-progress'}>
+            {`탱커 ${tankerStatus}`}
+          </Badge>
+        )}
       </div>
     </div>
   )
