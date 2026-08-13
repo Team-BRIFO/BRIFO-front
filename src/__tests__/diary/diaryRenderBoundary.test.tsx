@@ -84,6 +84,23 @@ vi.mock('@/pages/DiaryPage/hooks/useDiaryQueries', () => ({
   }),
   useDiaryStatisticsQuery: () => ({ data: undefined, error: undefined, fetchStatus: 'idle' }),
 }))
+vi.mock('@/hooks/policy/usePolicyReagreement', () => ({
+  usePolicyReagreement: () => ({
+    isOpen: false,
+    items: [],
+    preCheckedPolicyIds: [],
+    isPending: false,
+    errorMessage: null,
+    onAgree: vi.fn(),
+    onViewPolicy: vi.fn(),
+  }),
+}))
+vi.mock('@/hooks/auth/useSessionValidationOnFocus', () => ({
+  useSessionValidationOnFocus: vi.fn(),
+}))
+vi.mock('@/components/feature/policy/PolicyReagreementBottomSheet', () => ({
+  PolicyReagreementBottomSheet: () => null,
+}))
 
 import { AppLayout } from '@/layouts/AppLayout'
 import { DiaryPage } from '@/pages/DiaryPage/DiaryPage'

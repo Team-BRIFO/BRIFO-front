@@ -155,7 +155,9 @@ export default function StockSearchView({
   return (
     <main
       className={
-        embedded ? 'flex w-full flex-1 flex-col pb-5' : 'flex w-full flex-1 flex-col px-4 pb-5'
+        embedded
+          ? 'flex min-h-0 w-full flex-1 flex-col overflow-hidden pb-5'
+          : 'flex min-h-0 w-full flex-1 flex-col overflow-hidden px-4 pb-5'
       }
     >
       {!embedded && (
@@ -166,92 +168,96 @@ export default function StockSearchView({
         />
       )}
 
-      <div className="mt-4">
-        <StockSearchInput value={searchKeyword} onSearchKeywordChange={onSearchKeywordChange} />
-      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+        <div className="mt-4">
+          <StockSearchInput value={searchKeyword} onSearchKeywordChange={onSearchKeywordChange} />
+        </div>
 
-      {!searchKeyword.trim() && selectedStocks.length > 0 && (
-        <section className="mt-5">
-          <h2 className="pretendard-Body2-Semibold text-Yellow-30">나의 관심종목</h2>
+        {!searchKeyword.trim() && selectedStocks.length > 0 && (
+          <section className="mt-5">
+            <h2 className="pretendard-Body2-Semibold text-Yellow-30">나의 관심종목</h2>
 
-          <div className="mt-3 flex flex-wrap gap-2">
-            {selectedStocks.map((stock) => (
-              <SelectedStockChip key={stock.id} stock={stock} onToggleStock={onToggleStock} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {hasReachedSelectionLimit && (
-        <p role="status" className="pretendard-Caption2 text-Gray-6 mt-4">
-          관심종목은 최대 3개까지 선택할 수 있어요. 선택한 종목을 해제하면 다른 종목을 추가할 수
-          있어요.
-        </p>
-      )}
-
-      <section className="mt-7 flex-1">
-        {isLoading && !hasSearchResult ? (
-          <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
-            종목을 불러오는 중이에요.
-          </p>
-        ) : hasSearchResult ? (
-          <>
-            {!searchKeyword.trim() && (
-              <h2 className="pretendard-Body2-Semibold text-Yellow-30 mb-3">현재 인기 종목 랭킹</h2>
-            )}
-
-            <div className="border-Gray-2 overflow-hidden rounded-xl border">
-              {stocks.map((stock, index) => (
-                <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
-                  <StockSearchResultItem
-                    rank={searchKeyword.trim() ? undefined : index + 1}
-                    stock={stock}
-                    isFavorite={selectedStockIds.includes(stock.id)}
-                    disabled={hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)}
-                    disabledMessage={
-                      hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)
-                        ? '관심종목은 최대 3개까지 선택할 수 있어요.'
-                        : undefined
-                    }
-                    onToggleStock={onToggleStock}
-                  />
-                </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {selectedStocks.map((stock) => (
+                <SelectedStockChip key={stock.id} stock={stock} onToggleStock={onToggleStock} />
               ))}
             </div>
-
-            {hasNextPage && onLoadMore && (
-              <div className="mt-4 flex justify-center">
-                <Button
-                  type="button"
-                  size="md"
-                  color="secondary"
-                  disabled={isFetchingNextPage}
-                  onClick={onLoadMore}
-                >
-                  {isFetchingNextPage ? '종목을 불러오는 중...' : '종목 더 보기'}
-                </Button>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="flex h-full min-h-80 flex-col items-center justify-center">
-            <NotFound className="h-34 w-40" />
-          </div>
+          </section>
         )}
-      </section>
 
-      {interestStocksError && (
-        <p role="alert" className="pretendard-Caption2 text-Pink-30 mt-3 text-center">
-          {interestStocksError}
-        </p>
-      )}
+        {hasReachedSelectionLimit && (
+          <p role="status" className="pretendard-Caption2 text-Gray-6 mt-4">
+            관심종목은 최대 3개까지 선택할 수 있어요. 선택한 종목을 해제하면 다른 종목을 추가할 수
+            있어요.
+          </p>
+        )}
+
+        <section className="mt-7">
+          {isLoading && !hasSearchResult ? (
+            <p className="pretendard-Body2-Regular text-Gray-5 py-10 text-center">
+              종목을 불러오는 중이에요.
+            </p>
+          ) : hasSearchResult ? (
+            <>
+              {!searchKeyword.trim() && (
+                <h2 className="pretendard-Body2-Semibold text-Yellow-30 mb-3">
+                  현재 인기 종목 랭킹
+                </h2>
+              )}
+
+              <div className="border-Gray-2 overflow-hidden rounded-xl border">
+                {stocks.map((stock, index) => (
+                  <div key={stock.id} className="border-Gray-2 border-b last:border-b-0">
+                    <StockSearchResultItem
+                      rank={searchKeyword.trim() ? undefined : index + 1}
+                      stock={stock}
+                      isFavorite={selectedStockIds.includes(stock.id)}
+                      disabled={hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)}
+                      disabledMessage={
+                        hasReachedSelectionLimit && !selectedStockIds.includes(stock.id)
+                          ? '관심종목은 최대 3개까지 선택할 수 있어요.'
+                          : undefined
+                      }
+                      onToggleStock={onToggleStock}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {hasNextPage && onLoadMore && (
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    type="button"
+                    size="md"
+                    color="secondary"
+                    disabled={isFetchingNextPage}
+                    onClick={onLoadMore}
+                  >
+                    {isFetchingNextPage ? '종목을 불러오는 중...' : '종목 더 보기'}
+                  </Button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex h-full min-h-80 flex-col items-center justify-center">
+              <NotFound className="h-34 w-40" />
+            </div>
+          )}
+        </section>
+
+        {interestStocksError && (
+          <p role="alert" className="pretendard-Caption2 text-Pink-30 mt-3 text-center">
+            {interestStocksError}
+          </p>
+        )}
+      </div>
 
       <Button
         type="button"
         isFullWidth
         disabled={Boolean(interestStocksError)}
         onClick={onComplete}
-        className="mt-6"
+        className="mt-6 shrink-0"
       >
         완료
       </Button>

@@ -6,7 +6,11 @@ const hookMocks = vi.hoisted(() => ({
 
 vi.mock('@/hooks/api', () => hookMocks)
 
-import { usePoliciesQuery, usePolicyDetailQuery } from '@/hooks/queries/policy/usePolicyQueries'
+import {
+  usePendingPoliciesQuery,
+  usePoliciesQuery,
+  usePolicyDetailQuery,
+} from '@/hooks/queries/policy/usePolicyQueries'
 
 interface QueryOptions {
   endpoint: string
@@ -23,6 +27,7 @@ describe('policy query hooks', () => {
   it('allows the signed-in settings policy viewer to use the existing generated queries', () => {
     const listOptions = usePoliciesQuery(true) as unknown as QueryOptions
     const detailOptions = usePolicyDetailQuery('policy-id', true) as unknown as QueryOptions
+    const pendingOptions = usePendingPoliciesQuery(true) as unknown as QueryOptions
 
     expect(listOptions).toMatchObject({
       endpoint: 'getPolicies',
@@ -35,6 +40,12 @@ describe('policy query hooks', () => {
       args: ['policy-id'],
       enabled: true,
       queryKey: ['onboarding', 'policies', 'policy-id'],
+    })
+    expect(pendingOptions).toMatchObject({
+      endpoint: 'getPendingPolicies',
+      args: [],
+      enabled: true,
+      queryKey: ['policies', 'pending'],
     })
   })
 })
