@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { MyGlossaryList } from '@/components/feature/my/MyGlossaryList'
 
 describe('MyGlossaryList', () => {
-  it('renders learned terms as keyboard-accessible detail actions without changing the list state', () => {
+  it('renders learned terms as a non-interactive list', () => {
     const markup = renderToStaticMarkup(
       <MyGlossaryList
         learnedTermCount={1}
@@ -18,11 +18,11 @@ describe('MyGlossaryList', () => {
           },
         ]}
         isEmpty={false}
-        onSelectEntry={() => {}}
       />,
     )
 
-    expect(markup).toContain('type="button"')
+    expect(markup).not.toContain('<button')
+    expect(markup).toContain('<article')
     expect(markup).toContain('순매수')
     expect(markup).toContain('산 금액이 판 금액보다 많은 상태예요.')
   })

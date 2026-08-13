@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import NavigationBar from '@/components/common/NavigationBar'
@@ -50,9 +50,12 @@ export function AppLayout() {
   }, [pathname])
 
   const selectedNavigation = getNavigationValue(pathname)
-  const handleNavigationChange = (value: NavigationValue) => {
-    navigate(NAVIGATION_PATHS[value])
-  }
+  const handleNavigationChange = useCallback(
+    (value: NavigationValue) => {
+      navigate(NAVIGATION_PATHS[value])
+    },
+    [navigate],
+  )
   return (
     <div className="bg-Background1 relative mx-auto flex h-dvh w-full max-w-3xl flex-col overflow-hidden shadow-xl">
       <main

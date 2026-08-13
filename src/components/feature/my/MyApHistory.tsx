@@ -1,3 +1,5 @@
+import { memo, useMemo, useState } from 'react'
+
 import Button from '@/components/common/Button'
 import { Tabs } from '@/components/common/Tabs'
 // 대체: domain/ap — AP 잔액·획득·사용 요약 카드
@@ -16,37 +18,41 @@ const AP_PERIOD_ITEMS: { value: ApPeriod; label: string }[] = [
 export interface MyApHistoryProps {
   summary: ApSummary
   transactions: ApTransaction[]
-  period: ApPeriod
-  onChangePeriod: (period: ApPeriod) => void
   /** 다음 페이지 존재 여부 (커서 기반) */
   hasNext?: boolean
   onLoadMore?: () => void
   isLoadingMore?: boolean
   loadMoreError?: boolean
-  /** 빈 상태 여부는 조회 데이터를 소유한 Page가 결정한다. */
-  isEmpty: boolean
 }
+
+const MemoizedApHistorySummaryCard = memo(ApHistorySummaryCard)
+const MemoizedApTransactionRow = memo(ApTransactionRow)
 
 /** AP 내역 화면(SCR-15) 본문 — 요약 카드 · 흐름 필터 · 입출금 리스트 */
 export function MyApHistory({
   summary,
   transactions,
-  period,
-  onChangePeriod,
   hasNext = false,
   onLoadMore,
   isLoadingMore = false,
   loadMoreError = false,
-  isEmpty,
 }: MyApHistoryProps) {
+  const [period, setPeriod] = useState<ApPeriod>('all')
+  const filteredTransactions = useMemo(() => {
+    if (period === 'earned') return transactions.filter((transaction) => transaction.amount > 0)
+    if (period === 'spent') return transactions.filter((transaction) => transaction.amount < 0)
+    return transactions
+  }, [period, transactions])
+  const isEmpty = filteredTransactions.length === 0
+
   return (
     <div className="flex flex-col gap-5">
-      <ApHistorySummaryCard summary={summary} />
+      <MemoizedApHistorySummaryCard summary={summary} />
 
       <div className="flex flex-col gap-2">
         <Tabs
           value={period}
-          onChange={(value) => onChangePeriod(value as ApPeriod)}
+          onChange={(value) => setPeriod(value as ApPeriod)}
           items={AP_PERIOD_ITEMS}
           variant="segmented"
           isFullWidth={false}
@@ -61,8 +67,8 @@ export function MyApHistory({
           </p>
         ) : (
           <ul className="overflow-hidden rounded-lg">
-            {transactions.map((transaction) => (
-              <ApTransactionRow key={transaction.id} transaction={transaction} />
+            {filteredTransactions.map((transaction) => (
+              <MemoizedApTransactionRow key={transaction.id} transaction={transaction} />
             ))}
           </ul>
         )}

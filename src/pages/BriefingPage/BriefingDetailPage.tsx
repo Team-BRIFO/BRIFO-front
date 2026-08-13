@@ -66,6 +66,7 @@ export function BriefingDetailPage() {
     <div className="bg-Background1 flex h-screen w-full flex-col gap-3">
       {/* 1. 글로벌 상태바 헤더 (배경 흰색) */}
       <StatusBar
+        hasStatusArea={false}
         className="bg-White"
         left={
           <StatusBarBackButton
@@ -73,7 +74,7 @@ export function BriefingDetailPage() {
           />
         }
         title="브리핑"
-        right={<StatusBarNotificationButton />}
+        right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
 
       {!!error && fetchStatus === 'idle' ? (

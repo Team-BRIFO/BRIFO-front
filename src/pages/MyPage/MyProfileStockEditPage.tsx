@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Toast } from '@/components/common/Toast'
@@ -61,18 +61,21 @@ export function MyProfileStockEditPage() {
     [stocksQuery.data],
   )
 
-  const handleToggleStock = (stockId: string) => {
-    setSelectedStocksOverride((previous) => {
-      const current = previous ?? selectedStocks
-      if (current.some((stock) => stock.id === stockId)) {
-        return current.filter((stock) => stock.id !== stockId)
-      }
-      if (current.length >= MAX_INTEREST_STOCK_COUNT) return current
+  const handleToggleStock = useCallback(
+    (stockId: string) => {
+      setSelectedStocksOverride((previous) => {
+        const current = previous ?? initialStocks
+        if (current.some((stock) => stock.id === stockId)) {
+          return current.filter((stock) => stock.id !== stockId)
+        }
+        if (current.length >= MAX_INTEREST_STOCK_COUNT) return current
 
-      const stock = stocks.find((item) => item.id === stockId)
-      return stock ? [...current, { id: stock.id, name: stock.name }] : current
-    })
-  }
+        const stock = stocks.find((item) => item.id === stockId)
+        return stock ? [...current, { id: stock.id, name: stock.name }] : current
+      })
+    },
+    [initialStocks, stocks],
+  )
 
   const currentProfileValues = useMemo<UserProfileFormValues | undefined>(() => {
     if (!profileQuery.data) return undefined
