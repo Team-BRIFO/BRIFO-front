@@ -9,10 +9,9 @@ import HomeCardNewsSection from '@/components/feature/home/HomeCardNewsSection'
 import HomeHeader from '@/components/feature/home/HomeHeader'
 import OfficeCard from '@/components/feature/home/OfficeCard'
 import PredictionCard from '@/components/feature/home/PredictionCard'
-import SettlementCard from '@/components/feature/home/SettlementCard'
+import SettlementCountdownCard from '@/components/feature/home/SettlementCountdownCard'
 import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueries'
 import { mapTodayNewsCardsByStock } from '@/mappers/homeMapper'
-import { useSettlementCountdown } from '@/pages/HomePage/hooks/useSettlementCountdown'
 import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
 import { PATH } from '@/routes/paths'
 import { formatBatchTime } from '@/utils/formatBatchTime'
@@ -22,7 +21,6 @@ export function HomePage() {
   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false)
   const attendanceReward = useCreateAttendanceRewardMutation()
   const homeQuery = useUserHomeQuery()
-  const settlementRemainingTime = useSettlementCountdown()
   const home = homeQuery.data
   const balanceText = `${(home?.user.balanceAp ?? 0).toLocaleString()} AP`
   const employeeLevels = Object.fromEntries(
@@ -60,7 +58,7 @@ export function HomePage() {
             <OfficeCard levels={employeeLevels} />
 
             <div className="grid grid-cols-2 gap-3">
-              <SettlementCard remainingTime={settlementRemainingTime} />
+              <SettlementCountdownCard />
               <PredictionCard
                 count={home?.todayDecisions.count ?? 0}
                 onClick={() => navigate(PATH.OFFICE_PREDICTION)}

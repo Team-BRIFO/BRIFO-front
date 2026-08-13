@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { getSettlementRemainingTime } from '@/pages/HomePage/hooks/useSettlementCountdown'
+import { getSettlementRemainingTime } from '@/components/feature/home/hooks/useSettlementCountdown'
 
 describe('getSettlementRemainingTime', () => {
   it('오후 3시 30분 전에는 당일 정산까지 남은 시간을 반환한다', () => {
