@@ -21,6 +21,7 @@ interface HomeCardNewsSectionProps {
   time: string
   items: HomeCardNewsItem[]
   onItemClick?: (id: string | number) => void
+  selectedId?: string | null
 }
 
 export default function HomeCardNewsSection({
@@ -28,6 +29,7 @@ export default function HomeCardNewsSection({
   time,
   items,
   onItemClick,
+  selectedId,
 }: HomeCardNewsSectionProps) {
   return (
     <section className="flex flex-col gap-3">
@@ -57,6 +59,11 @@ export default function HomeCardNewsSection({
                 headline: item.headline,
                 isCompleted: item.isCompleted,
               }}
+              className={
+                selectedId === (item.stockId ?? String(item.id))
+                  ? 'border-Yellow-40 border-2 transition-colors'
+                  : 'transition-colors'
+              }
             />
           </button>
         ))}

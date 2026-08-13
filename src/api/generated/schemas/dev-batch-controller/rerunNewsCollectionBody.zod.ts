@@ -10,7 +10,6 @@ import { z as zod } from 'zod'
 export const RerunNewsCollectionBody = zod.object({
   password: zod.string().min(1),
   targetDate: zod.iso.date(),
-  collectionRound: zod.enum(['MORNING', 'MIDDAY', 'CLOSING']),
 })
 
 export type RerunNewsCollectionBody = zod.input<typeof RerunNewsCollectionBody>
