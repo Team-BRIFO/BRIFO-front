@@ -79,7 +79,7 @@ export function NewsCardPage() {
         </PageStatusShell>
       ) : (
         <main className="mx-5 mt-5 flex min-h-0 flex-1 flex-col gap-8 pb-6">
-          <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto">
+          <div className="flex min-h-0 flex-col overflow-x-hidden overflow-y-auto">
             <div
               ref={scrollContainerRef}
               className="flex w-full snap-x snap-mandatory overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden"
