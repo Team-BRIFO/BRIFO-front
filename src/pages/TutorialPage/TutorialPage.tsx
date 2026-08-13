@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { signupSession } from '@/api/client/signupSession'
 import { browserTokenStore } from '@/api/client/tokenStore'
-import BrifoLogo from '@/assets/logo/brifo_logo_small.svg'
+import BrifoTecLogo from '@/assets/logo/BRIFOTEC.svg'
 import { Toast } from '@/components/common/Toast'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
 import { BriefingComment } from '@/components/domain/briefing/BriefingComment'
@@ -181,7 +181,7 @@ function PredictionRegisteredStep() {
           name: '브리포테크',
           code: 'BRIFO01',
           marketType: '코스피',
-          logoUrl: BrifoLogo,
+          logoUrl: BrifoTecLogo,
           price: 31850,
           changeRate: 17.96,
           keywords: ['HBM', '반도체', '외국인 순매수'],
