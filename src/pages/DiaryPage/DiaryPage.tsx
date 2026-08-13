@@ -1,16 +1,14 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import Logo from '@/assets/logo/brifo_logo_small.svg?react'
-import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
 import { DiaryCalendar } from '@/components/feature/diary/DiaryCalendar'
 import { DiaryList } from '@/components/feature/diary/DiaryList'
+import DiaryPageHeader from '@/components/feature/diary/DiaryPageHeader'
 import { DiaryStatistics } from '@/components/feature/diary/DiaryStatistics'
 import { DiaryTabScreen } from '@/components/feature/diary/DiaryTabScreen'
 import type { DiaryView } from '@/components/feature/diary/DiaryViewTabs'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
-import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import {
   useDiaryCalendarQuery,
   useDiaryListQuery,
@@ -35,7 +33,12 @@ function isDiaryView(value: string | null): value is DiaryView {
  */
 export function DiaryPage() {
   const navigate = useNavigate()
+  const navigateRef = useRef(navigate)
   const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    navigateRef.current = navigate
+  }, [navigate])
 
   const viewParam = searchParams.get(VIEW_PARAM)
   const view: DiaryView = isDiaryView(viewParam) ? viewParam : 'calendar'
@@ -49,12 +52,10 @@ export function DiaryPage() {
   const calendarQuery = useDiaryCalendarQuery(year, month, view === 'calendar')
   const listQuery = useDiaryListQuery(undefined, view === 'list')
   const statsQuery = useDiaryStatisticsQuery(view === 'statistics')
-  const userQuery = useUserProfileQuery()
-  const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
-    : userQuery.error
-      ? 'AP 조회 실패'
-      : 'AP 불러오는 중'
+
+  const handleNotificationClick = useCallback(() => {
+    navigateRef.current(PATH.NOTIFICATION)
+  }, [])
 
   const handleChangeView = (next: DiaryView) => {
     const nextSearchParams = new URLSearchParams()
@@ -150,28 +151,17 @@ export function DiaryPage() {
 
   return (
     <div className="bg-Background1 flex flex-1 flex-col">
-      <StatusBar
-        hasStatusArea={false}
-        left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
-        right={
-          <div className="flex items-center gap-3">
-            <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-              {balanceText}
-            </div>
-            <StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />
-          </div>
-        }
-      />
+      <DiaryPageHeader onNotificationClick={handleNotificationClick} />
 
-      {isError ? (
-        <PageErrorView title={errorTitle} error={currentError} onRetry={handleRetry} />
-      ) : isLoading ? (
-        <PageLoadingView />
-      ) : (
-        <DiaryTabScreen view={view} onChangeView={handleChangeView}>
-          {renderView()}
-        </DiaryTabScreen>
-      )}
+      <DiaryTabScreen view={view} onChangeView={handleChangeView}>
+        {isError ? (
+          <PageErrorView title={errorTitle} error={currentError} onRetry={handleRetry} />
+        ) : isLoading ? (
+          <PageLoadingView />
+        ) : (
+          renderView()
+        )}
+      </DiaryTabScreen>
     </div>
   )
 }

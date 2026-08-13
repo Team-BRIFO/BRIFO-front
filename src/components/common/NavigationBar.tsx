@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 
 import BriefingIcon from '@/assets/icons/bar-chart-up.svg?react'
 import DiaryIcon from '@/assets/icons/calendar.svg?react'
@@ -45,7 +45,7 @@ const NAV_ITEMS = [
   },
 ] as const
 
-export default function NavigationBar({
+function NavigationBar({
   value,
   defaultValue = 'home',
   onChange,
@@ -83,3 +83,5 @@ export default function NavigationBar({
     </nav>
   )
 }
+
+export default memo(NavigationBar)

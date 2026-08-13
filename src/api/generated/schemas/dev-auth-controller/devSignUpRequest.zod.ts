@@ -7,8 +7,16 @@
  */
 import { z as zod } from 'zod'
 
+export const devSignUpRequestInitialBalanceApMax = 500
+
 export const DevSignUpRequest = zod.object({
   password: zod.string().min(1),
+  initialBalanceAp: zod
+    .int()
+    .min(1)
+    .max(devSignUpRequestInitialBalanceApMax)
+    .optional()
+    .describe('개발용 계정의 초기 AP 잔액입니다. 생략하면 기본값 500 AP가 지급됩니다.'),
 })
 
 export type DevSignUpRequest = zod.input<typeof DevSignUpRequest>

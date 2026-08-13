@@ -31,7 +31,7 @@ export function PageStatusTemplate({
   return (
     <div className="bg-Background1 mx-auto flex h-dvh w-full max-w-120 flex-col overflow-hidden sm:max-h-228.75">
       <StatusBar
-        hasStatusArea
+        hasStatusArea={false}
         className="bg-White w-full"
         left={<Logo className="h-6 w-21" />}
         right={

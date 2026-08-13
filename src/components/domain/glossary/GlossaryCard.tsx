@@ -1,10 +1,10 @@
-import type { ButtonHTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import type { MyGlossaryEntry } from '@/types/domain/glossary'
 
-export interface GlossaryCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
+export interface GlossaryCardProps {
   entry: MyGlossaryEntry
+  className?: string
 }
 
 function formatLearnedDayLabel(isoDate: string) {
@@ -34,18 +34,15 @@ function formatLearnedDayLabel(isoDate: string) {
  *
  * TODO(#31): 용어장 도메인 이슈에서 공용 용어 카드가 나오면 이 컴포넌트를 대체할 것.
  */
-export function GlossaryCard({ entry, className = '', ...props }: GlossaryCardProps) {
+export function GlossaryCard({ entry, className = '' }: GlossaryCardProps) {
   const { term, definition, learnedAt } = entry
 
   return (
-    <button
-      type="button"
+    <article
       className={twMerge(
         'border-Gray-2 bg-White flex w-full flex-col gap-3 rounded-lg border px-5 py-4 text-left',
-        'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
-      {...props}
     >
       <div className="flex w-full items-center justify-between gap-3">
         <span className="dnf-Caption1 text-Gray-10 truncate leading-none">{term}</span>
@@ -55,6 +52,6 @@ export function GlossaryCard({ entry, className = '', ...props }: GlossaryCardPr
       </div>
 
       <p className="pretendard-Caption2 text-Gray-7 w-full leading-[1.32]">{definition}</p>
-    </button>
+    </article>
   )
 }

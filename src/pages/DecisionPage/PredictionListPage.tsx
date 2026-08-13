@@ -1,26 +1,16 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import Modal from '@/components/common/Modal'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
-import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
-import { DecisionResultModalContent } from '@/components/feature/decision/DecisionResultModal'
+import { PredictionDecisionCard } from '@/components/feature/decision/PredictionDecisionCard'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
-import {
-  useDecisionDetailQuery,
-  useDecisionListQuery,
-} from '@/pages/DecisionPage/hooks/useDecisionQueries'
+import { useDecisionListQuery } from '@/pages/DecisionPage/hooks/useDecisionQueries'
 
 export function PredictionListPage() {
   const navigate = useNavigate()
-  const [selectedDecisionId, setSelectedDecisionId] = useState<string | null>(null)
 
   const decisionsQuery = useDecisionListQuery()
-  const selectedDecisionQuery = useDecisionDetailQuery(selectedDecisionId)
   const decisions = decisionsQuery.data
-  const selectedDecisionDetail = selectedDecisionQuery.data
-  const selectedDecision = decisions?.find((decision) => decision.id === selectedDecisionId)
 
   if (!!decisionsQuery.error && decisionsQuery.fetchStatus === 'idle' && !decisions) {
     return (
@@ -80,72 +70,10 @@ export function PredictionListPage() {
             {/* 예측 리스트 */}
             <div className="flex flex-col gap-4">
               {decisions.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    if (item.isSettled) {
-                      setSelectedDecisionId(item.id)
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (item.isSettled && (e.key === 'Enter' || e.key === ' ')) {
-                      e.preventDefault()
-                      setSelectedDecisionId(item.id)
-                    }
-                  }}
-                  role={item.isSettled ? 'button' : undefined}
-                  tabIndex={item.isSettled ? 0 : undefined}
-                  className={
-                    item.isSettled
-                      ? 'focus-visible:ring-Pink-30 cursor-pointer rounded-xl focus:outline-none focus-visible:ring-2'
-                      : ''
-                  }
-                >
-                  <AnalyzeCard
-                    resultType="PREDICTION"
-                    predictionFooter={{
-                      status: item.isSettled ? 'SETTLED' : 'WAITING',
-                      currentRate: item.stock.changeRate,
-                    }}
-                    stock={{
-                      name: item.stock.name,
-                      logoUrl: item.stock.logoUrl,
-                      changeRate: item.stock.changeRate,
-                    }}
-                  />
-                </div>
+                <PredictionDecisionCard key={item.id} decision={item} />
               ))}
             </div>
           </>
-        )}
-
-        {selectedDecisionId && (
-          <Modal isOpen={!!selectedDecisionId} onClose={() => setSelectedDecisionId(null)}>
-            {!!selectedDecisionQuery.error &&
-            selectedDecisionQuery.fetchStatus === 'idle' &&
-            !selectedDecisionDetail ? (
-              <PageErrorView
-                title="예측 결과를 불러오지 못했어요"
-                error={selectedDecisionQuery.error}
-                onRetry={() => selectedDecisionQuery.refetch()}
-              />
-            ) : !selectedDecisionDetail ? (
-              <PageLoadingView />
-            ) : selectedDecision && selectedDecisionDetail ? (
-              <DecisionResultModalContent
-                decisionId={selectedDecisionId}
-                isSuccess={selectedDecisionDetail.isCorrect ?? false}
-                points={Math.abs(selectedDecisionDetail.apDelta ?? 0)}
-                confidenceLevel={selectedDecision.confidenceLevel}
-                stockInfo={{
-                  name: selectedDecision.stock.name,
-                  changeRate: selectedDecisionDetail.stock.changeRate ?? 0,
-                }}
-                onAction={() => setSelectedDecisionId(null)}
-                onClose={() => setSelectedDecisionId(null)}
-              />
-            ) : null}
-          </Modal>
         )}
       </div>
     </div>

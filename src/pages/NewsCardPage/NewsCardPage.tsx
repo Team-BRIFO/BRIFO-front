@@ -55,7 +55,7 @@ export function NewsCardPage() {
       <StatusBar
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
         title={stockName}
-        right={<StatusBarNotificationButton />}
+        right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
         hasStatusArea={false}
       />
 
