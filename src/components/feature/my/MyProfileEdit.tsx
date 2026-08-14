@@ -21,8 +21,6 @@ export interface MyProfileEditProps {
   /** 프로필에 노출되는 캐릭터 */
   characterType: AgentType
   onSubmit: (values: UserProfileFormValues) => void
-  /** 캐릭터 변경 진입 — 미전달 시 텍스트만 표시 */
-  onChangeCharacter?: () => void
   /** 관심종목 선택 화면 진입 */
   onAddStock: (values: UserProfileFormValues) => void
   isSubmitting?: boolean
@@ -126,7 +124,6 @@ export function MyProfileEdit({
   initialValues,
   characterType,
   onSubmit,
-  onChangeCharacter,
   onAddStock,
   isSubmitting = false,
   serverError,
@@ -185,17 +182,6 @@ export function MyProfileEdit({
     <div className="flex flex-col gap-5 pt-10">
       <div className="flex flex-col items-center gap-2">
         <AgentAvatar type={characterType} size={84} hasCircleBg />
-        {onChangeCharacter ? (
-          <button
-            type="button"
-            onClick={onChangeCharacter}
-            className="pretendard-Caption1 text-Yellow-20 leading-none"
-          >
-            사진 변경
-          </button>
-        ) : (
-          <span className="pretendard-Caption1 text-Yellow-20 leading-none">사진 변경</span>
-        )}
       </div>
 
       <div className="flex flex-col gap-6">
