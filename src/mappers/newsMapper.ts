@@ -1,5 +1,4 @@
 import type { GetNewsCardsResponseOutput } from '@/api/generated/schemas/news-controller'
-import type { TodayNewsCardItem } from '@/mappers/homeMapper'
 import type { NewsCardData } from '@/types/domain/newsCard'
 import { formatRelativeTime } from '@/utils/formatRelativeTime'
 
@@ -24,46 +23,6 @@ function sortNewsCardsByImportance(cards: NewsCardData[]): NewsCardData[] {
       return orderDiff !== 0 ? orderDiff : a.index - b.index
     })
     .map(({ card }) => card)
-}
-
-export function mapHomeNewsCardItem(item: TodayNewsCardItem): NewsCardData {
-  return {
-    cardId: item.cardId,
-    publishedDate: formatRelativeTime(item.news.publishedAt),
-    headline: item.headline,
-    points: [],
-    terms: [],
-    source: item.news.source,
-    relatedStocks: [
-      {
-        name: item.stock.name,
-        changeRate: item.stock.changeRate,
-      },
-    ],
-  }
-}
-
-/** 홈 목록(cardId) 순서를 유지하면서 상세 API 데이터와 병합 */
-export function mergeStockNewsCards(
-  homeItems: TodayNewsCardItem[],
-  detailCards: NewsCardData[],
-): NewsCardData[] {
-  const detailByCardId = new Map(detailCards.map((card) => [card.cardId, card]))
-  const seen = new Set<string>()
-  const merged: NewsCardData[] = []
-
-  for (const item of homeItems) {
-    if (seen.has(item.cardId)) continue
-    seen.add(item.cardId)
-    merged.push(detailByCardId.get(item.cardId) ?? mapHomeNewsCardItem(item))
-  }
-
-  for (const card of detailCards) {
-    if (seen.has(card.cardId)) continue
-    merged.push(card)
-  }
-
-  return sortNewsCardsByImportance(merged)
 }
 
 export function mapNewsCards(response: GetNewsCardsResponseOutput): NewsCardData[] {

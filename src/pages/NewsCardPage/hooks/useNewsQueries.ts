@@ -1,10 +1,7 @@
-import { useMemo } from 'react'
-
 import { getNewsCards } from '@/api/generated/endpoints/news-controller/news-controller'
 import { ApiResponseGetNewsCardsResponse } from '@/api/generated/schemas/news-controller'
 import { useApiQuery } from '@/hooks/api'
-import { mapNewsCards, mergeStockNewsCards } from '@/mappers/newsMapper'
-import { useUserHomeQuery } from '@/pages/HomePage/hooks/useUserHomeQuery'
+import { mapNewsCards } from '@/mappers/newsMapper'
 
 export const newsQueryKeys = {
   all: ['news'] as const,
@@ -25,27 +22,19 @@ export function useGetNewsCardDetail(stockId: string | null) {
   })
 }
 
-/** 홈 todayNewsCards + 상세 API를 cardId 기준으로 병합해 전체 카드뉴스 목록 반환 */
+/**
+ * 카드뉴스 상세 목록.
+ *
+ * 예전에는 홈 `todayNewsCards`와 병합했다. 상세 API가 카드를 2건만 내려주던 시절의 보정인데,
+ * 홈 데이터에는 본문·용어·이미지가 없어서 제목만 있는 빈 카드가 생겼다. 서버가 그날 카드를
+ * 전부 내려주게 되면서 병합을 걷어냈다.
+ */
 export function useStockNewsCards(stockId: string | null) {
-  const homeQuery = useUserHomeQuery()
   const detailQuery = useGetNewsCardDetail(stockId)
 
-  const cards = useMemo(() => {
-    if (!stockId) return []
-
-    const detailCards = detailQuery.data ?? []
-    const homeItems =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      homeQuery.data?.todayNewsCards.items.filter((item: any) => item.stock.stockId === stockId) ??
-      []
-
-    if (homeItems.length === 0) return detailCards
-    return mergeStockNewsCards(homeItems, detailCards)
-  }, [stockId, homeQuery.data, detailQuery.data])
-
   return {
-    cards,
-    isLoading: detailQuery.isLoading || homeQuery.isLoading,
+    cards: detailQuery.data ?? [],
+    isLoading: detailQuery.isLoading,
     error: detailQuery.error,
     refetch: detailQuery.refetch,
     fetchStatus: detailQuery.fetchStatus,
