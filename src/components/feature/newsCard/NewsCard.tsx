@@ -18,7 +18,6 @@ export function NewsCard({ data, onTermClick, className = '' }: NewsCardProps) {
         headline={data.headline}
         imageUrl={data.imageUrl}
         importanceBadge={data.importanceBadge}
-        source={data.source}
       />
 
       <div className="flex flex-col gap-5 px-4 py-3.5">

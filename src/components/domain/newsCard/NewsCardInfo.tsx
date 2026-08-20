@@ -1,14 +1,12 @@
 import type { BadgeType } from '@/components/common/Badge'
 import { Badge } from '@/components/common/Badge'
 import { NewsPublishedTime } from '@/components/domain/newsCard/NewsPublishedTime'
-import { NewsSourceLink } from '@/components/domain/newsCard/NewsSourceLink'
 export interface NewsCardInfoProps {
   cardId?: string
   publishedDate: string
   headline: string
   imageUrl?: string
   importanceBadge?: string
-  source?: string
   className?: string
 }
 
@@ -31,7 +29,6 @@ export function NewsCardInfo({
   headline,
   imageUrl,
   importanceBadge,
-  source,
   className = '',
 }: NewsCardInfoProps) {
   return (
@@ -43,15 +40,7 @@ export function NewsCardInfo({
               {importanceBadge}
             </Badge>
           )}
-          <div className="flex items-center gap-1">
-            {source && (
-              <>
-                <NewsSourceLink source={source} />
-                <span className="text-Gray-5 pretendard-Caption2">·</span>
-              </>
-            )}
-            <NewsPublishedTime time={publishedDate} />
-          </div>
+          <NewsPublishedTime time={publishedDate} />
         </div>
         <h2 className="text-Gray-9 pretendard-Body1-Semibold">{headline}</h2>
       </div>
