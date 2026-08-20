@@ -8,8 +8,8 @@ export interface GlossaryStatusBadgeProps {
 }
 
 export function GlossaryStatusBadge({ isLearned, className = '' }: GlossaryStatusBadgeProps) {
-  // TODO: isLearned === true일 때 "이미 저장된 용어" 상태 뱃지 노출 (나중에 구현)
-  if (isLearned) {
+  // 저장된 용어에만 배지를 보여준다. 분기가 반대라 저장 안 된 용어에 "저장했어요"가 뜨고 있었다.
+  if (!isLearned) {
     return null
   }
 

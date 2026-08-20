@@ -45,10 +45,22 @@ export function GlossaryBottomSheet({
   const displayTermTitle = termDetailResponse?.term
   const displayDefinition = termDetailResponse?.definition ?? '용어 설명을 불러오고 있습니다.'
   const displayIsLearned = termDetailResponse?.isLearned ?? isLearned
+
+  const saveTerm = () => {
+    if (!currentTerm?.termId || displayIsLearned || isPending) return
+    markAsLearned(currentTerm.termId)
+  }
+
+  // 뜻을 확인한 용어는 용어장에 남는다. "이해했어요"를 누르든 딤·ESC로 닫든 동일하게 저장한다.
+  const handleClose = () => {
+    saveTerm()
+    onClose()
+  }
+
   if (!currentTerm) return null
 
   return (
-    <BottomSheet isOpen={isOpen} onClose={onClose} className="items-center gap-4.5">
+    <BottomSheet isOpen={isOpen} onClose={handleClose} className="items-center gap-4.5">
       {isLoading ? (
         <PageLoadingView
           headerText="용어를 불러오는 중..."
@@ -85,15 +97,7 @@ export function GlossaryBottomSheet({
               size="lg"
               isFullWidth
               disabled={displayIsLearned || isPending}
-              onClick={() => {
-                if (currentTerm?.termId && !displayIsLearned) {
-                  markAsLearned(currentTerm.termId, {
-                    onSuccess: () => {
-                      // After success, it will invalidate and refetch, showing "learned"
-                    },
-                  })
-                }
-              }}
+              onClick={saveTerm}
             >
               {displayIsLearned ? '이미 학습한 용어예요' : '이해했어요'}
             </Button>
