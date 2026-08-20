@@ -65,6 +65,13 @@ export function PredictionListPage() {
     )
   }
 
+  const settledCount = decisions.filter((item) => item.isSettled).length
+  // 정산이 끝난 예측도 자정까지 목록에 남는다. 남은 게 전부 정산 대기일 때만 정산 시각을 안내한다.
+  const summaryText =
+    settledCount > 0
+      ? `오늘 ${decisions.length}건 · 정산 완료 ${settledCount}건`
+      : `오늘 ${decisions.length}건 · 15:30 정산대기`
+
   return (
     <div className="bg-Background1 flex min-h-dvh w-full flex-col pb-10">
       <StatusBar
@@ -77,23 +84,19 @@ export function PredictionListPage() {
         <header className="flex flex-col gap-2">
           <h1 className="dnf-Subtitle1 text-Gray-10">오늘의 예측</h1>
           <p className="pretendard-Button2 text-Gray-6">
-            정산 전까지 오늘 걸어둔 예측을 확인하세요
+            오늘 걸어둔 예측과 정산 결과를 확인하세요
           </p>
         </header>
 
         {decisions.length === 0 ? (
           <div className="border-Yellow-80 bg-Yellow-100 flex items-center rounded-lg border px-4 py-3.5">
-            <span className="pretendard-Button1 text-Yellow-20">
-              오늘 {decisions.length}건 · 15:30 정산대기
-            </span>
+            <span className="pretendard-Button1 text-Yellow-20">{summaryText}</span>
           </div>
         ) : (
           <>
             {/* 요약 배너 */}
             <div className="border-Yellow-80 bg-Yellow-100 flex items-center rounded-lg border px-4 py-3.5">
-              <span className="pretendard-Button1 text-Yellow-20">
-                오늘 {decisions.length}건 · 15:30 정산대기
-              </span>
+              <span className="pretendard-Button1 text-Yellow-20">{summaryText}</span>
             </div>
 
             {/* 예측 리스트 */}
