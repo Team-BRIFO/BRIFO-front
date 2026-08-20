@@ -4,7 +4,7 @@ import type {
   GetOfficeBriefingsResponseOutput,
   GetStockBriefingsResponseOutput,
 } from '@/api/generated/schemas/briefing-controller'
-import { mapAgentType } from '@/mappers/agentMapper'
+import { AGENT_MODEL_NAME, mapAgentType } from '@/mappers/agentMapper'
 import type { AgentSummary } from '@/types/domain/agent'
 import type {
   BriefingDetailData,
@@ -67,7 +67,7 @@ export function mapBriefingDetail(
       id: result.agent.agentId,
       type: agentType,
       name: result.agent.nickname,
-      modelName: result.agent.modelName,
+      modelName: AGENT_MODEL_NAME[agentType],
       level: agentSummary?.level ?? 1,
       levelProgress: agentSummary?.levelProgress ?? 0,
       hitRate: agentSummary?.hitRate ?? 0,

@@ -182,6 +182,25 @@ describe('Profile edit render boundaries', () => {
     expect(getRenderCount(profileMocks.renderChip, 'SK하이닉스')).toBe(1)
   })
 
+  it('does not show a profile photo change control', () => {
+    act(() => {
+      root.render(
+        <MyProfileEdit
+          initialValues={{
+            nickname: '브리포',
+            companyName: '브리포 투자사',
+            interestStocks: [{ id: 'stock-1', name: '삼성전자' }],
+          }}
+          characterType="rookie"
+          onSubmit={noop}
+          onAddStock={noop}
+        />,
+      )
+    })
+
+    expect(container.textContent).not.toContain('사진 변경')
+  })
+
   it('re-renders only the stock row whose selection changed', () => {
     act(() => {
       root.render(<StockSelectionHarness />)
