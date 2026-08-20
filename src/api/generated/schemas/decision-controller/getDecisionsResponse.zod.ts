@@ -13,6 +13,7 @@ export const GetDecisionsResponse = zod.object({
       decisionId: zod.uuid(),
       direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
       confidenceLevel: zod.int(),
+      isSettled: zod.boolean(),
       agent: zod.object({
         agentId: zod.uuid(),
         agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),
