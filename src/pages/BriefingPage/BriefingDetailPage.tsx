@@ -19,7 +19,6 @@ import { useBriefingDetailQuery } from '@/pages/BriefingPage/hooks/useBriefingDe
 import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecisionMutation'
 import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
-import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
 
 export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()
@@ -40,11 +39,6 @@ export function BriefingDetailPage() {
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
   const [errorModalMsg, setErrorModalMsg] = useState<string | null>(null)
-
-  const [predictionData, setPredictionData] = useState<{
-    direction: DecisionDirection
-    confidence: ConfidenceLevel
-  } | null>(null)
 
   const handleTabChange = (val: string) => {
     navigate(PATH.BRIEFING_DETAIL(val), { replace: true })
@@ -132,7 +126,6 @@ export function BriefingDetailPage() {
               { direction, confidenceLevel: confidence },
               {
                 onSuccess: () => {
-                  setPredictionData({ direction, confidence })
                   setIsDecisionSheetOpen(false)
                   setIsCompleteModalOpen(true)
                 },
@@ -149,7 +142,6 @@ export function BriefingDetailPage() {
           isOpen={isCompleteModalOpen}
           onClose={() => setIsCompleteModalOpen(false)}
           stock={data.stock}
-          earnedPoint={predictionData ? predictionData.confidence * 20 : 100}
           onConfirm={() => {
             setIsCompleteModalOpen(false)
             navigate(PATH.DIARY)

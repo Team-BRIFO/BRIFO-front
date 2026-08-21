@@ -71,7 +71,20 @@ export function PredictionDecisionCard({
 
       {isResultModalOpen && (
         <Modal isOpen onClose={closeResultModal}>
-          {!!resultQuery.error && resultQuery.fetchStatus === 'idle' && !detail ? (
+          {decision.isCorrect !== null && decision.isCorrect !== undefined ? (
+            <DecisionResultModalContent
+              decisionId={decision.id}
+              isSuccess={decision.isCorrect}
+              points={Math.abs(decision.apDelta ?? 0)}
+              confidenceLevel={decision.confidenceLevel}
+              stockInfo={{
+                name: decision.stock.name,
+                changeRate: decision.stock.changeRate,
+              }}
+              onAction={closeResultModal}
+              onClose={closeResultModal}
+            />
+          ) : !!resultQuery.error && resultQuery.fetchStatus === 'idle' && !detail ? (
             <PageErrorView
               className="p-0"
               title={isSettlementWaiting ? '정산 대기 중입니다' : '예측 결과를 불러오지 못했어요'}
