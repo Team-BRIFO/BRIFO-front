@@ -13,7 +13,6 @@ export interface DecisionResultModalContentProps {
   comment?: string
   resultText?: string
   confidenceLevel?: number
-  decisionId?: string
   onAction: () => void
   onClose: () => void
 }
@@ -21,27 +20,22 @@ export interface DecisionResultModalContentProps {
 export function DecisionResultModalContent({
   isSuccess = true,
   points = 100,
-  stockInfo = { name: '삼성전자', changeRate: 8.1 },
-  comment = '아쉬운 결과지만, 이번 경험을 바탕으로 다음 예측에서 더 좋은 결과를 얻을 수 있을 거예요!',
+  stockInfo = { name: '브리포', changeRate: 8.1 },
+  comment,
   resultText,
   confidenceLevel = 5,
-  decisionId,
   onAction,
   onClose,
 }: DecisionResultModalContentProps) {
-  const defaultResultText = isSuccess ? '상승 적중' : '상승 예측 빗나감'
+  const defaultResultText = isSuccess ? '예측 성공' : '예측 실패'
   const displayResultText = resultText || defaultResultText
+  const displayComment =
+    comment || (isSuccess ? '사장님, 제가 된다고 했잖아요!' : '조심스럽게, 다음기회를 노려봅시다.')
   const navigate = useNavigate()
 
   const handleActionClick = () => {
     onAction()
-    if (isSuccess && decisionId) {
-      navigate(PATH.DIARY_DETAIL(decisionId))
-    } else if (isSuccess) {
-      navigate(PATH.DIARY)
-    } else {
-      onClose()
-    }
+    navigate(PATH.DIARY)
   }
 
   return (
@@ -76,7 +70,7 @@ export function DecisionResultModalContent({
 
         {/* 3. 코멘트 박스 */}
         <div className="bg-Yellow-100 border-Yellow-80 pretendard-Button1 text-Gray-9 box-border w-full rounded-lg border p-3 text-center">
-          {comment}
+          {displayComment}
         </div>
       </div>
       {/* 4. 하단 버튼 영역 */}

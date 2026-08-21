@@ -43,7 +43,7 @@ export function PredictionListPage() {
 
   if (!!decisionsQuery.error && decisionsQuery.fetchStatus === 'idle' && !decisions) {
     return (
-      <div className="bg-White flex min-h-dvh w-full flex-col pb-10">
+      <div className="bg-White flex w-full flex-1 flex-col pb-10">
         <StatusBar
           hasStatusArea={false}
           left={<StatusBarBackButton onClick={() => navigate(-1)} />}
@@ -55,7 +55,7 @@ export function PredictionListPage() {
 
   if (!decisions) {
     return (
-      <div className="bg-White flex min-h-dvh w-full flex-col pb-10">
+      <div className="bg-White flex w-full flex-1 flex-col pb-10">
         <StatusBar
           hasStatusArea={false}
           left={<StatusBarBackButton onClick={() => navigate(-1)} />}
@@ -73,7 +73,7 @@ export function PredictionListPage() {
       : `오늘 ${decisions.length}건 · 15:30 정산대기`
 
   return (
-    <div className="bg-Background1 flex min-h-dvh w-full flex-col pb-10">
+    <div className="bg-Background1 flex w-full flex-1 flex-col pb-10">
       <StatusBar
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}

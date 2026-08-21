@@ -73,7 +73,6 @@ export function PredictionDecisionCard({
         <Modal isOpen onClose={closeResultModal}>
           {decision.isCorrect !== null && decision.isCorrect !== undefined ? (
             <DecisionResultModalContent
-              decisionId={decision.id}
               isSuccess={decision.isCorrect}
               points={Math.abs(decision.apDelta ?? 0)}
               confidenceLevel={decision.confidenceLevel}
@@ -98,7 +97,6 @@ export function PredictionDecisionCard({
             <PageLoadingView className="p-0" />
           ) : (
             <DecisionResultModalContent
-              decisionId={decision.id}
               isSuccess={detail.isCorrect ?? false}
               points={Math.abs(detail.apDelta ?? 0)}
               confidenceLevel={decision.confidenceLevel}

@@ -67,7 +67,7 @@ function NavigationBar({
 
   return (
     <nav
-      className={`flex h-18 ${isFullWidth ? 'w-full' : 'mx-auto w-full max-w-90'} border-Yellow-100 bg-White items-center justify-between rounded-t-2xl border-x border-t px-4 py-1.5 shadow-[0_0_20px_rgba(242,78,2,0.1)] ${className} `}
+      className={`flex w-full ${isFullWidth ? '' : 'mx-auto max-w-90'} border-Yellow-100 bg-White justify-between rounded-t-2xl border-x border-t px-4 pt-[18px] pb-[calc(18px+env(safe-area-inset-bottom))] shadow-[0_0_20px_rgba(242,78,2,0.1)] ${className} `}
     >
       {NAV_ITEMS.map((item) => {
         return (

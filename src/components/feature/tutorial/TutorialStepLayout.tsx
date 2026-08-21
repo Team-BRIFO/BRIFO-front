@@ -47,7 +47,7 @@ export default function TutorialStepLayout({
       />
 
       <section
-        className={`mt-8 flex min-h-0 flex-1 flex-col overflow-hidden ${isReplay ? 'px-4' : ''}`}
+        className={`mt-8 flex min-h-0 flex-1 flex-col ${isContentScrollable ? 'overflow-y-auto overscroll-y-contain' : 'overflow-hidden'} ${isReplay ? 'px-4' : ''}`}
       >
         <div className="shrink-0">
           <p className="dnf-Title3 text-Gray-10 leading-[1.15]">STEP {step}</p>
@@ -60,7 +60,7 @@ export default function TutorialStepLayout({
         <AgentChat type="rookie" message={message} className="mt-8 shrink-0" />
 
         <div
-          className={`mt-8 min-h-0 flex-1 ${isContentScrollable ? 'overflow-y-auto overscroll-y-contain pb-2' : 'overflow-hidden'}`}
+          className={`mt-8 ${isContentScrollable ? 'shrink-0 pb-2' : 'min-h-0 flex-1 overflow-hidden'}`}
         >
           {children}
         </div>

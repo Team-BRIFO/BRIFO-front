@@ -262,7 +262,6 @@ export function AnalyzeCard({
                     현재 {predictionFooter.currentRate > 0 ? '+' : ''}
                     {predictionFooter.currentRate}%
                   </span>
-                  <span className="pretendard-Caption1 text-Gray-6">15분 지연</span>
                 </div>
               </div>
             )

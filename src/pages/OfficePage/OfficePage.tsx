@@ -23,7 +23,7 @@ export function OfficePage() {
   const items = briefingsQuery.data
 
   return (
-    <div className="bg-Background1 flex min-h-dvh w-full flex-col pb-4">
+    <div className="bg-Background1 flex w-full flex-1 flex-col pb-6">
       {/* 상단 StatusBar */}
       <StatusBar
         hasStatusArea={false}
