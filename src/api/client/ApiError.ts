@@ -77,12 +77,18 @@ interface NormalizeApiErrorOptions {
   signal?: AbortSignal
 }
 
-function getHttpMessage(status: number) {
+function getHttpMessage(status: number, code?: string) {
   if (status === 400) return '요청 내용을 확인해 주세요.'
   if (status === 401) return '로그인이 필요합니다.'
   if (status === 403) return '요청한 작업을 수행할 권한이 없습니다.'
   if (status === 404) return '요청한 정보를 찾을 수 없습니다.'
-  if (status === 409) return '현재 상태에서는 요청을 처리할 수 없습니다.'
+  if (status === 409) {
+    if (code === 'BRIEFING_409_05') return '최초 의뢰에 포함되지 않은 사원은 추가할 수 없습니다.'
+    if (code === 'BRIEFING_409_01') return '이미 요청한 브리핑입니다.'
+    if (code === 'BRIEFING_409_06') return '오늘의 브리핑 의뢰 시간이 마감되었습니다.'
+    if (code === 'AP_409_05') return 'AP가 부족합니다.'
+    return '현재 상태에서는 요청을 처리할 수 없습니다.'
+  }
   if (status >= 500) return '서버에서 요청을 처리하지 못했습니다.'
   return '요청을 처리하지 못했습니다.'
 }
@@ -135,12 +141,14 @@ export function normalizeApiError({ endpoint, cause, signal }: NormalizeApiError
     const parsedBody = ApiErrorResponseSchema.safeParse(responseBody)
     const status = cause.response.status
 
+    const code = parsedBody.success ? parsedBody.data.code : `HTTP_${status}`
+
     return new ApiError({
       kind: 'http',
       endpoint,
       status,
-      code: parsedBody.success ? parsedBody.data.code : `HTTP_${status}`,
-      message: getHttpMessage(status),
+      code,
+      message: getHttpMessage(status, code),
       serviceMessage: parsedBody.success ? parsedBody.data.message : undefined,
       cause,
       responseBody: parsedBody.success ? parsedBody.data : undefined,

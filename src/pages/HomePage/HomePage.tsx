@@ -76,7 +76,7 @@ export function HomePage() {
         </div>
 
         {/* 카드뉴스 회색 영역 */}
-        <section className="bg-Background1 w-full pt-6 pb-24">
+        <section className="bg-Background1 w-full pt-6 pb-8">
           <div className="px-4">
             <HomeCardNewsSection
               items={cardNewsItems}

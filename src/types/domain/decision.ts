@@ -5,6 +5,8 @@ export interface DecisionListItem {
   id: string
   confidenceLevel: ConfidenceLevel
   isSettled: boolean
+  isCorrect?: boolean | null
+  apDelta?: number | null
   stock: {
     name: string
     logoUrl?: string

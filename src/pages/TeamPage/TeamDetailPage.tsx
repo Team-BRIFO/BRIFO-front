@@ -24,7 +24,7 @@ export function TeamDetailPage() {
   }
 
   return (
-    <div className="bg-Background1 flex min-h-dvh flex-col">
+    <div className="bg-Background1 flex flex-1 flex-col">
       <StatusBar
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(PATH.TEAM)} />}

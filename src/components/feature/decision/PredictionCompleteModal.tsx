@@ -14,7 +14,6 @@ export interface PredictionCompleteModalProps {
     changeRate: number
     hashtags?: string[]
   }
-  earnedPoint: number
   onConfirm?: () => void
 }
 
@@ -22,17 +21,8 @@ export function PredictionCompleteModal({
   isOpen,
   onClose,
   stock,
-  earnedPoint,
   onConfirm,
 }: PredictionCompleteModalProps) {
-  const now = new Date()
-  const kstOffset = 9 * 60 * 60 * 1000
-  const kstTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + kstOffset)
-
-  const isAfterMarketClose =
-    kstTime.getHours() > 15 || (kstTime.getHours() === 15 && kstTime.getMinutes() >= 30)
-  const settlementDayText = isAfterMarketClose ? '내일' : '오늘'
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col items-center gap-5">
@@ -40,7 +30,6 @@ export function PredictionCompleteModal({
           {/* 헤더 */}
           <div className="flex flex-col items-center gap-5">
             <h2 className="dnf-Title4 text-Gray-10 m-0">예측 등록 완료!</h2>
-            <span className="dnf-Title3 text-Yellow-40">+ {earnedPoint} AP</span>
           </div>
 
           {/* 주식 정보 카드 */}
@@ -56,8 +45,7 @@ export function PredictionCompleteModal({
 
           {/* 안내 텍스트 */}
           <p className="pretendard-Caption2 text-Gray-6 gap-0.5 text-center leading-[1.4]">
-            <span className="text-Pink-30">{settlementDayText} 15:30</span> 장 마감에 자동으로
-            정산돼요.
+            <span className="text-Pink-30">장 마감 시</span> 자동으로 정산돼요.
             <br />
             결과는 알림으로 알려드릴게요!
           </p>
