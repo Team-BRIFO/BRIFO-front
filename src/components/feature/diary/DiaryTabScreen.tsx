@@ -23,7 +23,9 @@ export function DiaryTabScreen({ view, onChangeView, children }: DiaryTabScreenP
         <div className="flex w-full flex-col gap-3 px-4">
           <header className="flex w-full flex-col gap-1">
             <h1 className="dnf-Subtitle2 text-Gray-10">결정일기</h1>
-            <p className="pretendard-Body2-Regular text-Gray-6">내 AI 사원들을 관리하세요</p>
+            <p className="pretendard-Body2-Regular text-Gray-6">
+              그동안의 예측과 결정을 기록으로 확인하세요
+            </p>
           </header>
 
           <DiaryViewTabs value={view} onChange={onChangeView} />

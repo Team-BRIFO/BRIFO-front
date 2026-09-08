@@ -38,7 +38,7 @@ export function MyHome({
       <header className="flex flex-col gap-1">
         <h1 className="dnf-Subtitle2 text-Gray-10">마이페이지</h1>
         <p className="font-pretendard text-Gray-6 text-sm leading-5 font-normal tracking-[-0.56px]">
-          내 AI 사원들을 관리하세요
+          내 활동과 정보를 확인하세요
         </p>
       </header>
 
