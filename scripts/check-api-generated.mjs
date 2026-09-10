@@ -42,9 +42,18 @@ try {
 
   if (generation.status !== 0) {
     if (generation.error) console.error(generation.error)
+
+    // Orval은 생성 전에 출력 폴더를 비우므로, 실패하면 작업 트리에 삭제만 남는다.
+    // 스냅샷을 되돌려 체크 실패가 생성 파일을 날리지 않게 한다.
+    if (existsSync(snapshotDirectory)) {
+      rmSync(generatedDirectory, { recursive: true, force: true })
+      cpSync(snapshotDirectory, generatedDirectory, { recursive: true })
+    }
+
     console.error(
       'API generation failed before the synchronization check. Check the live OpenAPI network response and Orval diagnostics above.',
     )
+    rmSync(temporaryDirectory, { recursive: true, force: true })
     process.exit(generation.status ?? 1)
   }
 
