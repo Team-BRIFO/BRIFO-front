@@ -48,7 +48,7 @@ export function OfficePage() {
           <header className="flex items-center justify-between pt-3">
             <div className="flex flex-col gap-2">
               <h1 className="dnf-Subtitle2 text-Gray-10">사무실</h1>
-              <p className="pretendard-Button2 text-Gray-6">내 AI 사원들을 관리하세요</p>
+              <p className="pretendard-Button2 text-Gray-6">사원들의 분석 진행 상황을 확인하세요</p>
             </div>
             {items.length > 0 && (
               <Badge
