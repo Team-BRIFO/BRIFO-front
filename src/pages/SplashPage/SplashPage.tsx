@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { clearClientSession } from '@/api/client/sessionCleanup'
@@ -23,6 +23,7 @@ export function SplashPage() {
   const location = useLocation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const isLoginStartingRef = useRef(false)
   const locationState = location.state as SplashLocationState | null
   const initialLoginError = locationState?.loginError
   const [isSplashVisible, setIsSplashVisible] = useState(!initialLoginError)
@@ -71,18 +72,23 @@ export function SplashPage() {
    * 로그인이 중간에 끊겼다가 재시도하는 경우를 포함해, 매 시도가 이전 세션의 흔적 없이
    * 깨끗한 상태에서 시작되도록 클라이언트·서버 가입 세션을 먼저 정리한다.
    */
-  const restartSocialLogin = (provider: 'kakao' | 'naver') => {
+  const restartSocialLogin = async (provider: 'kakao' | 'naver') => {
+    // 리다이렉트가 시작되면 진행 중인 요청이 끊기므로, 중복 클릭으로 정리가 반쪽이 나지 않게 막는다.
+    if (isLoginStartingRef.current) return
+    isLoginStartingRef.current = true
+
     clearClientSession(queryClient)
-    void cancelSignupSession()
+    // 응답의 Set-Cookie를 받아야 쿠키가 지워진다. 리다이렉트 전에 기다린다.
+    await cancelSignupSession()
     startSocialLogin(provider)
   }
 
   const handleKakaoLogin = () => {
-    restartSocialLogin('kakao')
+    void restartSocialLogin('kakao')
   }
 
   const handleNaverLogin = () => {
-    restartSocialLogin('naver')
+    void restartSocialLogin('naver')
   }
 
   // 최초 로고 스플래시
