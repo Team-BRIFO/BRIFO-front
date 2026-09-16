@@ -33,3 +33,11 @@ export async function ensureSignupCsrfToken(options?: { signal?: GenericAbortSig
   signupSession.setCsrfToken(csrfToken)
   return csrfToken
 }
+
+/**
+ * 로그인을 새로 시작하기 전에 이전 가입 세션(signup_token 쿠키)을 정리한다.
+ * best-effort로 호출한다 — 실패해도 새 로그인 시도를 막을 이유가 없다.
+ */
+export async function cancelSignupSession() {
+  await AXIOS_INSTANCE.post('/api/auth/signup/cancel', null, { validateStatus: () => true })
+}

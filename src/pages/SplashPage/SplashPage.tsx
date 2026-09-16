@@ -1,6 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import { clearClientSession } from '@/api/client/sessionCleanup'
+import { cancelSignupSession } from '@/api/client/signupAuth'
 import SplashBackground from '@/assets/images/splash_background.svg?react'
 import Logo from '@/assets/logo/brifo_logo.svg?react'
 import { Toast } from '@/components/common/Toast'
@@ -19,6 +22,7 @@ interface SplashLocationState {
 export function SplashPage() {
   const location = useLocation()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const locationState = location.state as SplashLocationState | null
   const initialLoginError = locationState?.loginError
   const [isSplashVisible, setIsSplashVisible] = useState(!initialLoginError)
@@ -63,12 +67,22 @@ export function SplashPage() {
     setCurrentStep(SPLASH_SLIDES.length)
   }
 
+  /**
+   * 로그인이 중간에 끊겼다가 재시도하는 경우를 포함해, 매 시도가 이전 세션의 흔적 없이
+   * 깨끗한 상태에서 시작되도록 클라이언트·서버 가입 세션을 먼저 정리한다.
+   */
+  const restartSocialLogin = (provider: 'kakao' | 'naver') => {
+    clearClientSession(queryClient)
+    void cancelSignupSession()
+    startSocialLogin(provider)
+  }
+
   const handleKakaoLogin = () => {
-    startSocialLogin('kakao')
+    restartSocialLogin('kakao')
   }
 
   const handleNaverLogin = () => {
-    startSocialLogin('naver')
+    restartSocialLogin('naver')
   }
 
   // 최초 로고 스플래시
