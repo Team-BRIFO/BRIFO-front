@@ -24,6 +24,8 @@ import {
 } from '@/utils/profileValidation'
 
 const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사', 'zI존']
+/** 검색 열기 전 컴팩트 목록에는 인기 순위 상위 N개만 보여준다. */
+const COMPACT_STOCK_RANKING_COUNT = 5
 
 export function OnboardingPage() {
   const navigate = useNavigate()
@@ -44,6 +46,8 @@ export function OnboardingPage() {
       stocksQuery.data?.pages.flatMap((page) => page.page.items.map(mapInterestStockOption)) ?? [],
     [stocksQuery.data],
   )
+  // 검색을 열기 전 컴팩트 목록은 인기 순위 상위 5개만 보여주고, 검색 화면은 전체를 보여준다.
+  const compactStocks = useMemo(() => stocks.slice(0, COMPACT_STOCK_RANKING_COUNT), [stocks])
   const selectedStockIds = useMemo(() => selectedStocks.map((stock) => stock.id), [selectedStocks])
 
   const nicknameError = validateNickname(nickname)
@@ -190,7 +194,7 @@ export function OnboardingPage() {
           </div>
 
           <InterestStockSection
-            stocks={stocks}
+            stocks={compactStocks}
             searchKeyword={searchKeyword}
             selectedStockIds={selectedStockIds}
             selectedStocks={selectedStocks}

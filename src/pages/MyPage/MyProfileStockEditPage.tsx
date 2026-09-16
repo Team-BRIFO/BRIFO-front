@@ -19,7 +19,10 @@ import {
   validateNickname,
 } from '@/utils/profileValidation'
 
-const STOCK_PAGE_SIZE = 20
+/** 키워드 없이 인기 종목을 조회할 때는 코스피200 전체 순위를 한 번에 받아온다. */
+const POPULAR_PAGE_SIZE = 200
+/** 키워드 검색은 서버가 허용하는 최대 size(50)를 넘지 않아야 한다. */
+const SEARCH_PAGE_SIZE = 20
 
 type StockEditReturnPath = typeof PATH.MY_EDIT | typeof PATH.MY_SETTINGS
 type ProfileEditReturnPath = typeof PATH.MY_PAGE | typeof PATH.MY_SETTINGS
@@ -40,7 +43,8 @@ export function MyProfileStockEditPage() {
     null,
   )
   const [searchKeyword, setSearchKeyword] = useState('')
-  const stocksQuery = useGetStocksQuery(searchKeyword, STOCK_PAGE_SIZE, Boolean(profileQuery.data))
+  const stockPageSize = searchKeyword.trim() ? SEARCH_PAGE_SIZE : POPULAR_PAGE_SIZE
+  const stocksQuery = useGetStocksQuery(searchKeyword, stockPageSize, Boolean(profileQuery.data))
   const locationState = location.state as MyProfileStockEditLocationState | null
 
   const initialStocks = useMemo(
