@@ -129,8 +129,11 @@ export function BriefingDetailPage() {
                   setIsDecisionSheetOpen(false)
                   setIsCompleteModalOpen(true)
                 },
-                onError: () => {
-                  setErrorModalMsg('예측 등록에 실패했습니다. 잠시 후 다시 시도해주세요.')
+                onError: (submitError) => {
+                  setErrorModalMsg(
+                    submitError.serviceMessage ??
+                      '예측 등록에 실패했습니다. 잠시 후 다시 시도해주세요.',
+                  )
                 },
               },
             )

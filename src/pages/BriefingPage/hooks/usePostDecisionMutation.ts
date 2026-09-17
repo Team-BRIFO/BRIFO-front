@@ -5,6 +5,7 @@ import { ApiResponseCreateDecisionResponse } from '@/api/generated/schemas'
 import { useApiMutation } from '@/hooks/api'
 import { decisionQueryKeys } from '@/hooks/queries/decision/decisionQueryKeys'
 import { diaryQueryKeys } from '@/hooks/queries/diary/diaryQueryKeys'
+import { userQueryKeys } from '@/hooks/queries/user/userQueryKeys'
 import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
 
 interface PostDecisionInput {
@@ -29,6 +30,9 @@ export function usePostDecisionMutation(briefingId: string) {
         }),
         queryClient.invalidateQueries({
           queryKey: diaryQueryKeys.calendars(),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: userQueryKeys.profile(),
         }),
       ])
     },

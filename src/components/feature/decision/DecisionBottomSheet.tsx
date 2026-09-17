@@ -9,6 +9,9 @@ import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSe
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
 
+/** 예측 등록 시 확신도와 무관하게 즉시 차감되는 참가비 (서버 DecisionRequestService와 동일한 값) */
+const DECISION_ENTRY_FEE_AP = 1_000
+
 export interface DecisionBottomSheetProps {
   isOpen: boolean
   onClose: () => void
@@ -45,9 +48,9 @@ export function DecisionBottomSheet({
   const [direction, setDirection] = useState<PredictionType>('UP')
   const [confidence, setConfidence] = useState<ConfidenceLevel>(3)
 
-  // API 스펙이나 요구사항에 따라 계산 (임시 로직)
-  const apCost = confidence * 20
-  const expectedReward = confidence * 20
+  // 참가비는 확신도와 무관하게 고정, 적중 보상은 서버 정산 공식(확신도 * 20,000원)과 맞춘다.
+  const apCost = DECISION_ENTRY_FEE_AP
+  const expectedReward = confidence * 20_000
 
   const handleConfirm = () => {
     if (isSubmitting) return

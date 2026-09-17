@@ -16,6 +16,7 @@ export const CursorPageApTransactionItem = zod.object({
         'ATTENDANCE',
         'TUTORIAL',
         'BADGE',
+        'DECISION_ENTRY_FEE',
         'DECISION_WIN',
         'DECISION_LOSE',
         'NEUTRAL_HIT',

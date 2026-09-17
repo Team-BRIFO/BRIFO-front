@@ -9,6 +9,7 @@ export const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   ATTENDANCE: '출석 보상',
   TUTORIAL: '튜토리얼 완료',
   BADGE: '배지 획득',
+  DECISION_ENTRY_FEE: '예측 참가비',
   DECISION_WIN: '결정 적중',
   DECISION_LOSE: '결정 실패',
   NEUTRAL_HIT: '중립 예측 적중',
