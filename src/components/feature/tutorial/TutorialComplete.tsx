@@ -52,7 +52,9 @@ export default function TutorialComplete({
         {reward !== undefined && (
           <div className="border-Yellow-80 bg-Yellow-105 mt-17 flex w-57.75 shrink-0 flex-col rounded-xl border px-6 py-3.5">
             <span className="pretendard-Caption2 text-Gray-6">튜토리얼 보상</span>
-            <strong className="dnf-Title2 text-Yellow-30 mt-1">+ {reward} AP</strong>
+            <strong className="dnf-Title2 text-Yellow-30 mt-1">
+              + {reward.toLocaleString()}원
+            </strong>
           </div>
         )}
       </AdaptiveScrollArea>

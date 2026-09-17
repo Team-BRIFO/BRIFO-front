@@ -44,7 +44,7 @@ export function BriefingDetailPage() {
     navigate(PATH.BRIEFING_DETAIL(val), { replace: true })
   }
 
-  // 백엔드 API에서 제공되지 않는 agent 디테일 스펙(레벨, 승률, 일급 등)을 AgentList API 결과를 통해 병합합니다.
+  // 백엔드 API에서 제공되지 않는 agent 디테일 스펙(레벨, 승률, 의뢰비 등)을 AgentList API 결과를 통해 병합합니다.
   const realAgent = data ? agentsList?.find((a) => a.id === data.agent.id) : undefined
   const displayAgent = data ? { ...data.agent, ...(realAgent ?? {}) } : undefined
 

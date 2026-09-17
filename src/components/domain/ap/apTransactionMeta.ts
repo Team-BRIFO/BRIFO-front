@@ -12,15 +12,15 @@ export const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   DECISION_WIN: '결정 적중',
   DECISION_LOSE: '결정 실패',
   NEUTRAL_HIT: '중립 예측 적중',
-  SALARY: '사원 급여',
-  SALARY_REFUND: '급여 환급',
-  CREDIT_LOAN: 'AP 대출',
+  SALARY: '의뢰비',
+  SALARY_REFUND: '의뢰비 환급',
+  CREDIT_LOAN: '포인트 대출',
 }
 
-/** 증감 부호를 붙인 AP 문자열 (예: +80 AP / -40 AP) */
+/** 증감 부호를 붙인 원화 문자열 (예: +80,000원 / -40,000원) */
 export function formatSignedAp(amount: number) {
   const sign = amount > 0 ? '+' : amount < 0 ? '-' : ''
-  return `${sign}${Math.abs(amount).toLocaleString()} AP`
+  return `${sign}${Math.abs(amount).toLocaleString()}원`
 }
 
 /** 증감 부호별 텍스트 색상 클래스 (획득 Pink / 차감 Green — 국내 증시 관례) */

@@ -20,7 +20,7 @@ export const DIARY_LEGEND_DOT: Record<DiaryCalendarOutcome, string> = {
   loss: 'bg-Pink-50',
 }
 
-/** AP 증감을 부호 포함 문자열로 (0은 부호 없이) */
+/** 포인트 증감을 부호 포함 문자열로 (0은 부호 없이) */
 export function formatApDelta(apDelta: number): string {
   if (apDelta === 0) return '0'
 

@@ -18,7 +18,7 @@ export function DecisionResultCard({
   return (
     <section className="border-Gray-2 flex w-full flex-col items-center rounded-2xl border px-5 py-7 text-center">
       <h2 className="dnf-Title4 text-Gray-10">예측 적중!</h2>
-      <strong className="dnf-Title3 text-Yellow-40 mt-4">+ {points} AP</strong>
+      <strong className="dnf-Title3 text-Yellow-40 mt-4">+ {points.toLocaleString()}원</strong>
 
       <div className="mt-5 flex flex-col items-center gap-1">
         <p className="pretendard-Button2 text-Gray-6">

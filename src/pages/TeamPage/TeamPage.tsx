@@ -9,15 +9,15 @@ import { useAgentListQuery } from '@/hooks/queries/agent/useAgentListQuery'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { PATH } from '@/routes/paths'
 
-/** 팀 탭 - SCR-12: 사원 관리 인사팀 화면 (Level/EXP, 일급) */
+/** 팀 탭 - SCR-12: 사원 관리 인사팀 화면 (Level/EXP, 의뢰비) */
 export function TeamPage() {
   const navigate = useNavigate()
 
   const agentsQuery = useAgentListQuery()
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
-    : '0 AP'
+    ? `${userQuery.data.apSummary.balance.toLocaleString()}원`
+    : '0원'
   const agents = agentsQuery.data
 
   const isError = !!agentsQuery.error && agentsQuery.fetchStatus === 'idle'

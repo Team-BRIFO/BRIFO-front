@@ -9,7 +9,7 @@ export default function AttendanceBonusCard({ bonus, endTime, onClick }: Attenda
     <div className="bg-Yellow-100 flex h-17 w-full items-center justify-between rounded-lg px-4 py-3.5">
       <div className="flex flex-col gap-1">
         <p className="pretendard-Button3 text-Yellow-5 font-bold">
-          🔥 오늘의 출석 보너스 +{bonus} AP
+          🔥 오늘의 출석 보너스 +{bonus.toLocaleString()}원
         </p>
 
         <p className="pretendard-Caption3 text-Yellow-5 font-bold">{endTime} 장 마감 자동 정산</p>
