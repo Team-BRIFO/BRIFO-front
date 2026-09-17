@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge'
 
 import {
   formatApTransactionDateTime,
+  formatWon,
   getApAmountColorClass,
 } from '@/components/domain/ap/apTransactionMeta'
 import type { ApTransaction } from '@/types/domain/ap'
@@ -11,7 +12,7 @@ export interface ApTransactionRowProps extends HTMLAttributes<HTMLLIElement> {
   transaction: ApTransaction
 }
 
-/** AP 입출금 내역 한 행 (사유 · 날짜 · 증감) — 피그마 h-65 / px-16 py-14 */
+/** 자금 입출금 내역 한 행 (사유 · 날짜 · 증감) — 피그마 h-65 / px-16 py-14 */
 export function ApTransactionRow({ transaction, className = '', ...props }: ApTransactionRowProps) {
   const { label, amount, createdAt } = transaction
   const { date, time } = formatApTransactionDateTime(createdAt)
@@ -40,8 +41,7 @@ export function ApTransactionRow({ transaction, className = '', ...props }: ApTr
         )}
       >
         {sign && <span>{sign}</span>}
-        <span>{Math.abs(amount).toLocaleString()}</span>
-        <span>AP</span>
+        <span>{formatWon(amount)}</span>
       </span>
     </li>
   )
