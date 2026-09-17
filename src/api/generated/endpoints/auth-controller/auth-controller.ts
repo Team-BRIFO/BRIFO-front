@@ -19,6 +19,9 @@ import type { BodyType } from '../../../client/axiosInstance'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
+export const cancelSignup = (options?: SecondParameter<typeof axiosInstance<ApiResponse>>) => {
+  return axiosInstance<ApiResponse>({ url: `/api/auth/signup/cancel`, method: 'POST' }, options)
+}
 export const reissue = (
   refreshTokenRequest?: BodyType<RefreshTokenRequest>,
   options?: SecondParameter<typeof axiosInstance<ApiResponseReissueResponse>>,
@@ -80,6 +83,7 @@ export const refreshSignupCsrfToken = (
 ) => {
   return axiosInstance<ApiResponse>({ url: `/api/auth/signup/csrf`, method: 'GET' }, options)
 }
+export type CancelSignupResult = NonNullable<Awaited<ReturnType<typeof cancelSignup>>>
 export type ReissueResult = NonNullable<Awaited<ReturnType<typeof reissue>>>
 export type LogoutResult = NonNullable<Awaited<ReturnType<typeof logout>>>
 export type LoginWithNaverResult = NonNullable<Awaited<ReturnType<typeof loginWithNaver>>>
