@@ -54,7 +54,7 @@ export function BadgeItem({ badge, icon, size, className = '', ...props }: Badge
 
       <span
         className={twMerge(
-          'pretendard-Body2-Semibold line-clamp-1 w-full text-center',
+          'pretendard-Caption1 line-clamp-2 w-full text-center break-keep',
           isUnlocked ? 'text-Gray-10' : 'text-Gray-5',
         )}
       >

@@ -4,6 +4,7 @@ import { Badge as ApBadge } from '@/components/common/Badge'
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
 import { formatWon } from '@/components/domain/ap/apTransactionMeta'
+import { getBadgeIcon } from '@/components/domain/badge/badgeIcons'
 // 대체: domain/badge — 갤러리 BadgeItem과 동일 (획득 모달용, unlocked 고정)
 import { BadgeItem } from '@/components/domain/badge/BadgeItem'
 import type { Badge } from '@/types/domain/badge'
@@ -51,7 +52,12 @@ export function BadgeUnlockModal({
         <>
           <Modal.Header className="flex flex-col items-center gap-4">
             <h2 className="dnf-Title4 text-Gray-10 mt-6">{badge.name} 획득!</h2>
-            <BadgeItem badge={{ ...badge, isUnlocked: true }} size={60} disabled />
+            <BadgeItem
+              badge={{ ...badge, isUnlocked: true }}
+              icon={getBadgeIcon(badge.iconKey)}
+              size={60}
+              disabled
+            />
             <p className="font-pretendard text-Gray-6 text-center text-sm leading-5 font-normal tracking-[-0.56px]">
               {badge.description}
             </p>
