@@ -1,6 +1,7 @@
 import CelebrationImage from '@/assets/characters/celebration.svg?react'
 import Button from '@/components/common/Button'
 import { StatusBar } from '@/components/common/StatusBar'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import AdaptiveScrollArea from '@/components/feature/tutorial/AdaptiveScrollArea'
 
 interface TutorialCompleteProps {
@@ -52,9 +53,7 @@ export default function TutorialComplete({
         {reward !== undefined && (
           <div className="border-Yellow-80 bg-Yellow-105 mt-17 flex w-57.75 shrink-0 flex-col rounded-xl border px-6 py-3.5">
             <span className="pretendard-Caption2 text-Gray-6">튜토리얼 보상</span>
-            <strong className="dnf-Title2 text-Yellow-30 mt-1">
-              + {reward.toLocaleString()}원
-            </strong>
+            <strong className="dnf-Title2 text-Yellow-30 mt-1">+ {formatWon(reward)}</strong>
           </div>
         )}
       </AdaptiveScrollArea>

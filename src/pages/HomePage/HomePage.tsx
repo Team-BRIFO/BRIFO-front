@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import AttendanceRewardSection from '@/components/feature/home/AttendanceRewardSection'
 import HomeCardNewsSection from '@/components/feature/home/HomeCardNewsSection'
 import HomeHeader from '@/components/feature/home/HomeHeader'
@@ -20,7 +21,7 @@ export function HomePage() {
   const officeQuery = useOfficeBriefingsQuery()
 
   const home = homeQuery.data
-  const balanceText = `${(home?.user.balanceAp ?? 0).toLocaleString()}원`
+  const balanceText = formatWon(home?.user.balanceAp ?? 0)
   const employeeLevels = Object.fromEntries(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (home?.agents ?? []).map((agent: any) => [agent.agentType, agent.level]),

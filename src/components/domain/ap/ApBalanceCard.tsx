@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-import { getApAmountColorClass } from '@/components/domain/ap/apTransactionMeta'
+import { formatWon, getApAmountColorClass } from '@/components/domain/ap/apTransactionMeta'
 import type { ApSummary } from '@/types/domain/ap'
 
 export interface ApBalanceCardProps extends HTMLAttributes<HTMLDivElement> {
@@ -11,12 +11,15 @@ export interface ApBalanceCardProps extends HTMLAttributes<HTMLDivElement> {
    * 집계 기간이 화면마다 달라질 수 있어 데이터로 받는다. 생략하면 증감 영역을 숨긴다.
    */
   deltaLabel?: string
+  /** 잔액 옆 "+" 충전 버튼 클릭 핸들러. 생략하면 버튼을 숨긴다. */
+  onChargeClick?: () => void
 }
 
 /** 보유 포인트 + 기간 내 증감 카드 (마이 메인 · 포인트 내역 상단) */
 export function ApBalanceCard({
   summary,
   deltaLabel,
+  onChargeClick,
   className = '',
   ...props
 }: ApBalanceCardProps) {
@@ -35,9 +38,18 @@ export function ApBalanceCard({
     >
       <div className="flex flex-col gap-2">
         <span className="pretendard-Caption3 text-Gray-6 leading-none">보유 포인트</span>
-        <p className="dnf-Subtitle1 text-Gray-10 flex items-center gap-1 leading-none">
-          <span>{balance.toLocaleString()}</span>
-          <span>원</span>
+        <p className="dnf-Subtitle1 text-Gray-10 flex items-center gap-1.5 leading-none">
+          <span>{formatWon(balance)}</span>
+          {onChargeClick && (
+            <button
+              type="button"
+              onClick={onChargeClick}
+              aria-label="포인트 충전하기"
+              className="bg-Pink-30 text-White flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs leading-none font-bold"
+            >
+              +
+            </button>
+          )}
         </p>
       </div>
 
@@ -51,8 +63,7 @@ export function ApBalanceCard({
           <span>{deltaLabel}</span>
           <span className="flex items-center gap-0.5">
             {sign && <span>{sign}</span>}
-            <span>{Math.abs(delta).toLocaleString()}</span>
-            <span>원</span>
+            <span>{formatWon(delta)}</span>
           </span>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import Button from '@/components/common/Button'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import { PATH } from '@/routes/paths'
 
 export interface DecisionResultModalContentProps {
@@ -19,7 +20,7 @@ export interface DecisionResultModalContentProps {
 
 export function DecisionResultModalContent({
   isSuccess = true,
-  points = 100,
+  points = 100_000,
   stockInfo = { name: '브리포', changeRate: 8.1 },
   comment,
   resultText,
@@ -47,7 +48,7 @@ export function DecisionResultModalContent({
             {isSuccess ? '예측 적중!' : '아쉽게도 빗나갔어요'}
           </h2>
           <span className={`dnf-Title3 ${isSuccess ? 'text-Yellow-40' : 'text-Green-40'}`}>
-            {isSuccess ? `+ ${points.toLocaleString()}원` : `- ${points.toLocaleString()}원`}
+            {isSuccess ? `+ ${formatWon(points)}` : `- ${formatWon(points)}`}
           </span>
         </div>
 

@@ -43,7 +43,7 @@ export function TutorialIntroPage() {
           <div className="bg-Yellow-50 mt-5 flex h-12 shrink-0 items-center justify-center rounded-[20px]">
             <span className="pretendard-Body2-Semibold text-Yellow-5">튜토리얼 완료 시 보너스</span>
 
-            <span className="dnf-Caption2 text-Yellow-5 ml-1">+100,000원</span>
+            <span className="dnf-Caption2 text-Yellow-5 ml-1">+10만원</span>
           </div>
         )}
 

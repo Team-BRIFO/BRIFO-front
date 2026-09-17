@@ -1,13 +1,16 @@
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { MyApHistory } from '@/components/feature/my/MyApHistory'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useMyApTransactionsQuery } from '@/pages/MyPage/hooks/useMyQueries'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
+import { PATH } from '@/routes/paths'
 
 /** SCR-15 포인트 내역 */
 export function MyApPage() {
+  const navigate = useNavigate()
   const query = useMyApTransactionsQuery()
   const transactions = useMemo(() => {
     if (!query.data) return []
@@ -31,6 +34,7 @@ export function MyApPage() {
         onLoadMore={() => query.fetchNextPage()}
         isLoadingMore={query.isFetchingNextPage}
         loadMoreError={query.isFetchNextPageError}
+        onChargeClick={() => navigate(PATH.MY_CHARGE)}
       />
     )
 

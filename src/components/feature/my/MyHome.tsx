@@ -17,6 +17,7 @@ export interface MyHomeProps {
   /** 포인트 카드 우측 증감의 기간 라벨 (예: 이번주) */
   apDeltaLabel?: string
   onSelectMenu?: (key: MyMenuKey) => void
+  onChargeClick?: () => void
 }
 
 /** 마이 메인(SCR-13) 본문 — 프로필 · 포인트 · 요약 지표 · 메뉴 리스트 */
@@ -26,6 +27,7 @@ export function MyHome({
   apSummary,
   apDeltaLabel = '이번주',
   onSelectMenu,
+  onChargeClick,
 }: MyHomeProps) {
   const statTiles = [
     { key: 'hitRate', value: stats.hitRate, unit: '%', label: '적중률' },
@@ -45,7 +47,11 @@ export function MyHome({
       <div className="flex flex-col gap-2">
         <UserProfileCard profile={profile} />
 
-        <ApBalanceCard summary={apSummary} deltaLabel={apDeltaLabel} />
+        <ApBalanceCard
+          summary={apSummary}
+          deltaLabel={apDeltaLabel}
+          onChargeClick={onChargeClick}
+        />
 
         <div className="flex items-center gap-1.5">
           {statTiles.map(({ key, value, unit, label }) => (

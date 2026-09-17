@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import { AgentListSection } from '@/components/feature/myEmployee/AgentListSection'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
@@ -15,9 +16,7 @@ export function TeamPage() {
 
   const agentsQuery = useAgentListQuery()
   const userQuery = useUserProfileQuery()
-  const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()}원`
-    : '0원'
+  const balanceText = userQuery.data ? formatWon(userQuery.data.apSummary.balance) : '0원'
   const agents = agentsQuery.data
 
   const isError = !!agentsQuery.error && agentsQuery.fetchStatus === 'idle'
