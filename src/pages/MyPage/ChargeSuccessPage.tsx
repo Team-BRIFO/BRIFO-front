@@ -32,7 +32,7 @@ export function ChargeSuccessPage() {
 
   if (!hasValidParams || confirmPaymentMutation.isError) {
     return (
-      <MyPageLayout title="포인트 충전">
+      <MyPageLayout title="자금 충전">
         <PageErrorView
           error={confirmPaymentMutation.error}
           title="충전에 실패했어요"
@@ -45,17 +45,17 @@ export function ChargeSuccessPage() {
 
   if (!confirmPaymentMutation.isSuccess) {
     return (
-      <MyPageLayout title="포인트 충전">
+      <MyPageLayout title="자금 충전">
         <PageLoadingView headerText="충전 확인 중..." title="결제를 확인하고 있어요" />
       </MyPageLayout>
     )
   }
 
   return (
-    <MyPageLayout title="포인트 충전">
+    <MyPageLayout title="자금 충전">
       <StatusMessage
         title="충전이 완료됐어요!"
-        description={`${formatWon(Number(amount))}이 포인트에 반영됐어요.\n현재 잔액 ${formatWon(confirmPaymentMutation.data.balanceAp)}`}
+        description={`${formatWon(Number(amount))}이 자금에 반영됐어요.\n현재 잔액 ${formatWon(confirmPaymentMutation.data.balanceAp)}`}
         buttonText="마이페이지로"
         onButtonClick={() => navigate(PATH.MY_PAGE, { replace: true })}
       />

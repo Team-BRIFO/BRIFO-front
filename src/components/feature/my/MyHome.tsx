@@ -1,5 +1,5 @@
 import { MenuRow, MenuRowGroup } from '@/components/common/MenuRow'
-// 대체: domain/ap — 포인트 잔액·증감 카드 (마이 메인)
+// 대체: domain/ap — 자금 잔액·증감 카드 (마이 메인)
 import { ApBalanceCard } from '@/components/domain/ap/ApBalanceCard'
 // 대체: domain/user — 프로필 카드 (내부에서 AgentAvatar 재사용)
 import { UserProfileCard } from '@/components/domain/user/UserProfileCard'
@@ -14,13 +14,13 @@ export interface MyHomeProps {
   profile: UserProfile
   stats: UserStats
   apSummary: ApSummary
-  /** 포인트 카드 우측 증감의 기간 라벨 (예: 이번주) */
+  /** 자금 카드 우측 증감의 기간 라벨 (예: 이번주) */
   apDeltaLabel?: string
   onSelectMenu?: (key: MyMenuKey) => void
   onChargeClick?: () => void
 }
 
-/** 마이 메인(SCR-13) 본문 — 프로필 · 포인트 · 요약 지표 · 메뉴 리스트 */
+/** 마이 메인(SCR-13) 본문 — 프로필 · 자금 · 요약 지표 · 메뉴 리스트 */
 export function MyHome({
   profile,
   stats,

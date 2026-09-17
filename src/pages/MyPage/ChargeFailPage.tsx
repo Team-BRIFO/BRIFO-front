@@ -11,7 +11,7 @@ export function ChargeFailPage() {
   const message = searchParams.get('message') ?? '결제가 취소됐거나 실패했어요.'
 
   return (
-    <MyPageLayout title="포인트 충전">
+    <MyPageLayout title="자금 충전">
       <StatusMessage
         title="결제를 완료하지 못했어요"
         description={message}

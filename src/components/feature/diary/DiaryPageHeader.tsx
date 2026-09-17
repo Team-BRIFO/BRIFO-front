@@ -15,8 +15,8 @@ function DiaryPageHeader({ onNotificationClick }: DiaryPageHeaderProps) {
   const balanceText = userQuery.data
     ? formatWon(userQuery.data.apSummary.balance)
     : userQuery.error
-      ? '포인트 조회 실패'
-      : '포인트 불러오는 중'
+      ? '자금 조회 실패'
+      : '자금 불러오는 중'
 
   return (
     <StatusBar

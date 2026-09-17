@@ -8,7 +8,7 @@ import { useMyApTransactionsQuery } from '@/pages/MyPage/hooks/useMyQueries'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
-/** SCR-15 포인트 내역 */
+/** SCR-15 자금 내역 */
 export function MyApPage() {
   const navigate = useNavigate()
   const query = useMyApTransactionsQuery()
@@ -38,5 +38,5 @@ export function MyApPage() {
       />
     )
 
-  return <MyPageLayout title="포인트 내역">{content}</MyPageLayout>
+  return <MyPageLayout title="자금 내역">{content}</MyPageLayout>
 }

@@ -8,7 +8,7 @@ import { PATH } from '@/routes/paths'
 
 const PRESET_AMOUNTS = [10_000, 30_000, 50_000, 100_000, 300_000, 500_000]
 
-/** 포인트 충전 — 토스페이먼츠 결제창(카드) 연동 */
+/** 자금 충전 — 토스페이먼츠 결제창(카드) 연동 */
 export function ChargePage() {
   const [amount, setAmount] = useState(PRESET_AMOUNTS[2])
   const [customAmount, setCustomAmount] = useState('')
@@ -47,7 +47,7 @@ export function ChargePage() {
         method: 'CARD',
         amount: { currency: 'KRW', value: amount },
         orderId,
-        orderName: '브리포 포인트 충전',
+        orderName: '브리포 자금 충전',
         successUrl: `${window.location.origin}${PATH.MY_CHARGE_SUCCESS}`,
         failUrl: `${window.location.origin}${PATH.MY_CHARGE_FAIL}`,
         card: { useEscrow: false, flowMode: 'DEFAULT', useCardPoint: false },
@@ -59,7 +59,7 @@ export function ChargePage() {
   }
 
   return (
-    <MyPageLayout title="포인트 충전">
+    <MyPageLayout title="자금 충전">
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-3 gap-2">
           {PRESET_AMOUNTS.map((preset) => (

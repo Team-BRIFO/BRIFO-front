@@ -77,10 +77,10 @@ export function AnalyzeRequestModal({
         return (
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
-              <h2 className="dnf-Title4 text-Gray-10 m-0">포인트가 부족해요</h2>
+              <h2 className="dnf-Title4 text-Gray-10 m-0">자금이 부족해요</h2>
               <ApShortageBadge label="부족한 금액" value={formatWon(shortageAP)} />
               <p className="pretendard-Button2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
-                사원들에게 의뢰비를 주려면 포인트가 더 필요해요.
+                사원들에게 의뢰비를 주려면 자금이 더 필요해요.
                 <br />
                 출석하거나 신용대출로 채울 수 있어요.
               </p>

@@ -11,7 +11,7 @@ export interface ApHistorySummaryCardProps extends HTMLAttributes<HTMLDivElement
   onChargeClick?: () => void
 }
 
-/** 포인트 내역 상단 요약 카드 (보유 포인트 · 이번 달 획득/사용 · 충전하기) — 피그마 Mypage_AP Card */
+/** 자금 내역 상단 요약 카드 (보유 자금 · 이번 달 획득/사용 · 충전하기) — 피그마 Mypage_AP Card */
 export function ApHistorySummaryCard({
   summary,
   onChargeClick,
@@ -29,7 +29,7 @@ export function ApHistorySummaryCard({
       {...props}
     >
       <div className="flex flex-col gap-2">
-        <span className="dnf-Caption2 text-Gray-10 leading-none">보유 포인트</span>
+        <span className="dnf-Caption2 text-Gray-10 leading-none">보유 자금</span>
         <p className="dnf-Title4 text-Yellow-30 flex items-start gap-1 leading-none">
           <span>{formatWon(balance)}</span>
         </p>
