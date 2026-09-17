@@ -23,7 +23,7 @@ export function BriefingPage() {
 
   if (!stockId) {
     return (
-      <div className="bg-Background1 flex h-screen w-full flex-col">
+      <div className="bg-Background1 flex h-full w-full flex-1 flex-col">
         <StatusBar
           hasStatusArea={false}
           className="bg-White"
@@ -59,7 +59,7 @@ export function BriefingPage() {
   const requestedCount = validItems.length
 
   return (
-    <div className="bg-Background1 flex h-screen w-full flex-col">
+    <div className="bg-Background1 flex h-full w-full flex-1 flex-col">
       {/* 글로벌 상태바 헤더 */}
       <StatusBar
         hasStatusArea={false}

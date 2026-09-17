@@ -30,7 +30,7 @@ export function NotificationPage() {
 
   if (!!query.error && query.fetchStatus === 'idle' && !query.data) {
     return (
-      <main className="min-h-screen bg-white">
+      <main className="flex h-full flex-1 flex-col bg-white">
         <div className="flex w-full flex-col gap-3 px-4">
           <StatusBar
             hasStatusArea={false}
@@ -50,7 +50,7 @@ export function NotificationPage() {
 
   if (!query.data) {
     return (
-      <main className="min-h-screen bg-white">
+      <main className="flex h-full flex-1 flex-col bg-white">
         <div className="flex w-full flex-col gap-3 px-4">
           <StatusBar
             hasStatusArea={false}
@@ -65,7 +65,7 @@ export function NotificationPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="flex h-full flex-1 flex-col bg-white">
       <div className="flex w-full flex-col gap-3 px-4">
         <StatusBar
           hasStatusArea={false}

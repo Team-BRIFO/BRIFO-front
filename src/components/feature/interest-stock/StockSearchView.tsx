@@ -156,7 +156,7 @@ export default function StockSearchView({
     <main
       className={
         embedded
-          ? 'flex min-h-0 w-full flex-1 flex-col overflow-hidden pb-5'
+          ? 'flex min-h-0 w-full flex-1 flex-col overflow-hidden'
           : 'flex min-h-0 w-full flex-1 flex-col overflow-hidden px-4 pb-5'
       }
     >
