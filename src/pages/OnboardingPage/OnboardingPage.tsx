@@ -24,8 +24,6 @@ import {
 } from '@/utils/profileValidation'
 
 const PROFILE_KEYWORDS = ['현명한투자', '동학개미운동', '일짱회사', 'zI존']
-/** 검색 열기 전 컴팩트 목록에는 인기 순위 상위 N개만 보여준다. */
-const COMPACT_STOCK_RANKING_COUNT = 5
 
 export function OnboardingPage() {
   const navigate = useNavigate()
@@ -37,7 +35,8 @@ export function OnboardingPage() {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedStocks, setSelectedStocks] = useState<UserInterestStock[]>([])
   const [isStockSearchOpen, setIsStockSearchOpen] = useState(false)
-  const stocksQuery = useOnboardingStocksQuery(searchKeyword)
+  // 조회 개수는 검색 화면이 열렸는지에 따라 달라진다 — 컴팩트 목록에 200개를 받아올 이유가 없다.
+  const stocksQuery = useOnboardingStocksQuery(searchKeyword, isStockSearchOpen)
   const updateProfile = useUpdateOnboardingProfileMutation()
   const { isCsrfReady, isCsrfError, retryCsrf } = useSignupCsrfBootstrap()
 
@@ -46,8 +45,6 @@ export function OnboardingPage() {
       stocksQuery.data?.pages.flatMap((page) => page.page.items.map(mapInterestStockOption)) ?? [],
     [stocksQuery.data],
   )
-  // 검색을 열기 전 컴팩트 목록은 인기 순위 상위 5개만 보여주고, 검색 화면은 전체를 보여준다.
-  const compactStocks = useMemo(() => stocks.slice(0, COMPACT_STOCK_RANKING_COUNT), [stocks])
   const selectedStockIds = useMemo(() => selectedStocks.map((stock) => stock.id), [selectedStocks])
 
   const nicknameError = validateNickname(nickname)
@@ -194,7 +191,7 @@ export function OnboardingPage() {
           </div>
 
           <InterestStockSection
-            stocks={compactStocks}
+            stocks={stocks}
             searchKeyword={searchKeyword}
             selectedStockIds={selectedStockIds}
             selectedStocks={selectedStocks}
