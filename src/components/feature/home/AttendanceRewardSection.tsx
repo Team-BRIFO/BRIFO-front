@@ -4,6 +4,9 @@ import AttendanceBonusCard from '@/components/feature/home/AttendanceBonusCard'
 import AttendanceModal from '@/components/feature/home/AttendanceModal'
 import { useCreateAttendanceRewardMutation } from '@/hooks/queries/ap/useApQueries'
 
+/** 출석 기본 보상(원). 서버 ApService.ATTENDANCE_REWARD_AP와 맞춰둔다. */
+const ATTENDANCE_REWARD = 10_000
+
 interface AttendanceRewardSectionProps {
   attendedDays: number
   attendanceDates: string[]
@@ -24,13 +27,18 @@ export default function AttendanceRewardSection({
 
   return (
     <>
-      <AttendanceBonusCard bonus={50} endTime="15:30" onClick={() => setIsModalOpen(true)} />
+      <AttendanceBonusCard
+        bonus={ATTENDANCE_REWARD}
+        isAttended={isAttended}
+        endTime="15:30"
+        onClick={() => setIsModalOpen(true)}
+      />
 
       <AttendanceModal
         isOpen={isModalOpen}
         attendedDays={attendedDays}
         attendanceDates={attendanceDates}
-        reward={50}
+        reward={ATTENDANCE_REWARD}
         isAttended={isAttended}
         isPending={attendanceReward.isPending}
         onClose={() => setIsModalOpen(false)}
