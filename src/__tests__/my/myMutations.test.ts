@@ -18,6 +18,7 @@ vi.mock('@/hooks/api', () => ({
   useApiMutation: hookMocks.useApiMutation,
 }))
 
+import { useCancelPendingStockChangeMutation } from '@/pages/MyPage/hooks/useCancelPendingStockChangeMutation'
 import { useDeleteMyAccountMutation } from '@/pages/MyPage/hooks/useDeleteMyAccountMutation'
 import { useUpdateMyProfileMutation } from '@/pages/MyPage/hooks/useUpdateMyProfileMutation'
 
@@ -71,5 +72,19 @@ describe('My mutation hook effects', () => {
 
     expect(hookMocks.clear).toHaveBeenCalledOnce()
     expect(hookMocks.invalidateQueries).not.toHaveBeenCalled()
+  })
+
+  it('invalidates the shared profile key after cancelling a pending stock change', async () => {
+    const options = useCancelPendingStockChangeMutation() as unknown as MutationOptions
+
+    expect(options.endpoint).toBe('cancelPendingStockChange')
+    expect(options).not.toHaveProperty('response')
+    expect(options.getArgs()).toEqual([])
+
+    await options.onSuccess?.()
+
+    expect(hookMocks.invalidateQueries).toHaveBeenCalledOnce()
+    expect(hookMocks.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['user', 'profile'] })
+    expect(hookMocks.clear).not.toHaveBeenCalled()
   })
 })

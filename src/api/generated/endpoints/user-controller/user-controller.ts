@@ -83,6 +83,14 @@ export const getUserHome = (
     options,
   )
 }
+export const cancelPendingStockChange = (
+  options?: SecondParameter<typeof axiosInstance<ApiResponse>>,
+) => {
+  return axiosInstance<ApiResponse>(
+    { url: `/api/users/me/profile/pending-stocks`, method: 'DELETE' },
+    options,
+  )
+}
 export type CompleteOnboardingResult = NonNullable<Awaited<ReturnType<typeof completeOnboarding>>>
 export type GetUserProfileResult = NonNullable<Awaited<ReturnType<typeof getUserProfile>>>
 export type UpdateUserProfileResult = NonNullable<Awaited<ReturnType<typeof updateUserProfile>>>
@@ -92,3 +100,6 @@ export type UpdateOnboardingProfileResult = NonNullable<
 export type GetMyPageResult = NonNullable<Awaited<ReturnType<typeof getMyPage>>>
 export type DeleteUserResult = NonNullable<Awaited<ReturnType<typeof deleteUser>>>
 export type GetUserHomeResult = NonNullable<Awaited<ReturnType<typeof getUserHome>>>
+export type CancelPendingStockChangeResult = NonNullable<
+  Awaited<ReturnType<typeof cancelPendingStockChange>>
+>

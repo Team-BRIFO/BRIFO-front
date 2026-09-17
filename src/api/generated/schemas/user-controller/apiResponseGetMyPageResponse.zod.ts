@@ -9,6 +9,8 @@ import { z as zod } from 'zod'
 
 export const apiResponseGetMyPageResponseResultStocksMax = 3
 
+export const apiResponseGetMyPageResponseResultPendingStockChangeStocksMax = 3
+
 export const ApiResponseGetMyPageResponse = zod.object({
   success: zod.boolean(),
   code: zod.string(),
@@ -33,6 +35,21 @@ export const ApiResponseGetMyPageResponse = zod.object({
         )
         .min(1)
         .max(apiResponseGetMyPageResponseResultStocksMax),
+      pendingStockChange: zod
+        .object({
+          stocks: zod
+            .array(
+              zod.object({
+                stockId: zod.uuid(),
+                name: zod.string(),
+                logoUrl: zod.string().optional(),
+              }),
+            )
+            .min(1)
+            .max(apiResponseGetMyPageResponseResultPendingStockChangeStocksMax),
+          effectiveAt: zod.iso.date(),
+        })
+        .optional(),
     })
     .optional(),
 })

@@ -10,6 +10,7 @@ import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useGetStocksQuery } from '@/hooks/queries/stock/useStockQueries'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { mapInterestStockOption } from '@/mappers/stockMapper'
+import { useCancelPendingStockChangeMutation } from '@/pages/MyPage/hooks/useCancelPendingStockChangeMutation'
 import { useUpdateMyProfileMutation } from '@/pages/MyPage/hooks/useUpdateMyProfileMutation'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
@@ -41,6 +42,7 @@ export function MyProfileStockEditPage() {
   const location = useLocation()
   const profileQuery = useUserProfileQuery()
   const updateProfile = useUpdateMyProfileMutation()
+  const cancelPendingStockChange = useCancelPendingStockChangeMutation()
   const [selectedStocksOverride, setSelectedStocksOverride] = useState<UserInterestStock[] | null>(
     null,
   )
@@ -159,6 +161,29 @@ export function MyProfileStockEditPage() {
       <PageLoadingView />
     ) : (
       <>
+        {profileQuery.data.pendingStockChange && (
+          <div className="border-Yellow-80 bg-Yellow-95 mx-4 mt-4 flex items-center justify-between gap-3 rounded-xl border px-4 py-3">
+            <p className="pretendard-Caption2 text-Yellow-20">
+              {`${profileQuery.data.pendingStockChange.stocks.map((stock) => stock.name).join(', ')}로 변경 예정 · 내일 적용`}
+            </p>
+            <button
+              type="button"
+              disabled={cancelPendingStockChange.isPending}
+              onClick={() => cancelPendingStockChange.mutate(undefined)}
+              className="pretendard-Caption2 text-Gray-6 shrink-0 underline disabled:opacity-40"
+            >
+              {cancelPendingStockChange.isPending ? '취소 중...' : '변경 취소'}
+            </button>
+          </div>
+        )}
+        {cancelPendingStockChange.isError && (
+          <Toast
+            message={
+              cancelPendingStockChange.error.serviceMessage ??
+              '변경 예약을 취소하지 못했어요. 다시 시도해주세요.'
+            }
+          />
+        )}
         <StockSearchView
           embedded
           stocks={stocks}

@@ -7,10 +7,12 @@ import { MY_SETTINGS_SECTIONS } from '@/constants/myMenu'
 export interface MySettingsProps {
   onSelectMenu?: (key: MyMenuKey) => void
   accountManagement?: ReactNode
+  /** 특정 메뉴 행의 chevron 앞에 보여줄 보조 요소 (예: 관심종목 변경 대기중 배지) */
+  menuRight?: Partial<Record<MyMenuKey, ReactNode>>
 }
 
 /** 설정 화면(SCR-13) 본문 — 계정 · 학습 · 도움말 · 계정관리 섹션 */
-export function MySettings({ onSelectMenu, accountManagement }: MySettingsProps) {
+export function MySettings({ onSelectMenu, accountManagement, menuRight }: MySettingsProps) {
   return (
     <div className="flex flex-col gap-4">
       {MY_SETTINGS_SECTIONS.map(({ title, items }) =>
@@ -28,6 +30,7 @@ export function MySettings({ onSelectMenu, accountManagement }: MySettingsProps)
                   key={key}
                   label={label}
                   variant={variant}
+                  right={menuRight?.[key]}
                   onClick={() => onSelectMenu?.(key)}
                 />
               ))}

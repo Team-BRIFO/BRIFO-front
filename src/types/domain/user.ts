@@ -42,10 +42,18 @@ export interface UserProfileFormValues {
   interestStocks: UserInterestStock[]
 }
 
+/** 다음날 00시에 적용될 대기 중인 관심종목 변경 */
+export interface PendingStockChange {
+  stocks: UserInterestStock[]
+  /** 적용일 (YYYY-MM-DD) */
+  effectiveAt: string
+}
+
 /** 사용자 Query Cache에 저장되는 화면 모델 */
 export interface UserOverview {
   profile: UserProfile
   stats: UserStats
   apSummary: ApSummary
   profileFormValues: UserProfileFormValues
+  pendingStockChange: PendingStockChange | null
 }
