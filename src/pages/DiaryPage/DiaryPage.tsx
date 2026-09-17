@@ -48,6 +48,7 @@ export function DiaryPage() {
 
     return { year: today.getFullYear(), month: today.getMonth() + 1 }
   })
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined)
 
   const calendarQuery = useDiaryCalendarQuery(year, month, view === 'calendar')
   const listQuery = useDiaryListQuery(undefined, view === 'list')
@@ -107,9 +108,12 @@ export function DiaryPage() {
           month={month}
           marks={marks}
           hitRate={hitRate}
-          onChangeMonth={(delta) =>
+          selectedDate={selectedDate}
+          onSelectDate={(date) => setSelectedDate((prev) => (prev === date ? undefined : date))}
+          onChangeMonth={(delta) => {
+            setSelectedDate(undefined)
             setViewMonth((prev) => shiftMonth(prev.year, prev.month, delta))
-          }
+          }}
         />
       )
     }

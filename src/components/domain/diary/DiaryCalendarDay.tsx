@@ -16,6 +16,8 @@ export interface DiaryCalendarDayProps extends Omit<
   day: number
   /** 그날 존재한 정산 결과 (빈 배열이면 회색 점 1개) */
   outcomes?: DiaryCalendarOutcome[]
+  /** 현재 선택된 날짜인지 여부 */
+  isSelected?: boolean
 }
 
 /**
@@ -24,6 +26,7 @@ export interface DiaryCalendarDayProps extends Omit<
 export function DiaryCalendarDay({
   day,
   outcomes = [],
+  isSelected = false,
   className = '',
   ...props
 }: DiaryCalendarDayProps) {
@@ -36,9 +39,11 @@ export function DiaryCalendarDay({
     <button
       type="button"
       aria-label={`${day}일 ${summary}`}
+      aria-pressed={isSelected}
       className={twMerge(
         'flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-1 rounded-lg',
         'focus-visible:ring-Yellow-45 focus-visible:ring-2 focus-visible:outline-hidden',
+        isSelected && 'bg-Yellow-100 ring-Yellow-40 ring-2',
         className,
       )}
       {...props}

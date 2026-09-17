@@ -1,6 +1,7 @@
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg?react'
 import ChevronRightIcon from '@/assets/icons/chevron-right.svg?react'
 import { DiaryCalendarDay } from '@/components/domain/diary/DiaryCalendarDay'
+import { DiaryDateDetail } from '@/components/domain/diary/DiaryDateDetail'
 import { DiaryHitRateCard } from '@/components/domain/diary/DiaryHitRateCard'
 import type { DiaryDayMark, DiaryHitRate } from '@/types/domain/diary'
 import { buildCalendarWeeks, toDateKey } from '@/utils/diaryCalendar'
@@ -17,9 +18,11 @@ export interface DiaryCalendarProps {
   onChangeMonth: (delta: number) => void
   /** 날짜 선택 시 (YYYY-MM-DD) */
   onSelectDate?: (date: string) => void
+  /** 현재 선택된 날짜 (YYYY-MM-DD) */
+  selectedDate?: string
 }
 
-/** 결정일기 캘린더 뷰 (월 네비 · 요일 · 날짜 그리드 · 적중률 카드) */
+/** 결정일기 캘린더 뷰 (월 네비 · 요일 · 날짜 그리드 · 선택 날짜 상세 · 적중률 카드) */
 export function DiaryCalendar({
   year,
   month,
@@ -27,8 +30,12 @@ export function DiaryCalendar({
   hitRate,
   onChangeMonth,
   onSelectDate,
+  selectedDate,
 }: DiaryCalendarProps) {
   const weeks = buildCalendarWeeks(year, month, marks)
+  const selectedOutcomes = selectedDate
+    ? (marks.find((mark) => mark.date === selectedDate)?.outcomes ?? [])
+    : null
 
   return (
     <div className="flex flex-col gap-4">
@@ -83,6 +90,7 @@ export function DiaryCalendar({
                       <DiaryCalendarDay
                         day={day}
                         outcomes={outcomes}
+                        isSelected={selectedDate === toDateKey(year, month, day)}
                         onClick={() => onSelectDate?.(toDateKey(year, month, day))}
                       />
                     </div>
@@ -93,6 +101,10 @@ export function DiaryCalendar({
           </div>
         </div>
       </div>
+
+      {selectedDate && selectedOutcomes && (
+        <DiaryDateDetail date={selectedDate} outcomes={selectedOutcomes} />
+      )}
 
       <DiaryHitRateCard hitRate={hitRate} variant="calendar" />
     </div>
