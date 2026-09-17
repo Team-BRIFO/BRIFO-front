@@ -47,7 +47,7 @@ export function DecisionResultModalContent({
             {isSuccess ? '예측 적중!' : '아쉽게도 빗나갔어요'}
           </h2>
           <span className={`dnf-Title3 ${isSuccess ? 'text-Yellow-40' : 'text-Green-40'}`}>
-            {isSuccess ? `+ ${points} AP` : `- ${points} AP`}
+            {isSuccess ? `+ ${points.toLocaleString()}원` : `- ${points.toLocaleString()}원`}
           </span>
         </div>
 

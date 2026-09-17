@@ -110,7 +110,7 @@ export const TUTORIAL_AGENTS: AgentSummary[] = [
     level: 8,
     levelProgress: 30,
     hitRate: 64,
-    dailyAP: 10,
+    dailyAP: 50_000,
   },
   {
     id: 'pro',
@@ -120,7 +120,7 @@ export const TUTORIAL_AGENTS: AgentSummary[] = [
     level: 7,
     levelProgress: 30,
     hitRate: 64,
-    dailyAP: 10,
+    dailyAP: 200_000,
   },
   {
     id: 'tanker',
@@ -130,6 +130,6 @@ export const TUTORIAL_AGENTS: AgentSummary[] = [
     level: 7,
     levelProgress: 30,
     hitRate: 64,
-    dailyAP: 10,
+    dailyAP: 150_000,
   },
 ]

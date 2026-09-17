@@ -54,7 +54,7 @@ export function AgentCard({ agent, active = false, className = '', ...props }: A
 
           <div className="flex items-center gap-2">
             <StatItem label="적중" value={`${hitRate}%`} />
-            <StatItem label="일급" value={`${dailyAP} AP`} />
+            <StatItem label="의뢰비" value={`${dailyAP.toLocaleString()}원`} />
           </div>
         </div>
       </div>

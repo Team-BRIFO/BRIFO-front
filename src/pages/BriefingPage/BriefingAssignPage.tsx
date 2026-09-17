@@ -189,7 +189,7 @@ export function BriefingAssignPage() {
     )
   }
 
-  // 선택된 사원의 일급 합산
+  // 선택된 사원의 의뢰비 합산
   const totalAP = agentsList
     .filter((agent) => selectedIds.has(agent.id))
     .reduce((sum, agent) => sum + agent.dailyAP, 0)
@@ -253,10 +253,10 @@ export function BriefingAssignPage() {
                     />
                   )
                 })}
-                {/* 합계 AP 문구 */}
+                {/* 합계 의뢰비 문구 */}
                 <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
-                  <span className="pretendard-Caption1 text-Gray-9">선택한 사원 일급 합계</span>
-                  <span className="dnf-Caption1 text-Pink-30">{totalAP} AP</span>
+                  <span className="pretendard-Caption1 text-Gray-9">선택한 사원 의뢰비 합계</span>
+                  <span className="dnf-Caption1 text-Pink-30">{totalAP.toLocaleString()}원</span>
                 </div>
               </div>
             </div>

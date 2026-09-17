@@ -7,7 +7,7 @@ export interface ApHistorySummaryCardProps extends HTMLAttributes<HTMLDivElement
   summary: ApSummary
 }
 
-/** AP 내역 상단 요약 카드 (보유 AP · 이번 달 획득/사용) — 피그마 Mypage_AP Card */
+/** 포인트 내역 상단 요약 카드 (보유 포인트 · 이번 달 획득/사용) — 피그마 Mypage_AP Card */
 export function ApHistorySummaryCard({
   summary,
   className = '',
@@ -24,14 +24,14 @@ export function ApHistorySummaryCard({
       {...props}
     >
       <div className="flex flex-col gap-2">
-        <span className="dnf-Caption2 text-Gray-10 leading-none">보유 AP</span>
+        <span className="dnf-Caption2 text-Gray-10 leading-none">보유 포인트</span>
         <p className="dnf-Title4 text-Yellow-30 flex items-start gap-1 leading-none">
           <span>{balance.toLocaleString()}</span>
-          <span>AP</span>
+          <span>원</span>
         </p>
       </div>
       <p className="pretendard-Caption3 text-Gray-6 leading-none">
-        {`이번 달  획득 +${earned.toLocaleString()}  ·  사용 -${lost.toLocaleString()}`}
+        {`이번 달  획득 +${earned.toLocaleString()}원  ·  사용 -${lost.toLocaleString()}원`}
       </p>
     </div>
   )

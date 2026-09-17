@@ -12,10 +12,10 @@ interface DiaryPageHeaderProps {
 function DiaryPageHeader({ onNotificationClick }: DiaryPageHeaderProps) {
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
+    ? `${userQuery.data.apSummary.balance.toLocaleString()}원`
     : userQuery.error
-      ? 'AP 조회 실패'
-      : 'AP 불러오는 중'
+      ? '포인트 조회 실패'
+      : '포인트 불러오는 중'
 
   return (
     <StatusBar

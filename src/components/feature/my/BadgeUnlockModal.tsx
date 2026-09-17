@@ -59,7 +59,7 @@ export function BadgeUnlockModal({
                 type="ap"
                 className="dnf-Caption1 bg-Pink-60 text-Pink-30 h-auto gap-0.5 rounded-[20px] px-3 py-1.5"
               >
-                {`+ ${rewardAp} AP`}
+                {`+ ${rewardAp.toLocaleString()}원`}
               </ApBadge>
             )}
           </Modal.Header>

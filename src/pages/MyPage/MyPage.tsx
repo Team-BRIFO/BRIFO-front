@@ -35,7 +35,7 @@ export function MyPage() {
         right={
           <div className="flex items-center gap-3">
             <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
-              {userQuery.data ? `${userQuery.data.apSummary.balance.toLocaleString()} AP` : '0 AP'}
+              {userQuery.data ? `${userQuery.data.apSummary.balance.toLocaleString()}원` : '0원'}
             </div>
             <StatusBarSettingsButton onClick={() => navigate(PATH.MY_SETTINGS)} />
           </div>

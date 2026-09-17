@@ -6,7 +6,7 @@ import { PageLoadingView } from '@/components/feedback/PageLoadingView'
 import { useMyApTransactionsQuery } from '@/pages/MyPage/hooks/useMyQueries'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 
-/** SCR-15 AP 내역 */
+/** SCR-15 포인트 내역 */
 export function MyApPage() {
   const query = useMyApTransactionsQuery()
   const transactions = useMemo(() => {
@@ -34,5 +34,5 @@ export function MyApPage() {
       />
     )
 
-  return <MyPageLayout title="AP 내역">{content}</MyPageLayout>
+  return <MyPageLayout title="포인트 내역">{content}</MyPageLayout>
 }

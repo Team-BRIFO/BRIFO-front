@@ -13,7 +13,7 @@ export interface ApBalanceCardProps extends HTMLAttributes<HTMLDivElement> {
   deltaLabel?: string
 }
 
-/** 보유 AP + 기간 내 증감 카드 (마이 메인 · AP 내역 상단) */
+/** 보유 포인트 + 기간 내 증감 카드 (마이 메인 · 포인트 내역 상단) */
 export function ApBalanceCard({
   summary,
   deltaLabel,
@@ -34,10 +34,10 @@ export function ApBalanceCard({
       {...props}
     >
       <div className="flex flex-col gap-2">
-        <span className="pretendard-Caption3 text-Gray-6 leading-none">보유AP</span>
+        <span className="pretendard-Caption3 text-Gray-6 leading-none">보유 포인트</span>
         <p className="dnf-Subtitle1 text-Gray-10 flex items-center gap-1 leading-none">
           <span>{balance.toLocaleString()}</span>
-          <span>AP</span>
+          <span>원</span>
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export function ApBalanceCard({
           <span className="flex items-center gap-0.5">
             {sign && <span>{sign}</span>}
             <span>{Math.abs(delta).toLocaleString()}</span>
-            <span>AP</span>
+            <span>원</span>
           </span>
         </div>
       )}

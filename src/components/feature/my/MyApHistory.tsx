@@ -2,9 +2,9 @@ import { memo, useMemo, useState } from 'react'
 
 import Button from '@/components/common/Button'
 import { Tabs } from '@/components/common/Tabs'
-// 대체: domain/ap — AP 잔액·획득·사용 요약 카드
+// 대체: domain/ap — 포인트 잔액·획득·사용 요약 카드
 import { ApHistorySummaryCard } from '@/components/domain/ap/ApHistorySummaryCard'
-// 대체: domain/ap — AP 입출금 행 (라벨은 apTransactionMeta)
+// 대체: domain/ap — 포인트 입출금 행 (라벨은 apTransactionMeta)
 import { ApTransactionRow } from '@/components/domain/ap/ApTransactionRow'
 import type { ApPeriod, ApSummary, ApTransaction } from '@/types/domain/ap'
 
@@ -28,7 +28,7 @@ export interface MyApHistoryProps {
 const MemoizedApHistorySummaryCard = memo(ApHistorySummaryCard)
 const MemoizedApTransactionRow = memo(ApTransactionRow)
 
-/** AP 내역 화면(SCR-15) 본문 — 요약 카드 · 흐름 필터 · 입출금 리스트 */
+/** 포인트 내역 화면(SCR-15) 본문 — 요약 카드 · 흐름 필터 · 입출금 리스트 */
 export function MyApHistory({
   summary,
   transactions,
@@ -56,7 +56,7 @@ export function MyApHistory({
           items={AP_PERIOD_ITEMS}
           variant="segmented"
           isFullWidth={false}
-          ariaLabel="AP 내역 필터"
+          ariaLabel="포인트 내역 필터"
         />
 
         {isEmpty ? (

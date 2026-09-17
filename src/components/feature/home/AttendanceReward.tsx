@@ -8,7 +8,7 @@ export default function AttendanceReward({ reward }: AttendanceRewardProps) {
     <section className="flex flex-col items-center text-center">
       <h2 className="dnf-Title4 text-Gray-10">오늘도 출근!</h2>
 
-      <p className="dnf-Title3 text-Yellow-40 mt-2">+ {reward} AP</p>
+      <p className="dnf-Title3 text-Yellow-40 mt-2">+ {reward.toLocaleString()}원</p>
 
       <p className="pretendard-Button2 font-regular text-Gray-6 mt-3">
         오늘도 브리포에 출근했어요!

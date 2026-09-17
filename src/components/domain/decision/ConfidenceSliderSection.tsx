@@ -111,7 +111,8 @@ export function ConfidenceSliderSection({
         </div>
         {/* Info_Guide_Text */}
         <span className="pretendard-Caption1 text-Gray-6 text-center">
-          확신도 {value} · AP {apCost} 소모 · 적중 시 +{expectedReward}AP
+          확신도 {value} · {apCost.toLocaleString()}원 소모 · 적중 시 +
+          {expectedReward.toLocaleString()}원
         </span>
       </div>
     </div>

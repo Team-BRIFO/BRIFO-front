@@ -32,7 +32,7 @@ function formatChangeRate(changeRate: number) {
 
 function formatApDelta(apDelta: number) {
   const sign = apDelta > 0 ? '+' : ''
-  return `${sign}${apDelta.toLocaleString('ko-KR')} AP`
+  return `${sign}${apDelta.toLocaleString('ko-KR')}원`
 }
 
 function formatTradeDate(tradeDate: string) {

@@ -11,14 +11,14 @@ import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { useOfficeBriefingsQuery } from '@/pages/OfficePage/hooks/useOfficeBriefingsQuery'
 import { PATH } from '@/routes/paths'
 
-/** 사무실 탭 - SCR-04: 메인 대시보드 (사원 도트, AP 잔액 등) */
+/** 사무실 탭 - SCR-04: 메인 대시보드 (사원 도트, 포인트 잔액 등) */
 export function OfficePage() {
   const navigate = useNavigate()
   const briefingsQuery = useOfficeBriefingsQuery()
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()} AP`
-    : '0 AP'
+    ? `${userQuery.data.apSummary.balance.toLocaleString()}원`
+    : '0원'
 
   const items = briefingsQuery.data
 
