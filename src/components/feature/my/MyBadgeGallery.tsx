@@ -1,5 +1,6 @@
 import { memo } from 'react'
 
+import { getBadgeIcon } from '@/components/domain/badge/badgeIcons'
 // 대체: domain/badge — 배지 그리드 아이템 (BadgeUnlockModal과 동일)
 import { BadgeItem } from '@/components/domain/badge/BadgeItem'
 // 대체: domain/badge — 해금 진행률 카드
@@ -39,7 +40,11 @@ export const MyBadgeGallery = memo(function MyBadgeGallery({
         <ul className="border-Gray-2 bg-White grid grid-cols-4 gap-x-0 gap-y-3 rounded-lg border px-3 py-4">
           {badges.map((badge) => (
             <li key={badge.id} className="flex justify-center">
-              <BadgeItem badge={badge} onClick={() => onSelectBadge?.(badge.id)} />
+              <BadgeItem
+                badge={badge}
+                icon={getBadgeIcon(badge.iconKey)}
+                onClick={() => onSelectBadge?.(badge.id)}
+              />
             </li>
           ))}
         </ul>
