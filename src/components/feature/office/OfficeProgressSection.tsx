@@ -12,6 +12,10 @@ export interface OfficeProgressSectionProps {
   availableCount: number
   /** 빈 상태 여부는 조회 데이터를 소유한 Page가 결정한다. */
   isEmpty: boolean
+  /** 위쪽 오피스 일러스트에 현재 표시 중인 종목 ID (카드 강조용) */
+  selectedStockId?: string
+  /** 진행중 카드를 눌러 오피스 일러스트를 그 종목으로 전환할 때 */
+  onSelectItem?: (index: number) => void
 }
 
 /** 사무실 탭 하단의 진행사항(의뢰 목록) 섹션 */
@@ -19,6 +23,8 @@ export function OfficeProgressSection({
   items,
   availableCount,
   isEmpty,
+  selectedStockId,
+  onSelectItem,
 }: OfficeProgressSectionProps) {
   const navigate = useNavigate()
 
@@ -54,10 +60,15 @@ export function OfficeProgressSection({
               key={item.stockId}
               rank={index + 1}
               type={item.isCompleted ? '완료' : '진행중'}
+              active={item.stockId === selectedStockId}
               stock={{ name: item.stockName, logoUrl: item.logoUrl }}
               agentStatuses={item.agentStatuses}
               onClick={
-                item.isCompleted ? () => navigate(PATH.BRIEFING_FOR_STOCK(item.stockId)) : undefined
+                item.isCompleted
+                  ? () => navigate(PATH.BRIEFING_FOR_STOCK(item.stockId))
+                  : onSelectItem
+                    ? () => onSelectItem(index)
+                    : undefined
               }
             />
           ))}
