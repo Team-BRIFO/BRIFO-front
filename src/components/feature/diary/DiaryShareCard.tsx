@@ -5,6 +5,7 @@ import RookieCharacter from '@/assets/characters/rookie-normal.svg'
 import TankerCharacter from '@/assets/characters/tanker-normal.svg'
 import StarIcon from '@/assets/icons/star.svg?react'
 import BrifoLogo from '@/assets/logo/brifo_logo_small.svg'
+import { formatSignedAp } from '@/components/domain/ap/apTransactionMeta'
 import type { DiaryDirection } from '@/types/domain/diary'
 
 const CHARACTER_BY_AGENT_TYPE = {
@@ -28,11 +29,6 @@ export interface DiaryShareCardProps {
 function formatChangeRate(changeRate: number) {
   const sign = changeRate > 0 ? '+' : ''
   return `${sign}${changeRate.toLocaleString('ko-KR', { maximumFractionDigits: 2 })}%`
-}
-
-function formatApDelta(apDelta: number) {
-  const sign = apDelta > 0 ? '+' : ''
-  return `${sign}${apDelta.toLocaleString('ko-KR')}원`
 }
 
 function formatTradeDate(tradeDate: string) {
@@ -105,7 +101,7 @@ export const DiaryShareCard = forwardRef<HTMLDivElement, DiaryShareCardProps>(
         </div>
 
         <p className={`dnf-Title1 mt-[8px] text-[40px] leading-none ${apColorClass}`}>
-          {formatApDelta(apDelta)}
+          {formatSignedAp(apDelta)}
         </p>
 
         <div

@@ -2,6 +2,7 @@ import { memo } from 'react'
 
 import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 
 interface DiaryPageHeaderProps {
@@ -12,7 +13,7 @@ interface DiaryPageHeaderProps {
 function DiaryPageHeader({ onNotificationClick }: DiaryPageHeaderProps) {
   const userQuery = useUserProfileQuery()
   const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()}원`
+    ? formatWon(userQuery.data.apSummary.balance)
     : userQuery.error
       ? '포인트 조회 실패'
       : '포인트 불러오는 중'

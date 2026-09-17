@@ -23,6 +23,7 @@ const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   SALARY: '의뢰비',
   SALARY_REFUND: '의뢰비 환급',
   CREDIT_LOAN: '포인트 대출',
+  CHARGE: '포인트 충전',
 }
 
 export function mapMyUser(result: GetMyPageResponse): UserOverview {

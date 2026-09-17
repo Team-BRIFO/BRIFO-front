@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import { AgentLevelBar } from '@/components/domain/agent/AgentLevelBar'
 import { AGENT_THEME } from '@/components/domain/agent/agentTheme'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import type { AgentSummary } from '@/types/domain/agent'
 
 export interface AgentCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
@@ -54,7 +55,7 @@ export function AgentCard({ agent, active = false, className = '', ...props }: A
 
           <div className="flex items-center gap-2">
             <StatItem label="적중" value={`${hitRate}%`} />
-            <StatItem label="의뢰비" value={`${dailyAP.toLocaleString()}원`} />
+            <StatItem label="의뢰비" value={formatWon(dailyAP)} />
           </div>
         </div>
       </div>

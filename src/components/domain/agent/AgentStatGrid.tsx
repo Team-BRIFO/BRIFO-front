@@ -1,6 +1,7 @@
 import { twMerge } from 'tailwind-merge'
 
 import { AgentStatCard } from '@/components/domain/agent/AgentStatCard'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import type { AgentStats } from '@/types/domain/agent'
 
 export interface AgentStatGridProps {
@@ -16,7 +17,7 @@ export function AgentStatGrid({ stats, className = '' }: AgentStatGridProps) {
     <div className={twMerge('grid grid-cols-2 gap-2', className)}>
       <AgentStatCard value={hitRate} unit="%" label="적중률" />
       <AgentStatCard value={totalAnalysis} unit="건" label="누적분석" />
-      <AgentStatCard value={contributedAP.toLocaleString()} unit="원" label="기여 포인트" />
+      <AgentStatCard value={formatWon(contributedAP)} label="기여 포인트" />
       <AgentStatCard value={workStreak} unit="일" label="연속 근무" />
     </div>
   )

@@ -98,4 +98,10 @@ export const PATH = {
   MY_TERMS_DETAIL_ROUTE: '/my/terms/:policyId',
   /** 마이 탭 - 관심종목 변경 */
   MY_EDIT_STOCKS: '/my/edit/stocks',
+  /** 마이 탭 - 포인트 충전 (토스페이먼츠) */
+  MY_CHARGE: '/my/charge',
+  /** 마이 탭 - 포인트 충전 성공 리다이렉트 (토스페이먼츠) */
+  MY_CHARGE_SUCCESS: '/my/charge/success',
+  /** 마이 탭 - 포인트 충전 실패 리다이렉트 (토스페이먼츠) */
+  MY_CHARGE_FAIL: '/my/charge/fail',
 } as const

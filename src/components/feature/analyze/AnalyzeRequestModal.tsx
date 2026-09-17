@@ -1,5 +1,6 @@
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 
 export type AnalyzeModalType =
   | 'SUCCESS'
@@ -77,7 +78,7 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">포인트가 부족해요</h2>
-              <ApShortageBadge label="부족한 금액" value={`${shortageAP.toLocaleString()}원`} />
+              <ApShortageBadge label="부족한 금액" value={formatWon(shortageAP)} />
               <p className="pretendard-Button2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 사원들에게 의뢰비를 주려면 포인트가 더 필요해요.
                 <br />
@@ -96,7 +97,7 @@ export function AnalyzeRequestModal({
                   onClick={onSecondaryClick}
                   disabled={secondaryDisabled}
                 >
-                  신용대출 +100,000원 (1회한정)
+                  신용대출 +10만원 (1회한정)
                 </Button>
               </div>
               <button
@@ -114,11 +115,11 @@ export function AnalyzeRequestModal({
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
               <h2 className="dnf-Title4 text-Gray-10 m-0">오늘은 여기까지</h2>
-              <ApShortageBadge label="부족한 금액" value={`${shortageAP.toLocaleString()}원`} />
+              <ApShortageBadge label="부족한 금액" value={formatWon(shortageAP)} />
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
                 출석 보너스도 신용대출도 이미 받았어요.
                 <br />
-                내일 출석하면 +10,000원을 다시 드릴게요!
+                내일 출석하면 +1만원을 다시 드릴게요!
               </p>
             </Modal.Header>
             <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3">
@@ -135,14 +136,14 @@ export function AnalyzeRequestModal({
               <h2 className="dnf-Title4 text-Gray-10 m-0">
                 <span className="text-Yellow-40">{employeeName}</span>의 분석이 실패했어요
               </h2>
-              <ApShortageBadge label="재의뢰 비용" value={`${shortageAP.toLocaleString()}원`} />
+              <ApShortageBadge label="재의뢰 비용" value={formatWon(shortageAP)} />
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em] whitespace-pre-wrap">
                 {`${employeeName}가 분석에 실패했어요.\n의뢰비는 환불됐어요. 다시 시도할까요?`}
               </p>
             </Modal.Header>
             <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
               <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
-                다시 시도하기 ({shortageAP.toLocaleString()}원)
+                다시 시도하기 ({formatWon(shortageAP)})
               </Button>
               <button
                 type="button"

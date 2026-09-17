@@ -15,12 +15,41 @@ export const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   SALARY: '의뢰비',
   SALARY_REFUND: '의뢰비 환급',
   CREDIT_LOAN: '포인트 대출',
+  CHARGE: '포인트 충전',
 }
 
-/** 증감 부호를 붙인 원화 문자열 (예: +80,000원 / -40,000원) */
+const WON_UNITS: [number, string][] = [
+  [100_000_000, '억'],
+  [10_000, '만'],
+  [1_000, '천'],
+]
+
+/**
+ * 원화를 만/억 단위로 끊어 읽기 쉽게 표시 (예: 1,000,000 → "100만원", 23,000 → "2만3천원").
+ * 콤마 구분 대신 이 방식을 쓰는 이유는 기획 요청 — 실제 회사 자금처럼 체감되게 하기 위함.
+ */
+export function formatWon(amount: number) {
+  const truncated = Math.trunc(Math.abs(amount))
+  if (truncated === 0) return '0원'
+
+  let remainder = truncated
+  let text = ''
+  for (const [unit, label] of WON_UNITS) {
+    const count = Math.floor(remainder / unit)
+    if (count > 0) {
+      text += `${count}${label}`
+      remainder %= unit
+    }
+  }
+  if (remainder > 0) text += `${remainder}`
+
+  return `${text}원`
+}
+
+/** 증감 부호를 붙인 원화 문자열 (예: +8만원 / -4만원) */
 export function formatSignedAp(amount: number) {
   const sign = amount > 0 ? '+' : amount < 0 ? '-' : ''
-  return `${sign}${Math.abs(amount).toLocaleString()}원`
+  return `${sign}${formatWon(amount)}`
 }
 
 /** 증감 부호별 텍스트 색상 클래스 (획득 Pink / 차감 Green — 국내 증시 관례) */

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Badge as ApBadge } from '@/components/common/Badge'
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 // 대체: domain/badge — 갤러리 BadgeItem과 동일 (획득 모달용, unlocked 고정)
 import { BadgeItem } from '@/components/domain/badge/BadgeItem'
 import type { Badge } from '@/types/domain/badge'
@@ -59,7 +60,7 @@ export function BadgeUnlockModal({
                 type="ap"
                 className="dnf-Caption1 bg-Pink-60 text-Pink-30 h-auto gap-0.5 rounded-[20px] px-3 py-1.5"
               >
-                {`+ ${rewardAp.toLocaleString()}원`}
+                {`+ ${formatWon(rewardAp)}`}
               </ApBadge>
             )}
           </Modal.Header>

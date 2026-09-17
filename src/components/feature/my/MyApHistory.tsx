@@ -23,6 +23,7 @@ export interface MyApHistoryProps {
   onLoadMore?: () => void
   isLoadingMore?: boolean
   loadMoreError?: boolean
+  onChargeClick?: () => void
 }
 
 const MemoizedApHistorySummaryCard = memo(ApHistorySummaryCard)
@@ -36,6 +37,7 @@ export function MyApHistory({
   onLoadMore,
   isLoadingMore = false,
   loadMoreError = false,
+  onChargeClick,
 }: MyApHistoryProps) {
   const [period, setPeriod] = useState<ApPeriod>('all')
   const filteredTransactions = useMemo(() => {
@@ -47,7 +49,7 @@ export function MyApHistory({
 
   return (
     <div className="flex flex-col gap-5">
-      <MemoizedApHistorySummaryCard summary={summary} />
+      <MemoizedApHistorySummaryCard summary={summary} onChargeClick={onChargeClick} />
 
       <div className="flex flex-col gap-2">
         <Tabs

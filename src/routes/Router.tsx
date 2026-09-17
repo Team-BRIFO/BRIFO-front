@@ -66,6 +66,15 @@ const LazyDiaryDetailPage = lazyNamed(
 )
 const LazyMyPage = lazyNamed(() => import('@/pages/MyPage/MyPage'), 'MyPage')
 const LazyMyApPage = lazyNamed(() => import('@/pages/MyPage/MyApPage'), 'MyApPage')
+const LazyChargePage = lazyNamed(() => import('@/pages/MyPage/ChargePage'), 'ChargePage')
+const LazyChargeSuccessPage = lazyNamed(
+  () => import('@/pages/MyPage/ChargeSuccessPage'),
+  'ChargeSuccessPage',
+)
+const LazyChargeFailPage = lazyNamed(
+  () => import('@/pages/MyPage/ChargeFailPage'),
+  'ChargeFailPage',
+)
 const LazyMyBadgePage = lazyNamed(() => import('@/pages/MyPage/MyBadgePage'), 'MyBadgePage')
 const LazyMyGlossaryPage = lazyNamed(
   () => import('@/pages/MyPage/MyGlossaryPage'),
@@ -201,6 +210,18 @@ export const router = createBrowserRouter([
       {
         path: PATH.MY_AP,
         element: withRouteLoadingFallback(<LazyMyApPage />),
+      },
+      {
+        path: PATH.MY_CHARGE,
+        element: withRouteLoadingFallback(<LazyChargePage />),
+      },
+      {
+        path: PATH.MY_CHARGE_SUCCESS,
+        element: withRouteLoadingFallback(<LazyChargeSuccessPage />),
+      },
+      {
+        path: PATH.MY_CHARGE_FAIL,
+        element: withRouteLoadingFallback(<LazyChargeFailPage />),
       },
       {
         path: PATH.MY_BADGES,

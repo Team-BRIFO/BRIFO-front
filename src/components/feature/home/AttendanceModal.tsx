@@ -30,7 +30,7 @@ export default function AttendanceModal({
         {/* 고정 보너스 안내 */}
         <div className="border-Yellow-80 bg-Yellow-100 rounded-lg border px-4 py-3.5">
           <p className="pretendard-Caption1 text-Gray-6">7일 연속 출석 시</p>
-          <p className="pretendard-Button1 text-Gray-9 mt-1">+ 100,000원 추가 보너스</p>
+          <p className="pretendard-Button1 text-Gray-9 mt-1">+ 10만원 추가 보너스</p>
         </div>
 
         {/* 오늘 출석 보상 */}

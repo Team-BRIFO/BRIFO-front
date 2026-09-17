@@ -11,6 +11,7 @@ export type ApTransactionReason =
   | 'SALARY'
   | 'SALARY_REFUND'
   | 'CREDIT_LOAN'
+  | 'CHARGE'
 
 /** AP 요약 (보유 AP · 기간 내 증감) */
 export interface ApSummary {

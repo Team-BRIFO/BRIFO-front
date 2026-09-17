@@ -173,7 +173,7 @@ function PredictionRegisteredStep() {
   return (
     <section className="border-Gray-2 flex flex-col items-center rounded-2xl border px-4 py-7 text-center">
       <h2 className="dnf-Subtitle2 text-Gray-10">예측 등록 완료!</h2>
-      <strong className="dnf-Title2 text-Yellow-30 mt-2">+100,000원</strong>
+      <strong className="dnf-Title2 text-Yellow-30 mt-2">+10만원</strong>
       <AnalyzeCard
         type="normal"
         resultType="HASHTAG"

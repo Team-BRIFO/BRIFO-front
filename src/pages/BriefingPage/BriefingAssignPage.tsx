@@ -9,6 +9,7 @@ import {
   StatusBarNotificationButton,
 } from '@/components/common/StatusBar'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import type { AnalyzeModalType } from '@/components/feature/analyze/AnalyzeRequestModal'
 import { AnalyzeRequestModal } from '@/components/feature/analyze/AnalyzeRequestModal'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
@@ -256,7 +257,7 @@ export function BriefingAssignPage() {
                 {/* 합계 의뢰비 문구 */}
                 <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
                   <span className="pretendard-Caption1 text-Gray-9">선택한 사원 의뢰비 합계</span>
-                  <span className="dnf-Caption1 text-Pink-30">{totalAP.toLocaleString()}원</span>
+                  <span className="dnf-Caption1 text-Pink-30">{formatWon(totalAP)}</span>
                 </div>
               </div>
             </div>

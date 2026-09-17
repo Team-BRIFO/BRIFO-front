@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Logo from '@/assets/logo/brifo_logo_small.svg?react'
 import { Badge } from '@/components/common/Badge'
 import { StatusBar, StatusBarNotificationButton } from '@/components/common/StatusBar'
+import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import { type AgentStatusMap, Office } from '@/components/feature/office/Office'
 import { OfficeProgressSection } from '@/components/feature/office/OfficeProgressSection'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
@@ -16,9 +17,7 @@ export function OfficePage() {
   const navigate = useNavigate()
   const briefingsQuery = useOfficeBriefingsQuery()
   const userQuery = useUserProfileQuery()
-  const balanceText = userQuery.data
-    ? `${userQuery.data.apSummary.balance.toLocaleString()}원`
-    : '0원'
+  const balanceText = userQuery.data ? formatWon(userQuery.data.apSummary.balance) : '0원'
 
   const items = briefingsQuery.data
 

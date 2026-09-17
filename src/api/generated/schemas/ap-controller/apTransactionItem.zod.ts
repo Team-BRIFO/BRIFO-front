@@ -20,6 +20,7 @@ export const ApTransactionItem = zod.object({
     'SALARY',
     'SALARY_REFUND',
     'CREDIT_LOAN',
+    'CHARGE',
   ]),
   amount: zod.int(),
   createdAt: zod.iso.datetime({ local: true, offset: false }),
