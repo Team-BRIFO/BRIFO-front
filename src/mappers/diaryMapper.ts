@@ -109,7 +109,7 @@ export function mapDiaryEntryPage(result: GetDiariesResponseOutput): DiaryEntryP
  * 상세 응답 → 도메인
  *
  * 사용: diaryId · stock.name/changeRate · agent.agentType · briefing.direction
- *       decision.isCorrect/confidenceLevel. 공유 카드의 날짜/포인트는 POST 응답과 결합한다.
+ *       decision.isCorrect/confidenceLevel. 공유 카드의 날짜/자금은 POST 응답과 결합한다.
  */
 export function mapDiaryDetail(result: GetDiaryDetailResponseOutput): DiaryDetail {
   return {

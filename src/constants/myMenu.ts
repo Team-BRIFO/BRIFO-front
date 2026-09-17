@@ -35,7 +35,7 @@ export interface MyMenuItem {
 export const MY_MAIN_MENU_ITEMS: MyMenuItem[] = [
   { key: 'profileEdit', label: '프로필 편집', icon: SettingIcon },
   { key: 'glossary', label: '내 용어장', icon: FolderIcon },
-  { key: 'apHistory', label: '포인트 내역', icon: BarChartIcon },
+  { key: 'apHistory', label: '자금 내역', icon: BarChartIcon },
   { key: 'badges', label: '업적 · 배지', icon: HeartIcon },
 ]
 

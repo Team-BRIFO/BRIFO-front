@@ -15,7 +15,7 @@ export interface ApBalanceCardProps extends HTMLAttributes<HTMLDivElement> {
   onChargeClick?: () => void
 }
 
-/** 보유 포인트 + 기간 내 증감 카드 (마이 메인 · 포인트 내역 상단) */
+/** 보유 자금 + 기간 내 증감 카드 (마이 메인 · 자금 내역 상단) */
 export function ApBalanceCard({
   summary,
   deltaLabel,
@@ -37,14 +37,14 @@ export function ApBalanceCard({
       {...props}
     >
       <div className="flex flex-col gap-2">
-        <span className="pretendard-Caption3 text-Gray-6 leading-none">보유 포인트</span>
+        <span className="pretendard-Caption3 text-Gray-6 leading-none">보유 자금</span>
         <p className="dnf-Subtitle1 text-Gray-10 flex items-center gap-1.5 leading-none">
           <span>{formatWon(balance)}</span>
           {onChargeClick && (
             <button
               type="button"
               onClick={onChargeClick}
-              aria-label="포인트 충전하기"
+              aria-label="자금 충전하기"
               className="bg-Pink-30 text-White flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs leading-none font-bold"
             >
               +

@@ -137,7 +137,7 @@ export function DiaryDetailPage() {
   const shareCardErrorMessage = isCurrentShareImageFailure
     ? getShareImageErrorMessage(shareImageError)
     : isCardDataMissing
-      ? '공유 카드에 필요한 포인트 변동값을 아직 받지 못했어요. 잠시 후 다시 시도해 주세요.'
+      ? '공유 카드에 필요한 자금 변동값을 아직 받지 못했어요. 잠시 후 다시 시도해 주세요.'
       : shareCardImageState === 'failed'
         ? getShareCardImageErrorMessage(shareCardImageError)
         : undefined

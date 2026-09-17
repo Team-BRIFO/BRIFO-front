@@ -18,7 +18,7 @@ import { PATH } from '@/routes/paths'
 /** 스와이프로 넘기기 위해 필요한 최소 이동 거리(px) */
 const SWIPE_THRESHOLD = 40
 
-/** 사무실 탭 - SCR-04: 메인 대시보드 (사원 도트, 포인트 잔액 등) */
+/** 사무실 탭 - SCR-04: 메인 대시보드 (사원 도트, 자금 잔액 등) */
 export function OfficePage() {
   const navigate = useNavigate()
   const briefingsQuery = useOfficeBriefingsQuery()

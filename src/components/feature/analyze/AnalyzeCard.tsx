@@ -57,7 +57,7 @@ export interface AnalyzeCardProps {
     keywords?: string[]
     tradeDate?: string
   }
-  /** 보상/차감 포인트 (예: +100000, -100000) */
+  /** 보상/차감 자금 (예: +100000, -100000) */
   apAmount?: number
   className?: string
 }

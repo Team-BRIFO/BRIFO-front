@@ -22,8 +22,8 @@ const AP_TRANSACTION_LABEL: Record<ApTransactionReason, string> = {
   NEUTRAL_HIT: '중립 예측 적중',
   SALARY: '의뢰비',
   SALARY_REFUND: '의뢰비 환급',
-  CREDIT_LOAN: '포인트 대출',
-  CHARGE: '포인트 충전',
+  CREDIT_LOAN: '자금 대출',
+  CHARGE: '자금 충전',
 }
 
 export function mapMyUser(result: GetMyPageResponse): UserOverview {
