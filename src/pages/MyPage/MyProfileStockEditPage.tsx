@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import Button from '@/components/common/Button'
+import Modal from '@/components/common/Modal'
 import { Toast } from '@/components/common/Toast'
 import StockSearchView from '@/components/feature/interest-stock/StockSearchView'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
@@ -43,6 +45,7 @@ export function MyProfileStockEditPage() {
     null,
   )
   const [searchKeyword, setSearchKeyword] = useState('')
+  const [isApplyConfirmOpen, setIsApplyConfirmOpen] = useState(false)
   const stockPageSize = searchKeyword.trim() ? SEARCH_PAGE_SIZE : POPULAR_PAGE_SIZE
   const stocksQuery = useGetStocksQuery(searchKeyword, stockPageSize, Boolean(profileQuery.data))
   const locationState = location.state as MyProfileStockEditLocationState | null
@@ -118,11 +121,19 @@ export function MyProfileStockEditPage() {
     )
       return
 
+    setIsApplyConfirmOpen(true)
+  }
+
+  const handleConfirmApply = () => {
+    if (!currentProfileValues) return
+
     updateProfile.mutate(currentProfileValues, {
-      onSuccess: () =>
+      onSuccess: () => {
+        setIsApplyConfirmOpen(false)
         navigate(returnTo, {
           replace: true,
-        }),
+        })
+      },
     })
   }
 
@@ -177,6 +188,39 @@ export function MyProfileStockEditPage() {
   return (
     <MyPageLayout title="관심종목 변경" onBack={handleBack}>
       {content}
+      <Modal
+        isOpen={isApplyConfirmOpen}
+        onClose={() => setIsApplyConfirmOpen(false)}
+        ariaLabel="관심종목 변경 확인"
+        className="w-82.5 rounded-xl"
+      >
+        <Modal.Header className="flex flex-col items-center gap-4 text-center">
+          <h2 className="dnf-Title4 text-Gray-10">관심종목을 변경할까요?</h2>
+          <p className="font-pretendard text-Gray-6 text-sm leading-5 font-normal tracking-[-0.56px] whitespace-pre-line">
+            {'변경한 관심종목은 오늘 진행 중인 의뢰에는 적용되지 않고\n내일부터 적용돼요.'}
+          </p>
+        </Modal.Header>
+
+        <Modal.Footer className="mt-5 flex flex-col gap-2">
+          <Button
+            size="lg"
+            isFullWidth
+            disabled={updateProfile.isPending}
+            onClick={handleConfirmApply}
+          >
+            {updateProfile.isPending ? '처리 중...' : '변경하기'}
+          </Button>
+          <Button
+            color="assistive"
+            size="lg"
+            isFullWidth
+            disabled={updateProfile.isPending}
+            onClick={() => setIsApplyConfirmOpen(false)}
+          >
+            취소
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </MyPageLayout>
   )
 }
