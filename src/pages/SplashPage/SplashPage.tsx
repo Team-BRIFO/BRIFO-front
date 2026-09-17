@@ -113,7 +113,7 @@ export function SplashPage() {
   // 튜토리얼 완료 후 로그인
   if (isLoginStep) {
     return (
-      <div className="w-full">
+      <div className="flex min-h-0 w-full flex-1 flex-col">
         <LoginSection
           onKakaoLogin={handleKakaoLogin}
           onNaverLogin={handleNaverLogin}

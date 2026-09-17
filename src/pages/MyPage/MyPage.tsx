@@ -47,7 +47,7 @@ export function MyPage() {
       ) : !data ? (
         <PageLoadingView />
       ) : (
-        <div className="px-4 pt-3 pb-24">
+        <div className="px-4 pt-3 pb-6">
           <MyHome
             profile={data.profile}
             stats={data.stats}

@@ -203,7 +203,7 @@ export function BriefingAssignPage() {
       .join(', ') || '선택한 사원'
 
   return (
-    <div className="bg-White flex h-screen w-full flex-col">
+    <div className="bg-White flex h-full w-full flex-1 flex-col">
       <StatusBar
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}

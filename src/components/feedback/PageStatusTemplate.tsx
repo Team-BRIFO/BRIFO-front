@@ -29,7 +29,7 @@ export function PageStatusTemplate({
   const navigate = useNavigate()
 
   return (
-    <div className="bg-Background1 mx-auto flex h-dvh w-full max-w-120 flex-col overflow-hidden sm:max-h-228.75">
+    <div className="bg-Background1 mx-auto flex h-full w-full max-w-120 flex-1 flex-col overflow-hidden sm:max-h-228.75">
       <StatusBar
         hasStatusArea={false}
         className="bg-White w-full"

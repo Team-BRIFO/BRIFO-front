@@ -19,14 +19,14 @@ export function MyPageLayout({ title, children, onBack }: MyPageLayoutProps) {
   const navigate = useNavigate()
 
   return (
-    <div className="bg-Background1 flex min-h-full flex-col">
+    <div className="bg-Background1 flex h-full flex-1 flex-col">
       <StatusBar
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={onBack ?? (() => navigate(-1))} />}
         title={title}
         right={<StatusBarNotificationButton onClick={() => navigate(PATH.NOTIFICATION)} />}
       />
-      <div className="px-4 pt-3 pb-24">{children}</div>
+      <div className="flex min-h-0 flex-1 flex-col px-4 pt-3 pb-6">{children}</div>
     </div>
   )
 }
