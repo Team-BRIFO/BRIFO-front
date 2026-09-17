@@ -16,6 +16,8 @@ export const ApiResponseCreateDecisionResponse = zod.object({
       decisionId: zod.uuid(),
       direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
       confidenceLevel: zod.int(),
+      entryFeeAp: zod.int(),
+      balanceAp: zod.int(),
       stock: zod.object({
         stockId: zod.uuid(),
         name: zod.string(),
