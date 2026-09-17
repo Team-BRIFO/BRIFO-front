@@ -9,6 +9,8 @@ import { z as zod } from 'zod'
 
 export const getMyPageResponseStocksMax = 3
 
+export const getMyPageResponsePendingStockChangeStocksMax = 3
+
 export const GetMyPageResponse = zod.object({
   nickname: zod.string(),
   companyName: zod.string(),
@@ -28,6 +30,21 @@ export const GetMyPageResponse = zod.object({
     )
     .min(1)
     .max(getMyPageResponseStocksMax),
+  pendingStockChange: zod
+    .object({
+      stocks: zod
+        .array(
+          zod.object({
+            stockId: zod.uuid(),
+            name: zod.string(),
+            logoUrl: zod.string().optional(),
+          }),
+        )
+        .min(1)
+        .max(getMyPageResponsePendingStockChangeStocksMax),
+      effectiveAt: zod.iso.date(),
+    })
+    .optional(),
 })
 
 export type GetMyPageResponse = zod.input<typeof GetMyPageResponse>

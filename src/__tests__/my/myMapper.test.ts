@@ -49,6 +49,32 @@ describe('My mappers', () => {
     })
   })
 
+  it('maps a pending stock change into a null-safe UI shape, or null when absent', () => {
+    const withPending = {
+      nickname: '브리포',
+      companyName: '브리포 투자사',
+      balanceAp: 1_250,
+      thisWeekEarnedAp: 450,
+      decisionAccuracyRate: 63,
+      totalDecision: 48,
+      consecutiveDays: 5,
+      learnedTermCount: 2,
+      stocks: [{ stockId: '51f6a481-3a4f-4f74-b5b7-2f7f6a0d8c31', name: '삼성전자' }],
+      pendingStockChange: {
+        stocks: [{ stockId: 'e2b1a481-3a4f-4f74-b5b7-2f7f6a0d8c31', name: 'SK하이닉스' }],
+        effectiveAt: '2026-07-22',
+      },
+    } satisfies GetMyPageResponse
+
+    expect(mapMyUser(withPending).pendingStockChange).toEqual({
+      stocks: [{ id: 'e2b1a481-3a4f-4f74-b5b7-2f7f6a0d8c31', name: 'SK하이닉스' }],
+      effectiveAt: '2026-07-22',
+    })
+
+    const withoutPending = { ...withPending, pendingStockChange: undefined }
+    expect(mapMyUser(withoutPending).pendingStockChange).toBeNull()
+  })
+
   it('maps AP transactions and normalizes an omitted next cursor to null', () => {
     const response = {
       summary: { balanceAp: 1_250, monthlyEarnedAp: 620, monthlyLostAp: 140 },

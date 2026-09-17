@@ -45,6 +45,15 @@ export function mapMyUser(result: GetMyPageResponse): UserOverview {
       companyName: result.companyName,
       interestStocks: result.stocks.map((stock) => ({ id: stock.stockId, name: stock.name })),
     },
+    pendingStockChange: result.pendingStockChange
+      ? {
+          stocks: result.pendingStockChange.stocks.map((stock) => ({
+            id: stock.stockId,
+            name: stock.name,
+          })),
+          effectiveAt: result.pendingStockChange.effectiveAt,
+        }
+      : null,
   }
 }
 

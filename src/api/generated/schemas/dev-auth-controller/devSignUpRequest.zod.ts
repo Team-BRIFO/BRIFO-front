@@ -17,7 +17,7 @@ export const DevSignUpRequest = zod.object({
     .max(devSignUpRequestInitialBalanceApMax)
     .optional()
     .describe(
-      '개발용 계정의 초기 AP 잔액입니다. 생략하면 기본 초기 지급액(1,000,000 AP)이 유지됩니다.',
+      '개발용 계정의 초기 자금 잔액입니다. 생략하면 기본 초기 지급액(1,000,000원)이 유지됩니다.',
     ),
 })
 

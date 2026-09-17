@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { AccountManagementSection } from '@/components/feature/my/AccountManagementSection'
 import { MySettings } from '@/components/feature/my/MySettings'
 import type { MyMenuKey } from '@/constants/myMenu'
+import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
@@ -17,6 +18,8 @@ const KAKAO_CONTACT_URL = 'https://open.kakao.com/o/sA4wcnui'
 
 export function MySettingsPage() {
   const navigate = useNavigate()
+  const profileQuery = useUserProfileQuery()
+  const pendingStockChange = profileQuery.data?.pendingStockChange
   const onSelect = (key: MyMenuKey) => {
     if (key === 'contact') {
       window.open(KAKAO_CONTACT_URL, '_blank', 'noopener,noreferrer')
@@ -35,7 +38,19 @@ export function MySettingsPage() {
   }
   return (
     <MyPageLayout title="설정" onBack={() => navigate(PATH.MY_PAGE, { replace: true })}>
-      <MySettings onSelectMenu={onSelect} accountManagement={<AccountManagementSection />} />
+      <MySettings
+        onSelectMenu={onSelect}
+        accountManagement={<AccountManagementSection />}
+        menuRight={
+          pendingStockChange
+            ? {
+                interestStocks: (
+                  <span className="pretendard-Caption2 text-Yellow-40">변경 예정</span>
+                ),
+              }
+            : undefined
+        }
+      />
     </MyPageLayout>
   )
 }
