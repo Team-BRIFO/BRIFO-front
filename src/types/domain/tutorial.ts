@@ -1,6 +1,7 @@
 export type TutorialContent =
   | 'cardNewsList'
   | 'cardNewsDetail'
+  | 'cardNewsTermBottomSheet'
   | 'agentSelection'
   | 'analysisRequested'
   | 'analysisReport'

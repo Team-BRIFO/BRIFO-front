@@ -16,7 +16,7 @@ export const SPLASH_SLIDES: SplashSlideData[] = [
     image: OnboardingStep2,
     title: '하나의 뉴스\n세가지 시각',
     highlightedText: '세가지 시각',
-    description: '루키 · 프로 · 탱크 세 사원이 각자\n다른 프레임으로 분석합니다',
+    description: '루키 · 프로 · 탱커 세 사원이 각자\n다른 프레임으로 분석합니다',
   },
   {
     id: 3,

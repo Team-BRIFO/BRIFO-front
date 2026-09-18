@@ -4,8 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { signupSession } from '@/api/client/signupSession'
 import { browserTokenStore } from '@/api/client/tokenStore'
 import BrifoTecLogo from '@/assets/logo/BRIFOTEC.svg'
+import { Badge } from '@/components/common/Badge'
+import BottomSheet from '@/components/common/BottomSheet'
+import Button from '@/components/common/Button'
 import { Toast } from '@/components/common/Toast'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
+import { AgentChat } from '@/components/domain/agent/AgentChat'
 import { BriefingComment } from '@/components/domain/briefing/BriefingComment'
 import { BriefingNote } from '@/components/domain/briefing/BriefingNote'
 import { BriefingReviewSection } from '@/components/domain/briefing/BriefingReviewSection'
@@ -13,6 +17,7 @@ import { BriefingTopCard } from '@/components/domain/briefing/BriefingTopCard'
 import { ConfidenceSliderSection } from '@/components/domain/decision/ConfidenceSliderSection'
 import type { PredictionType } from '@/components/domain/decision/DirectionSelectorGroup'
 import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSelectorGroup'
+import { GlossaryDefinition } from '@/components/domain/glossary/GlossaryDefinition'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { DecisionResultCard } from '@/components/feature/decision/DecisionResultCard'
 import HomeCardNewsSection from '@/components/feature/home/HomeCardNewsSection'
@@ -34,7 +39,6 @@ import type { TutorialContent } from '@/types/domain/tutorial'
 
 /** 카드뉴스 상세·브리핑·예측 등 콘텐츠가 viewport를 넘는 STEP만 스크롤 허용 */
 const SCROLLABLE_TUTORIAL_CONTENTS: TutorialContent[] = [
-  'cardNewsDetail',
   'analysisReport',
   'prediction',
   'predictionRegistered',
@@ -64,15 +68,64 @@ function CardNewsListStep({
   )
 }
 
-function CardNewsDetailStep({ isSecond = false }: { isSecond?: boolean }) {
+function CardNewsDetailStep() {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
   return (
     <div className="flex flex-col items-center gap-6 overflow-hidden pb-4">
-      <NewsCard
-        data={isSecond ? TUTORIAL_NEWS_CARD_MOCK_2 : TUTORIAL_NEWS_CARD_MOCK}
-        className="w-full"
-      />
-      <NewsCardIndicator total={2} currentIndex={isSecond ? 1 : 0} />
+      <div
+        className="-mx-4 flex w-[calc(100%+2rem)] snap-x snap-mandatory [scrollbar-width:none] overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden"
+        aria-label="추천 카드뉴스"
+        onScroll={(event) => {
+          const { scrollLeft, clientWidth } = event.currentTarget
+          if (clientWidth > 0) setCurrentIndex(Math.min(1, Math.round(scrollLeft / clientWidth)))
+        }}
+      >
+        {[TUTORIAL_NEWS_CARD_MOCK, TUTORIAL_NEWS_CARD_MOCK_2].map((newsCard) => (
+          <div key={newsCard.cardId} className="w-full shrink-0 snap-center px-4">
+            <NewsCard data={newsCard} className="w-full" />
+          </div>
+        ))}
+      </div>
+      <NewsCardIndicator total={2} currentIndex={currentIndex} />
     </div>
+  )
+}
+
+function CardNewsTermBottomSheetStep({ onComplete }: { onComplete: () => void }) {
+  return (
+    <BottomSheet
+      isOpen
+      onClose={() => undefined}
+      shouldCloseOnOverlayClick={false}
+      shouldCloseOnEscape={false}
+      ariaLabel="어려운 단어 안내"
+      className="items-center gap-4.5"
+    >
+      <BottomSheet.Body className="flex flex-col gap-5">
+        <div className="flex flex-col items-center gap-2">
+          <Badge size="md" type="normal">
+            주식 용어
+          </Badge>
+          <p className="dnf-Title4 break-keep">HBM</p>
+        </div>
+        <div className="flex flex-col gap-2">
+          <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
+          <GlossaryDefinition className="break-keep">
+            HBM은 여러 개의 메모리를 수직으로 쌓아 데이터 처리 속도를 높인 고대역폭 메모리예요. AI
+            반도체에 주로 사용돼요.
+          </GlossaryDefinition>
+        </div>
+        <p className="pretendard-Caption2 text-Gray-6 text-center break-keep">
+          이해했어요를 누르면 내 용어장에 저장돼요.
+        </p>
+      </BottomSheet.Body>
+      <BottomSheet.Footer>
+        <Button size="lg" isFullWidth onClick={onComplete}>
+          이해했어요
+        </Button>
+      </BottomSheet.Footer>
+    </BottomSheet>
   )
 }
 
@@ -173,7 +226,7 @@ function PredictionRegisteredStep() {
   return (
     <section className="border-Gray-2 flex flex-col items-center rounded-2xl border px-4 py-7 text-center">
       <h2 className="dnf-Subtitle2 text-Gray-10">예측 등록 완료!</h2>
-      <strong className="dnf-Title2 text-Yellow-30 mt-2">+10만원</strong>
+      <strong className="dnf-Title2 text-Yellow-30 mt-2">+100 AP</strong>
       <AnalyzeCard
         type="normal"
         resultType="HASHTAG"
@@ -211,7 +264,6 @@ function PredictionResultStep() {
 }
 
 interface StepContentProps {
-  stepId: string
   content: TutorialContent
   selectedAgentId: string
   selectedNewsId: string | null
@@ -221,10 +273,10 @@ interface StepContentProps {
   setSelectedNewsId: (id: string) => void
   setDirection: (direction: PredictionType) => void
   setConfidence: (value: ConfidenceLevel) => void
+  onNext: () => void
 }
 
 function renderStepContent({
-  stepId,
   content,
   selectedAgentId,
   selectedNewsId,
@@ -234,12 +286,15 @@ function renderStepContent({
   setSelectedNewsId,
   setDirection,
   setConfidence,
+  onNext,
 }: StepContentProps) {
   switch (content) {
     case 'cardNewsList':
       return <CardNewsListStep selectedId={selectedNewsId} onSelect={setSelectedNewsId} />
     case 'cardNewsDetail':
-      return <CardNewsDetailStep isSecond={stepId === 'card-news-detail-guide'} />
+      return <CardNewsDetailStep />
+    case 'cardNewsTermBottomSheet':
+      return <CardNewsTermBottomSheetStep onComplete={onNext} />
     case 'agentSelection':
       return <AgentSelectionStep selectedAgentId={selectedAgentId} onSelect={setSelectedAgentId} />
     case 'analysisRequested':
@@ -353,7 +408,6 @@ export function TutorialPage() {
         onSkip={isReplay ? navigateSettings : handleSkip}
       >
         {renderStepContent({
-          stepId: currentStep.id,
           content: currentStep.content,
           selectedAgentId,
           selectedNewsId,
@@ -363,6 +417,7 @@ export function TutorialPage() {
           setSelectedNewsId,
           setDirection,
           setConfidence,
+          onNext: handleNext,
         })}
       </TutorialStepLayout>
       {!isReplay && submitError && (

@@ -50,9 +50,9 @@ export default function TutorialStepLayout({
         className={`mt-8 flex min-h-0 flex-1 flex-col ${isContentScrollable ? 'overflow-y-auto overscroll-y-contain' : 'overflow-hidden'} ${isReplay ? 'px-4' : ''}`}
       >
         <div className="shrink-0">
-          <p className="dnf-Title3 text-Gray-10 leading-[1.15]">STEP {step}</p>
-          <h1 className="dnf-Title3 mt-1 leading-[1.15] text-[#FFBE00]">{title}</h1>
-          <p className="pretendard-Caption1 mt-4 text-[#8A8499]">
+          <p className="dnf-Title3 text-Gray-10 leading-[1.15] break-keep">STEP {step}</p>
+          <h1 className="dnf-Title3 mt-1 leading-[1.15] break-keep text-[#FFBE00]">{title}</h1>
+          <p className="pretendard-Caption1 mt-4 break-keep text-[#8A8499]">
             루키의 지시에 따라 튜토리얼을 진행해주세요.
           </p>
         </div>
