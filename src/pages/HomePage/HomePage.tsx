@@ -44,6 +44,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={() => navigate(PATH.MY_AP)}
+                aria-label="자금 내역 보기"
                 className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2"
               >
                 {balanceText}
