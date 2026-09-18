@@ -13,6 +13,9 @@ const settingsMocks = vi.hoisted(() => ({
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ clear: vi.fn() }),
 }))
+vi.mock('@/hooks/queries/user/useUserProfileQuery', () => ({
+  useUserProfileQuery: () => ({ data: undefined }),
+}))
 vi.mock('@/components/common/MenuRow', () => ({
   MenuRow: ({ label, onClick }: { label: string; onClick?: () => void }) => (
     <button type="button" onClick={onClick}>
