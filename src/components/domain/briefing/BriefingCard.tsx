@@ -56,9 +56,9 @@ export function BriefingCard({
   } else if (type === '진행중') {
     rankClass = 'text-Gray-5'
     if (active) {
-      containerBgClass = 'bg-Background1'
-      borderClass = 'border-Gray-2' // 피그마 액티브 테두리 명세
-      bottomBgClass = 'bg-Gray-2'
+      containerBgClass = 'bg-Pink-100'
+      borderClass = 'border-Pink-60'
+      bottomBgClass = 'bg-Pink-60'
     } else {
       containerBgClass = 'bg-White'
       borderClass = 'border-Gray-2'
