@@ -63,6 +63,11 @@
   --color-Gray-9: #353535;
   --color-Gray-10: #1f1f1f; /* Typo */
 
+  /* Rank - Bronze (3위 전용, 연한 → 짙은) */
+  --color-Bronze-100: #cd7f32; /* 배경 */
+  --color-Bronze-50: #ffb74d; /* 동그라미 */
+  --color-Bronze-10: #8d6e63; /* 숫자 */
+
   /* Gradation */
   --gradient-1: linear-gradient(90deg, #fff9e6 0%, #ffcf40 100%);
   --gradient-2: linear-gradient(90deg, #ffebb0 0%, #ff7395 100%);

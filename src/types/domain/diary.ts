@@ -106,6 +106,8 @@ export interface DiaryRateRow {
   label: string
   /** 적중률 (0~100, %) */
   value: number
+  /** 정렬/색상 매핑용 안정 키 (그룹마다 의미가 다름: 사원별은 agentType, 확신도별은 level) */
+  key?: string
 }
 
 /** 프로그레스 카드 1개 (그룹 기준은 데이터가 정한다) */
