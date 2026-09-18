@@ -18,13 +18,13 @@ const AGENT_COLOR_BY_TYPE: Record<string, string> = {
 }
 const DEFAULT_AGENT_COLOR = 'bg-Gray-4'
 
-// 확신도 구간별 색상 (낮음-파란색, 보통-노란색, 높음-빨간색 계열의 팔레트 내 토큰)
-const CONFIDENCE_COLOR_BY_LEVEL: Record<string, string> = {
+// 배분 비중 구간별 색상 (소액-파란색, 중간-노란색, 집중-빨간색 계열의 팔레트 내 토큰)
+const ALLOCATION_RATE_COLOR_BY_LEVEL: Record<string, string> = {
   HIGH: 'bg-Pink-40',
   MEDIUM: 'bg-Yellow-50',
   LOW: 'bg-Green-50',
 }
-const DEFAULT_CONFIDENCE_COLOR = 'bg-Gray-4'
+const DEFAULT_ALLOCATION_RATE_COLOR = 'bg-Gray-4'
 
 const RANK_SURFACES = ['bg-Yellow-100', 'bg-Background1', 'bg-Bronze-100']
 const RANK_COLORS = [
@@ -100,12 +100,13 @@ function AgentRateChart({ rows }: { rows: DiaryRateRow[] }) {
   )
 }
 
-function ConfidenceRateChart({ rows }: { rows: DiaryRateRow[] }) {
+function AllocationRateChart({ rows }: { rows: DiaryRateRow[] }) {
   return (
     <div className="flex flex-col gap-2.5">
       {rows.map((row) => {
         const value = clampRate(row.value)
-        const color = (row.key && CONFIDENCE_COLOR_BY_LEVEL[row.key]) ?? DEFAULT_CONFIDENCE_COLOR
+        const color =
+          (row.key && ALLOCATION_RATE_COLOR_BY_LEVEL[row.key]) ?? DEFAULT_ALLOCATION_RATE_COLOR
         return (
           <div key={row.label} className="flex items-center gap-2.25">
             <span className="pretendard-Caption3 text-Gray-6 w-10 shrink-0 truncate">
@@ -161,8 +162,8 @@ function RateVisualization({ group }: { group: DiaryRateGroup }) {
       return <StockRateRanking rows={group.rows} />
     case 'agent':
       return <AgentRateChart rows={group.rows} />
-    case 'confidence':
-      return <ConfidenceRateChart rows={group.rows} />
+    case 'allocation-rate':
+      return <AllocationRateChart rows={group.rows} />
     default:
       return <DirectionRateChart rows={group.rows} />
   }

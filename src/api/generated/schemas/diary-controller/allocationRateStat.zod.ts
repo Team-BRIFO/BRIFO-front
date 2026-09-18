@@ -7,12 +7,12 @@
  */
 import { z as zod } from 'zod'
 
-export const ConfidenceLevelStat = zod.object({
+export const AllocationRateStat = zod.object({
   level: zod.enum(['LOW', 'MEDIUM', 'HIGH']),
   settledDecisionCount: zod.int(),
   correctDecisionCount: zod.int(),
   accuracyRate: zod.int(),
 })
 
-export type ConfidenceLevelStat = zod.input<typeof ConfidenceLevelStat>
-export type ConfidenceLevelStatOutput = zod.output<typeof ConfidenceLevelStat>
+export type AllocationRateStat = zod.input<typeof AllocationRateStat>
+export type AllocationRateStatOutput = zod.output<typeof AllocationRateStat>

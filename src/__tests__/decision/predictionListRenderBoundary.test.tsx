@@ -35,13 +35,13 @@ vi.mock('@/pages/DecisionPage/hooks/useDecisionQueries', () => ({
     data: [
       {
         id: 'decision-1',
-        confidenceLevel: 3,
+        allocatedAp: 30_000,
         isSettled: true,
         stock: { name: '삼성전자', changeRate: 1.2 },
       },
       {
         id: 'decision-2',
-        confidenceLevel: 4,
+        allocatedAp: 40_000,
         isSettled: true,
         stock: { name: 'SK하이닉스', changeRate: 2.3 },
       },

@@ -14,7 +14,7 @@ import { BriefingComment } from '@/components/domain/briefing/BriefingComment'
 import { BriefingNote } from '@/components/domain/briefing/BriefingNote'
 import { BriefingReviewSection } from '@/components/domain/briefing/BriefingReviewSection'
 import { BriefingTopCard } from '@/components/domain/briefing/BriefingTopCard'
-import { ConfidenceSliderSection } from '@/components/domain/decision/ConfidenceSliderSection'
+import { AllocationAmountSection } from '@/components/domain/decision/AllocationAmountSection'
 import type { PredictionType } from '@/components/domain/decision/DirectionSelectorGroup'
 import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSelectorGroup'
 import { GlossaryDefinition } from '@/components/domain/glossary/GlossaryDefinition'
@@ -34,8 +34,10 @@ import {
   TUTORIAL_NEWS_CARD_MOCK_2,
 } from '@/pages/TutorialPage/mockData'
 import { PATH } from '@/routes/paths'
-import type { ConfidenceLevel } from '@/types/domain/decision'
 import type { TutorialContent } from '@/types/domain/tutorial'
+
+/** 튜토리얼 시뮬레이션에서 사용하는 가상의 보유 자금 */
+const TUTORIAL_BALANCE_AP = 1_000_000
 
 /** 카드뉴스 상세·브리핑·예측 등 콘텐츠가 viewport를 넘는 STEP만 스크롤 허용 */
 const SCROLLABLE_TUTORIAL_CONTENTS: TutorialContent[] = [
@@ -187,23 +189,22 @@ function AnalysisReportStep() {
 
 function PredictionStep({
   direction,
-  confidence,
+  allocatedAp,
   onDirectionChange,
-  onConfidenceChange,
+  onAllocatedApChange,
 }: {
   direction: PredictionType | null
-  confidence: ConfidenceLevel
+  allocatedAp: number
   onDirectionChange: (direction: PredictionType) => void
-  onConfidenceChange: (value: ConfidenceLevel) => void
+  onAllocatedApChange: (value: number) => void
 }) {
   return (
     <section className="flex flex-col">
       <DirectionSelectorGroup selectedDirection={direction} onDirectionChange={onDirectionChange} />
-      <ConfidenceSliderSection
-        value={confidence}
-        onChange={onConfidenceChange}
-        apCost={60}
-        expectedReward={100}
+      <AllocationAmountSection
+        value={allocatedAp}
+        onChange={onAllocatedApChange}
+        balance={TUTORIAL_BALANCE_AP}
         className="mt-6"
       />
       <BriefingReviewSection
@@ -257,7 +258,7 @@ function PredictionResultStep() {
       stockName="브리포테크"
       changeRate={8.1}
       resultText="상승 적중"
-      confidenceLevel={5}
+      allocatedAp={40_000}
       comment="사장님, 제가 된다고 했잖아요!"
     />
   )
@@ -268,11 +269,11 @@ interface StepContentProps {
   selectedAgentId: string
   selectedNewsId: string | null
   direction: PredictionType | null
-  confidence: ConfidenceLevel
+  allocatedAp: number
   setSelectedAgentId: (id: string) => void
   setSelectedNewsId: (id: string) => void
   setDirection: (direction: PredictionType) => void
-  setConfidence: (value: ConfidenceLevel) => void
+  setAllocatedAp: (value: number) => void
   onNext: () => void
 }
 
@@ -281,11 +282,11 @@ function renderStepContent({
   selectedAgentId,
   selectedNewsId,
   direction,
-  confidence,
+  allocatedAp,
   setSelectedAgentId,
   setSelectedNewsId,
   setDirection,
-  setConfidence,
+  setAllocatedAp,
   onNext,
 }: StepContentProps) {
   switch (content) {
@@ -305,9 +306,9 @@ function renderStepContent({
       return (
         <PredictionStep
           direction={direction}
-          confidence={confidence}
+          allocatedAp={allocatedAp}
           onDirectionChange={setDirection}
-          onConfidenceChange={setConfidence}
+          onAllocatedApChange={setAllocatedAp}
         />
       )
     case 'predictionRegistered':
@@ -329,7 +330,7 @@ export function TutorialPage() {
   const [selectedAgentId, setSelectedAgentId] = useState(TUTORIAL_AGENTS[0].id)
   const [selectedNewsId, setSelectedNewsId] = useState<string | null>(null)
   const [direction, setDirection] = useState<PredictionType | null>('UP')
-  const [confidence, setConfidence] = useState<ConfidenceLevel>(3)
+  const [allocatedAp, setAllocatedAp] = useState(Math.floor(TUTORIAL_BALANCE_AP * 0.2))
 
   const currentStep = TUTORIAL_STEPS[currentStepIndex]
 
@@ -412,11 +413,11 @@ export function TutorialPage() {
           selectedAgentId,
           selectedNewsId,
           direction,
-          confidence,
+          allocatedAp,
           setSelectedAgentId,
           setSelectedNewsId,
           setDirection,
-          setConfidence,
+          setAllocatedAp,
           onNext: handleNext,
         })}
       </TutorialStepLayout>

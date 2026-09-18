@@ -32,7 +32,7 @@ export const ApiResponseGetDiaryDetailResponse = zod.object({
       }),
       decision: zod.object({
         isCorrect: zod.boolean(),
-        confidenceLevel: zod.int(),
+        allocationRatePercent: zod.int(),
       }),
     })
     .optional(),

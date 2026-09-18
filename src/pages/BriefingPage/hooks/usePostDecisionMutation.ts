@@ -6,11 +6,11 @@ import { useApiMutation } from '@/hooks/api'
 import { decisionQueryKeys } from '@/hooks/queries/decision/decisionQueryKeys'
 import { diaryQueryKeys } from '@/hooks/queries/diary/diaryQueryKeys'
 import { userQueryKeys } from '@/hooks/queries/user/userQueryKeys'
-import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
+import type { DecisionDirection } from '@/types/domain/decision'
 
 interface PostDecisionInput {
   direction: DecisionDirection
-  confidenceLevel: ConfidenceLevel
+  allocatedAp: number
 }
 
 export function usePostDecisionMutation(briefingId: string) {
@@ -22,7 +22,7 @@ export function usePostDecisionMutation(briefingId: string) {
     responseSchema: ApiResponseCreateDecisionResponse,
     response: 'requiredResult',
     getArgs: (input: PostDecisionInput) =>
-      [briefingId, { direction: input.direction, confidenceLevel: input.confidenceLevel }] as const,
+      [briefingId, { direction: input.direction, allocatedAp: input.allocatedAp }] as const,
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({

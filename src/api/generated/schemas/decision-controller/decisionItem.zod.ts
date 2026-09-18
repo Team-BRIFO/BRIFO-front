@@ -10,7 +10,7 @@ import { z as zod } from 'zod'
 export const DecisionItem = zod.object({
   decisionId: zod.uuid(),
   direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
-  confidenceLevel: zod.int(),
+  allocatedAp: zod.int(),
   isSettled: zod.boolean(),
   agent: zod.object({
     agentId: zod.uuid(),

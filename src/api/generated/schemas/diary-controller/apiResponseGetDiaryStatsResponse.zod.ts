@@ -19,7 +19,7 @@ export const ApiResponseGetDiaryStatsResponse = zod.object({
         recent30DaysAccuracyRate: zod.int(),
         settledDecisionCount: zod.int(),
         correctDecisionCount: zod.int(),
-        averageConfidenceLevel: zod.number(),
+        averageAllocationRatePercent: zod.number(),
         bestCorrectStreak: zod.int(),
       }),
       directionStats: zod.array(
@@ -40,7 +40,7 @@ export const ApiResponseGetDiaryStatsResponse = zod.object({
           accuracyRate: zod.int(),
         }),
       ),
-      confidenceLevelStats: zod.array(
+      allocationRateStats: zod.array(
         zod.object({
           level: zod.enum(['LOW', 'MEDIUM', 'HIGH']),
           settledDecisionCount: zod.int(),

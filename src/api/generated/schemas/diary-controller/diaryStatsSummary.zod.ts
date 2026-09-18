@@ -13,7 +13,7 @@ export const DiaryStatsSummary = zod.object({
   recent30DaysAccuracyRate: zod.int(),
   settledDecisionCount: zod.int(),
   correctDecisionCount: zod.int(),
-  averageConfidenceLevel: zod.number(),
+  averageAllocationRatePercent: zod.number(),
   bestCorrectStreak: zod.int(),
 })
 

@@ -9,7 +9,7 @@ import { z as zod } from 'zod'
 
 export const DayDetailDecision = zod.object({
   direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
-  confidenceLevel: zod.int(),
+  allocationRatePercent: zod.int(),
   isCorrect: zod.boolean(),
   apDelta: zod.int(),
 })

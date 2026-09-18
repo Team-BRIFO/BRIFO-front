@@ -22,7 +22,7 @@ export const DayDetailItem = zod.object({
   }),
   decision: zod.object({
     direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
-    confidenceLevel: zod.int(),
+    allocationRatePercent: zod.int(),
     isCorrect: zod.boolean(),
     apDelta: zod.int(),
   }),

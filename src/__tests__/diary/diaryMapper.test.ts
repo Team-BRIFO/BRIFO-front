@@ -76,7 +76,7 @@ describe('diaryMapper', () => {
         direction: 'UP',
         confidenceRate: 72,
       },
-      decision: { isCorrect: true, confidenceLevel: 4 },
+      decision: { isCorrect: true, allocationRatePercent: 20 },
     })
 
     expect(detail).toMatchObject({
@@ -106,7 +106,7 @@ describe('diaryMapper', () => {
           },
           decision: {
             direction: 'UP',
-            confidenceLevel: 4,
+            allocationRatePercent: 20,
             isCorrect: true,
             apDelta: 80,
           },
@@ -126,7 +126,7 @@ describe('diaryMapper', () => {
           },
           decision: {
             direction: 'DOWN',
-            confidenceLevel: 2,
+            allocationRatePercent: 10,
             isCorrect: false,
             apDelta: -30,
           },
@@ -144,7 +144,7 @@ describe('diaryMapper', () => {
         agentType: 'rookie',
         agentNickname: '루키',
         direction: 'up',
-        confidenceLevel: 4,
+        allocationRatePercent: 20,
         isCorrect: true,
         apDelta: 80,
       },
@@ -156,7 +156,7 @@ describe('diaryMapper', () => {
         agentType: 'pro',
         agentNickname: '프로',
         direction: 'down',
-        confidenceLevel: 2,
+        allocationRatePercent: 10,
         isCorrect: false,
         apDelta: -30,
       },
@@ -171,12 +171,12 @@ describe('diaryMapper', () => {
         recent30DaysAccuracyRate: 0,
         settledDecisionCount: 1,
         correctDecisionCount: 1,
-        averageConfidenceLevel: 4,
+        averageAllocationRatePercent: 4,
         bestCorrectStreak: 1,
       },
       directionStats: [],
       agentStats: [],
-      confidenceLevelStats: [],
+      allocationRateStats: [],
       stockStats: [],
     })
 
@@ -192,12 +192,12 @@ describe('diaryMapper', () => {
         recent30DaysAccuracyRate: 0,
         settledDecisionCount: 0,
         correctDecisionCount: 0,
-        averageConfidenceLevel: 0,
+        averageAllocationRatePercent: 0,
         bestCorrectStreak: 0,
       },
       directionStats: [],
       agentStats: [],
-      confidenceLevelStats: [],
+      allocationRateStats: [],
       stockStats: [],
     })
 

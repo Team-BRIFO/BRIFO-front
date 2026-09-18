@@ -70,7 +70,7 @@ export interface DiaryDetail {
   direction: DiaryDirection
   isCorrect: boolean
   agentType: 'rookie' | 'pro' | 'tanker'
-  confidenceLevel: number
+  allocationRatePercent: number
 }
 
 export interface DiaryShareImage {
@@ -97,7 +97,7 @@ export interface DiaryDayDetailItem {
   agentType: 'rookie' | 'pro' | 'tanker'
   agentNickname: string
   direction: DiaryDirection
-  confidenceLevel: number
+  allocationRatePercent: number
   isCorrect: boolean
   apDelta: number
 }
