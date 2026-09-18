@@ -16,7 +16,7 @@ export const ApiResponseGetDecisionResultResponse = zod.object({
       isCorrect: zod.boolean(),
       apDelta: zod.int(),
       direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
-      confidenceLevel: zod.int(),
+      allocatedAp: zod.int(),
       agent: zod.object({
         agentId: zod.uuid(),
         agentType: zod.enum(['ROOKIE', 'PRO', 'TANKER']),

@@ -3,14 +3,13 @@ import { useState } from 'react'
 import BottomSheet from '@/components/common/BottomSheet'
 import Button from '@/components/common/Button'
 import { BriefingReviewSection } from '@/components/domain/briefing/BriefingReviewSection'
-import { ConfidenceSliderSection } from '@/components/domain/decision/ConfidenceSliderSection'
+import { AllocationAmountSection } from '@/components/domain/decision/AllocationAmountSection'
 import type { PredictionType } from '@/components/domain/decision/DirectionSelectorGroup'
 import { DirectionSelectorGroup } from '@/components/domain/decision/DirectionSelectorGroup'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
-import type { ConfidenceLevel, DecisionDirection } from '@/types/domain/decision'
-
-/** 예측 등록 시 확신도와 무관하게 즉시 차감되는 참가비 (서버 DecisionRequestService와 동일한 값) */
-const DECISION_ENTRY_FEE_AP = 1_000
+import { useUserProfileQuery } from '@/hooks/queries/user/useUserProfileQuery'
+import type { DecisionDirection } from '@/types/domain/decision'
+import { MAX_ALLOCATION_RATE_PERCENT } from '@/types/domain/decision'
 
 export interface DecisionBottomSheetProps {
   isOpen: boolean
@@ -32,7 +31,7 @@ export interface DecisionBottomSheetProps {
     badgeType: 'rise' | 'fall' | 'watch'
     oneLiner: string
   }
-  onConfirm: (direction: DecisionDirection, confidence: ConfidenceLevel) => void
+  onConfirm: (direction: DecisionDirection, allocatedAp: number) => void
   isSubmitting?: boolean
 }
 
@@ -46,16 +45,16 @@ export function DecisionBottomSheet({
   isSubmitting = false,
 }: DecisionBottomSheetProps) {
   const [direction, setDirection] = useState<PredictionType>('UP')
-  const [confidence, setConfidence] = useState<ConfidenceLevel>(3)
-
-  // 참가비는 확신도와 무관하게 고정, 적중 보상은 서버 정산 공식(확신도 * 20,000원)과 맞춘다.
-  const apCost = DECISION_ENTRY_FEE_AP
-  const expectedReward = confidence * 20_000
+  const [allocatedAp, setAllocatedAp] = useState(0)
+  const { data: profile } = useUserProfileQuery()
+  const balance = profile?.apSummary.balance ?? 0
+  const maxAllocatableAp = Math.floor((balance * MAX_ALLOCATION_RATE_PERCENT) / 100)
 
   const handleConfirm = () => {
     if (isSubmitting) return
+    if (allocatedAp < 1 || allocatedAp > maxAllocatableAp) return
     const confirmDirection = direction === 'HOLD' ? 'NEUTRAL' : (direction as 'UP' | 'DOWN')
-    onConfirm(confirmDirection, confidence)
+    onConfirm(confirmDirection, allocatedAp)
   }
 
   return (
@@ -81,13 +80,8 @@ export function DecisionBottomSheet({
         {/* 방향 선택 */}
         <DirectionSelectorGroup selectedDirection={direction} onDirectionChange={setDirection} />
 
-        {/* 확신도 선택 */}
-        <ConfidenceSliderSection
-          value={confidence}
-          onChange={setConfidence}
-          apCost={apCost}
-          expectedReward={expectedReward}
-        />
+        {/* 배분 금액 선택 */}
+        <AllocationAmountSection value={allocatedAp} onChange={setAllocatedAp} balance={balance} />
 
         {/* 브리핑 다시보기 */}
         <BriefingReviewSection
@@ -106,7 +100,7 @@ export function DecisionBottomSheet({
             size="lg"
             color="primary"
             onClick={handleConfirm}
-            disabled={isSubmitting}
+            disabled={isSubmitting || allocatedAp < 1 || allocatedAp > maxAllocatableAp}
           >
             {isSubmitting ? '등록 중...' : '예측 등록하기'}
           </Button>

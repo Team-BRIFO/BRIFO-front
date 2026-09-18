@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge'
 import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { AnalyzeResultType } from '@/components/feature/analyze/AnalyzeCard'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
-import { CONFIDENCE_LEVEL_LABEL, DIRECTION_LABEL } from '@/mappers/diaryMapper'
+import { ALLOCATION_RATE_LEVEL_LABEL, DIRECTION_LABEL } from '@/mappers/diaryMapper'
 import { useDiaryDayDetailQuery } from '@/pages/DiaryPage/hooks/useDiaryQueries'
 import type { DiaryDayDetailItem } from '@/types/domain/diary'
 
@@ -25,10 +25,10 @@ function toResultType({ direction, isCorrect }: DiaryDayDetailItem): AnalyzeResu
   return `${prefix}_${suffix}` as AnalyzeResultType
 }
 
-/** 확신도 1~5를 낮음/보통/높음 구간으로 묶는다 (통계 화면과 동일한 구간 정의) */
-function confidenceLevelBand(level: number): 'LOW' | 'MEDIUM' | 'HIGH' {
-  if (level <= 2) return 'LOW'
-  if (level === 3) return 'MEDIUM'
+/** 배분 비중(1~40%)을 소액/중간/집중 구간으로 묶는다 (통계 화면과 동일한 구간 정의) */
+function allocationRateBand(ratePercent: number): 'LOW' | 'MEDIUM' | 'HIGH' {
+  if (ratePercent <= 13) return 'LOW'
+  if (ratePercent <= 27) return 'MEDIUM'
   return 'HIGH'
 }
 
@@ -60,8 +60,8 @@ export function DiaryDateDetail({ date, className = '' }: DiaryDateDetailProps) 
               <AgentAvatar type={item.agentType} size={32} />
               <div className="min-w-0 flex-1">
                 <p className="pretendard-Caption2 text-Gray-6 truncate">
-                  {item.agentNickname} · {DIRECTION_LABEL[item.direction]} 확신도{' '}
-                  {CONFIDENCE_LEVEL_LABEL[confidenceLevelBand(item.confidenceLevel)]}
+                  {item.agentNickname} · {DIRECTION_LABEL[item.direction]} 배분{' '}
+                  {ALLOCATION_RATE_LEVEL_LABEL[allocationRateBand(item.allocationRatePercent)]}
                 </p>
                 <AnalyzeCard
                   type="Analyze_small"

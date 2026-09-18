@@ -291,9 +291,9 @@ export function BriefingDetailPage() {
             oneLiner: data.briefing.comment,
           }}
           isSubmitting={isSubmitting}
-          onConfirm={(direction, confidence) => {
+          onConfirm={(direction, allocatedAp) => {
             submitDecision(
-              { direction, confidenceLevel: confidence },
+              { direction, allocatedAp },
               {
                 onSuccess: () => {
                   setIsDecisionSheetOpen(false)

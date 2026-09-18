@@ -5,7 +5,7 @@ import { mapDecisionList } from '@/mappers/decisionMapper'
 const baseItem = {
   decisionId: '8fd2c732-b4f1-4b66-b53a-95b5f11df391',
   direction: 'UP' as const,
-  confidenceLevel: 3,
+  allocatedAp: 30_000,
   isSettled: false,
   agent: {
     agentId: '0d6d4f4a-7d5d-4e4d-bf71-4b59d18c1a01',
@@ -46,9 +46,9 @@ describe('decisionMapper', () => {
     expect(item?.stock.logoUrl).toBeUndefined()
   })
 
-  it('falls back to the lowest confidence level for out-of-range values', () => {
-    const [item] = mapDecisionList([{ ...baseItem, confidenceLevel: 9 }])
+  it('passes the allocated amount through unchanged', () => {
+    const [item] = mapDecisionList([{ ...baseItem, allocatedAp: 40_000 }])
 
-    expect(item?.confidenceLevel).toBe(1)
+    expect(item?.allocatedAp).toBe(40_000)
   })
 })

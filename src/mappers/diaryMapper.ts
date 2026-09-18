@@ -37,18 +37,18 @@ export const DIRECTION_LABEL: Record<DiaryDirection, string> = {
   neutral: '관망',
 }
 
-/** 확신도 구간 라벨 (LOW = 1~2, MEDIUM = 3, HIGH = 4~5) */
-export const CONFIDENCE_LEVEL_LABEL: Record<'LOW' | 'MEDIUM' | 'HIGH', string> = {
-  LOW: '낮음',
-  MEDIUM: '보통',
-  HIGH: '높음',
+/** 배분 비중 구간 라벨 (LOW = ~13%, MEDIUM = 14~27%, HIGH = 28%~) */
+export const ALLOCATION_RATE_LEVEL_LABEL: Record<'LOW' | 'MEDIUM' | 'HIGH', string> = {
+  LOW: '소액',
+  MEDIUM: '중간',
+  HIGH: '집중',
 }
 
 /** 사원별 채택 적중률 카드의 표시 순서 (루키 → 프로 → 탱커) */
 const AGENT_TYPE_ORDER = ['ROOKIE', 'PRO', 'TANKER'] as const
 
-/** 확신도별 적중률 카드의 표시 순서 (높음 → 보통 → 낮음, 위에서부터) */
-const CONFIDENCE_LEVEL_ORDER = ['HIGH', 'MEDIUM', 'LOW'] as const
+/** 배분 비중별 적중률 카드의 표시 순서 (집중 → 중간 → 소액, 위에서부터) */
+const ALLOCATION_RATE_LEVEL_ORDER = ['HIGH', 'MEDIUM', 'LOW'] as const
 
 // ─── 캘린더 ────────────────────────────────────────────────────────────────
 
@@ -91,7 +91,7 @@ export function mapDiaryDayDetail(result: GetDiaryDayDetailResponseOutput): Diar
       agentType: AGENT_TYPE_BY_CODE[item.agent.agentType],
       agentNickname: item.agent.nickname,
       direction: DIRECTION_BY_CODE[item.decision.direction],
-      confidenceLevel: item.decision.confidenceLevel,
+      allocationRatePercent: item.decision.allocationRatePercent,
       isCorrect: item.decision.isCorrect,
       apDelta: item.decision.apDelta,
     })),
@@ -136,7 +136,7 @@ export function mapDiaryEntryPage(result: GetDiariesResponseOutput): DiaryEntryP
  * 상세 응답 → 도메인
  *
  * 사용: diaryId · stock.name/changeRate · agent.agentType · briefing.direction
- *       decision.isCorrect/confidenceLevel. 공유 카드의 날짜/자금은 POST 응답과 결합한다.
+ *       decision.isCorrect/allocationRatePercent. 공유 카드의 날짜/자금은 POST 응답과 결합한다.
  */
 export function mapDiaryDetail(result: GetDiaryDetailResponseOutput): DiaryDetail {
   return {
@@ -147,7 +147,7 @@ export function mapDiaryDetail(result: GetDiaryDetailResponseOutput): DiaryDetai
     direction: DIRECTION_BY_CODE[result.briefing.direction],
     isCorrect: result.decision.isCorrect,
     agentType: AGENT_TYPE_BY_CODE[result.agent.agentType],
-    confidenceLevel: result.decision.confidenceLevel,
+    allocationRatePercent: result.decision.allocationRatePercent,
   }
 }
 
@@ -166,8 +166,8 @@ export function mapDiaryShareImage(result: CreateDiaryShareImageResponseOutput):
  * 통계 응답 → 도메인
  *
  * 사용:   summary.recent30DaysAccuracyRate · recent30DaysSettledDecisionCount
- *         summary.settledDecisionCount · correctDecisionCount · averageConfidenceLevel · bestCorrectStreak
- *         directionStats[].direction · agentStats[].nickname · confidenceLevelStats[].level
+ *         summary.settledDecisionCount · correctDecisionCount · averageAllocationRatePercent · bestCorrectStreak
+ *         directionStats[].direction · agentStats[].nickname · allocationRateStats[].level
  *         stockStats[].name · 각 배열의 accuracyRate
  * 미사용: summary.recent30DaysCorrectDecisionCount — 최근 30일은 적중률(%)과 모수만 표시한다
  *         각 배열의 settledDecisionCount · correctDecisionCount — 행이 라벨·바·% 만 보여준다
@@ -203,9 +203,10 @@ export function mapDiaryStatistics(result: GetDiaryStatsResponseOutput): DiarySt
         label: '적중',
       },
       {
-        id: 'avg-confidence',
-        value: summary.averageConfidenceLevel.toFixed(1),
-        label: '평균확신도',
+        id: 'avg-allocation-rate',
+        value: summary.averageAllocationRatePercent.toFixed(1),
+        unit: '%',
+        label: '평균 배분 비중',
       },
       {
         id: 'best-streak',
@@ -250,17 +251,17 @@ export function mapDiaryStatistics(result: GetDiaryStatsResponseOutput): DiarySt
           })),
       },
       {
-        id: 'confidence',
-        title: '확신도별 적중률',
+        id: 'allocation-rate',
+        title: '배분 비중별 적중률',
         subtitle,
-        rows: [...result.confidenceLevelStats]
+        rows: [...result.allocationRateStats]
           .sort(
             (first, second) =>
-              CONFIDENCE_LEVEL_ORDER.indexOf(first.level) -
-              CONFIDENCE_LEVEL_ORDER.indexOf(second.level),
+              ALLOCATION_RATE_LEVEL_ORDER.indexOf(first.level) -
+              ALLOCATION_RATE_LEVEL_ORDER.indexOf(second.level),
           )
           .map((stat) => ({
-            label: CONFIDENCE_LEVEL_LABEL[stat.level],
+            label: ALLOCATION_RATE_LEVEL_LABEL[stat.level],
             value: stat.accuracyRate,
             key: stat.level,
           })),

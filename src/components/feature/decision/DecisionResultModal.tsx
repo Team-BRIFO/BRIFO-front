@@ -13,7 +13,7 @@ export interface DecisionResultModalContentProps {
   }
   comment?: string
   resultText?: string
-  confidenceLevel?: number
+  allocatedAp?: number
   onAction: () => void
   onClose: () => void
 }
@@ -24,7 +24,7 @@ export function DecisionResultModalContent({
   stockInfo = { name: '브리포', changeRate: 8.1 },
   comment,
   resultText,
-  confidenceLevel = 5,
+  allocatedAp = 100_000,
   onAction,
   onClose,
 }: DecisionResultModalContentProps) {
@@ -65,7 +65,7 @@ export function DecisionResultModalContent({
             </span>
           </p>
           <p className="pretendard-Caption2 text-Gray-6 m-0">
-            확신도 {confidenceLevel} × 적중 보너스
+            배분 {formatWon(allocatedAp)} · 2배 적중 보너스
           </p>
         </div>
 

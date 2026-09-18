@@ -7,11 +7,9 @@
  */
 import { z as zod } from 'zod'
 
-export const createDecisionBodyConfidenceLevelMax = 5
-
 export const CreateDecisionBody = zod.object({
   direction: zod.enum(['UP', 'DOWN', 'NEUTRAL']),
-  confidenceLevel: zod.int().min(1).max(createDecisionBodyConfidenceLevelMax),
+  allocatedAp: zod.int().min(1),
 })
 
 export type CreateDecisionBody = zod.input<typeof CreateDecisionBody>

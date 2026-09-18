@@ -20,7 +20,7 @@ export interface DiaryShareCardProps {
   agentType: keyof typeof CHARACTER_BY_AGENT_TYPE
   direction: DiaryDirection
   isCorrect: boolean
-  confidenceLevel: number
+  allocationRatePercent: number
   apDelta: number
   tradeDate: string
   companyName: string
@@ -35,14 +35,19 @@ function formatTradeDate(tradeDate: string) {
   return tradeDate.replaceAll('-', '.')
 }
 
+/** 배분 비율(1~40%)을 5단계 별점으로 환산한다 (AI 브리핑 컨텍스트와 동일한 스케일) */
+function toStarLevel(allocationRatePercent: number) {
+  return Math.min(5, Math.max(1, Math.ceil(allocationRatePercent / 8)))
+}
+
 function getDiaryQuote({
   direction,
   isCorrect,
-  confidenceLevel,
-}: Pick<DiaryShareCardProps, 'direction' | 'isCorrect' | 'confidenceLevel'>) {
+  allocationRatePercent,
+}: Pick<DiaryShareCardProps, 'direction' | 'isCorrect' | 'allocationRatePercent'>) {
   if (direction === 'neutral') return '관망도 훌륭한 판단! 리스크를 잘 관리했어요.'
-  if (isCorrect) return `확신도 ${confidenceLevel}로 적중! 사장님 판단이 정확했어요.`
-  return `확신도 ${confidenceLevel}의 도전! 다음 판단도 BRIFO가 응원할게요.`
+  if (isCorrect) return `자산 ${allocationRatePercent}%를 배분해 적중! 사장님 판단이 정확했어요.`
+  return `자산 ${allocationRatePercent}%를 배분한 도전! 다음 판단도 BRIFO가 응원할게요.`
 }
 
 /** 피그마 584:4711의 320×418 공유 카드. 이 노드를 PNG로 변환해 저장·카카오 공유에 공용한다. */
@@ -54,7 +59,7 @@ export const DiaryShareCard = forwardRef<HTMLDivElement, DiaryShareCardProps>(
       agentType,
       direction,
       isCorrect,
-      confidenceLevel,
+      allocationRatePercent,
       apDelta,
       tradeDate,
       companyName,
@@ -64,7 +69,8 @@ export const DiaryShareCard = forwardRef<HTMLDivElement, DiaryShareCardProps>(
     const Character = CHARACTER_BY_AGENT_TYPE[agentType]
     const resultLabel = isCorrect ? '적중' : '아쉬움'
     const apColorClass = apDelta < 0 ? 'text-Green-30' : 'text-Pink-30'
-    const quote = getDiaryQuote({ direction, isCorrect, confidenceLevel })
+    const quote = getDiaryQuote({ direction, isCorrect, allocationRatePercent })
+    const starLevel = toStarLevel(allocationRatePercent)
 
     return (
       <div
@@ -106,13 +112,13 @@ export const DiaryShareCard = forwardRef<HTMLDivElement, DiaryShareCardProps>(
 
         <div
           className="text-Pink-30 mt-[8px] flex gap-[4px]"
-          aria-label={`확신도 ${confidenceLevel}점`}
+          aria-label={`자산 배분 ${allocationRatePercent}%`}
         >
           {Array.from({ length: 5 }, (_, index) => (
             <StarIcon
               key={index}
               className="h-[20px] w-[20px]"
-              style={{ opacity: index < confidenceLevel ? 1 : 0.28 }}
+              style={{ opacity: index < starLevel ? 1 : 0.28 }}
               aria-hidden="true"
             />
           ))}

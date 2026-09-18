@@ -44,7 +44,7 @@ const diaryMocks = vi.hoisted(() => ({
     direction: 'up' | 'down' | 'neutral'
     isCorrect: boolean
     agentType: 'rookie' | 'pro' | 'tanker'
-    confidenceLevel: number
+    allocationRatePercent: number
   } | null,
   mutation: {
     mutate: vi.fn(),
@@ -141,7 +141,7 @@ describe('DiaryDetailPage share image flow', () => {
       direction: 'up',
       isCorrect: true,
       agentType: 'rookie',
-      confidenceLevel: 4,
+      allocationRatePercent: 20,
     }
     diaryMocks.mutation.mutate.mockReset()
     diaryMocks.mutation.reset.mockReset()
@@ -234,7 +234,7 @@ describe('DiaryDetailPage share image flow', () => {
       direction: 'down',
       isCorrect: false,
       agentType: 'pro',
-      confidenceLevel: 3,
+      allocationRatePercent: 15,
     }
     diaryMocks.mutation.reset.mockClear()
     act(() => getButton('다른 결정 카드 열기').click())

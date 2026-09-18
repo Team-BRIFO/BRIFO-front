@@ -72,7 +72,7 @@ export function DiaryDetailPage() {
       detail.agentType,
       detail.direction,
       detail.isCorrect,
-      detail.confidenceLevel,
+      detail.allocationRatePercent,
       currentShareCardData.tradeDate,
       currentShareCardData.apDelta,
       companyName,
@@ -124,7 +124,7 @@ export function DiaryDetailPage() {
         agentType={detail.agentType}
         direction={detail.direction}
         isCorrect={detail.isCorrect}
-        confidenceLevel={detail.confidenceLevel}
+        allocationRatePercent={detail.allocationRatePercent}
         apDelta={currentShareCardData.apDelta}
         tradeDate={currentShareCardData.tradeDate}
         companyName={companyName}

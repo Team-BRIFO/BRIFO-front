@@ -5,7 +5,7 @@ interface DecisionResultCardProps {
   stockName: string
   changeRate: number
   resultText: string
-  confidenceLevel: number
+  allocatedAp: number
   comment: string
 }
 
@@ -14,7 +14,7 @@ export function DecisionResultCard({
   stockName,
   changeRate,
   resultText,
-  confidenceLevel,
+  allocatedAp,
   comment,
 }: DecisionResultCardProps) {
   return (
@@ -29,7 +29,9 @@ export function DecisionResultCard({
             {changeRate}% · {resultText}
           </span>
         </p>
-        <p className="pretendard-Caption2 text-Gray-6">확신도 {confidenceLevel} × 적중 보너스</p>
+        <p className="pretendard-Caption2 text-Gray-6">
+          배분 {formatWon(allocatedAp)} · 2배 적중 보너스
+        </p>
       </div>
 
       <div className="bg-Yellow-100 border-Yellow-80 pretendard-Button1 text-Gray-9 mt-6 w-full rounded-lg border p-3">

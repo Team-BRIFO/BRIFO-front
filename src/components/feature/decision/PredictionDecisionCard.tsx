@@ -75,7 +75,7 @@ export function PredictionDecisionCard({
             <DecisionResultModalContent
               isSuccess={decision.isCorrect}
               points={Math.abs(decision.apDelta ?? 0)}
-              confidenceLevel={decision.confidenceLevel}
+              allocatedAp={decision.allocatedAp}
               stockInfo={{
                 name: decision.stock.name,
                 changeRate: decision.stock.changeRate,
@@ -99,7 +99,7 @@ export function PredictionDecisionCard({
             <DecisionResultModalContent
               isSuccess={detail.isCorrect ?? false}
               points={Math.abs(detail.apDelta ?? 0)}
-              confidenceLevel={decision.confidenceLevel}
+              allocatedAp={decision.allocatedAp}
               stockInfo={{
                 name: decision.stock.name,
                 changeRate: detail.stock.changeRate ?? 0,
