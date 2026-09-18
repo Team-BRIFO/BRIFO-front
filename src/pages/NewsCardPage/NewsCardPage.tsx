@@ -97,7 +97,7 @@ export function NewsCardPage() {
             <p className="text-Gray-6 pretendard-Caption2 text-center">
               카드뉴스 {cards.length}건을 사원이 모두 읽고 분석해요 · 종목당 1회
             </p>
-            {requestedCount === 3 ? (
+            {requestedCount > 0 ? (
               <Button
                 size="lg"
                 isFullWidth
@@ -109,31 +109,6 @@ export function NewsCardPage() {
               >
                 분석 현황 보기
               </Button>
-            ) : requestedCount > 0 ? (
-              <div className="flex w-full flex-col gap-2">
-                <Button
-                  size="lg"
-                  isFullWidth
-                  color="primary"
-                  disabled={!stockId}
-                  onClick={() => {
-                    if (stockId) navigate(PATH.BRIEFING_ASSIGN(stockId))
-                  }}
-                >
-                  사원에게 추가 분석 의뢰하기
-                </Button>
-                <Button
-                  size="lg"
-                  isFullWidth
-                  color="secondary"
-                  disabled={!stockId}
-                  onClick={() => {
-                    if (stockId) navigate(PATH.BRIEFING_FOR_STOCK(stockId))
-                  }}
-                >
-                  분석 현황 보기
-                </Button>
-              </div>
             ) : (
               <Button
                 size="lg"
