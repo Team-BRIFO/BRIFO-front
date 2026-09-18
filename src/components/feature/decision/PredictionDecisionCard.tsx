@@ -65,7 +65,6 @@ export function PredictionDecisionCard({
             name: decision.stock.name,
             logoUrl: decision.stock.logoUrl,
             price: decision.stock.price,
-            changeRate: decision.stock.changeRate,
           }}
         />
       </div>
