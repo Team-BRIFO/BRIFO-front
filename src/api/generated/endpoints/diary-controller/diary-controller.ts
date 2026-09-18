@@ -9,6 +9,7 @@ import type {
   ApiResponseCreateDiaryShareImageResponse,
   ApiResponseGetDiariesResponse,
   ApiResponseGetDiaryCalendarResponse,
+  ApiResponseGetDiaryDayDetailResponse,
   ApiResponseGetDiaryDetailResponse,
   ApiResponseGetDiaryStatsResponse,
   GetDiariesParams,
@@ -63,6 +64,15 @@ export const getDiaryCalendar = (
     options,
   )
 }
+export const getDiaryDayDetail = (
+  date: string,
+  options?: SecondParameter<typeof axiosInstance<ApiResponseGetDiaryDayDetailResponse>>,
+) => {
+  return axiosInstance<ApiResponseGetDiaryDayDetailResponse>(
+    { url: `/api/diaries/calendar/${date}`, method: 'GET' },
+    options,
+  )
+}
 export type CreateDiaryShareImageResult = NonNullable<
   Awaited<ReturnType<typeof createDiaryShareImage>>
 >
@@ -70,3 +80,4 @@ export type GetDiariesResult = NonNullable<Awaited<ReturnType<typeof getDiaries>
 export type GetDiaryDetailResult = NonNullable<Awaited<ReturnType<typeof getDiaryDetail>>>
 export type GetDiaryStatsResult = NonNullable<Awaited<ReturnType<typeof getDiaryStats>>>
 export type GetDiaryCalendarResult = NonNullable<Awaited<ReturnType<typeof getDiaryCalendar>>>
+export type GetDiaryDayDetailResult = NonNullable<Awaited<ReturnType<typeof getDiaryDayDetail>>>

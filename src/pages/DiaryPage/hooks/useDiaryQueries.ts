@@ -1,12 +1,14 @@
 import {
   getDiaries,
   getDiaryCalendar,
+  getDiaryDayDetail,
   getDiaryDetail,
   getDiaryStats,
 } from '@/api/generated/endpoints/diary-controller/diary-controller'
 import {
   ApiResponseGetDiariesResponse,
   ApiResponseGetDiaryCalendarResponse,
+  ApiResponseGetDiaryDayDetailResponse,
   ApiResponseGetDiaryDetailResponse,
   ApiResponseGetDiaryStatsResponse,
   type GetDiariesParams,
@@ -15,6 +17,7 @@ import { useApiInfiniteQuery, useApiQuery } from '@/hooks/api'
 import { diaryQueryKeys } from '@/hooks/queries/diary/diaryQueryKeys'
 import {
   mapDiaryCalendar,
+  mapDiaryDayDetail,
   mapDiaryDetail,
   mapDiaryEntryPage,
   mapDiaryStatistics,
@@ -34,6 +37,20 @@ export function useDiaryCalendarQuery(year: number, month: number, enabled: bool
     map: mapDiaryCalendar,
     staleTime: 0,
     enabled,
+  })
+}
+
+export function useDiaryDayDetailQuery(date: string | null, enabled: boolean = true) {
+  return useApiQuery({
+    queryKey: diaryQueryKeys.dayDetail(date ?? ''),
+    operation: getDiaryDayDetail,
+    endpoint: 'getDiaryDayDetail',
+    args: [date ?? ''],
+    responseSchema: ApiResponseGetDiaryDayDetailResponse,
+    response: 'requiredResult',
+    map: mapDiaryDayDetail,
+    staleTime: 0,
+    enabled: Boolean(date) && enabled,
   })
 }
 

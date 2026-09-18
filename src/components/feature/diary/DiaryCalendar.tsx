@@ -33,9 +33,6 @@ export function DiaryCalendar({
   selectedDate,
 }: DiaryCalendarProps) {
   const weeks = buildCalendarWeeks(year, month, marks)
-  const selectedOutcomes = selectedDate
-    ? (marks.find((mark) => mark.date === selectedDate)?.outcomes ?? [])
-    : null
 
   return (
     <div className="flex flex-col gap-4">
@@ -102,9 +99,7 @@ export function DiaryCalendar({
         </div>
       </div>
 
-      {selectedDate && selectedOutcomes && (
-        <DiaryDateDetail date={selectedDate} outcomes={selectedOutcomes} />
-      )}
+      {selectedDate && <DiaryDateDetail date={selectedDate} />}
 
       <DiaryHitRateCard hitRate={hitRate} variant="calendar" />
     </div>

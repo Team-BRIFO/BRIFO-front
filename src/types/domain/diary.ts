@@ -88,6 +88,26 @@ export interface DiaryCalendarData {
   hitRate: DiaryHitRate
 }
 
+/** 캘린더에서 날짜 하나를 골랐을 때 보여줄 그날의 결정 한 건 */
+export interface DiaryDayDetailItem {
+  diaryId: string
+  stockName: string
+  logoUrl?: string
+  changeRate: number
+  agentType: 'rookie' | 'pro' | 'tanker'
+  agentNickname: string
+  direction: DiaryDirection
+  confidenceLevel: number
+  isCorrect: boolean
+  apDelta: number
+}
+
+/** 캘린더 날짜별 상세 — 그날 등록한 결정 목록 */
+export interface DiaryDayDetail {
+  date: string
+  items: DiaryDayDetailItem[]
+}
+
 /** 통계 상단 요약 타일 1개 */
 export interface DiaryStatItem {
   id: string
