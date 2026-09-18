@@ -65,7 +65,7 @@ export function AnalyzeRequestModal({
             </Modal.Header>
             <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-2">
               <Button isFullWidth size="lg" color="primary" onClick={onPrimaryClick}>
-                내일까지 기다리기
+                사무실 바로가기
               </Button>
               <Button isFullWidth size="lg" color="assistive" onClick={onSecondaryClick}>
                 다른 카드뉴스 더보기
