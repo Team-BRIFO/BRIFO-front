@@ -2,12 +2,14 @@ import type {
   CreateDiaryShareImageResponseOutput,
   GetDiariesResponseOutput,
   GetDiaryCalendarResponseOutput,
+  GetDiaryDayDetailResponseOutput,
   GetDiaryDetailResponseOutput,
   GetDiaryStatsResponseOutput,
 } from '@/api/generated/schemas/diary-controller'
 import type {
   DiaryCalendarData,
   DiaryCalendarOutcome,
+  DiaryDayDetail,
   DiaryDetail,
   DiaryDirection,
   DiaryEntry,
@@ -74,6 +76,25 @@ export function mapDiaryCalendar(result: GetDiaryCalendarResponseOutput): DiaryC
       totalCount: result.settledDecisionCount,
       periodLabel: `${result.year}.${String(result.month).padStart(2, '0')}`,
     },
+  }
+}
+
+/** 캘린더 날짜별 상세 응답 → 도메인 */
+export function mapDiaryDayDetail(result: GetDiaryDayDetailResponseOutput): DiaryDayDetail {
+  return {
+    date: result.date,
+    items: result.items.map((item) => ({
+      diaryId: item.diaryId,
+      stockName: item.stock.name,
+      logoUrl: item.stock.logoUrl ?? undefined,
+      changeRate: item.stock.changeRate,
+      agentType: AGENT_TYPE_BY_CODE[item.agent.agentType],
+      agentNickname: item.agent.nickname,
+      direction: DIRECTION_BY_CODE[item.decision.direction],
+      confidenceLevel: item.decision.confidenceLevel,
+      isCorrect: item.decision.isCorrect,
+      apDelta: item.decision.apDelta,
+    })),
   }
 }
 

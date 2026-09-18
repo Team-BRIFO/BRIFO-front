@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   mapDiaryCalendar,
+  mapDiaryDayDetail,
   mapDiaryDetail,
   mapDiaryEntryPage,
   mapDiaryStatistics,
@@ -84,6 +85,82 @@ describe('diaryMapper', () => {
       direction: 'up',
       isCorrect: true,
     })
+  })
+
+  it('maps day-detail response fields from the nested stock/agent/decision DTOs', () => {
+    const dayDetail = mapDiaryDayDetail({
+      date: '2026-08-03',
+      items: [
+        {
+          diaryId: '8fd2c732-b4f1-4b66-b53a-95b5f11df391',
+          stock: {
+            stockId: '0d6d4f4a-7d5d-4e4d-bf71-4b59d18c1a01',
+            name: '삼성전자',
+            logoUrl: 'https://example.com/logo.png',
+            changeRate: 1.2,
+          },
+          agent: {
+            agentId: '0f2b7e7c-7d8a-4f4f-9b8e-0d1f3a2b9c11',
+            agentType: 'ROOKIE',
+            nickname: '루키',
+          },
+          decision: {
+            direction: 'UP',
+            confidenceLevel: 4,
+            isCorrect: true,
+            apDelta: 80,
+          },
+        },
+        {
+          diaryId: 'a1b2c3d4-1111-2222-3333-444455556666',
+          stock: {
+            stockId: '1a2b3c4d-5e6f-4a4a-8b8b-9c9c9c9c9c9c',
+            name: 'LG전자',
+            logoUrl: undefined,
+            changeRate: -0.8,
+          },
+          agent: {
+            agentId: '2b3c4d5e-6f7a-4b4b-9c9c-0d0d0d0d0d0d',
+            agentType: 'PRO',
+            nickname: '프로',
+          },
+          decision: {
+            direction: 'DOWN',
+            confidenceLevel: 2,
+            isCorrect: false,
+            apDelta: -30,
+          },
+        },
+      ],
+    })
+
+    expect(dayDetail.date).toBe('2026-08-03')
+    expect(dayDetail.items).toEqual([
+      {
+        diaryId: '8fd2c732-b4f1-4b66-b53a-95b5f11df391',
+        stockName: '삼성전자',
+        logoUrl: 'https://example.com/logo.png',
+        changeRate: 1.2,
+        agentType: 'rookie',
+        agentNickname: '루키',
+        direction: 'up',
+        confidenceLevel: 4,
+        isCorrect: true,
+        apDelta: 80,
+      },
+      {
+        diaryId: 'a1b2c3d4-1111-2222-3333-444455556666',
+        stockName: 'LG전자',
+        logoUrl: undefined,
+        changeRate: -0.8,
+        agentType: 'pro',
+        agentNickname: '프로',
+        direction: 'down',
+        confidenceLevel: 2,
+        isCorrect: false,
+        apDelta: -30,
+      },
+    ])
   })
 
   it('marks statistics empty only when there are no settled decisions at all', () => {
