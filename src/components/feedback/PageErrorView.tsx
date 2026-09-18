@@ -47,7 +47,7 @@ export function PageErrorView({
   } else if (status === 404) {
     // Not Found
     headerText = '404 Not Found'
-    title = '길을 잘못 드셨어요'
+    title = '길을 잘못 들었어요'
     description = '찾는 페이지가 없어요.\n홈으로 돌아갈까요?'
   } else if (status && status >= 500) {
     // Server Error

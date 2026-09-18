@@ -10,7 +10,7 @@ export function NotFoundPage() {
   return (
     <PageStatusTemplate
       headerText="404 Not Found"
-      title="길을 잘못 드셨어요"
+      title="길을 잘못 들었어요"
       description={
         <>
           찾는 페이지가 없어요.
