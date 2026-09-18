@@ -20,6 +20,9 @@ import { usePostDecisionMutation } from '@/pages/BriefingPage/hooks/usePostDecis
 import { useStockBriefingsQuery } from '@/pages/BriefingPage/hooks/useStockBriefingsQuery'
 import { PATH } from '@/routes/paths'
 
+/** 스와이프로 넘기기 위해 필요한 최소 이동 거리(px) */
+const SWIPE_THRESHOLD = 40
+
 export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()
   const navigate = useNavigate()
@@ -39,9 +42,31 @@ export function BriefingDetailPage() {
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
   const [errorModalMsg, setErrorModalMsg] = useState<string | null>(null)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
 
   const handleTabChange = (val: string) => {
     navigate(PATH.BRIEFING_DETAIL(val), { replace: true })
+  }
+
+  const tabItems = stockBriefings?.items.filter((item) => item.status === 'COMPLETED') ?? []
+  const currentTabIndex = tabItems.findIndex((item) => item.id === activeTab)
+
+  const moveToTab = (index: number) => {
+    const itemCount = tabItems.length
+    if (itemCount === 0 || currentTabIndex === -1) return
+    const nextItem = tabItems[((index % itemCount) + itemCount) % itemCount]
+    if (nextItem && nextItem.id !== activeTab) {
+      handleTabChange(nextItem.id)
+    }
+  }
+
+  const handleTouchEnd = (endX: number) => {
+    if (touchStartX === null) return
+    const deltaX = endX - touchStartX
+    if (Math.abs(deltaX) >= SWIPE_THRESHOLD) {
+      moveToTab(currentTabIndex + (deltaX < 0 ? 1 : -1))
+    }
+    setTouchStartX(null)
   }
 
   // 백엔드 API에서 제공되지 않는 agent 디테일 스펙(레벨, 승률, 의뢰비 등)을 AgentList API 결과를 통해 병합합니다.
@@ -83,6 +108,7 @@ export function BriefingDetailPage() {
             <Tabs
               variant="segmented"
               segmentedType={1}
+              sizeToContent
               value={activeTab}
               onChange={handleTabChange}
               items={
@@ -95,8 +121,12 @@ export function BriefingDetailPage() {
               }
             />
 
-            {/* 메인 브리핑 시트 (가운데 정렬) */}
-            <div className="mt-2 flex justify-center">
+            {/* 메인 브리핑 시트 (가운데 정렬, 좌우 스와이프로 사원 전환) */}
+            <div
+              className="mt-2 flex justify-center"
+              onTouchStart={(event) => setTouchStartX(event.touches[0].clientX)}
+              onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0].clientX)}
+            >
               {data && displayAgent && (
                 <BriefingMainContentSheet
                   agent={displayAgent}

@@ -37,7 +37,7 @@ export function BriefingTopCard({
 
       {/* Title_Wrapper */}
       <div className="flex w-full items-center">
-        <span className="dnf-Caption1 text-Gray-10 line-clamp-2">{newsTitleText}</span>
+        <span className="dnf-Caption1 text-Gray-10 leading-[1.5]">{newsTitleText}</span>
       </div>
     </div>
   )
