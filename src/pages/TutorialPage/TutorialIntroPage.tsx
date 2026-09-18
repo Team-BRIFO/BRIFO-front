@@ -25,7 +25,7 @@ export function TutorialIntroPage() {
       />
 
       <section
-        className={`mt-13 flex min-h-0 flex-1 flex-col overflow-hidden ${isReplay ? 'px-4' : ''}`}
+        className={`mt-4 flex min-h-0 flex-1 flex-col overflow-hidden ${isReplay ? 'px-4' : ''}`}
       >
         <div className="shrink-0">
           <h1 className="dnf-Title3 text-Gray-10 leading-[1.2]">

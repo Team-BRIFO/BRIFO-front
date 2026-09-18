@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { signupSession } from '@/api/client/signupSession'
 import { browserTokenStore } from '@/api/client/tokenStore'
-import BrifoTecLogo from '@/assets/logo/BRIFOTEC.svg'
 import { Badge } from '@/components/common/Badge'
 import BottomSheet from '@/components/common/BottomSheet'
 import Button from '@/components/common/Button'
+import Modal from '@/components/common/Modal'
 import { Toast } from '@/components/common/Toast'
 import { AgentCard } from '@/components/domain/agent/AgentCard'
 import { AgentChat } from '@/components/domain/agent/AgentChat'
@@ -39,13 +39,8 @@ import type { TutorialContent } from '@/types/domain/tutorial'
 /** 튜토리얼 시뮬레이션에서 사용하는 가상의 보유 자금 */
 const TUTORIAL_BALANCE_AP = 1_000_000
 
-/** 카드뉴스 상세·브리핑·예측 등 콘텐츠가 viewport를 넘는 STEP만 스크롤 허용 */
-const SCROLLABLE_TUTORIAL_CONTENTS: TutorialContent[] = [
-  'analysisReport',
-  'prediction',
-  'predictionRegistered',
-  'predictionResult',
-]
+/** 튜토리얼에서 유일하게 선택 가능한 카드뉴스(브리포테크)의 id */
+const TUTORIAL_BRIFO_NEWS_ID = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
 
 function CardNewsListStep({
   selectedId,
@@ -61,8 +56,8 @@ function CardNewsListStep({
       time="09:30"
       selectedId={selectedId}
       onItemClick={(id) => {
-        // 브리포테크(id: '3fa85f64-5717-4562-b3fc-2c963f66afa6' 또는 'BRIFO01')만 선택
-        if (id === '3fa85f64-5717-4562-b3fc-2c963f66afa6' || id === 'BRIFO01') {
+        // 브리포테크(id: TUTORIAL_BRIFO_NEWS_ID 또는 'BRIFO01')만 선택
+        if (id === TUTORIAL_BRIFO_NEWS_ID || id === 'BRIFO01') {
           onSelect(String(id))
         }
       }}
@@ -139,12 +134,13 @@ function AgentSelectionStep({
   onSelect: (id: string) => void
 }) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       {TUTORIAL_AGENTS.map((agent) => (
         <AgentCard
           key={agent.id}
           agent={agent}
           active={selectedAgentId === agent.id}
+          compact
           onClick={() => {
             if (agent.id === 'rookie') {
               onSelect(agent.id)
@@ -158,17 +154,25 @@ function AgentSelectionStep({
 
 function AnalysisRequestedStep() {
   return (
-    <section className="border-Gray-2 mt-9 flex w-full flex-col items-center rounded-xl border px-5 py-6 text-center">
-      <h2 className="dnf-Title4 text-Gray-10">분석을 의뢰했어요!</h2>
-      <p className="pretendard-Button2 text-Gray-6 mt-4 leading-relaxed font-normal">
-        루키 · 프로 · 탱커가 브리포테크 보고서를 쓰고 있어요.
-        <br />
-        사무실에서 진행 상황을 볼 수 있어요!
-      </p>
-      <div className="bg-Yellow-40 text-Pink-5 pretendard-Subtitle6 mt-5 w-72 rounded-3xl px-8 py-5">
-        내일까지 기다리기
-      </div>
-    </section>
+    <div className="bg-White mt-9 flex w-full flex-col items-center rounded-3xl px-5 py-6 shadow-lg">
+      <Modal.Header className="flex flex-col items-center gap-4 text-center">
+        <h2 className="dnf-Title4 text-Gray-10 m-0">분석을 의뢰했어요!</h2>
+        <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
+          루키가 브리포테크 보고서를 쓰고 있어요.
+          <br />
+          사무실에서 진행 상황을 볼 수 있어요!
+        </p>
+      </Modal.Header>
+      {/* 실제 동작은 하지 않는 미리보기용 버튼 — 진행은 하단 "다음" 버튼으로 */}
+      <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-2">
+        <Button isFullWidth size="lg" color="primary">
+          사무실 바로가기
+        </Button>
+        <Button isFullWidth size="lg" color="assistive">
+          다른 카드뉴스 더보기
+        </Button>
+      </Modal.Footer>
+    </div>
   )
 }
 
@@ -223,27 +227,37 @@ function PredictionStep({
   )
 }
 
-function PredictionRegisteredStep() {
+const MARKET_TYPE_LABEL: Record<string, string> = {
+  KOSPI: '코스피',
+  KOSDAQ: '코스닥',
+}
+
+function PredictionRegisteredStep({ selectedNewsId }: { selectedNewsId: string | null }) {
+  // 이전 스텝(카드뉴스 선택)에서 고른 자산을 그대로 보여준다
+  const selectedNews =
+    TUTORIAL_HOME_CARD_NEWS_MOCK.find((item) => String(item.id) === selectedNewsId) ??
+    TUTORIAL_HOME_CARD_NEWS_MOCK[0]
+  const { stock } = selectedNews
+
   return (
     <section className="border-Gray-2 flex flex-col items-center rounded-2xl border px-4 py-7 text-center">
       <h2 className="dnf-Subtitle2 text-Gray-10">예측 등록 완료!</h2>
-      <strong className="dnf-Title2 text-Yellow-30 mt-2">+100 AP</strong>
       <AnalyzeCard
         type="normal"
         resultType="HASHTAG"
         stock={{
-          name: '브리포테크',
-          code: 'BRIFO01',
-          marketType: '코스피',
-          logoUrl: BrifoTecLogo,
-          price: 31850,
-          changeRate: 17.96,
+          name: stock.name,
+          code: stock.code,
+          marketType: MARKET_TYPE_LABEL[stock.marketType] ?? stock.marketType,
+          logoUrl: stock.logoUrl,
+          price: stock.price,
+          changeRate: stock.changeRate,
           keywords: ['HBM', '반도체', '외국인 순매수'],
         }}
         className="mt-5"
       />
       <p className="pretendard-Caption2 text-Gray-6 mt-5 text-center leading-[1.4]">
-        <span className="text-Pink-30">오늘 15:30</span> 장 마감에 자동으로 정산돼요.
+        <span className="text-Pink-30">장 마감 시</span> 자동으로 정산돼요.
         <br />
         결과는 알림으로 알려드릴게요!
       </p>
@@ -251,14 +265,15 @@ function PredictionRegisteredStep() {
   )
 }
 
-function PredictionResultStep() {
+function PredictionResultStep({ allocatedAp }: { allocatedAp: number }) {
   return (
     <DecisionResultCard
-      points={100}
+      // 카드 문구가 "2배 적중 보너스"이므로 배분액의 2배를 적중 보상으로 표시한다
+      points={allocatedAp * 2}
       stockName="브리포테크"
       changeRate={8.1}
       resultText="상승 적중"
-      allocatedAp={40_000}
+      allocatedAp={allocatedAp}
       comment="사장님, 제가 된다고 했잖아요!"
     />
   )
@@ -312,9 +327,9 @@ function renderStepContent({
         />
       )
     case 'predictionRegistered':
-      return <PredictionRegisteredStep />
+      return <PredictionRegisteredStep selectedNewsId={selectedNewsId} />
     case 'predictionResult':
-      return <PredictionResultStep />
+      return <PredictionResultStep allocatedAp={allocatedAp} />
   }
 }
 
@@ -328,7 +343,7 @@ export function TutorialPage() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [selectedAgentId, setSelectedAgentId] = useState(TUTORIAL_AGENTS[0].id)
-  const [selectedNewsId, setSelectedNewsId] = useState<string | null>(null)
+  const [selectedNewsId, setSelectedNewsId] = useState<string | null>(TUTORIAL_BRIFO_NEWS_ID)
   const [direction, setDirection] = useState<PredictionType | null>('UP')
   const [allocatedAp, setAllocatedAp] = useState(Math.floor(TUTORIAL_BALANCE_AP * 0.2))
 
@@ -403,7 +418,6 @@ export function TutorialPage() {
         buttonLabel={currentStep.buttonLabel}
         nextDisabled={currentStep.content === 'cardNewsList' && !selectedNewsId}
         skipDisabled={!isReplay && isSubmitting}
-        isContentScrollable={SCROLLABLE_TUTORIAL_CONTENTS.includes(currentStep.content)}
         isReplay={isReplay}
         onNext={handleNext}
         onSkip={isReplay ? navigateSettings : handleSkip}

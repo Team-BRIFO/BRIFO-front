@@ -30,7 +30,10 @@ export default function TutorialComplete({
       />
 
       <AdaptiveScrollArea className={isReplay ? 'px-4' : ''}>
-        <h1 className="dnf-Title3 text-Gray-10 leading-[1.2]">
+        <h1
+          className="dnf-Title3 text-Gray-10 leading-[1.2]"
+          style={isReplay ? { fontSize: 'clamp(1.5rem, 6vw, 1.75rem)' } : undefined}
+        >
           {isReplay ? '튜토리얼을 다시 살펴봤어요!' : '튜토리얼 완료!'}
           <br />
           <span className="text-Brand-Highlight">

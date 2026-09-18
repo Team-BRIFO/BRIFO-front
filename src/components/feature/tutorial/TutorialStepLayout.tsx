@@ -12,8 +12,6 @@ interface TutorialStepLayoutProps {
   buttonLabel?: string
   nextDisabled?: boolean
   skipDisabled?: boolean
-  /** 콘텐츠가 긴 STEP만 내부 스크롤 허용 */
-  isContentScrollable?: boolean
   /** 설정에서 다시 보는 튜토리얼은 설정 하위 화면 헤더를 사용한다. */
   isReplay?: boolean
   onNext: () => void
@@ -28,7 +26,6 @@ export default function TutorialStepLayout({
   buttonLabel = '다음',
   nextDisabled = false,
   skipDisabled = false,
-  isContentScrollable = false,
   isReplay = false,
   onNext,
   onSkip,
@@ -47,7 +44,7 @@ export default function TutorialStepLayout({
       />
 
       <section
-        className={`mt-8 flex min-h-0 flex-1 flex-col ${isContentScrollable ? 'overflow-y-auto overscroll-y-contain' : 'overflow-hidden'} ${isReplay ? 'px-4' : ''}`}
+        className={`mt-4 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain ${isReplay ? 'px-4' : ''}`}
       >
         <div className="shrink-0">
           <p className="dnf-Title3 text-Gray-10 leading-[1.15] break-keep">STEP {step}</p>
@@ -57,13 +54,9 @@ export default function TutorialStepLayout({
           </p>
         </div>
 
-        <AgentChat type="rookie" message={message} className="mt-8 shrink-0" />
+        <AgentChat type="rookie" message={message} className="mt-6 shrink-0" />
 
-        <div
-          className={`mt-8 ${isContentScrollable ? 'shrink-0 pb-2' : 'min-h-0 flex-1 overflow-hidden'}`}
-        >
-          {children}
-        </div>
+        <div className="mt-6 shrink-0 pb-2">{children}</div>
       </section>
 
       <div className={`shrink-0 ${isReplay ? 'mx-4 flex justify-center' : ''}`}>

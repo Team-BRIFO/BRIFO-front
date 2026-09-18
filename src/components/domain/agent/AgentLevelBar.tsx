@@ -11,6 +11,8 @@ export interface AgentLevelBarProps {
   /** 레벨업 진행률 (0~100, %) — 바가 채워지는 비율 */
   levelProgress: number
   className?: string
+  /** 세로 공간이 좁은 목록(예: 튜토리얼)에서 바 높이를 줄인다 */
+  compact?: boolean
 }
 
 /**
@@ -18,7 +20,13 @@ export interface AgentLevelBarProps {
  * - 공용 ProgressBar 하나로 구성 (트랙/필 색 + LV/% 오버레이)
  * - 목록 카드 / 프로필 카드에서 공통 사용
  */
-export function AgentLevelBar({ type, level, levelProgress, className = '' }: AgentLevelBarProps) {
+export function AgentLevelBar({
+  type,
+  level,
+  levelProgress,
+  className = '',
+  compact = false,
+}: AgentLevelBarProps) {
   const { levelTrackClassName, levelFillClassName, levelTextClassName } = AGENT_THEME[type]
 
   return (
@@ -26,10 +34,15 @@ export function AgentLevelBar({ type, level, levelProgress, className = '' }: Ag
       progress={levelProgress}
       barColor={levelFillClassName}
       trackColor={levelTrackClassName}
-      heightClassName="h-7"
+      heightClassName={compact ? 'h-6' : 'h-7'}
       className={twMerge('overflow-hidden rounded-none', className)}
     >
-      <div className={twMerge('flex h-full items-center justify-between px-4', levelTextClassName)}>
+      <div
+        className={twMerge(
+          `flex h-full items-center justify-between ${compact ? 'px-3' : 'px-4'}`,
+          levelTextClassName,
+        )}
+      >
         <span className="dnf-Caption2">LV. {level}</span>
         <span className="pretendard-Caption1">{levelProgress}%</span>
       </div>
