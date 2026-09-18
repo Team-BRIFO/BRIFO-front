@@ -4,6 +4,16 @@ import { twMerge } from 'tailwind-merge'
 import { formatWon, getApAmountColorClass } from '@/components/domain/ap/apTransactionMeta'
 import type { ApSummary } from '@/types/domain/ap'
 
+/** 잔액 자릿수가 늘어나도 카드 밖으로 밀려나거나 줄바꿈되지 않도록 글자 수에 맞춰 폰트를 단계적으로 줄인다. */
+function getBalanceFontClass(text: string) {
+  const length = text.length
+  if (length <= 7) return 'dnf-Subtitle1'
+  if (length <= 8) return 'dnf-Subtitle2'
+  if (length <= 10) return 'dnf-Subtitle3'
+  if (length <= 13) return 'dnf-Caption1'
+  return 'dnf-Caption2'
+}
+
 export interface ApBalanceCardProps extends HTMLAttributes<HTMLDivElement> {
   summary: ApSummary
   /**
@@ -31,15 +41,20 @@ export function ApBalanceCard({
   return (
     <div
       className={twMerge(
-        'border-Gray-2 bg-White flex h-17.75 items-center justify-between rounded-lg border px-5 py-4',
+        'border-Gray-2 bg-White flex min-h-17.75 items-center justify-between gap-2 rounded-lg border px-5 py-4',
         className,
       )}
       {...props}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex min-w-0 flex-col gap-2">
         <span className="pretendard-Caption3 text-Gray-6 leading-none">보유 자금</span>
-        <p className="dnf-Subtitle1 text-Gray-10 flex items-center gap-1.5 leading-none">
-          <span>{formatWon(balance)}</span>
+        <p
+          className={twMerge(
+            getBalanceFontClass(formatWon(balance)),
+            'text-Gray-10 flex min-w-0 items-center gap-1.5 leading-none',
+          )}
+        >
+          <span className="truncate">{formatWon(balance)}</span>
           {onChargeClick && (
             <button
               type="button"
@@ -56,7 +71,7 @@ export function ApBalanceCard({
       {deltaLabel && (
         <div
           className={twMerge(
-            'dnf-Caption2 flex items-center gap-2 leading-none',
+            'dnf-Caption2 flex shrink-0 items-center gap-2 leading-none',
             getApAmountColorClass(delta),
           )}
         >

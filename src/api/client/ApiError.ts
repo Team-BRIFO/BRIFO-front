@@ -86,7 +86,7 @@ function getHttpMessage(status: number, code?: string) {
     if (code === 'BRIEFING_409_05') return '최초 의뢰에 포함되지 않은 사원은 추가할 수 없습니다.'
     if (code === 'BRIEFING_409_01') return '이미 요청한 브리핑입니다.'
     if (code === 'BRIEFING_409_06') return '오늘의 브리핑 의뢰 시간이 마감되었습니다.'
-    if (code === 'AP_409_05') return 'AP가 부족합니다.'
+    if (code === 'AP_409_05') return '자금이 부족합니다.'
     return '현재 상태에서는 요청을 처리할 수 없습니다.'
   }
   if (status >= 500) return '서버에서 요청을 처리하지 못했습니다.'

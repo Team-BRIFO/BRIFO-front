@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+import Button from '@/components/common/Button'
+import Modal from '@/components/common/Modal'
 import { formatWon } from '@/components/domain/ap/apTransactionMeta'
 import { PageErrorView } from '@/components/feedback/PageErrorView'
 import { PageLoadingView } from '@/components/feedback/PageLoadingView'
-import { StatusMessage } from '@/components/feedback/StatusMessage'
 import { useConfirmPaymentMutation } from '@/hooks/queries/payment/usePaymentQueries'
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
@@ -51,14 +52,28 @@ export function ChargeSuccessPage() {
     )
   }
 
+  const handleGoToMyPage = () => navigate(PATH.MY_PAGE, { replace: true })
+
   return (
     <MyPageLayout title="자금 충전">
-      <StatusMessage
-        title="충전이 완료됐어요!"
-        description={`${formatWon(Number(amount))}이 자금에 반영됐어요.\n현재 잔액 ${formatWon(confirmPaymentMutation.data.balanceAp)}`}
-        buttonText="마이페이지로"
-        onButtonClick={() => navigate(PATH.MY_PAGE, { replace: true })}
-      />
+      <Modal
+        isOpen
+        onClose={handleGoToMyPage}
+        ariaLabel="충전 완료"
+        shouldCloseOnOverlayClick={false}
+      >
+        <Modal.Header className="flex flex-col items-center gap-2 text-center">
+          <h2 className="dnf-Subtitle2 text-Gray-10 m-0">충전이 완료됐어요!</h2>
+          <p className="pretendard-Caption1 text-Gray-6 m-0 text-center leading-[132%] whitespace-pre-line">
+            {`${formatWon(Number(amount))}이 자금에 반영됐어요.\n현재 잔액 ${formatWon(confirmPaymentMutation.data.balanceAp)}`}
+          </p>
+        </Modal.Header>
+        <Modal.Footer className="mt-5">
+          <Button isFullWidth size="lg" color="primary" onClick={handleGoToMyPage}>
+            마이페이지로
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </MyPageLayout>
   )
 }
