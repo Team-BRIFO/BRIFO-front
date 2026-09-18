@@ -66,13 +66,14 @@ export function AppLayout() {
       >
         <Outlet />
       </main>
-      <div className="z-40 flex w-full shrink-0 justify-center">
+      <div className="z-40 flex w-full shrink-0 flex-col items-center">
         <NavigationBar
           value={selectedNavigation}
           onChange={handleNavigationChange}
           isFullWidth
           className="max-md:w-full md:max-w-3xl"
         />
+        <div className="bg-White h-2 w-full sm:h-3 md:h-4" />
       </div>
       <PolicyReagreementBottomSheet
         isOpen={policyReagreement.isOpen}
