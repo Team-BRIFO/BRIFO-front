@@ -181,23 +181,25 @@ export function AnalyzeCard({
                 <div className="flex items-center gap-1.5">
                   <span className="text-Gray-10 pretendard-Body2-Semibold">{stock.name}</span>
                 </div>
-                {stock.price !== undefined && stock.changeRate !== undefined && (
+                {stock.price !== undefined && (
                   <div className="flex items-center gap-1">
                     <span className="text-Gray-5 pretendard-Caption3">
                       {stock.price.toLocaleString()}
                     </span>
-                    <span
-                      className={`pretendard-Caption1 ${
-                        stock.changeRate > 0
-                          ? 'text-Pink-30'
-                          : stock.changeRate < 0
-                            ? 'text-Green-30'
-                            : 'text-Gray-6'
-                      }`}
-                    >
-                      {stock.changeRate > 0 ? '+' : ''}
-                      {stock.changeRate}%
-                    </span>
+                    {stock.changeRate !== undefined && (
+                      <span
+                        className={`pretendard-Caption1 ${
+                          stock.changeRate > 0
+                            ? 'text-Pink-30'
+                            : stock.changeRate < 0
+                              ? 'text-Green-30'
+                              : 'text-Gray-6'
+                        }`}
+                      >
+                        {stock.changeRate > 0 ? '+' : ''}
+                        {stock.changeRate}%
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
@@ -259,8 +261,19 @@ export function AnalyzeCard({
               <div className="bg-Background1 flex items-center justify-between px-4 py-2">
                 <div className="flex items-center gap-3">
                   <span className="pretendard-Caption1 text-Gray-8">
-                    현재 {predictionFooter.currentRate > 0 ? '+' : ''}
-                    {predictionFooter.currentRate}%
+                    현재{' '}
+                    <span
+                      className={
+                        predictionFooter.currentRate > 0
+                          ? 'text-Pink-30'
+                          : predictionFooter.currentRate < 0
+                            ? 'text-Green-30'
+                            : 'text-Gray-8'
+                      }
+                    >
+                      {predictionFooter.currentRate > 0 ? '+' : ''}
+                      {predictionFooter.currentRate}%
+                    </span>
                   </span>
                 </div>
               </div>
