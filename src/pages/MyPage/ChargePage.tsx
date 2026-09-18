@@ -6,7 +6,9 @@ import { useReadyPaymentMutation } from '@/hooks/queries/payment/usePaymentQueri
 import { MyPageLayout } from '@/pages/MyPage/MyPageLayout'
 import { PATH } from '@/routes/paths'
 
-const PRESET_AMOUNTS = [10_000, 30_000, 50_000, 100_000, 300_000, 500_000]
+const PRESET_AMOUNTS = [1_000, 3_000, 5_000, 10_000, 30_000, 50_000]
+/** 결제 1원당 지급되는 게임 자금 배율 (서버 PaymentService와 동일한 값) */
+const CHARGE_EXCHANGE_MULTIPLIER = 50
 
 /** 자금 충전 — 토스페이먼츠 결제창(카드) 연동 */
 export function ChargePage() {
@@ -93,9 +95,17 @@ export function ChargePage() {
           />
         </div>
 
-        <div className="border-Gray-2 bg-Background1 flex items-center justify-between rounded-lg border px-4 py-3.5">
-          <span className="pretendard-Caption2 text-Gray-6">충전 금액</span>
-          <span className="dnf-Subtitle3 text-Gray-10">{formatWon(amount)}</span>
+        <div className="border-Gray-2 bg-Background1 flex flex-col gap-1.5 rounded-lg border px-4 py-3.5">
+          <div className="flex items-center justify-between">
+            <span className="pretendard-Caption2 text-Gray-6">결제 금액</span>
+            <span className="pretendard-Caption1 text-Gray-8">{formatWon(amount)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="pretendard-Caption2 text-Gray-6">지급되는 자금</span>
+            <span className="dnf-Subtitle3 text-Gray-10">
+              {formatWon(amount * CHARGE_EXCHANGE_MULTIPLIER)}
+            </span>
+          </div>
         </div>
 
         {errorMessage && (
