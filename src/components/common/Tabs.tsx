@@ -30,6 +30,12 @@ export interface TabsProps {
    * 2: Type 2 (316px, space-between, 반경 40px)
    */
   segmentedType?: 1 | 2
+  /**
+   * segmented Type 1 전용: 전체 너비를 3개 항목 기준(213px) 고정폭으로 두는 대신,
+   * 항목 개수에 비례해 늘어나도록 함 (1~2개일 때 탭이 불필요하게 넓어지는 것을 방지).
+   * 탭 1개당 폭은 3개 기준일 때와 동일하게 유지된다.
+   */
+  sizeToContent?: boolean
   /** 전체 비활성화 여부 */
   disabled?: boolean
   /** 추가 스타일 className */
@@ -44,6 +50,7 @@ export function Tabs({
   ariaLabel = '탭 메뉴',
   isFullWidth = false,
   segmentedType = 1,
+  sizeToContent = false,
   disabled = false,
   className = '',
 }: TabsProps) {
@@ -122,13 +129,21 @@ export function Tabs({
     }
   }, [activeIndex, variant, items.length])
 
+  // segmented Type 1 기준폭(213px)은 3개 항목 기준이므로, 항목 수에 비례해 컨테이너 폭을 줄인다.
+  const SEGMENTED_TYPE1_REFERENCE_COUNT = 3
+  const segmentedType1Width =
+    variant === 'segmented' && segmentedType === 1 && sizeToContent
+      ? `${(59.16 * Math.min(items.length, SEGMENTED_TYPE1_REFERENCE_COUNT)) / SEGMENTED_TYPE1_REFERENCE_COUNT}%`
+      : undefined
+
   // ─── Render Logic ───
   return (
     <div
       ref={containerRef}
       role="tablist"
       aria-label={ariaLabel}
-      className={`${getContainerClass(variant, isFullWidth, segmentedType, className)} relative z-0`}
+      className={`${getContainerClass(variant, isFullWidth, segmentedType, sizeToContent, className)} relative z-0`}
+      style={segmentedType1Width ? { width: segmentedType1Width } : undefined}
     >
       {variant === 'segmented' && activeIndex !== -1 && (
         <div
@@ -179,6 +194,7 @@ function getContainerClass(
   variant: TabsVariant,
   isFullWidth: boolean,
   segmentedType: 1 | 2,
+  sizeToContent: boolean,
   className: string,
 ): string {
   const base = ['flex items-center', className]
@@ -195,8 +211,11 @@ function getContainerClass(
         'h-6 justify-between rounded-[40px] bg-Background1',
       )
     } else {
-      // Type 1 (리스트/통계 등, 213px)
-      base.push(isFullWidth ? 'w-full' : 'w-[59.16%]', 'h-6 gap-1 rounded-[30px] bg-Gray-2')
+      // Type 1 (리스트/통계 등, 213px). sizeToContent일 때는 인라인 style로 폭을 지정한다.
+      base.push(
+        sizeToContent ? '' : isFullWidth ? 'w-full' : 'w-[59.16%]',
+        'h-6 gap-1 rounded-[30px] bg-Gray-2',
+      )
     }
   } else if (variant === 'underline') {
     base.push('border-b border-Gray-2 gap-4')
@@ -225,7 +244,7 @@ function getItemClass(
     // 폰트 스타일
     base.push(isActive ? 'pretendard-Caption1 text-White' : 'pretendard-Caption1 text-Gray-6')
 
-    // 구조 및 배경 스타일
+    // 구조 및 배경 스타일 (항목은 항상 컨테이너 폭을 균등 분배)
     if (segmentedType === 2) {
       base.push('h-full flex-1 rounded-[40px]')
       // 배경색은 애니메이션용 absolute div가 담당하므로 제거
