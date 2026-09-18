@@ -58,7 +58,7 @@ export function DiaryDateDetail({ date, className = '' }: DiaryDateDetailProps) 
           {data!.items.map((item) => (
             <li key={item.diaryId} className="flex items-center gap-2">
               <AgentAvatar type={item.agentType} size={32} />
-              <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <p className="pretendard-Caption2 text-Gray-6 truncate">
                   {item.agentNickname} · {DIRECTION_LABEL[item.direction]} 배분{' '}
                   {ALLOCATION_RATE_LEVEL_LABEL[allocationRateBand(item.allocationRatePercent)]}
