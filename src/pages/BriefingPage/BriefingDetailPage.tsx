@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { type PointerEvent, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Modal from '@/components/common/Modal'
@@ -22,6 +22,8 @@ import { PATH } from '@/routes/paths'
 
 /** 스와이프로 넘기기 위해 필요한 최소 이동 거리(px) */
 const SWIPE_THRESHOLD = 40
+/** 캐러셀에서 한 칸(사원 하나) 넘어갈 때의 이동폭 — 뷰포트 기준 100% */
+const SLOT_SHIFT_PERCENT = 100
 
 export function BriefingDetailPage() {
   const { briefingId } = useParams<{ briefingId: string }>()
@@ -42,7 +44,21 @@ export function BriefingDetailPage() {
   const [isDecisionSheetOpen, setIsDecisionSheetOpen] = useState(false)
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false)
   const [errorModalMsg, setErrorModalMsg] = useState<string | null>(null)
-  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  // 드래그 중인지 여부만 React state로 관리한다 (커서·텍스트 선택 스타일용, 저빈도 갱신).
+  const [isDragging, setIsDragging] = useState(false)
+
+  // 실제 드래그 위치(transform)는 매 프레임 리렌더를 피하기 위해 DOM에 직접 반영한다.
+  const stripRef = useRef<HTMLDivElement>(null)
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null)
+  const dragXRef = useRef(0)
+  const settleDirectionRef = useRef<1 | -1 | null>(null)
+
+  const setStripTransform = (extraPercent: number, px: number, withTransition: boolean) => {
+    const el = stripRef.current
+    if (!el) return
+    el.style.transition = withTransition ? 'transform 250ms ease-out' : 'none'
+    el.style.transform = `translateX(calc(${extraPercent}% + ${px}px))`
+  }
 
   const handleTabChange = (val: string) => {
     navigate(PATH.BRIEFING_DETAIL(val), { replace: true })
@@ -51,27 +67,111 @@ export function BriefingDetailPage() {
   const tabItems = stockBriefings?.items.filter((item) => item.status === 'COMPLETED') ?? []
   const currentTabIndex = tabItems.findIndex((item) => item.id === activeTab)
 
+  // 드래그 중 옆 탭이 함께 보이도록 이전/다음 사원의 브리핑을 미리 불러온다.
+  const prevTabItem = currentTabIndex > 0 ? tabItems[currentTabIndex - 1] : null
+  const nextTabItem =
+    currentTabIndex !== -1 && currentTabIndex < tabItems.length - 1
+      ? tabItems[currentTabIndex + 1]
+      : null
+  const { data: prevData } = useBriefingDetailQuery(prevTabItem?.id ?? null)
+  const { data: nextData } = useBriefingDetailQuery(nextTabItem?.id ?? null)
+
   const moveToTab = (index: number) => {
     const itemCount = tabItems.length
     if (itemCount === 0 || currentTabIndex === -1) return
-    const nextItem = tabItems[((index % itemCount) + itemCount) % itemCount]
+    // 첫/마지막 탭을 넘어가는 스와이프는 반대쪽 끝으로 순환하지 않고 그 자리에 머무른다.
+    const clampedIndex = Math.max(0, Math.min(itemCount - 1, index))
+    const nextItem = tabItems[clampedIndex]
     if (nextItem && nextItem.id !== activeTab) {
       handleTabChange(nextItem.id)
     }
   }
 
-  const handleTouchEnd = (endX: number) => {
-    if (touchStartX === null) return
-    const deltaX = endX - touchStartX
-    if (Math.abs(deltaX) >= SWIPE_THRESHOLD) {
-      moveToTab(currentTabIndex + (deltaX < 0 ? 1 : -1))
+  // 탭이 바뀌면(스와이프 확정이든 탭 클릭이든) 트랜지션 없이 기준 위치로 스트립을 되돌린다.
+  // 브라우저가 그리기 전에(useLayoutEffect) 동기적으로 되돌려야 내용은 바뀌었는데
+  // 위치는 그대로인 한 프레임짜리 "깜빡임"이 생기지 않는다.
+  useLayoutEffect(() => {
+    settleDirectionRef.current = null
+    setStripTransform(0, 0, false)
+  }, [activeTab])
+
+  // 스와이프를 확정해 한 칸 슬라이드하는 애니메이션이 끝나면 실제 탭을 전환한다.
+  useEffect(() => {
+    const el = stripRef.current
+    if (!el) return
+
+    const handleTransitionEnd = (event: globalThis.TransitionEvent) => {
+      if (event.target !== el || event.propertyName !== 'transform') return
+      const direction = settleDirectionRef.current
+      if (direction === null) return
+      moveToTab(currentTabIndex + direction)
     }
-    setTouchStartX(null)
+
+    el.addEventListener('transitionend', handleTransitionEnd)
+    return () => el.removeEventListener('transitionend', handleTransitionEnd)
+  })
+
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    // 마우스는 좌클릭 드래그만 스와이프로 인식한다 (터치·펜은 button이 항상 0).
+    if (event.pointerType === 'mouse' && event.button !== 0) return
+    // 이전 스와이프가 다음 칸으로 넘어가는 애니메이션 중이면 새 드래그를 시작하지 않는다.
+    if (settleDirectionRef.current !== null) return
+    event.currentTarget.setPointerCapture(event.pointerId)
+    dragStartRef.current = { x: event.clientX, y: event.clientY }
+    dragXRef.current = 0
+    setIsDragging(true)
+  }
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const start = dragStartRef.current
+    if (!start) return
+
+    const deltaX = event.clientX - start.x
+    const deltaY = event.clientY - start.y
+    // 세로 스크롤 의도로 보이면 드래그를 적용하지 않는다.
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return
+
+    // 첫/마지막 탭에는 이동할 옆 탭 자체가 없으므로 그 방향으로는 전혀 움직이지 않는다.
+    const isAtStart = currentTabIndex <= 0 && deltaX > 0
+    const isAtEnd = currentTabIndex >= tabItems.length - 1 && deltaX < 0
+    if (isAtStart || isAtEnd) return
+
+    dragXRef.current = deltaX
+    // React 리렌더 없이 DOM에 직접 반영해 드래그 중 프레임 드랍을 막는다.
+    setStripTransform(0, deltaX, false)
+  }
+
+  const handlePointerUp = () => {
+    if (!dragStartRef.current) return
+    dragStartRef.current = null
+    setIsDragging(false)
+
+    if (Math.abs(dragXRef.current) >= SWIPE_THRESHOLD) {
+      // 놓았을 때 그 자리에서 멈추지 않고, 드래그하던 방향으로 한 칸 마저 슬라이드한 뒤(트랜지션 종료 시점에)
+      // 실제 탭을 전환한다 — 화면이 이어서 자연스럽게 넘어가는 것처럼 보이게 하기 위함.
+      const direction = dragXRef.current < 0 ? 1 : -1
+      settleDirectionRef.current = direction
+      setStripTransform(direction * -SLOT_SHIFT_PERCENT, 0, true)
+    } else {
+      setStripTransform(0, 0, true)
+    }
+  }
+
+  const cancelDrag = () => {
+    dragStartRef.current = null
+    setIsDragging(false)
+    setStripTransform(0, 0, true)
   }
 
   // 백엔드 API에서 제공되지 않는 agent 디테일 스펙(레벨, 승률, 의뢰비 등)을 AgentList API 결과를 통해 병합합니다.
-  const realAgent = data ? agentsList?.find((a) => a.id === data.agent.id) : undefined
-  const displayAgent = data ? { ...data.agent, ...(realAgent ?? {}) } : undefined
+  const mergeAgent = (briefingData: typeof data) => {
+    if (!briefingData) return undefined
+    const realAgent = agentsList?.find((a) => a.id === briefingData.agent.id)
+    return { ...briefingData.agent, ...(realAgent ?? {}) }
+  }
+  const displayAgent = mergeAgent(data)
+  const prevDisplayAgent = mergeAgent(prevData)
+  const nextDisplayAgent = mergeAgent(nextData)
 
   return (
     <div className="bg-Background1 flex min-h-full w-full flex-col gap-3 pb-8">
@@ -121,19 +221,59 @@ export function BriefingDetailPage() {
               }
             />
 
-            {/* 메인 브리핑 시트 (가운데 정렬, 좌우 스와이프로 사원 전환) */}
+            {/* 메인 브리핑 시트 캐러셀 (좌우 스와이프/드래그 시 옆 사원 탭이 함께 보임) */}
             <div
-              className="mt-2 flex justify-center"
-              onTouchStart={(event) => setTouchStartX(event.touches[0].clientX)}
-              onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0].clientX)}
+              className="mt-2 overflow-hidden"
+              style={{ touchAction: 'pan-y' }}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={cancelDrag}
             >
-              {data && displayAgent && (
-                <BriefingMainContentSheet
-                  agent={displayAgent}
-                  briefing={data.briefing}
-                  onConfirm={() => setIsDecisionSheetOpen(true)}
-                />
-              )}
+              <div
+                ref={stripRef}
+                className="relative w-full"
+                style={{
+                  transform: 'translateX(0px)',
+                  userSelect: isDragging ? 'none' : undefined,
+                  cursor: isDragging ? 'grabbing' : 'grab',
+                }}
+              >
+                {/* 이전/다음 칸은 absolute로 띄워 현재 칸의 높이에 영향을 주지 않는다 (높이는 현재 칸 기준). */}
+                <div
+                  className="absolute top-0 flex w-full justify-center px-1"
+                  style={{ left: '-100%' }}
+                >
+                  {prevData && prevDisplayAgent && (
+                    <BriefingMainContentSheet
+                      agent={prevDisplayAgent}
+                      briefing={prevData.briefing}
+                      onConfirm={() => setIsDecisionSheetOpen(true)}
+                    />
+                  )}
+                </div>
+                <div className="flex w-full justify-center px-1">
+                  {data && displayAgent && (
+                    <BriefingMainContentSheet
+                      agent={displayAgent}
+                      briefing={data.briefing}
+                      onConfirm={() => setIsDecisionSheetOpen(true)}
+                    />
+                  )}
+                </div>
+                <div
+                  className="absolute top-0 flex w-full justify-center px-1"
+                  style={{ left: '100%' }}
+                >
+                  {nextData && nextDisplayAgent && (
+                    <BriefingMainContentSheet
+                      agent={nextDisplayAgent}
+                      briefing={nextData.briefing}
+                      onConfirm={() => setIsDecisionSheetOpen(true)}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
