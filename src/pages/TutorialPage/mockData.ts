@@ -45,10 +45,11 @@ export const TUTORIAL_NEWS_CARD_MOCK: NewsCardData = {
   importanceBadge: 'HOT',
   source: '브리포뉴스',
   points: [
-    '브리포테크가 내부 개발 중인 차세대 공정 모듈 1단계 성능 검증 착수',
+    '브리포테크가 내부 개발 중인 차세대 HBM 공정 모듈 1단계 성능 검증 착수',
     '반복 작동 안정성 및 처리 효율 점검 후 하반기 통합 시험 전환 계획',
     '현재 주요 시험 항목은 계획 범위 내 진행 중',
   ],
+  terms: [{ termId: 'hbm', surface: 'HBM', displayOrder: 1 }],
   relatedStocks: [{ name: '브리포테크' }],
 }
 

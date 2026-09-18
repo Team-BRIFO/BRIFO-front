@@ -11,6 +11,8 @@ export interface AgentCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElem
   agent: AgentSummary
   /** 선택/활성 상태 — 타입 색 테두리(2px)로 강조 */
   active?: boolean
+  /** 세로 공간이 좁은 목록(예: 튜토리얼)에서 아바타·여백을 줄인다 */
+  compact?: boolean
 }
 
 interface StatItemProps {
@@ -28,7 +30,13 @@ function StatItem({ label, value }: StatItemProps) {
 }
 
 /** 사원 목록 카드 (AI_level: 아바타 · 이름/모델 · 적중/일급 · 레벨 바 · Active 상태) */
-export function AgentCard({ agent, active = false, className = '', ...props }: AgentCardProps) {
+export function AgentCard({
+  agent,
+  active = false,
+  compact = false,
+  className = '',
+  ...props
+}: AgentCardProps) {
   const { type, name, modelName, level, levelProgress, hitRate, dailyAP } = agent
   const { activeBorderClassName } = AGENT_THEME[type]
 
@@ -44,11 +52,11 @@ export function AgentCard({ agent, active = false, className = '', ...props }: A
       )}
       {...props}
     >
-      <div className="flex items-center gap-4 px-4 py-3.5">
-        <AgentAvatar type={type} size={60} />
+      <div className={`flex items-center ${compact ? 'gap-3 px-3.5 py-3' : 'gap-4 px-4 py-3.5'}`}>
+        <AgentAvatar type={type} size={compact ? 52 : 60} />
 
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <div className="flex flex-col gap-1.5">
+        <div className={`flex min-w-0 flex-1 flex-col ${compact ? 'gap-1.5' : 'gap-2'}`}>
+          <div className={`flex flex-col ${compact ? 'gap-1' : 'gap-1.5'}`}>
             <span className="dnf-Subtitle3 text-Gray-10">{name}</span>
             <span className="pretendard-Caption2 text-Gray-6 truncate">{modelName}</span>
           </div>
@@ -60,7 +68,7 @@ export function AgentCard({ agent, active = false, className = '', ...props }: A
         </div>
       </div>
 
-      <AgentLevelBar type={type} level={level} levelProgress={levelProgress} />
+      <AgentLevelBar type={type} level={level} levelProgress={levelProgress} compact={compact} />
     </button>
   )
 }
