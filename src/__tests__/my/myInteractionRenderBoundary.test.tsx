@@ -66,20 +66,12 @@ vi.mock('@/components/domain/badge/BadgeProgressCard', () => ({
   BadgeProgressCard: () => <div />,
 }))
 vi.mock('@/components/feature/my/BadgeUnlockModal', () => ({
-  BadgeUnlockModal: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
-    isOpen ? (
+  BadgeUnlockModal: ({ badge, onClose }: { badge: { id: string } | null; onClose: () => void }) =>
+    badge ? (
       <button type="button" onClick={onClose}>
         배지 모달 닫기
       </button>
     ) : null,
-}))
-vi.mock('@/pages/MyPage/hooks/useMyQueries', () => ({
-  useMyBadgeDetailQuery: () => ({
-    data: undefined,
-    isFetching: false,
-    isError: false,
-    refetch: vi.fn(),
-  }),
 }))
 
 import BadgeUnlockSection from '@/components/feature/my/BadgeUnlockSection'
@@ -117,9 +109,17 @@ describe('My interaction render boundaries', () => {
         name: '첫 배지',
         isUnlocked: true,
         description: '',
+        rewardAp: 50_000,
         unlockedAt: '2026-08-13T00:00:00Z',
       },
-      { id: 'badge-2', name: '잠긴 배지', isUnlocked: false, description: '', unlockedAt: null },
+      {
+        id: 'badge-2',
+        name: '잠긴 배지',
+        isUnlocked: false,
+        description: '',
+        rewardAp: 30_000,
+        unlockedAt: null,
+      },
     ]
 
     act(() => {
@@ -148,6 +148,15 @@ describe('My interaction render boundaries', () => {
 
     expect(getRenderCount(myMocks.renderBadgeItem, 'badge-1')).toBe(1)
     expect(getRenderCount(myMocks.renderBadgeItem, 'badge-2')).toBe(1)
+
+    const lockedBadgeButton = Array.from(container.querySelectorAll('button')).find(
+      (button) => button.textContent === '잠긴 배지',
+    )
+    if (!lockedBadgeButton) throw new Error('미획득 배지 버튼을 찾을 수 없습니다.')
+
+    act(() => lockedBadgeButton.click())
+
+    expect(container.textContent).toContain('배지 모달 닫기')
   })
 
   it('keeps the AP summary and unchanged transaction rows outside the period-tab state', () => {

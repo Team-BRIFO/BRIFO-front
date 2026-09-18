@@ -1,8 +1,7 @@
-import { useCallback, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { BadgeUnlockModal } from '@/components/feature/my/BadgeUnlockModal'
 import { MyBadgeGallery } from '@/components/feature/my/MyBadgeGallery'
-import { useMyBadgeDetailQuery } from '@/pages/MyPage/hooks/useMyQueries'
 import type { Badge } from '@/types/domain/badge'
 
 interface BadgeUnlockSectionProps {
@@ -11,40 +10,21 @@ interface BadgeUnlockSectionProps {
 }
 
 /**
- * 배지 선택과 상세 모달에만 필요한 상태·쿼리 경계.
+ * 배지 선택 상태만 소유하는 경계 — 목록은 이미 모든 배지(설명·보상 포함)를
+ * 들고 있으므로 선택 시 별도 조회 없이 로컬에서 찾아 모달에 넘긴다.
  * 모달을 열고 닫아도 배지 갤러리 전체가 다시 렌더되지 않게 한다.
  */
 export default function BadgeUnlockSection({ badges, initialBadgeId }: BadgeUnlockSectionProps) {
   const [selectedId, setSelectedId] = useState<string | null>(initialBadgeId)
-  const detailQuery = useMyBadgeDetailQuery(selectedId)
-
-  const handleSelectBadge = useCallback(
-    (id: string) => {
-      if (badges.find((badge) => badge.id === id)?.isUnlocked) setSelectedId(id)
-    },
-    [badges],
+  const selectedBadge = useMemo(
+    () => badges.find((badge) => badge.id === selectedId) ?? null,
+    [badges, selectedId],
   )
 
   return (
     <>
-      <MyBadgeGallery
-        badges={badges}
-        onSelectBadge={handleSelectBadge}
-        isEmpty={badges.length === 0}
-      />
-      <BadgeUnlockModal
-        isOpen={Boolean(selectedId)}
-        badge={detailQuery.data?.badge ?? null}
-        rewardAp={detailQuery.data?.rewardAp}
-        isLoading={Boolean(selectedId && !detailQuery.data && detailQuery.isFetching)}
-        errorMessage={
-          selectedId && !detailQuery.data && detailQuery.isError
-            ? '배지 정보를 불러오지 못했어요.'
-            : undefined
-        }
-        onRetry={() => detailQuery.refetch()}
-        onClose={() => setSelectedId(null)}
-      />
+      <MyBadgeGallery badges={badges} onSelectBadge={setSelectedId} isEmpty={badges.length === 0} />
+      <BadgeUnlockModal badge={selectedBadge} onClose={() => setSelectedId(null)} />
     </>
   )
 }

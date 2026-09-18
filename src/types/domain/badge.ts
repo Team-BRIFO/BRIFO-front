@@ -10,6 +10,8 @@ export interface Badge {
   name: string
   /** 획득 조건 설명 */
   description: string
+  /** 획득/획득 예정 보상 (원) */
+  rewardAp: number
   /** 배지 아이콘 식별자 — 에셋 확정 전까지 미지정이면 기본 아이콘 */
   iconKey?: string
   /** 획득 여부 */
@@ -24,9 +26,4 @@ export interface BadgeProgress {
   unlockedCount: number
   /** 전체 배지 수 */
   totalCount: number
-}
-
-export interface BadgeDetail {
-  badge: Badge
-  rewardAp: number
 }
