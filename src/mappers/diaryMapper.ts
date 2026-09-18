@@ -42,6 +42,12 @@ export const CONFIDENCE_LEVEL_LABEL: Record<'LOW' | 'MEDIUM' | 'HIGH', string> =
   HIGH: '높음',
 }
 
+/** 사원별 채택 적중률 카드의 표시 순서 (루키 → 프로 → 탱커) */
+const AGENT_TYPE_ORDER = ['ROOKIE', 'PRO', 'TANKER'] as const
+
+/** 확신도별 적중률 카드의 표시 순서 (높음 → 보통 → 낮음, 위에서부터) */
+const CONFIDENCE_LEVEL_ORDER = ['HIGH', 'MEDIUM', 'LOW'] as const
+
 // ─── 캘린더 ────────────────────────────────────────────────────────────────
 
 /**
@@ -198,31 +204,45 @@ export function mapDiaryStatistics(result: GetDiaryStatsResponseOutput): DiarySt
         })),
       },
       {
-        id: 'agent',
-        title: '사원별 채택 적중률',
-        subtitle,
-        rows: result.agentStats.map((stat) => ({
-          label: stat.nickname,
-          value: stat.accuracyRate,
-        })),
-      },
-      {
-        id: 'confidence',
-        title: '확신도별 적중률',
-        subtitle,
-        rows: result.confidenceLevelStats.map((stat) => ({
-          label: CONFIDENCE_LEVEL_LABEL[stat.level],
-          value: stat.accuracyRate,
-        })),
-      },
-      {
         id: 'stock',
-        title: '종목별 적중률',
+        title: '종목별 적중률 순위',
         subtitle,
         rows: result.stockStats.map((stat) => ({
           label: stat.name,
           value: stat.accuracyRate,
         })),
+      },
+      {
+        id: 'agent',
+        title: '사원별 채택 적중률',
+        subtitle,
+        rows: [...result.agentStats]
+          .sort(
+            (first, second) =>
+              AGENT_TYPE_ORDER.indexOf(first.agentType) -
+              AGENT_TYPE_ORDER.indexOf(second.agentType),
+          )
+          .map((stat) => ({
+            label: stat.nickname,
+            value: stat.accuracyRate,
+            key: stat.agentType,
+          })),
+      },
+      {
+        id: 'confidence',
+        title: '확신도별 적중률',
+        subtitle,
+        rows: [...result.confidenceLevelStats]
+          .sort(
+            (first, second) =>
+              CONFIDENCE_LEVEL_ORDER.indexOf(first.level) -
+              CONFIDENCE_LEVEL_ORDER.indexOf(second.level),
+          )
+          .map((stat) => ({
+            label: CONFIDENCE_LEVEL_LABEL[stat.level],
+            value: stat.accuracyRate,
+            key: stat.level,
+          })),
       },
     ],
   }
