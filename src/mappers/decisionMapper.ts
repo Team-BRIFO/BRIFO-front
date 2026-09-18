@@ -12,6 +12,7 @@ export function mapDecisionList(items: GetDecisionsResponseOutput['items']): Dec
     stock: {
       name: item.stock.name,
       logoUrl: item.stock.logoUrl,
+      price: item.stock.price ?? undefined,
       changeRate: item.stock.changeRate ?? 0,
     },
   }))

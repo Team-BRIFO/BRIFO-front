@@ -12,6 +12,7 @@ export interface DecisionListItem {
   stock: {
     name: string
     logoUrl?: string
+    price?: number
     changeRate: number
   }
 }
