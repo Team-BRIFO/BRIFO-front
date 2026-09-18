@@ -1,24 +1,13 @@
 import { ApTransactionsResponseSchema } from '@/api/contracts/ap'
 import { MyTermsResponseSchema } from '@/api/contracts/terms'
 import { getApTransactions } from '@/api/generated/endpoints/ap-controller/ap-controller'
-import {
-  getBadges,
-  getOwnedBadge,
-} from '@/api/generated/endpoints/badge-controller/badge-controller'
+import { getBadges } from '@/api/generated/endpoints/badge-controller/badge-controller'
 import { getMyTerms } from '@/api/generated/endpoints/term-controller/term-controller'
 import { type GetApTransactionsParams } from '@/api/generated/schemas/ap-controller'
-import {
-  ApiResponseGetBadgesResponse,
-  ApiResponseGetOwnedBadgeResponse,
-} from '@/api/generated/schemas/badge-controller'
+import { ApiResponseGetBadgesResponse } from '@/api/generated/schemas/badge-controller'
 import { type GetMyTermsParams } from '@/api/generated/schemas/term-controller'
 import { useApiInfiniteQuery, useApiQuery } from '@/hooks/api'
-import {
-  mapApTransactionPage,
-  mapBadge,
-  mapBadgeDetail,
-  mapMyGlossaryPage,
-} from '@/mappers/myMapper'
+import { mapApTransactionPage, mapBadge, mapMyGlossaryPage } from '@/mappers/myMapper'
 import { myQueryKeys } from '@/pages/MyPage/hooks/myQueryKeys'
 
 const AP_TRANSACTION_PAGE_SIZE = 20
@@ -62,20 +51,6 @@ export function useMyBadgesQuery() {
     response: 'requiredResult',
     map: (result) => result.items.map(mapBadge),
     staleTime: 0,
-  })
-}
-
-export function useMyBadgeDetailQuery(id: string | null) {
-  return useApiQuery({
-    queryKey: myQueryKeys.badge(id ?? ''),
-    operation: getOwnedBadge,
-    endpoint: 'getOwnedBadge',
-    args: [id ?? ''],
-    responseSchema: ApiResponseGetOwnedBadgeResponse,
-    response: 'requiredResult',
-    map: mapBadgeDetail,
-    staleTime: 0,
-    enabled: Boolean(id),
   })
 }
 

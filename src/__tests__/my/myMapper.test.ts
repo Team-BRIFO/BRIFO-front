@@ -1,16 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
 import type { GetApTransactionsResponse } from '@/api/generated/schemas/ap-controller'
-import type { BadgeItem, GetOwnedBadgeResponse } from '@/api/generated/schemas/badge-controller'
+import type { BadgeItem } from '@/api/generated/schemas/badge-controller'
 import type { GetMyTermsResponse } from '@/api/generated/schemas/term-controller'
 import type { GetMyPageResponse } from '@/api/generated/schemas/user-controller'
-import {
-  mapApTransactionPage,
-  mapBadge,
-  mapBadgeDetail,
-  mapMyGlossaryPage,
-  mapMyUser,
-} from '@/mappers/myMapper'
+import { mapApTransactionPage, mapBadge, mapMyGlossaryPage, mapMyUser } from '@/mappers/myMapper'
 
 describe('My mappers', () => {
   it('maps getMyPage stocks and keeps missing profile contract fields as UI fallbacks', () => {
@@ -123,38 +117,24 @@ describe('My mappers', () => {
     })
   })
 
-  it('maps badge list and detail responses', () => {
+  it('maps a badge list item, including locked badges description and reward', () => {
     const item = {
       badgeId: '1bcbac27-b08b-452e-a88a-3b7a41c1fe54',
       code: 'FIRST_ATTENDANCE',
       name: '첫 출근',
-      isOwned: true,
+      description: '튜토리얼을 처음 완료했어요!',
+      rewardAp: 50_000,
+      isOwned: false,
     } satisfies BadgeItem
-    const detail = {
-      badgeId: item.badgeId,
-      code: item.code,
-      name: item.name,
-      rewardAp: 50,
-    } satisfies GetOwnedBadgeResponse
 
     expect(mapBadge(item)).toEqual({
       id: item.badgeId,
       name: '첫 출근',
-      description: '',
+      description: '튜토리얼을 처음 완료했어요!',
+      rewardAp: 50_000,
       iconKey: 'FIRST_ATTENDANCE',
-      isUnlocked: true,
+      isUnlocked: false,
       unlockedAt: null,
-    })
-    expect(mapBadgeDetail(detail)).toEqual({
-      badge: {
-        id: item.badgeId,
-        name: '첫 출근',
-        description: '',
-        iconKey: 'FIRST_ATTENDANCE',
-        isUnlocked: true,
-        unlockedAt: null,
-      },
-      rewardAp: 50,
     })
   })
 })

@@ -11,6 +11,8 @@ export const BadgeItem = zod.object({
   badgeId: zod.uuid(),
   code: zod.string(),
   name: zod.string(),
+  description: zod.string().optional(),
+  rewardAp: zod.int(),
   isOwned: zod.boolean(),
 })
 

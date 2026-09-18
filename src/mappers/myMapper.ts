@@ -1,9 +1,9 @@
 import type { GetApTransactionsResponse } from '@/api/generated/schemas/ap-controller'
-import type { BadgeItem, GetOwnedBadgeResponse } from '@/api/generated/schemas/badge-controller'
+import type { BadgeItem } from '@/api/generated/schemas/badge-controller'
 import type { GetMyTermsResponse } from '@/api/generated/schemas/term-controller'
 import type { GetMyPageResponse } from '@/api/generated/schemas/user-controller'
 import type { ApSummary, ApTransactionPage, ApTransactionReason } from '@/types/domain/ap'
-import type { Badge, BadgeDetail } from '@/types/domain/badge'
+import type { Badge } from '@/types/domain/badge'
 import type { MyGlossaryPage } from '@/types/domain/glossary'
 import type { UserOverview } from '@/types/domain/user'
 
@@ -85,24 +85,11 @@ export function mapBadge(item: BadgeItem): Badge {
   return {
     id: item.badgeId,
     name: item.name,
-    description: '',
+    description: item.description ?? '',
+    rewardAp: item.rewardAp,
     iconKey: item.code,
     isUnlocked: item.isOwned,
     unlockedAt: null,
-  }
-}
-
-export function mapBadgeDetail(result: GetOwnedBadgeResponse): BadgeDetail {
-  return {
-    badge: {
-      id: result.badgeId,
-      name: result.name,
-      description: result.description ?? '',
-      iconKey: result.code,
-      isUnlocked: true,
-      unlockedAt: null,
-    },
-    rewardAp: result.rewardAp,
   }
 }
 

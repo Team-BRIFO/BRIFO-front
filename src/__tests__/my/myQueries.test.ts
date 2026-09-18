@@ -10,23 +10,13 @@ const apiHookMocks = vi.hoisted(() => ({
 
 vi.mock('@/hooks/api', () => apiHookMocks)
 
-import {
-  useMyApTransactionsQuery,
-  useMyBadgeDetailQuery,
-  useMyLearnedTermsQuery,
-} from '@/pages/MyPage/hooks/useMyQueries'
+import { useMyApTransactionsQuery, useMyLearnedTermsQuery } from '@/pages/MyPage/hooks/useMyQueries'
 
 interface InfiniteOptions<TPage> {
   endpoint: string
   response: string
   getArgs: (context: { pageParam: string | null }) => unknown
   getNextPageParam: (lastPage: TPage) => string | undefined
-}
-
-interface QueryOptions {
-  endpoint: string
-  response: string
-  enabled: boolean
 }
 
 describe('My query hook options', () => {
@@ -101,15 +91,5 @@ describe('My query hook options', () => {
       '[getMyTerms] hasNext is true but nextCursor is missing; stopping pagination.',
     )
     warn.mockRestore()
-  })
-
-  it('disables the owned-badge query when badgeId is missing', () => {
-    const options = useMyBadgeDetailQuery(null) as unknown as QueryOptions
-
-    expect(options).toMatchObject({
-      endpoint: 'getOwnedBadge',
-      response: 'requiredResult',
-      enabled: false,
-    })
   })
 })
