@@ -35,9 +35,13 @@ export function MyPage() {
         left={<Logo className="h-6 w-21" aria-label="BRIFO" />}
         right={
           <div className="flex items-center gap-3">
-            <div className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2">
+            <button
+              type="button"
+              onClick={() => navigate(PATH.MY_AP)}
+              className="dnf-Caption2 bg-Yellow-80 text-Yellow-20 rounded-full px-3 py-2"
+            >
               {userQuery.data ? formatWon(userQuery.data.apSummary.balance) : '0원'}
-            </div>
+            </button>
             <StatusBarSettingsButton onClick={() => navigate(PATH.MY_SETTINGS)} />
           </div>
         }

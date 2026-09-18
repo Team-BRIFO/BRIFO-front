@@ -34,8 +34,12 @@ export function ApHistorySummaryCard({
           <span>{formatWon(balance)}</span>
         </p>
       </div>
-      <p className="pretendard-Caption3 text-Gray-6 leading-none">
-        {`이번 달  획득 +${formatWon(earned)}  ·  사용 -${formatWon(lost)}`}
+      <p className="pretendard-Caption3 text-Gray-6 flex items-center gap-1 leading-none">
+        <span>이번 달 획득</span>
+        <span className="text-Pink-30">{`+${formatWon(earned)}`}</span>
+        <span>·</span>
+        <span>사용</span>
+        <span className="text-Green-30">{`-${formatWon(lost)}`}</span>
       </p>
       {onChargeClick && (
         <Button size="sm" color="primary" isFullWidth onClick={onChargeClick}>
