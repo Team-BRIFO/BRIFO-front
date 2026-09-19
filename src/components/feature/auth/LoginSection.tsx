@@ -19,19 +19,23 @@ export default function LoginSection({
   isGuestLoginPending = false,
 }: LoginSectionProps) {
   return (
-    <main className="flex h-full w-full flex-1 flex-col px-4 pb-8">
+    <main className="flex h-full w-full flex-1 flex-col overflow-hidden px-4 pb-8">
       <StatusBar
         className="w-full [&>div:last-child]:px-0"
         hasStatusArea={false}
         left={<StatusBarBackButton onClick={onBack} />}
       />
 
-      <div className="flex flex-1 flex-col items-center pt-44">
-        <Logo className="w-50" />
+      <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-y-contain">
+        <div className="flex w-full flex-1 shrink-0 flex-col items-center justify-center">
+          <Logo className="w-50 shrink-0" />
 
-        <p className="pretendard-Body1-Semibold mt-2 text-[#FF9500]">나는 사장, AI는 사원</p>
+          <p className="pretendard-Body1-Semibold mt-2 shrink-0 text-[#FF9500]">
+            나는 사장, AI는 사원
+          </p>
+        </div>
 
-        <div className="mt-26 flex w-full flex-col gap-2 px-4">
+        <div className="mt-10 flex w-full shrink-0 flex-col gap-2 px-4 pb-4">
           <SocialLoginButton provider="kakao" onClick={onKakaoLogin} />
           <SocialLoginButton provider="naver" onClick={onNaverLogin} />
 
@@ -49,7 +53,7 @@ export default function LoginSection({
         </div>
       </div>
 
-      <p className="pretendard-Caption3 text-Gray-5 mt-auto pt-10 text-center whitespace-pre-line">
+      <p className="pretendard-Caption3 text-Gray-5 shrink-0 pt-6 text-center whitespace-pre-line">
         로그인 시 본 서비스 약관에 동의한 것으로
         {'\n'}
         간주합니다.
