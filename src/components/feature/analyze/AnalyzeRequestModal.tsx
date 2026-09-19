@@ -1,6 +1,7 @@
 import Button from '@/components/common/Button'
 import Modal from '@/components/common/Modal'
 import { formatWon } from '@/components/domain/ap/apTransactionMeta'
+import { isKstWeekend } from '@/utils/kstSchedule'
 
 export type AnalyzeModalType =
   | 'SUCCESS'
@@ -174,15 +175,29 @@ export function AnalyzeRequestModal({
             </Modal.Footer>
           </>
         )
-      case 'TIME_OVER':
+      case 'TIME_OVER': {
+        const isMarketClosedDay = isKstWeekend()
+
         return (
           <>
             <Modal.Header className="flex flex-col items-center gap-4 text-center">
-              <h2 className="dnf-Title4 text-Gray-10 m-0">오늘의 의뢰 마감</h2>
+              <h2 className="dnf-Title4 text-Gray-10 m-0 leading-[1.3] break-keep">
+                {isMarketClosedDay ? '휴장일은 의뢰 시간이 아니에요' : '오늘의 의뢰 마감'}
+              </h2>
               <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
-                오늘의 브리핑 의뢰 시간이 마감되었어요.
-                <br />
-                내일 다시 찾아와 주세요!
+                {isMarketClosedDay ? (
+                  <>
+                    휴장일에는 브리핑 의뢰를 받지 않아요.
+                    <br />
+                    장이 열리는 날 다시 찾아와 주세요!
+                  </>
+                ) : (
+                  <>
+                    오늘의 브리핑 의뢰 시간이 마감되었어요.
+                    <br />
+                    내일 다시 찾아와 주세요!
+                  </>
+                )}
               </p>
             </Modal.Header>
             <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-3.5">
@@ -192,6 +207,7 @@ export function AnalyzeRequestModal({
             </Modal.Footer>
           </>
         )
+      }
       case 'ERROR':
         return (
           <>
