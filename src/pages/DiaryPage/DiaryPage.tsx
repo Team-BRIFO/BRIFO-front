@@ -15,7 +15,7 @@ import {
   useDiaryStatisticsQuery,
 } from '@/pages/DiaryPage/hooks/useDiaryQueries'
 import { PATH } from '@/routes/paths'
-import { shiftMonth } from '@/utils/diaryCalendar'
+import { shiftMonth, toDateKey } from '@/utils/diaryCalendar'
 
 /** 탭 상태를 담는 쿼리 파라미터 키 (/diary?view=statistics) */
 const VIEW_PARAM = 'view'
@@ -48,7 +48,12 @@ export function DiaryPage() {
 
     return { year: today.getFullYear(), month: today.getMonth() + 1 }
   })
-  const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined)
+  // 캘린더를 열면 오늘이 선택된 상태로 시작한다 — 들어오자마자 오늘 기록이 바로 보이도록.
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(() => {
+    const today = new Date()
+
+    return toDateKey(today.getFullYear(), today.getMonth() + 1, today.getDate())
+  })
 
   const calendarQuery = useDiaryCalendarQuery(year, month, view === 'calendar')
   const listQuery = useDiaryListQuery(undefined, view === 'list')
