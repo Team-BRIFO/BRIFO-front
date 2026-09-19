@@ -1,6 +1,5 @@
 import { twMerge } from 'tailwind-merge'
 
-import { AgentAvatar } from '@/components/domain/agent/AgentAvatar'
 import type { AnalyzeResultType } from '@/components/feature/analyze/AnalyzeCard'
 import { AnalyzeCard } from '@/components/feature/analyze/AnalyzeCard'
 import { ALLOCATION_RATE_LEVEL_LABEL, DIRECTION_LABEL } from '@/mappers/diaryMapper'
@@ -54,20 +53,36 @@ export function DiaryDateDetail({ date, className = '' }: DiaryDateDetailProps) 
       ) : data!.items.length === 0 ? (
         <p className="pretendard-Caption1 text-Gray-6">이 날은 결정 기록이 없어요.</p>
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-4">
           {data!.items.map((item) => (
-            <li key={item.diaryId} className="flex items-center gap-2">
-              <AgentAvatar type={item.agentType} size={32} />
-              <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                <p className="pretendard-Caption2 text-Gray-6 truncate">
-                  {item.agentNickname} · {DIRECTION_LABEL[item.direction]} 배분{' '}
-                  {ALLOCATION_RATE_LEVEL_LABEL[allocationRateBand(item.allocationRatePercent)]}
-                </p>
+            <li key={item.diaryId} className="flex items-start gap-2.5">
+              {item.logoUrl ? (
+                <img
+                  src={item.logoUrl}
+                  alt={`${item.stockName} 로고`}
+                  className="bg-Gray-2 h-14 w-14 shrink-0 rounded-full object-cover"
+                />
+              ) : (
+                <div className="bg-Gray-2 h-14 w-14 shrink-0 rounded-full" />
+              )}
+              <div className="border-Gray-2 bg-White flex min-w-0 flex-1 flex-col overflow-hidden rounded-tl-2xl rounded-tr-2xl rounded-br-2xl border">
+                <div className="flex items-center justify-between gap-2 px-2.5 pt-2">
+                  <span className="pretendard-Caption1 text-Gray-10 truncate">
+                    {item.agentNickname}
+                  </span>
+                  <span className="pretendard-Caption3 text-Gray-5 shrink-0">
+                    {DIRECTION_LABEL[item.direction]} 배분{' '}
+                    {ALLOCATION_RATE_LEVEL_LABEL[allocationRateBand(item.allocationRatePercent)]}
+                  </span>
+                </div>
                 <AnalyzeCard
                   type="Analyze_small"
                   resultType={toResultType(item)}
                   apAmount={item.apDelta}
                   stock={{ name: item.stockName, logoUrl: item.logoUrl }}
+                  showLogo={false}
+                  nameClassName="dnf-Caption2 text-Gray-10"
+                  className="rounded-none border-0"
                 />
               </div>
             </li>
