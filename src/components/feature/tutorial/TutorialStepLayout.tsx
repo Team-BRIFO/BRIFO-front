@@ -36,22 +36,18 @@ export default function TutorialStepLayout({
         isReplay ? 'bg-Background1' : 'bg-white px-4'
       }`}
     >
-      <StatusBar
-        hasStatusArea={false}
-        className={
-          isReplay
-            ? 'sticky top-0 z-10 w-full shrink-0'
-            : 'sticky top-0 z-10 w-full shrink-0 [&>div:last-child]:px-0'
-        }
-        right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
-        title={isReplay ? '튜토리얼' : undefined}
-      />
-
       {/* 하단 버튼이 흰 배경 바 없이 콘텐츠 위에 떠 있으므로 가려지지 않도록 여백을 확보한다 */}
       <section
-        className={`mt-4 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-24 ${isReplay ? 'px-4' : ''}`}
+        className={`flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-24 ${isReplay ? 'px-4' : ''}`}
       >
-        <div className="shrink-0">
+        <StatusBar
+          hasStatusArea={false}
+          className="w-full shrink-0 [&>div:last-child]:px-0"
+          right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
+          title={isReplay ? '튜토리얼' : undefined}
+        />
+
+        <div className="mt-4 shrink-0">
           <p className="dnf-Title3 text-Gray-10 leading-[1.15] break-keep">STEP {step}</p>
           <h1 className="dnf-Title3 mt-1 leading-[1.15] break-keep text-[#FFBE00]">{title}</h1>
           <p className="pretendard-Caption1 mt-4 break-keep text-[#8A8499]">
