@@ -1,8 +1,6 @@
 import CelebrationImage from '@/assets/characters/celebration.svg?react'
 import Button from '@/components/common/Button'
-import { StatusBar } from '@/components/common/StatusBar'
 import { formatWon } from '@/components/domain/ap/apTransactionMeta'
-import AdaptiveScrollArea from '@/components/feature/tutorial/AdaptiveScrollArea'
 
 interface TutorialCompleteProps {
   reward?: number
@@ -23,13 +21,9 @@ export default function TutorialComplete({
         isReplay ? 'bg-Background1' : 'bg-white px-4'
       }`}
     >
-      <StatusBar
-        hasStatusArea={false}
-        className={isReplay ? 'w-full shrink-0' : 'w-full shrink-0 [&>div:last-child]:px-0'}
-        title={isReplay ? '튜토리얼' : undefined}
-      />
-
-      <AdaptiveScrollArea className={isReplay ? 'px-4' : ''}>
+      <section
+        className={`flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-y-contain pt-10 pb-6 text-center ${isReplay ? 'px-4' : ''}`}
+      >
         <h1
           className="dnf-Title3 text-Gray-10 leading-[1.2]"
           style={isReplay ? { fontSize: 'clamp(1.5rem, 6vw, 1.75rem)' } : undefined}
@@ -59,7 +53,7 @@ export default function TutorialComplete({
             <strong className="dnf-Title2 text-Yellow-30 mt-1">+ {formatWon(reward)}</strong>
           </div>
         )}
-      </AdaptiveScrollArea>
+      </section>
 
       <div className={`shrink-0 ${isReplay ? 'mx-4 flex justify-center' : ''}`}>
         <Button
