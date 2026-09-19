@@ -226,45 +226,41 @@ export function BriefingAssignPage() {
       ) : agentsList.length === 0 ? (
         <PageErrorView title="배치할 사원이 없어요" description="먼저 사원을 등록해주세요." />
       ) : (
-        <>
-          <div className="flex flex-1 flex-col overflow-y-auto px-4 pt-6 pb-8">
-            <div className="flex w-full flex-col gap-5.5">
-              {/* 타이틀 영역 */}
-              <div className="flex flex-col gap-1 text-left">
-                <p className="dnf-Subtitle2 text-Gray-10">누구에게 맡길까요?</p>
-                <p className="pretendard-Button3 text-Gray-6">
-                  {stockName} 분석을 맡길 사원을 골라주세요.
-                </p>
-              </div>
+        <div className="flex flex-1 flex-col overflow-y-auto px-4 pt-6 pb-8">
+          <div className="flex w-full flex-col gap-5.5">
+            {/* 타이틀 영역 */}
+            <div className="flex flex-col gap-1 text-left">
+              <p className="dnf-Subtitle2 text-Gray-10">누구에게 맡길까요?</p>
+              <p className="pretendard-Button3 text-Gray-6">
+                {stockName} 분석을 맡길 사원을 골라주세요.
+              </p>
+            </div>
 
-              {/* 사원 카드리스트 */}
-              <div className="flex w-full flex-col gap-2">
-                {agentsList.map((agent) => {
-                  const isRequested = requestedAgentIds.has(agent.id)
-                  return (
-                    <AgentCard
-                      key={agent.id}
-                      agent={agent}
-                      active={selectedIds.has(agent.id)}
-                      disabled={isRequested}
-                      className={isRequested ? 'cursor-not-allowed opacity-50' : ''}
-                      onClick={() => {
-                        if (!isRequested) toggleAgent(agent.id)
-                      }}
-                    />
-                  )
-                })}
-                {/* 합계 의뢰비 문구 */}
-                <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
-                  <span className="pretendard-Caption1 text-Gray-9">선택한 사원 의뢰비 합계</span>
-                  <span className="dnf-Caption1 text-Pink-30">{formatWon(totalAP)}</span>
-                </div>
+            {/* 사원 카드리스트 */}
+            <div className="flex w-full flex-col gap-2">
+              {agentsList.map((agent) => {
+                const isRequested = requestedAgentIds.has(agent.id)
+                return (
+                  <AgentCard
+                    key={agent.id}
+                    agent={agent}
+                    active={selectedIds.has(agent.id)}
+                    disabled={isRequested}
+                    className={isRequested ? 'cursor-not-allowed opacity-50' : ''}
+                    onClick={() => {
+                      if (!isRequested) toggleAgent(agent.id)
+                    }}
+                  />
+                )
+              })}
+              {/* 합계 의뢰비 문구 */}
+              <div className="bg-Background1 flex w-full items-center justify-between rounded-lg px-4 py-3">
+                <span className="pretendard-Caption1 text-Gray-9">선택한 사원 의뢰비 합계</span>
+                <span className="dnf-Caption1 text-Pink-30">{formatWon(totalAP)}</span>
               </div>
             </div>
-          </div>
 
-          {/* 액션 버튼 */}
-          <div className="px-4 pt-4 pb-8">
+            {/* 액션 버튼 */}
             <Button
               isFullWidth
               size="lg"
@@ -276,7 +272,7 @@ export function BriefingAssignPage() {
               {isPending ? '분석 요청 중...' : '분석 시작하기'}
             </Button>
           </div>
-        </>
+        </div>
       )}
 
       {/* 분석 의뢰 상태 모달 */}
