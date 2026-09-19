@@ -106,7 +106,7 @@ export function SplashPage() {
           return
         }
 
-        await applyOAuthLoginResult(body.result, navigate)
+        await applyOAuthLoginResult(body.result, navigate, { skipAgreement: true })
       },
       onError: () => {
         setLoginError('테스트 로그인에 실패했어요')
