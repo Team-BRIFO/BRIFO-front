@@ -111,14 +111,15 @@ export function OnboardingPage() {
   }
 
   return (
-    <main className="flex min-h-0 w-full flex-1 flex-col overflow-hidden px-4 pb-5">
+    <main className="relative flex min-h-0 w-full flex-1 flex-col overflow-hidden px-4 pb-5">
       <StatusBar
         hasStatusArea={false}
         className="w-full [&>div:last-child]:px-0"
         left={<StatusBarBackButton onClick={() => navigate(-1)} />}
       />
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+      {/* 하단 버튼이 흰 배경 바 없이 콘텐츠 위에 떠 있으므로 가려지지 않도록 여백을 확보한다 */}
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pb-24">
         <section className="mt-8 flex flex-col">
           <div>
             <h1 className="dnf-Title3 text-Gray-10 leading-tight">
@@ -209,10 +210,9 @@ export function OnboardingPage() {
         type="button"
         size="lg"
         color="primary"
-        isFullWidth
         disabled={!isFormValid || updateProfile.isPending || stocksQuery.isLoading || !isCsrfReady}
         onClick={handleSubmit}
-        className="mt-6 shrink-0 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
+        className="absolute right-4 bottom-5 left-4 shadow-[0_4px_8px_rgba(168,79,1,0.15)]"
       >
         {updateProfile.isPending ? '저장 중...' : '다음'}
       </Button>
@@ -234,8 +234,7 @@ export function OnboardingPage() {
           type="button"
           size="lg"
           color="secondary"
-          isFullWidth
-          className="mt-3"
+          className="absolute right-4 bottom-[92px] left-4"
           onClick={() => void retryCsrf()}
         >
           다시 시도
