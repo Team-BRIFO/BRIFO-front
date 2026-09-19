@@ -1,5 +1,3 @@
-import NewscardImg from '@/assets/images/newscardImg.svg'
-import NewscardImg2 from '@/assets/images/newscardImg2.svg'
 import BrifoSysLogo from '@/assets/logo/BRIFOSYS.svg'
 import BrifoTecLogo from '@/assets/logo/BRIFOTEC.svg'
 import type { NewsCardData } from '@/types/domain/newsCard'
@@ -41,7 +39,6 @@ export const TUTORIAL_NEWS_CARD_MOCK: NewsCardData = {
   cardId: 'brifo01-0810',
   publishedDate: '8월 22일',
   headline: '브리포테크, 차세대 공정 모듈 연구개발 1단계 검증 착수',
-  imageUrl: NewscardImg,
   importanceBadge: 'HOT',
   source: '브리포뉴스',
   points: [
@@ -57,7 +54,6 @@ export const TUTORIAL_NEWS_CARD_MOCK_2: NewsCardData = {
   cardId: 'brifo01-0810-2',
   publishedDate: '8월 22일',
   headline: '브리포테크, 통합 시험용 시제품 제작 완료',
-  imageUrl: NewscardImg2,
   importanceBadge: 'HOT',
   source: '브리포뉴스',
   points: [
