@@ -41,13 +41,31 @@ export function ApBalanceCard({
   return (
     <div
       className={twMerge(
-        'border-Gray-2 bg-White flex min-h-17.75 items-center justify-between gap-2 rounded-lg border px-5 py-4',
+        'border-Gray-2 bg-White flex min-h-17.75 items-center gap-2 rounded-lg border px-5 py-4',
         className,
       )}
       {...props}
     >
-      <div className="flex min-w-0 flex-col gap-2">
-        <span className="pretendard-Caption3 text-Gray-6 leading-none">보유 자금</span>
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex min-w-0 items-baseline justify-between gap-2">
+          <span className="pretendard-Caption3 text-Gray-6 shrink-0 leading-none">보유 자금</span>
+
+          {deltaLabel && (
+            <div
+              className={twMerge(
+                'dnf-Caption2 flex min-w-0 shrink-0 items-baseline gap-2 leading-none',
+                getApAmountColorClass(delta),
+              )}
+            >
+              <span>{deltaLabel}</span>
+              <span className="flex items-baseline gap-0.5">
+                {sign && <span>{sign}</span>}
+                <span>{formatWon(delta)}</span>
+              </span>
+            </div>
+          )}
+        </div>
+
         <p
           className={twMerge(
             getBalanceFontClass(formatWon(balance)),
@@ -67,21 +85,6 @@ export function ApBalanceCard({
           )}
         </p>
       </div>
-
-      {deltaLabel && (
-        <div
-          className={twMerge(
-            'dnf-Caption2 flex shrink-0 items-center gap-2 leading-none',
-            getApAmountColorClass(delta),
-          )}
-        >
-          <span>{deltaLabel}</span>
-          <span className="flex items-center gap-0.5">
-            {sign && <span>{sign}</span>}
-            <span>{formatWon(delta)}</span>
-          </span>
-        </div>
-      )}
     </div>
   )
 }
