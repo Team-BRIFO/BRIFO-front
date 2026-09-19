@@ -38,16 +38,9 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     id: 'card-news-detail',
     step: 1,
     title: '카드뉴스 받기',
-    message: '좌우로 넘겨 추천된 카드뉴스를 모두 확인해보세요!',
+    message:
+      '좌우로 넘겨 추천된 카드뉴스를 모두 확인해보세요! 어려운 단어를 누르면 뜻을 확인하고 내 용어장에 저장할 수 있어요.',
     content: 'cardNewsDetail',
-    buttonLabel: '이해했어요',
-  },
-  {
-    id: 'card-news-term',
-    step: 1,
-    title: '카드뉴스 받기',
-    message: '카드뉴스의 어려운 단어를 누르면 뜻을 확인하고 내 용어장에 저장할 수 있어요!',
-    content: 'cardNewsTermBottomSheet',
     buttonLabel: '이해했어요',
   },
   {

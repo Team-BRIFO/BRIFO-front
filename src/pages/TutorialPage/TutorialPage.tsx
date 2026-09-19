@@ -65,8 +65,19 @@ function CardNewsListStep({
   )
 }
 
+/** 튜토리얼 카드뉴스 안의 용어 클릭 시 보여줄 정의 (실제 서비스의 용어 바텀시트를 모사) */
+const TUTORIAL_TERM_DEFINITIONS: Record<string, { title: string; definition: string }> = {
+  hbm: {
+    title: 'HBM',
+    definition:
+      'HBM은 여러 개의 메모리를 수직으로 쌓아 데이터 처리 속도를 높인 고대역폭 메모리예요. AI 반도체에 주로 사용돼요.',
+  },
+}
+
 function CardNewsDetailStep() {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [selectedTermId, setSelectedTermId] = useState<string | null>(null)
+  const selectedTerm = selectedTermId ? TUTORIAL_TERM_DEFINITIONS[selectedTermId] : null
 
   return (
     <div className="flex flex-col items-center gap-6 overflow-hidden pb-4">
@@ -80,49 +91,46 @@ function CardNewsDetailStep() {
       >
         {[TUTORIAL_NEWS_CARD_MOCK, TUTORIAL_NEWS_CARD_MOCK_2].map((newsCard) => (
           <div key={newsCard.cardId} className="w-full shrink-0 snap-center px-4">
-            <NewsCard data={newsCard} className="w-full" />
+            <NewsCard data={newsCard} onTermClick={setSelectedTermId} className="w-full" />
           </div>
         ))}
       </div>
       <NewsCardIndicator total={2} currentIndex={currentIndex} />
-    </div>
-  )
-}
 
-function CardNewsTermBottomSheetStep({ onComplete }: { onComplete: () => void }) {
-  return (
-    <BottomSheet
-      isOpen
-      onClose={() => undefined}
-      shouldCloseOnOverlayClick={false}
-      shouldCloseOnEscape={false}
-      ariaLabel="어려운 단어 안내"
-      className="items-center gap-4.5"
-    >
-      <BottomSheet.Body className="flex flex-col gap-5">
-        <div className="flex flex-col items-center gap-2">
-          <Badge size="md" type="normal">
-            주식 용어
-          </Badge>
-          <p className="dnf-Title4 break-keep">HBM</p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
-          <GlossaryDefinition className="break-keep">
-            HBM은 여러 개의 메모리를 수직으로 쌓아 데이터 처리 속도를 높인 고대역폭 메모리예요. AI
-            반도체에 주로 사용돼요.
-          </GlossaryDefinition>
-        </div>
-        <p className="pretendard-Caption2 text-Gray-6 text-center break-keep">
-          이해했어요를 누르면 내 용어장에 저장돼요.
-        </p>
-      </BottomSheet.Body>
-      <BottomSheet.Footer>
-        <Button size="lg" isFullWidth onClick={onComplete}>
-          이해했어요
-        </Button>
-      </BottomSheet.Footer>
-    </BottomSheet>
+      <BottomSheet
+        isOpen={selectedTerm !== null}
+        onClose={() => setSelectedTermId(null)}
+        ariaLabel="어려운 단어 안내"
+        className="items-center gap-4.5"
+      >
+        {selectedTerm && (
+          <>
+            <BottomSheet.Body className="flex flex-col gap-5">
+              <div className="flex flex-col items-center gap-2">
+                <Badge size="md" type="normal">
+                  주식 용어
+                </Badge>
+                <p className="dnf-Title4 break-keep">{selectedTerm.title}</p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <AgentChat type="rookie" message="이 단어, 제가 쉽게 알려드릴게요!" />
+                <GlossaryDefinition className="break-keep">
+                  {selectedTerm.definition}
+                </GlossaryDefinition>
+              </div>
+              <p className="pretendard-Caption2 text-Gray-6 text-center break-keep">
+                이해했어요를 누르면 내 용어장에 저장돼요.
+              </p>
+            </BottomSheet.Body>
+            <BottomSheet.Footer>
+              <Button size="lg" isFullWidth onClick={() => setSelectedTermId(null)}>
+                이해했어요
+              </Button>
+            </BottomSheet.Footer>
+          </>
+        )}
+      </BottomSheet>
+    </div>
   )
 }
 
@@ -154,7 +162,7 @@ function AgentSelectionStep({
 
 function AnalysisRequestedStep() {
   return (
-    <div className="bg-White mt-9 flex w-full flex-col items-center rounded-3xl px-5 py-6 shadow-lg">
+    <div className="bg-White mx-auto mt-9 flex w-[calc(100%-1rem)] flex-col items-center rounded-3xl px-5 py-6 shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
       <Modal.Header className="flex flex-col items-center gap-4 text-center">
         <h2 className="dnf-Title4 text-Gray-10 m-0">분석을 의뢰했어요!</h2>
         <p className="pretendard-Caption2 text-Gray-6 m-0 text-center leading-5 tracking-[-0.04em]">
@@ -165,10 +173,16 @@ function AnalysisRequestedStep() {
       </Modal.Header>
       {/* 실제 동작은 하지 않는 미리보기용 버튼 — 진행은 하단 "다음" 버튼으로 */}
       <Modal.Footer className="mt-5 flex w-full flex-col items-center gap-2">
-        <Button isFullWidth size="lg" color="primary">
+        <Button isFullWidth size="lg" color="primary" tabIndex={-1} className="pointer-events-none">
           사무실 바로가기
         </Button>
-        <Button isFullWidth size="lg" color="assistive">
+        <Button
+          isFullWidth
+          size="lg"
+          color="assistive"
+          tabIndex={-1}
+          className="pointer-events-none"
+        >
           다른 카드뉴스 더보기
         </Button>
       </Modal.Footer>
@@ -289,7 +303,6 @@ interface StepContentProps {
   setSelectedNewsId: (id: string) => void
   setDirection: (direction: PredictionType) => void
   setAllocatedAp: (value: number) => void
-  onNext: () => void
 }
 
 function renderStepContent({
@@ -302,15 +315,12 @@ function renderStepContent({
   setSelectedNewsId,
   setDirection,
   setAllocatedAp,
-  onNext,
 }: StepContentProps) {
   switch (content) {
     case 'cardNewsList':
       return <CardNewsListStep selectedId={selectedNewsId} onSelect={setSelectedNewsId} />
     case 'cardNewsDetail':
       return <CardNewsDetailStep />
-    case 'cardNewsTermBottomSheet':
-      return <CardNewsTermBottomSheetStep onComplete={onNext} />
     case 'agentSelection':
       return <AgentSelectionStep selectedAgentId={selectedAgentId} onSelect={setSelectedAgentId} />
     case 'analysisRequested':
@@ -396,7 +406,7 @@ export function TutorialPage() {
     return (
       <>
         <TutorialComplete
-          reward={isReplay ? undefined : 200}
+          reward={isReplay ? undefined : 100_000}
           isReplay={isReplay}
           onComplete={isReplay ? navigateSettings : handleComplete}
           isPending={isReplay ? false : isSubmitting}
@@ -432,7 +442,6 @@ export function TutorialPage() {
           setSelectedNewsId,
           setDirection,
           setAllocatedAp,
-          onNext: handleNext,
         })}
       </TutorialStepLayout>
       {!isReplay && submitError && (

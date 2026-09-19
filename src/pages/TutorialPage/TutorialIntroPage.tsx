@@ -25,7 +25,7 @@ export function TutorialIntroPage() {
       />
 
       <section
-        className={`mt-4 flex min-h-0 flex-1 flex-col overflow-hidden ${isReplay ? 'px-4' : ''}`}
+        className={`mt-4 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain ${isReplay ? 'px-4' : ''}`}
       >
         <div className="shrink-0">
           <h1 className="dnf-Title3 text-Gray-10 leading-[1.2]">
@@ -47,7 +47,7 @@ export function TutorialIntroPage() {
           </div>
         )}
 
-        <div className="mt-4 flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+        <div className="mt-4 flex shrink-0 flex-col gap-3 pb-2">
           {TUTORIAL_INTRO_STEPS.map((item) => (
             <TutorialStepCard
               key={item.step}
