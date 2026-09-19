@@ -59,6 +59,10 @@ export interface AnalyzeCardProps {
   }
   /** 보상/차감 자금 (예: +100000, -100000) */
   apAmount?: number
+  /** 종목 로고 표시 여부 (기본 true). 바깥에 이미 종목 로고를 크게 보여주는 레이아웃에서는 false로 중복을 없앤다 */
+  showLogo?: boolean
+  /** 종목명 타이포그래피 클래스 (Analyze_small 전용, 기본값 대체). 색상까지 포함해 통째로 지정한다 */
+  nameClassName?: string
   className?: string
 }
 
@@ -67,6 +71,8 @@ export function AnalyzeCard({
   resultType,
   stock,
   apAmount = 0,
+  showLogo = true,
+  nameClassName,
   briefingFooter,
   predictionFooter,
   className,
@@ -139,6 +145,73 @@ export function AnalyzeCard({
 
   const badgeConfig = getBadgeConfig()
   const footerConfig = getFooterConfig()
+  /** Analyze_small 은 아바타 옆 좁은 폭에서도 쓰이므로 로고·종목명을 1행, 배지·금액을 2행으로 쌓는다 */
+  const isCompact = type === 'Analyze_small'
+
+  const logo = stock.logoUrl ? (
+    <img
+      src={stock.logoUrl}
+      alt={`${stock.name} 로고`}
+      className={twMerge(
+        'bg-Gray-2 shrink-0 rounded-full object-cover',
+        isCompact ? 'h-6 w-6' : 'h-8 w-8',
+      )}
+    />
+  ) : (
+    <div
+      className={twMerge('bg-Gray-2 shrink-0 rounded-full', isCompact ? 'h-6 w-6' : 'h-8 w-8')}
+    />
+  )
+
+  const priceRow = stock.price !== undefined && (
+    <div className="flex items-center gap-1">
+      <span className="text-Gray-5 pretendard-Caption3">{stock.price.toLocaleString()}</span>
+      {stock.changeRate !== undefined && (
+        <span
+          className={`pretendard-Caption1 ${
+            stock.changeRate > 0
+              ? 'text-Pink-30'
+              : stock.changeRate < 0
+                ? 'text-Green-30'
+                : 'text-Gray-6'
+          }`}
+        >
+          {stock.changeRate > 0 ? '+' : ''}
+          {stock.changeRate}%
+        </span>
+      )}
+    </div>
+  )
+
+  const badgeRow = badgeConfig && (
+    <div
+      className={twMerge('flex shrink-0 items-center justify-end', isCompact ? 'gap-0.5' : 'gap-1')}
+    >
+      <Badge
+        type={badgeConfig.type}
+        size={isCompact ? 'sm' : 'md'}
+        className={twMerge(
+          resultType === 'BRIEFING' && !briefingFooter?.isCompleted
+            ? 'bg-Pink-60 text-Pink-30'
+            : '',
+          isCompact ? 'px-1.5' : 'px-3',
+        )}
+      >
+        {badgeConfig.text}
+      </Badge>
+      {apAmount !== 0 && (
+        <span
+          className={twMerge(
+            isCompact ? 'pretendard-Caption1' : 'dnf-Caption2',
+            badgeConfig.apColor,
+          )}
+        >
+          {apAmount > 0 ? '+' : ''}
+          {apAmount}
+        </span>
+      )}
+    </div>
+  )
 
   return (
     <div
@@ -148,7 +221,12 @@ export function AnalyzeCard({
       )}
     >
       {/* Top_Stock_Header */}
-      <div className="flex items-center justify-between px-4 py-3.5">
+      <div
+        className={twMerge(
+          'flex items-center justify-between px-4 py-3.5',
+          isCompact && 'gap-1.5 px-2.5 py-2',
+        )}
+      >
         {resultType === 'HASHTAG' ? (
           <>
             <StockInfo
@@ -165,66 +243,36 @@ export function AnalyzeCard({
               />
             )}
           </>
+        ) : isCompact ? (
+          <>
+            <div className="flex min-w-0 flex-1 items-center gap-1">
+              {showLogo && logo}
+              <span
+                className={twMerge(
+                  nameClassName ?? 'text-Gray-10 pretendard-Caption1',
+                  'min-w-0 flex-1 truncate',
+                )}
+              >
+                {stock.name}
+              </span>
+              {priceRow}
+            </div>
+            {badgeRow}
+          </>
         ) : (
           <>
-            <div className="flex items-center gap-4">
-              {stock.logoUrl ? (
-                <img
-                  src={stock.logoUrl}
-                  alt={`${stock.name} 로고`}
-                  className="bg-Gray-2 h-8 w-8 shrink-0 rounded-full object-cover"
-                />
-              ) : (
-                <div className="bg-Gray-2 h-8 w-8 shrink-0 rounded-full" />
-              )}
-              <div className="flex flex-col gap-0.5">
+            <div className="flex min-w-0 flex-1 items-center gap-4">
+              {logo}
+              <div className="flex min-w-0 flex-col gap-0.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-Gray-10 pretendard-Body2-Semibold">{stock.name}</span>
+                  <span className="text-Gray-10 pretendard-Body2-Semibold truncate">
+                    {stock.name}
+                  </span>
                 </div>
-                {stock.price !== undefined && (
-                  <div className="flex items-center gap-1">
-                    <span className="text-Gray-5 pretendard-Caption3">
-                      {stock.price.toLocaleString()}
-                    </span>
-                    {stock.changeRate !== undefined && (
-                      <span
-                        className={`pretendard-Caption1 ${
-                          stock.changeRate > 0
-                            ? 'text-Pink-30'
-                            : stock.changeRate < 0
-                              ? 'text-Green-30'
-                              : 'text-Gray-6'
-                        }`}
-                      >
-                        {stock.changeRate > 0 ? '+' : ''}
-                        {stock.changeRate}%
-                      </span>
-                    )}
-                  </div>
-                )}
+                {priceRow}
               </div>
             </div>
-            {badgeConfig && (
-              <div className="flex items-center gap-1">
-                <Badge
-                  type={badgeConfig.type}
-                  size="md"
-                  className={
-                    resultType === 'BRIEFING' && !briefingFooter?.isCompleted
-                      ? 'bg-Pink-60 text-Pink-30 px-3'
-                      : 'px-3'
-                  }
-                >
-                  {badgeConfig.text}
-                </Badge>
-                {apAmount !== 0 && (
-                  <span className={`dnf-Caption2 ${badgeConfig.apColor}`}>
-                    {apAmount > 0 ? '+' : ''}
-                    {apAmount}
-                  </span>
-                )}
-              </div>
-            )}
+            {badgeRow}
           </>
         )}
       </div>
