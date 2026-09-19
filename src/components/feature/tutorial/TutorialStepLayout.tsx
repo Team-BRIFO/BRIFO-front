@@ -32,7 +32,7 @@ export default function TutorialStepLayout({
 }: TutorialStepLayoutProps) {
   return (
     <main
-      className={`flex min-h-0 w-full flex-1 flex-col overflow-hidden overscroll-none pb-5 ${
+      className={`relative flex min-h-0 w-full flex-1 flex-col overflow-hidden overscroll-none pb-5 ${
         isReplay ? 'bg-Background1' : 'bg-white px-4'
       }`}
     >
@@ -43,8 +43,9 @@ export default function TutorialStepLayout({
         title={isReplay ? '튜토리얼' : undefined}
       />
 
+      {/* 하단 버튼이 흰 배경 바 없이 콘텐츠 위에 떠 있으므로 가려지지 않도록 여백을 확보한다 */}
       <section
-        className={`mt-4 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain ${isReplay ? 'px-4' : ''}`}
+        className={`mt-4 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-24 ${isReplay ? 'px-4' : ''}`}
       >
         <div className="shrink-0">
           <p className="dnf-Title3 text-Gray-10 leading-[1.15] break-keep">STEP {step}</p>
@@ -59,19 +60,16 @@ export default function TutorialStepLayout({
         <div className="mt-6 shrink-0 pb-2">{children}</div>
       </section>
 
-      <div className={`shrink-0 ${isReplay ? 'mx-4 flex justify-center' : ''}`}>
-        <Button
-          type="button"
-          size={isReplay ? 'semilg' : 'lg'}
-          color="primary"
-          isFullWidth
-          onClick={onNext}
-          disabled={nextDisabled}
-          className={`mt-6 shadow-[0_4px_8px_rgba(168,79,1,0.15)] ${isReplay ? 'max-w-80' : ''}`}
-        >
-          {buttonLabel}
-        </Button>
-      </div>
+      <Button
+        type="button"
+        size={isReplay ? 'semilg' : 'lg'}
+        color="primary"
+        onClick={onNext}
+        disabled={nextDisabled}
+        className={`absolute right-4 bottom-5 left-4 shadow-[0_4px_8px_rgba(168,79,1,0.15)] ${isReplay ? 'mx-auto max-w-80' : ''}`}
+      >
+        {buttonLabel}
+      </Button>
     </main>
   )
 }
