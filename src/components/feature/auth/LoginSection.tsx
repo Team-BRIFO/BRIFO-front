@@ -1,4 +1,5 @@
 import Logo from '@/assets/logo/brifo_logo.svg?react'
+import Button from '@/components/common/Button'
 import { StatusBar, StatusBarBackButton } from '@/components/common/StatusBar'
 import SocialLoginButton from '@/components/feature/auth/SocialLoginButton'
 
@@ -6,9 +7,17 @@ interface LoginSectionProps {
   onKakaoLogin: () => void
   onNaverLogin: () => void
   onBack: () => void
+  onGuestLogin: () => void
+  isGuestLoginPending?: boolean
 }
 
-export default function LoginSection({ onKakaoLogin, onNaverLogin, onBack }: LoginSectionProps) {
+export default function LoginSection({
+  onKakaoLogin,
+  onNaverLogin,
+  onBack,
+  onGuestLogin,
+  isGuestLoginPending = false,
+}: LoginSectionProps) {
   return (
     <main className="flex h-full w-full flex-1 flex-col px-4 pb-8">
       <StatusBar
@@ -25,6 +34,18 @@ export default function LoginSection({ onKakaoLogin, onNaverLogin, onBack }: Log
         <div className="mt-26 flex w-full flex-col gap-2 px-4">
           <SocialLoginButton provider="kakao" onClick={onKakaoLogin} />
           <SocialLoginButton provider="naver" onClick={onNaverLogin} />
+
+          <Button
+            type="button"
+            size="lg"
+            color="assistive"
+            isFullWidth
+            onClick={onGuestLogin}
+            disabled={isGuestLoginPending}
+            className="pretendard-Button1! h-13.5! rounded-[10px]"
+          >
+            {isGuestLoginPending ? '로그인 중...' : '로그인 없이 테스트하기'}
+          </Button>
         </div>
       </div>
 
