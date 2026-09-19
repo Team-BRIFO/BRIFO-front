@@ -64,9 +64,9 @@
   --color-Gray-10: #1f1f1f; /* Typo */
 
   /* Rank - Bronze (3위 전용, 연한 → 짙은) */
-  --color-Bronze-100: #cd7f32; /* 배경 */
-  --color-Bronze-50: #ffb74d; /* 동그라미 */
-  --color-Bronze-10: #8d6e63; /* 숫자 */
+  --color-Bronze-100: #fdf1e3; /* 배경 (1·2위와 같은 톤의 옅은 배경) */
+  --color-Bronze-50: #cd7f32; /* 동그라미 — 1위 골드와 구분되는 구릿빛 브론즈 톤 */
+  --color-Bronze-10: #4a2511; /* 숫자 — 브론즈 동그라미 위에서 대비를 확보하는 진한 색 */
 
   /* Gradation */
   --gradient-1: linear-gradient(90deg, #fff9e6 0%, #ffcf40 100%);
