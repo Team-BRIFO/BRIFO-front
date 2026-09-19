@@ -16,6 +16,8 @@ interface AgreementDetailLocationState {
   readOnly?: boolean
   fromPolicyReagreement?: boolean
   returnTo?: string
+  /** 가입 약관 동의 화면의 체크 상태. 돌려줄 때 그대로 넘겨야 이전 체크가 풀리지 않는다. */
+  checked?: Record<AgreementId, boolean>
 }
 
 interface AgreementConfirmationButtonProps {
@@ -81,6 +83,7 @@ export default function AgreementDetailPage() {
     readOnly: stateReadOnly = false,
     fromPolicyReagreement = false,
     returnTo,
+    checked,
   } = (location.state as AgreementDetailLocationState | null) ?? {}
   const policyId = routePolicyId ?? statePolicyId
   const readOnly = stateReadOnly || Boolean(routePolicyId)
@@ -111,6 +114,7 @@ export default function AgreementDetailPage() {
       replace: true,
       state: {
         checkedAgreementId: agreementId,
+        checked,
       },
     })
   }
@@ -126,7 +130,9 @@ export default function AgreementDetailPage() {
       return
     }
 
-    navigate(-1)
+    // navigate(-1)로 돌아가면 동의 화면이 처음 상태로 다시 마운트돼 체크가 전부 풀린다.
+    // 확인하지 않고 나가는 경우에도 기존 체크는 그대로 유지한다.
+    navigate(PATH.AGREEMENT, { replace: true, state: { checked } })
   }
 
   return (
