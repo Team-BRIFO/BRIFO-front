@@ -47,8 +47,27 @@ export function ApBalanceCard({
       {...props}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <span className="pretendard-Caption3 text-Gray-6 shrink-0 leading-none">보유 자금</span>
+
         <div className="flex min-w-0 items-baseline justify-between gap-2">
-          <span className="pretendard-Caption3 text-Gray-6 shrink-0 leading-none">보유 자금</span>
+          <p
+            className={twMerge(
+              getBalanceFontClass(formatWon(balance)),
+              'text-Gray-10 flex min-w-0 items-center gap-1.5 leading-none',
+            )}
+          >
+            <span className="truncate">{formatWon(balance)}</span>
+            {onChargeClick && (
+              <button
+                type="button"
+                onClick={onChargeClick}
+                aria-label="자금 충전하기"
+                className="bg-Pink-30 text-White flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs leading-none font-bold"
+              >
+                +
+              </button>
+            )}
+          </p>
 
           {deltaLabel && (
             <div
@@ -65,25 +84,6 @@ export function ApBalanceCard({
             </div>
           )}
         </div>
-
-        <p
-          className={twMerge(
-            getBalanceFontClass(formatWon(balance)),
-            'text-Gray-10 flex min-w-0 items-center gap-1.5 leading-none',
-          )}
-        >
-          <span className="truncate">{formatWon(balance)}</span>
-          {onChargeClick && (
-            <button
-              type="button"
-              onClick={onChargeClick}
-              aria-label="자금 충전하기"
-              className="bg-Pink-30 text-White flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs leading-none font-bold"
-            >
-              +
-            </button>
-          )}
-        </p>
       </div>
     </div>
   )
