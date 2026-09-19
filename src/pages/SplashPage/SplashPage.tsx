@@ -10,8 +10,10 @@ import { Toast } from '@/components/common/Toast'
 import LoginSection from '@/components/feature/auth/LoginSection'
 import OnboardingSlide from '@/components/feature/onboarding/OnboardingSlide'
 import { SPLASH_SLIDES } from '@/constants/splashSlides'
+import { useGuestLoginMutation } from '@/pages/SplashPage/hooks/useSocialLoginMutation'
 import { PATH } from '@/routes/paths'
 import { startSocialLogin } from '@/services/auth/oauth'
+import { applyOAuthLoginResult } from '@/services/auth/oauthLoginResult'
 
 const SPLASH_DURATION = 3000
 
@@ -91,6 +93,27 @@ export function SplashPage() {
     void restartSocialLogin('naver')
   }
 
+  const guestLogin = useGuestLoginMutation()
+
+  const handleGuestLogin = () => {
+    if (guestLogin.isPending) return
+
+    clearClientSession(queryClient)
+    guestLogin.mutate(undefined, {
+      onSuccess: async (body) => {
+        if (!body.success) {
+          setLoginError(body.message || '테스트 로그인에 실패했어요')
+          return
+        }
+
+        await applyOAuthLoginResult(body.result, navigate)
+      },
+      onError: () => {
+        setLoginError('테스트 로그인에 실패했어요')
+      },
+    })
+  }
+
   // 최초 로고 스플래시
   if (isSplashVisible) {
     return (
@@ -118,6 +141,8 @@ export function SplashPage() {
           onKakaoLogin={handleKakaoLogin}
           onNaverLogin={handleNaverLogin}
           onBack={handleBack}
+          onGuestLogin={handleGuestLogin}
+          isGuestLoginPending={guestLogin.isPending}
         />
         {loginError && <Toast message={loginError} />}
       </div>

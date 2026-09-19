@@ -78,6 +78,14 @@ export const loginWithKakao = (
     options,
   )
 }
+export const loginAsGuest = (
+  options?: SecondParameter<typeof axiosInstance<ApiResponseOAuthLoginResponse>>,
+) => {
+  return axiosInstance<ApiResponseOAuthLoginResponse>(
+    { url: `/api/auth/login/guest`, method: 'POST' },
+    options,
+  )
+}
 export const refreshSignupCsrfToken = (
   options?: SecondParameter<typeof axiosInstance<ApiResponse>>,
 ) => {
@@ -88,6 +96,7 @@ export type ReissueResult = NonNullable<Awaited<ReturnType<typeof reissue>>>
 export type LogoutResult = NonNullable<Awaited<ReturnType<typeof logout>>>
 export type LoginWithNaverResult = NonNullable<Awaited<ReturnType<typeof loginWithNaver>>>
 export type LoginWithKakaoResult = NonNullable<Awaited<ReturnType<typeof loginWithKakao>>>
+export type LoginAsGuestResult = NonNullable<Awaited<ReturnType<typeof loginAsGuest>>>
 export type RefreshSignupCsrfTokenResult = NonNullable<
   Awaited<ReturnType<typeof refreshSignupCsrfToken>>
 >

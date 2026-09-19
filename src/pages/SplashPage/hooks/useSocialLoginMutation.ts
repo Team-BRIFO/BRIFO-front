@@ -1,5 +1,6 @@
 import { type OAuthLoginResponseBody, OAuthLoginResponseSchema } from '@/api/contracts/auth'
 import {
+  loginAsGuest,
   loginWithKakao,
   loginWithNaver,
 } from '@/api/generated/endpoints/auth-controller/auth-controller'
@@ -26,6 +27,17 @@ export function useNaverLoginMutation() {
     responseSchema: OAuthLoginResponseSchema,
     response: 'body',
     getArgs: (request: NaverLoginRequest) => [request] as [NaverLoginRequest],
+  })
+}
+
+/** 소셜 계정 없이 매 호출마다 새 게스트 계정을 발급받는다. 항상 SIGNUP_REQUIRED로 응답한다 */
+export function useGuestLoginMutation() {
+  return useApiMutation({
+    operation: loginAsGuest,
+    endpoint: 'loginAsGuest',
+    responseSchema: OAuthLoginResponseSchema,
+    response: 'body',
+    getArgs: (): [] => [],
   })
 }
 

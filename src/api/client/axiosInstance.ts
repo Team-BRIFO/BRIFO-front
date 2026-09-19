@@ -21,6 +21,7 @@ const DEFAULT_TIMEOUT_MS = 15_000
 const PUBLIC_AUTH_PATHS = new Set([
   '/api/auth/login/kakao',
   '/api/auth/login/naver',
+  '/api/auth/login/guest',
   '/api/auth/reissue',
   '/api/auth/signup/csrf',
 ])
