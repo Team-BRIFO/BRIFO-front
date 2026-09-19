@@ -58,6 +58,10 @@ export function DiaryPage() {
     navigateRef.current(PATH.NOTIFICATION)
   }, [])
 
+  const handleBalanceClick = useCallback(() => {
+    navigateRef.current(PATH.MY_AP)
+  }, [])
+
   const handleChangeView = (next: DiaryView) => {
     const nextSearchParams = new URLSearchParams()
     if (next !== 'calendar') nextSearchParams.set(VIEW_PARAM, next)
@@ -155,7 +159,10 @@ export function DiaryPage() {
 
   return (
     <div className="bg-Background1 flex flex-1 flex-col">
-      <DiaryPageHeader onNotificationClick={handleNotificationClick} />
+      <DiaryPageHeader
+        onNotificationClick={handleNotificationClick}
+        onBalanceClick={handleBalanceClick}
+      />
 
       <DiaryTabScreen view={view} onChangeView={handleChangeView}>
         {isError ? (
