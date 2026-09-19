@@ -17,6 +17,11 @@ type AgreementCheckedState = Record<AgreementId, boolean>
 
 interface AgreementLocationState {
   checkedAgreementId?: AgreementId
+  /**
+   * 약관 상세로 다녀오는 사이 이 화면이 언마운트되므로, 체크 상태를 라우터 state로 들고 다닌다.
+   * 이게 없으면 상세에서 돌아올 때마다 직전에 체크한 항목 하나만 남고 나머지가 풀린다.
+   */
+  checked?: AgreementCheckedState
 }
 
 const INITIAL_CHECKED_STATE: AgreementCheckedState = {
@@ -35,7 +40,15 @@ export default function AgreementPage() {
   const policiesQuery = usePoliciesQuery()
   const agreePolicies = useAgreePoliciesMutation()
   const { isCsrfReady, isCsrfError, retryCsrf } = useSignupCsrfBootstrap()
-  const [checked, setChecked] = useState<AgreementCheckedState>(INITIAL_CHECKED_STATE)
+  const [checked, setChecked] = useState<AgreementCheckedState>(() => {
+    const state = location.state as AgreementLocationState | null
+
+    return {
+      ...INITIAL_CHECKED_STATE,
+      ...(state?.checked ?? {}),
+      ...(state?.checkedAgreementId ? { [state.checkedAgreementId]: true } : {}),
+    }
+  })
   const isAllChecked = Object.values(checked).every(Boolean)
   const isRequiredChecked = REQUIRED_AGREEMENT_IDS.every((id) => checked[id])
 
@@ -140,6 +153,7 @@ export default function AgreementPage() {
                         policiesQuery.data?.items ?? [],
                         agreement.id,
                       )?.policyId,
+                      checked,
                     },
                   })
                 }
