@@ -38,7 +38,11 @@ export default function TutorialStepLayout({
     >
       <StatusBar
         hasStatusArea={false}
-        className={isReplay ? 'w-full shrink-0' : 'w-full shrink-0 [&>div:last-child]:px-0'}
+        className={
+          isReplay
+            ? 'sticky top-0 z-10 w-full shrink-0'
+            : 'sticky top-0 z-10 w-full shrink-0 [&>div:last-child]:px-0'
+        }
         right={<StatusBarSkipButton onClick={onSkip} disabled={skipDisabled} />}
         title={isReplay ? '튜토리얼' : undefined}
       />
